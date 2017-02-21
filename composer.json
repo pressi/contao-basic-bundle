@@ -1,0 +1,46 @@
+{
+    "name"          : "iido/contao-basic-bundle",
+    "type"          : "contao-bundle",
+    "description"   : "Contao 4 IIDO Basic Bundle",
+    "homepage"      : "http://www.iido.at",
+    "license"       : "MIT",
+    "authors"       :
+    [
+        {
+            "name"      : "Stephan Preßl",
+            "email"     : "mail@stephanpressl.at",
+            "homepage"  : "http://www.stephanpressl.at",
+            "role"      : "Developer"
+        }
+    ],
+    "require":
+    {
+        "php"                       : ">=5.5.0",
+        "symfony/framework-bundle"  : "~2.8|~3.0",
+        "contao/core-bundle"        : "~4.3"
+    },
+    "require-dev":
+    {
+        "friendsofphp/php-cs-fixer" : "~1.8",
+        "phpunit/phpunit"           : "~4.5",
+        "satooshi/php-coveralls"    : "~0.6",
+        "symfony/phpunit-bridge"    : "~2.8|~3.0"
+    },
+    "conflict":
+    {
+        "contao/core" : "*"
+    },
+    "autoload":
+    {
+        "psr-4":
+        {
+            "IIDO\\BasicBundle\\" : ""
+        },
+
+        "classmap":
+        [
+            "Resources/contao/classes",
+            "Resources/contao/models"
+        ]
+    }
+}
