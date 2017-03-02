@@ -33,19 +33,19 @@ $listenerName       = $prefix . '_' . $subName;
  * Backend modules
  */
 
-array_insert($GLOBALS['BE_MOD'], 3, array(
-
-    $prefix => array
-   (
-        $prefix . 'Placeholder' => array
-        (
-            'callback'      => $namespace . '\\' . $subNamespace . '\Backend\Module\Placeholder',
-            'tables'        => array($tablePrefix . 'placeholder', 'tl_content'),
-            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
-        ),
-   )
-
-));
+//array_insert($GLOBALS['BE_MOD'], 3, array(
+//
+//    $prefix => array
+//   (
+//        $prefix . 'Placeholder' => array
+//        (
+//            'callback'      => $namespace . '\\' . $subNamespace . '\Backend\Module\Placeholder',
+//            'tables'        => array($tablePrefix . 'placeholder', 'tl_content'),
+//            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
+//        ),
+//   )
+//
+//));
 
 
 
@@ -53,17 +53,17 @@ array_insert($GLOBALS['BE_MOD'], 3, array(
  * Hooks
  */
 
-$GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerName . '.listener.system', 'initializeCustomizeSystem');
+//$GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerName . '.listener.system', 'initializeCustomizeSystem');
 
-$GLOBALS['TL_HOOKS']['generatePage'][]                      = array($listenerName . '.listener.page', 'generateCustomizePage');
-$GLOBALS['TL_HOOKS']['modifyFrontendPage'][]                = array($listenerName . '.listener.page', 'modifyCustomizeFrontendPage');
+//$GLOBALS['TL_HOOKS']['generatePage'][]                      = array($listenerName . '.listener.page', 'generateCustomizePage');
+//$GLOBALS['TL_HOOKS']['modifyFrontendPage'][]                = array($listenerName . '.listener.page', 'modifyCustomizeFrontendPage');
 
-$GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerName . '.listener.content', 'getCustomizeContentElement');
+//$GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerName . '.listener.content', 'getCustomizeContentElement');
 
-$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.listener.frontend_template', 'outputCustomizeFrontendTemplate');
-$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.listener.frontend_template', 'parseCustomizeFrontendTemplate');
+//$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.listener.frontend_template', 'outputCustomizeFrontendTemplate');
+//$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.listener.frontend_template', 'parseCustomizeFrontendTemplate');
 
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
+//$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
 
 
 
@@ -71,8 +71,8 @@ $GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerNam
  * Inherit group permissions
  */
 
-$GLOBALS['TL_PERMISSIONS'][] = 'placeholders';
-$GLOBALS['TL_PERMISSIONS'][] = 'placeholderp';
+//$GLOBALS['TL_PERMISSIONS'][] = 'placeholders';
+//$GLOBALS['TL_PERMISSIONS'][] = 'placeholderp';
 
 
 
@@ -80,4 +80,4 @@ $GLOBALS['TL_PERMISSIONS'][] = 'placeholderp';
  * Register models
  */
 
-$GLOBALS['TL_MODELS']['tl_iido_placeholder']        = $namespace . '\\' . $subNamespace . '\Model\PlaceholderModel';
+//$GLOBALS['TL_MODELS']['tl_iido_placeholder']        = $namespace . '\\' . $subNamespace . '\Model\PlaceholderModel';
