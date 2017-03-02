@@ -1,0 +1,15 @@
+services:
+#    kernel_bundle:
+#      class: IIDO\WebsiteBundle\IIDOWebsiteBundle
+
+#    iido_website.listener.frontend_template:
+#        class: IIDO\WebsiteBundle\EventListener\FrontendTemplateListener
+#        arguments:
+#            - "@contao.framework"
+
+
+#    iido_website.twig_extension:
+#        class: IIDO\WebsiteBundle\Twig\AppExtension
+#        public: false
+#        tags:
+#            - { name: twig.extension }
