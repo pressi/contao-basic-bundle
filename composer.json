@@ -39,11 +39,7 @@
             "IIDO\\BasicBundle\\"   : ""
         },
 
-        "classmap":
-        [
-//            "Resources/contao/classes",
-//            "Resources/contao/models"
-        ]
+        "classmap" : []
     },
     "config":
     {
