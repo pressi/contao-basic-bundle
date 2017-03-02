@@ -21,20 +21,22 @@
     },
     "require-dev":
     {
-        "friendsofphp/php-cs-fixer" : "~1.8",
+        "contao/manager-plugin"     : "^2.0",
+        "friendsofphp/php-cs-fixer" : "^2.0",
         "phpunit/phpunit"           : "~4.5",
-        "satooshi/php-coveralls"    : "~0.6",
+        "satooshi/php-coveralls"    : "~1.0",
         "symfony/phpunit-bridge"    : "~2.8|~3.0"
     },
     "conflict":
     {
-        "contao/core" : "*"
+        "contao/core"               : "*",
+        "contao/manager-plugin"     : "<2.0 || >=3.0"
     },
     "autoload":
     {
         "psr-4":
         {
-            "IIDO\\BasicBundle\\" : ""
+            "IIDO\\BasicBundle\\"   : ""
         },
 
         "classmap":
@@ -42,5 +44,17 @@
             "Resources/contao/classes",
             "Resources/contao/models"
         ]
+    },
+    "config":
+    {
+        "preferred-install"         : "dist"
+    },
+    "extra":
+    {
+        "branch-alias":
+        {
+            "dev-develop" : "4.4.x-dev"
+        },
+        "contao-manager-plugin" : "IIDO\\BasicBundle\\ContaoManager\\Plugin"
     }
 }
