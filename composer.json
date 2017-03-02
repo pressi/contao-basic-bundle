@@ -41,8 +41,8 @@
 
         "classmap":
         [
-            "Resources/contao/classes",
-            "Resources/contao/models"
+//            "Resources/contao/classes",
+//            "Resources/contao/models"
         ]
     },
     "config":
