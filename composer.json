@@ -1,5 +1,5 @@
 {
-    "name"          : "iido/contao-basic-bundle",
+    "name"          : "2do/contao-basic-bundle",
     "type"          : "contao-bundle",
     "description"   : "Contao 4 IIDO Basic Bundle",
     "homepage"      : "http://www.iido.at",
