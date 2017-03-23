@@ -17,7 +17,8 @@
     {
         "php"                       : ">=5.5.0",
         "symfony/framework-bundle"  : "~2.8|~3.0",
-        "contao/core-bundle"        : "~4.3"
+        "contao/core-bundle"        : "~4.3",
+        "madeyourday/contao-rocksolid-custom-elements": "~1"
     },
     "require-dev":
     {
