@@ -34,6 +34,6 @@ class IIDOBasicExtension extends Extension
             new FileLocator(__DIR__.'/../Resources/config')
         );
 
-        $loader->load('listeners.yml');
+        $loader->load('listener.yml');
     }
 }
