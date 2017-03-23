@@ -33,19 +33,33 @@ $listenerName       = $prefix . '_' . $subName;
  * Backend modules
  */
 
-//array_insert($GLOBALS['BE_MOD'], 3, array(
-//
-//    $prefix => array
-//   (
+array_insert($GLOBALS['BE_MOD'], 3, array
+(
+
+    $prefix => array
+   (
 //        $prefix . 'Placeholder' => array
 //        (
 //            'callback'      => $namespace . '\\' . $subNamespace . '\Backend\Module\Placeholder',
 //            'tables'        => array($tablePrefix . 'placeholder', 'tl_content'),
 //            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
 //        ),
-//   )
-//
-//));
+
+        $prefix . 'InitContao' => array
+        (
+            'callback'      => 'IIDO\BasicBundle\Backend\Module\InitContao'
+        )
+   )
+
+));
+
+
+
+/**
+ * Back end form fields
+ */
+
+$GLOBALS['BE_FFL']['metaWizard'] = 'IIDO\BasicBundle\Widget\MetaWizardWidget';
 
 
 
@@ -53,7 +67,7 @@ $listenerName       = $prefix . '_' . $subName;
  * Hooks
  */
 
-//$GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerName . '.listener.system', 'initializeCustomizeSystem');
+$GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerName . '.listener.system', 'initializeCustomizeSystem');
 
 //$GLOBALS['TL_HOOKS']['generatePage'][]                      = array($listenerName . '.listener.page', 'generateCustomizePage');
 //$GLOBALS['TL_HOOKS']['modifyFrontendPage'][]                = array($listenerName . '.listener.page', 'modifyCustomizeFrontendPage');
