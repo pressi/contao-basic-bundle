@@ -47,7 +47,8 @@ array_insert($GLOBALS['BE_MOD'], 3, array
 
         $prefix . 'InitContao' => array
         (
-            'callback'      => 'IIDO\BasicBundle\Backend\Module\InitContao'
+            'callback'      => $namespace . '\\' . $subNamespace . '\BackendModule\InitContao',
+            'stylesheet'    => $assetsPath . 'css/backend/init-contao.css'
         )
    )
 
