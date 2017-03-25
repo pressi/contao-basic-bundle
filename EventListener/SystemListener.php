@@ -68,17 +68,25 @@ class SystemListener
      */
     public function initializeCustomizeSystem()
     {
-        $route = System::getContainer()->get('request_stack')->getCurrentRequest()->get('_route');
+//        $route = "FE";
+        $container  = System::getContainer();
 
-//        if( $this->isBackendScope() && 'contao_backend' === $route && 'contao_install' != $route )
-        if( 'contao_backend' === $route && 'contao_install' != $route )
+        if( $container )
         {
-            $this->initSystem();
-            $this->initBackend();
+            $request = $container->get('request_stack')->getCurrentRequest();
+
+            if( $request )
+            {
+                $route = $request->get('_route');
+
+//                if( $this->isBackendScope() && 'contao_backend' === $route && 'contao_install' != $route )
+                if( 'contao_backend' === $route && 'contao_install' != $route )
+                {
+                    $this->initSystem();
+                    $this->initBackend();
+                }
+            }
         }
-//        echo "<pre>";
-//        print_r("NO");
-//        exit;
     }
 
 
@@ -144,10 +152,6 @@ class SystemListener
 
 
         }
-
-//        echo "<pre>";
-//        print_r( "INIT" );
-//        exit;
     }
 
 
@@ -159,9 +163,9 @@ class SystemListener
         $backendThemePath   = $rootDir . '/system/themes/' . \Backend::getTheme() . '/images/';
         $backendImagePath   = $rootDir . $this->bundlePathPublic . '/images/backend/';
 
-        if( file_exists($rootDir . $this->bundlePathPublic . '/css/backend/backend.css') )
+        if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/css/backend/backend.css') )
         {
-            $GLOBALS['TL_CSS'][] = preg_replace('/^\/web/', '', $this->bundlePathPublic) . '/css/backend/backend.css||static';
+            $GLOBALS['TL_CSS'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/css/backend/backend.css||static';
         }
 
 //        if( \Config::get("iidoCustomize_SettingsProjectType") == "i" && $GLOBALS['IIDO']['isActiveBackendTheme'] )
