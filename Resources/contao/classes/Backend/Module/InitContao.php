@@ -10,7 +10,7 @@
  *
  *******************************************************************/
 
-namespace IIDO\BasciBundle\BackendModule;
+namespace IIDO\BasciBundle\Backend\Module;
 
 use IIDO\BasciBundle\Connection\MasterConnection;
 
