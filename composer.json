@@ -8,8 +8,8 @@
     [
         {
             "name"      : "Stephan Preßl",
-            "email"     : "mail@stephanpressl.at",
-            "homepage"  : "http://www.stephanpressl.at",
+            "email"     : "development@prestep.at",
+            "homepage"  : "http://www.prestep.at",
             "role"      : "Developer"
         }
     ],
@@ -44,6 +44,14 @@
         [
             "Resources/contao/classes",
             "Resources/contao/models"
+        ],
+        "exclude-from-classmap":
+        [
+            "tests/",
+            "Resources/contao/config/",
+            "Resources/contao/dca/",
+            "Resources/contao/languages/",
+            "Resources/contao/templates/"
         ]
     },
     "config":
