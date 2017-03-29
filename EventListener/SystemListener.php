@@ -25,6 +25,10 @@ use Contao\NewsFeedModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Contao\Frontend;
+use IIDO\BasicBundle\Connection\MasterConnection;
+use IIDO\BasicBundle\Config\BundleConfig;
+
+
 //use IIDO\WebsiteBundle\Table\Page;
 
 
@@ -44,8 +48,8 @@ class SystemListener
     private $framework;
 
 
-    protected $bundlePathPublic = 'web/bundles/iidobasic';
-    protected $bundlePath       = 'vendor/2do/contao-basic-bundle';
+    protected $bundlePathPublic;
+    protected $bundlePath;
 
     protected $resourcePath     = '/app/Resources';
 
@@ -59,6 +63,10 @@ class SystemListener
     public function __construct(ContaoFrameworkInterface $framework)
     {
         $this->framework = $framework;
+
+        $this->bundlePathPublic = BundleConfig::getBundlePath(true);
+        $this->bundlePath       = BundleConfig::getBundlePath();
+
     }
 
 
@@ -68,6 +76,7 @@ class SystemListener
      */
     public function initializeCustomizeSystem()
     {
+
 //        $route = "FE";
         $container  = System::getContainer();
 
@@ -95,62 +104,10 @@ class SystemListener
     {
         if( !Config::get("iido_initSystem") )
         {
-            $rootDir            = dirname(System::getContainer()->getParameter('kernel.root_dir'));
-            $connectionFile     = $rootDir . '/' . $this->bundlePath . '/Resources/config/master-connection.json';
-            $settingsFile       = $rootDir . '/' . $this->bundlePath . '/Resources/config/default-settings.json';
-
-            $cmsConfig      = json_decode( file_get_contents( $settingsFile ) );
-            $arrFolders     = array();
-
-            foreach( $cmsConfig->files as $strFolder => $arrSubfolders)
+            if( !\Input::get("do") == "iidoConfigContao" )
             {
-                $strFolderPath  = "files/" . $strFolder;
-
-                if( is_dir($rootDir . '/' . $strFolderPath) )
-                {
-                    $objFolder      = \FilesModel::findByPath( $strFolderPath );
-                }
-                else
-                {
-                    $objFolder      = new \Folder( $strFolderPath );
-                }
-
-                $arrFolders[] = $objFolder->path;
-
-                if( is_array($arrSubfolders) && count($arrSubfolders) && $objFolder && is_dir( $rootDir . '/' . $objFolder->path) )
-                {
-                    foreach($arrSubfolders as $strSubFolder)
-                    {
-                        if( is_dir($rootDir . '/' . $objFolder->path . $strSubFolder) )
-                        {
-                            $objSubFolder = \FilesModel::findByPath( $objFolder->path . '/' . $strSubFolder );
-                        }
-                        else
-                        {
-                            $objSubFolder = new \Folder( $objFolder->path . '/' . $strSubFolder );
-                        }
-
-                        $arrFolders[] = $objSubFolder->path;
-                    }
-                }
+                \Controller::redirect( \Controller::addToUrl("do=iidoConfigContao") );
             }
-
-            if( count($arrFolders) )
-            {
-                \Dbafs::updateFolderHashes($arrFolders);
-            }
-
-            foreach( $cmsConfig->templates as $strTemplateFolder)
-            {
-                $strFolderPath  = "templates/" . $strTemplateFolder;
-
-                if( !is_dir($rootDir . '/' . $strFolderPath) )
-                {
-                    mkdir( $rootDir . '/' . $strFolderPath );
-                }
-            }
-
-
         }
     }
 
