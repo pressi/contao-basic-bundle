@@ -1,0 +1,84 @@
+<div class="config-contao-container backend-container">
+
+    <h2>Website Konfigurieren / Aufsetzen</h2>
+
+    <form action="<?= $this->route('contao_backend') ?>?do=iidoConfigContao" method="post">
+
+        <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_iido_configContao">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+            <input type="password" name="password" value="<?= $this->postPassword ?>" class="invisible">
+
+            <div class="formbody">
+
+                <div class="cols">
+
+                    <div class="col50">
+
+                        <div class="widget">
+                            <label for="customer_name">Kunden-Name</label>
+                            <input type="text" name="customer_name" id="customer_name" class="tl_text" value="" autocapitalize="off" required>
+                        </div>
+
+                    </div>
+
+                    <div class="col50">
+
+                        <div class="widget">
+                            <label for="customer_alias">Kunden-Alias</label>
+                            <input type="text" name="customer_alias" id="customer_alias" class="tl_text" value="" required>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="widget">
+                    <label for="theme">Theme</label>
+                    <select name="theme" id="theme" class="tl_select" required>
+                        <option value="">---</option>
+                        <? foreach($this->masterData['themes'] as $themeID => $themeName): ?>
+                            <option value="<?= $themeID ?>"><?= $themeName ?></option>
+                        <? endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="widget">
+                    <fieldset id="rsce_templates" class="tl_checkbox_container tl_checkbox_wizard">
+                        <legend>RSCE Content Elements</legend>
+
+                        <input type="hidden" name="rsce_templates" value="">
+
+                        <? if( is_array($this->masterData['rsce_templates']) && count($this->masterData['rsce_templates']) ): ?>
+
+                            <span class="fixed">
+                                <input type="checkbox" id="check_all_rsce_templates" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,'rsce_templates')"> <label for="check_all_rsce_templates" style="color:#a6a6a6"><em>Alle auswählen</em></label></span>
+
+                            <div class="no-sortable">
+
+                                <? $num = 0; foreach($this->masterData['rsce_templates'] as $templateFile => $templateName): ?>
+                                    <span><input type="checkbox" name="rsce_templates[]" id="opt_rsce_templates_0" class="tl_checkbox" value="<?= $templateFile ?>" onfocus="Backend.getScrollOffset()"> <label for="opt_rsce_templates_<?= $num ?>"><?= $templateName ?></label></span>
+                                <? $num++; endforeach; ?>
+
+                            </div>
+
+                        <? else: ?>
+                            <span style="color:#a6a6a6">Keine RSCE-Templates vorhanden.</span>
+                        <? endif; ?>
+
+                    </fieldset>
+
+<!--                    <script>Backend.checkboxWizard("rsce_templates")</script>-->
+                </div>
+
+                <div class="submit_container">
+                    <button type="submit" name="login" id="login" class="tl_submit">Ausführen</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>

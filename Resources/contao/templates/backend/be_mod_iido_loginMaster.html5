@@ -1,0 +1,32 @@
+<div class="backend-container login-master-container">
+
+    <h2>Zu Master Verbinden</h2>
+
+    <?= $this->message ?>
+
+    <form action="<?= $this->route('contao_backend') ?>?do=iidoConfigContao" method="post">
+
+        <div class="formbody">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_iido_loginMaster">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+
+            <div class="formbody">
+
+                <div class="widget">
+                    <label for="password">Passwort</label>
+                    <input type="password" name="password" id="password" class="tl_text" value="" required>
+                </div>
+
+
+                <div class="submit_container">
+                    <button type="submit" name="login" id="login" class="tl_submit">Verbinden</button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+</div>
