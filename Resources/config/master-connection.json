@@ -4,7 +4,7 @@
     "connection"    :
     {
         "path"          : "Resources/public/connection/",
-        "publicPath"    : "bundles/masterbundle/connection/",
+        "publicPath"    : "bundles/iidomaster/connection/",
         "file"          : "connect.php"
     }
 }
