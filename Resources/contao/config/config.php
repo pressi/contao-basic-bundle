@@ -17,15 +17,7 @@ $assetsPath     = 'bundles/iidobasic/';
 //    $GLOBALS['TL_CSS'][] = $assetsPath . 'css/backend/backend.css';
 //}
 
-$namespace          = 'IIDO';
-$subNamespace       = 'BasicBundle';
-$subName            = strtolower( preg_replace('/Bundle$/', '', $subNamespace) );
-
-$prefix             = strtolower($namespace);
-$tablePrefix        = 'tl_' . $prefix . '_';
-
-$listenerName       = $prefix . '_' . $subName;
-//\IIDO\WebsiteBundle\Loader::loadConfig("dcaVars");
+list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName ) = \IIDO\BasicBundle\Config\BundleConfig::getBundleConfigArray();
 
 
 
@@ -45,10 +37,10 @@ array_insert($GLOBALS['BE_MOD'], 3, array
 //            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
 //        ),
 
-        $prefix . 'InitContao' => array
+        $prefix . 'ConfigContao' => array
         (
-            'callback'      => $namespace . '\\' . $subNamespace . '\Backend\Module\InitContao',
-            'stylesheet'    => $assetsPath . 'css/backend/init-contao.css'
+            'callback'      => $namespace . '\\' . $subNamespace . '\BackendModule\ConfigClientModule',
+            'stylesheet'    => $assetsPath . 'css/backend/config-contao.css'
         )
    )
 
@@ -60,7 +52,15 @@ array_insert($GLOBALS['BE_MOD'], 3, array
  * Back end form fields
  */
 
-$GLOBALS['BE_FFL']['metaWizard'] = 'IIDO\BasicBundle\Widget\MetaWizardWidget';
+$GLOBALS['BE_FFL']['metaWizard'] = $namespace . '\\' . $subNamespace . '\Widget\MetaWizardWidget';
+
+
+
+/**
+ * Maintenance
+ */
+
+//$GLOBALS['TL_MAINTENANCE'][] = $namespace . '\\' . $subNamespace . '\Maintenance\InitContao';
 
 
 
