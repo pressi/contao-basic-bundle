@@ -12,7 +12,16 @@
 
 namespace IIDO\BasicBundle;
 
-class Classname
+class Classname extends \BackendModule
 {
 
+    /**
+     * Generate the module
+     */
+    protected function compile()
+    {
+        echo "<pre>";
+        print_r("CLASS");
+        exit;
+    }
 }
