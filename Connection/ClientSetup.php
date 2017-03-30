@@ -9,7 +9,6 @@
 
 namespace IIDO\BasicBundle\Connection;
 
-use Contao\Config;
 use Contao\Controller;
 use Contao\System;
 use IIDO\BasicBundle\Config\BundleConfig;
@@ -29,7 +28,7 @@ class ClientSetup
 
     public static function initClient()
     {
-        if( !Config::get("iido_initSystem") )
+        if( !\Config::get("iido_initSystem") )
         {
             if( !\Input::get("do") == "iidoConfigContao" )
             {
@@ -53,7 +52,8 @@ class ClientSetup
 
     protected function setUpContao()
     {
-        $this->objBackendMember   = \BackendUser::getInstance();
+        $this->Config               = \Config::getInstance();
+        $this->objBackendMember     = \BackendUser::getInstance();
 
         $bundlePath         = BundleConfig::getBundlePath();
         $rootDir            = dirname(System::getContainer()->getParameter('kernel.root_dir'));
@@ -108,7 +108,7 @@ class ClientSetup
 
         foreach( $cmsConfig->templates as $strTemplateFolder)
         {
-            $strFolderPath  = "templates/" . $strTemplateFolder;
+            $strFolderPath  = "templates/" . $this->replaceVars( $strTemplateFolder );
 
             if( !is_dir($rootDir . '/' . $strFolderPath) )
             {
@@ -125,30 +125,33 @@ class ClientSetup
         unset($arrTheme['imageSizes']);
         unset($arrTheme['imageSizeItems']);
 
-//        $this->createNewOneModelEntry("Theme", $arrTheme);
+        $this->createNewOneModelEntry("Theme", $arrTheme);
 
         // Create Layouts
-//        $this->createNewModelEntry("Layout", (array) $cmsConfig->theme->layouts);
+        $this->createNewModelEntry("Layout", (array) $cmsConfig->theme->layouts);
 
         // Create Modules
-//        $this->createNewModelEntry("Module", (array) $cmsConfig->theme->modules);
+        $this->createNewModelEntry("Module", (array) $cmsConfig->theme->modules);
 
         // Create Image Sizes
-//        $this->createNewModelEntry("ImageSize", (array) $cmsConfig->theme->imageSizes);
+        $this->createNewModelEntry("ImageSize", (array) $cmsConfig->theme->imageSizes);
 
         // Create Image Size Items
-//        $this->createNewModelEntry("ImageSizeItem", (array) $cmsConfig->theme->imageSizeItems);
+        $this->createNewModelEntry("ImageSizeItem", (array) $cmsConfig->theme->imageSizeItems);
         
         
         
         // Create Pages
-//        $this->createPages( (array) $cmsConfig->pages );
+        $this->createPages( (array) $cmsConfig->pages );
 
 
 
         // Backend User & Group
-//        $this->createNewOneModelEntry("UserGroup", (array) $cmsConfig->user_group);
-//        $this->createNewOneModelEntry("User", (array) $cmsConfig->user);
+        $arrUser = (array) $cmsConfig->user;
+        $arrUser['password'] = md5($arrUser['password']);
+
+        $this->createNewOneModelEntry("UserGroup", (array) $cmsConfig->user_group);
+        $this->createNewOneModelEntry("User", $arrUser);
 
 
 
@@ -167,7 +170,7 @@ class ClientSetup
 
 
         // Set Contao Settings
-        foreach( $cmsConfig->settings as $varName => $varValue)
+        foreach( (array) $cmsConfig->settings as $varName => $varValue)
         {
             if( is_array($varValue) )
             {
@@ -176,7 +179,7 @@ class ClientSetup
 
             $varValue = $this->replaceVars( $varValue );
 
-            Config::set( $varName, $varValue);
+            $this->Config->update( $varName, $varValue);
         }
     }
 
@@ -227,8 +230,8 @@ class ClientSetup
 
                 $objModel->$valueVar = $valueVarValue;
             }
-            echo "<pre>"; print_r($objModel); exit;
-//            return $objModel->save();
+//            echo "<pre>"; print_r($objModel); exit;
+            return $objModel->save();
         }
 
         return false;
@@ -263,6 +266,12 @@ class ClientSetup
                 case "customerAlias":
                 case "customeralias":
                     $varValue = str_replace($strChunk, \Input::post("customer_alias"), $varValue);
+                    break;
+
+                case "customer_email":
+                case "customerEmail":
+                case "customeremail":
+                    $varValue = str_replace($strChunk, \Input::post("customer_email"), $varValue);
                     break;
 
                 case "admin_email":
@@ -348,6 +357,11 @@ class ClientSetup
                             {
                                 $varValue = str_replace($strChunk, $objFolder->uuid, $varValue);
                             }
+                        }
+                        elseif( $arrParts[0] == "func" || $arrParts[0] == "function" )
+                        {
+                            $funcName = $arrParts[1];
+                            $varValue = str_replace($strChunk, $funcName(), $varValue);
                         }
                     }
                     else

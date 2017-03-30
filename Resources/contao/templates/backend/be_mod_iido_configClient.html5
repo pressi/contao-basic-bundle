@@ -20,6 +20,11 @@
                             <input type="text" name="customer_name" id="customer_name" class="tl_text" value="" autocapitalize="off" required>
                         </div>
 
+                        <div class="widget">
+                            <label for="customer_email">Kunden-Email</label>
+                            <input type="text" name="customer_email" id="customer_email" class="tl_text" value="" required>
+                        </div>
+
                     </div>
 
                     <div class="col50">

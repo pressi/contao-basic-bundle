@@ -126,7 +126,8 @@ class MasterConnection
 
     public static function redirect( $method = "", array $msg = array() )
     {
-        self::redirectTo( $method, $msg );
+        $self = new self();
+        $self->redirectTo( $method, $msg );
     }
 
 
