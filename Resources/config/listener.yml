@@ -4,6 +4,21 @@ services:
         arguments:
             - "@contao.framework"
 
+    iido_basic.listener.content:
+        class: IIDO\BasicBundle\EventListener\ContentListener
+        arguments:
+            - "@contao.framework"
+
+    iido_basic.listener.page:
+        class: IIDO\BasicBundle\EventListener\PageListener
+        arguments:
+            - "@contao.framework"
+
+    iido_basic.listener.frontend_template:
+        class: IIDO\BasicBundle\EventListener\FrontendTemplateListener
+        arguments:
+            - "@contao.framework"
+
 #    kernel_bundle:
 #      class: IIDO\WebsiteBundle\IIDOWebsiteBundle
 
