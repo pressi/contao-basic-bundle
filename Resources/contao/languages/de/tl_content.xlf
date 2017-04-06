@@ -1,0 +1,497 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+	<file datatype="php" original="system/modules/ziido_customize/languages/en/tl_content.php" source-language="en">
+		<body>
+
+			<trans-unit id="tl_content.headlineImagePosition.0">
+				<source>headline position</source>
+				<target>Überschrift Position</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.iidoCustomize.elementIsBox.0">
+				<source>element is box</source>
+				<target>Element als Box darstellen</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.dk_cfsType.1">
+				<source>Bitte wählen Sie die Betriebsart des carouFredSel-Elements.</source>
+				<target>Bitte wählen Sie die Betriebsart des Slideshow-Elements.</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.dk_cfsStart.1">
+				<source>Markiert den Anfang eines carouFredSel-Karussells, das mehrere Inhaltselemente umfasst.</source>
+				<target>Markiert den Anfang eines Slideshow-Karussells, das mehrere Inhaltselemente umfasst.</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.dk_cfsStop.1">
+				<source>Markiert das Ende eines carouFredSel-Karussells, das mehrere Inhaltselemente umfasst.</source>
+				<target>Markiert das Ende eines Slideshow-Karussells, das mehrere Inhaltselemente umfasst.</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.dk_cfsCarouFredSel.0">
+				<source>carouFredSel-Konfiguration</source>
+				<target>Slideshow-Konfiguration</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.bgOnOtherColumn.0">
+				<source>add background to a column</source>
+				<target>Hintergrund in Spalte aktivieren</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.bgToArticle.0">
+				<source>background on column</source>
+				<target>Hintergrund in Spalte (Artikel)</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.bgMode.0">
+				<source>background mode</source>
+				<target>Hintergrund Mode</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.bgAttachment.0">
+				<source>background attachment</source>
+				<target>Hintergrund verhalten</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.bgRepeat.0">
+				<source>background repeat</source>
+				<target>Hintergrund Wiederholung</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.bgPosition.0">
+				<source>background position</source>
+				<target>Hintergrund Position</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.ieFallback.0">
+				<source>internet explorer fallback</source>
+				<target>Internet Explorer unterstützen</target>
+			</trans-unit>
+			<trans-unit id="tl_content.ieFallback.1">
+				<source><![CDATA[internet explorer version less than 9]]></source>
+				<target><![CDATA[Internet Explorer Version kleiner als 9]]></target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.inheritBackground.0">
+				<source>background inherit</source>
+				<target>Hintergrund erben</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.addTopHeadline.0">
+				<source>add headline top</source>
+				<target>Überschrift oben hinzufügen</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.topHeadline.0">
+				<source>headline top</source>
+				<target>Überschrift oben</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.topHeadlineFloating.0">
+				<source>floating</source>
+				<target>Ausrichtung</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.addTopHeadlineBorder.0">
+				<source>add border</source>
+				<target>Rahmen hinzufügen</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.subHeadline.0">
+				<source>sub headline</source>
+				<target>Überschrift unten</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.subHeadlineFloating.0">
+				<source>floating</source>
+				<target>Ausrichtung</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.addSubHeadlineBorder.0">
+				<source>add border</source>
+				<target>Rahmen hinzufügen</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.headlineFloating.0">
+				<source>floating</source>
+				<target>Ausrichtung</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.addHeadlineBorder.0">
+				<source>add border</source>
+				<target>Rahmen hinzufügen</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.dividerSize.0">
+				<source>divider size</source>
+				<target>Größe</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.dividerColor.0">
+				<source>divider color / transparency</source>
+				<target>Farbe / Transparenz</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.dividerStyle.0">
+				<source>divider style</source>
+				<target>Style (Linien Typ)</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.addOrnament.0">
+				<source>add a ornament</source>
+				<target>Ornament hinzufügen</target>
+			</trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+			<trans-unit id="tl_content.caroufredsel_legend">
+				<source>carouFredSel-Einstellungen</source>
+				<target>Slideshow-Einstellungen</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.caroufredsel_thumbnails_legend">
+				<source>carouFredSel-Vorschaubilder</source>
+				<target>Slideshow-Vorschaubilder</target>
+			</trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+
+			<trans-unit id="tl_content.options.buttonIconPosition.left">
+				<source>left</source>
+				<target>Links</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.buttonIconPosition.right">
+				<source>right</source>
+				<target>Rechts</target>
+			</trans-unit>
+
+
+
+			<trans-unit id="tl_content.options.boxWidth.w1">
+				<source>width 1</source>
+				<target>Breite 1 (25%)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.boxWidth.w2">
+				<source>width 2</source>
+				<target>Breite 2 (50%)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.boxWidth.w3">
+				<source>width 3</source>
+				<target>Breite 3 (75%)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.boxWidth.w4">
+				<source>width 4</source>
+				<target>Breite 4 (100%)</target>
+			</trans-unit>
+            <trans-unit id="tl_content.options.boxWidth.w33">
+                <source>width 33</source>
+                <target>Breite 33 (33%)</target>
+            </trans-unit>
+
+
+			<trans-unit id="tl_content.options.boxHeight.ha">
+				<source>height auto</source>
+				<target>Höhe Automatisch</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.boxHeight.h1">
+				<source>height 1</source>
+				<target>Höhe 1 (150px)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.boxHeight.h2">
+				<source>height 2</source>
+				<target>Höhe 2 (190px)</target>
+			</trans-unit>
+			<!--<trans-unit id="tl_content.options.boxHeight.h3">-->
+				<!--<source>height 3</source>-->
+				<!--<target>Höhe 3 (570px)</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxHeight.h4">-->
+				<!--<source>height 4</source>-->
+				<!--<target>Höhe 4 (665px)</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxHeight.h5">-->
+				<!--<source>height 5</source>-->
+				<!--<target>Höhe 5 (760px)</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxHeight.h6">-->
+				<!--<source>height 6</source>-->
+				<!--<target>Höhe 6 (855px)</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxHeight.h7">-->
+				<!--<source>height 7</source>-->
+				<!--<target>Höhe 7 (950px)</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxHeight.h8">-->
+				<!--<source>height 8</source>-->
+				<!--<target>Höhe 8 (1045px)</target>-->
+			<!--</trans-unit>-->
+
+
+            <trans-unit id="tl_content.options.boxBackgroundColor.gray_gradient">
+                <source>gray gradient</source>
+                <target>Grau Verlauf</target>
+            </trans-unit>
+			<!--<trans-unit id="tl_content.options.boxBackgroundColor.blue">-->
+				<!--<source>blue</source>-->
+				<!--<target>Blau</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxBackgroundColor.rosa">-->
+				<!--<source>rosa</source>-->
+				<!--<target>Rosa</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxBackgroundColor.green">-->
+				<!--<source>green</source>-->
+				<!--<target>Grün</target>-->
+			<!--</trans-unit>-->
+			<!--<trans-unit id="tl_content.options.boxBackgroundColor.yellow">-->
+				<!--<source>yellow</source>-->
+				<!--<target>Gelb</target>-->
+			<!--</trans-unit>-->
+
+
+			<trans-unit id="tl_content.options.bgMode.cover">
+				<source>skaling</source>
+				<target>Skalierung (CSS)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgMode.none">
+				<source>none</source>
+				<target>Keine (Kacheln, Einzel Bild, ...)</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.bgAttachment.fixed">
+				<source>fixed</source>
+				<target>Fixiert</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgAttachment.scroll">
+				<source>scroll</source>
+				<target>Scroll</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.bgRepeat.no-repeat">
+				<source>no repeat</source>
+				<target>Nicht Wiederholen</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgRepeat.repeat-x">
+				<source>repeat x</source>
+				<target>Horizontal Wiederholen</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgRepeat.repeat-y">
+				<source>repeat y</source>
+				<target>Vertikal Wiederholen</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgRepeat.repeat">
+				<source>repeat</source>
+				<target>Wiederholen (Kacheln)</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.bgPosition.center_center">
+				<source>center center</source>
+				<target>Zentriert</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.center_top">
+				<source>center top</source>
+				<target>Zentriert Oben</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.center_bottom">
+				<source>center bottom</source>
+				<target>Zentriert Unten</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.left_top">
+				<source>left top</source>
+				<target>Links Oben</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.left_center">
+				<source>left center</source>
+				<target>Links Mitte</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.left_bottom">
+				<source>left center</source>
+				<target>Links Unten</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.right_top">
+				<source>right top</source>
+				<target>Rechts Oben</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.right_center">
+				<source>right center</source>
+				<target>Rechts Mitte</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgPosition.right_bottom">
+				<source>right center</source>
+				<target>Rechts Unten</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.bgToArticle.left">
+				<source>left</source>
+				<target>Linke Spalte</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.bgToArticle.right">
+				<source>right</source>
+				<target>Rechte Spalte</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.headlineFloating.header_left">
+				<source>left</source>
+				<target>Linksbündig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.headlineFloating.header_right">
+				<source>right</source>
+				<target>Rechtsbündig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.headlineFloating.header_center">
+				<source>center</source>
+				<target>Zentriert</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.addHeadlineBorder.top">
+				<source>top</source>
+				<target>Rahmen Oben</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.addHeadlineBorder.bottom">
+				<source>bottom</source>
+				<target>Rahmen Unten</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.buttonLinkMode.normal">
+				<source>normal</source>
+				<target>Normaler Link</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.buttonLinkMode.lightbox">
+				<source>lightbox</source>
+				<target>Link in Lightbox öffnen</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.buttonLinkMode.scroll">
+				<source>scroll</source>
+				<target>Link scrollen (unten/oben)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.buttonLinkMode.nolink">
+				<source>nolink</source>
+				<target>Kein Link (nur Button)</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.tickerMode.forward">
+				<source>forward</source>
+				<target>noch Zeit bis</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.tickerMode.backward">
+				<source>backward</source>
+				<target>vergangene Zeit seit</target>
+			</trans-unit>
+
+
+			<trans-unit id="tl_content.options.tickerShowMode.seconds">
+				<source>seconds</source>
+				<target>Sekunden</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.tickerShowMode.minutes">
+				<source>minutes</source>
+				<target>Minuten</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.tickerShowMode.hours">
+				<source>hours</source>
+				<target>Stunden</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.tickerShowMode.days">
+				<source>days</source>
+				<target>Tage</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.tickerShowMode.months">
+				<source>months</source>
+				<target>Monate</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.tickerShowMode.years">
+				<source>years</source>
+				<target>Jahre</target>
+			</trans-unit>
+
+
+
+			<trans-unit id="tl_content.options.blockShowMode.field">
+				<source>field</source>
+				<target>Einzelnes Feld</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.blockShowMode.fields">
+				<source>fields</source>
+				<target>Mehrere Felder (als Block)</target>
+			</trans-unit>
+
+
+
+			<trans-unit id="tl_content.options.serviceInterval.hours">
+				<source>hours</source>
+				<target>Stunden</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.serviceInterval.days">
+				<source>days</source>
+				<target>Tage</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.serviceInterval.weeks">
+				<source>weeks</source>
+				<target>Wochen</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.serviceInterval.months">
+				<source>months</source>
+				<target>Monate</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.serviceInterval.years">
+				<source>years</source>
+				<target>Jahre</target>
+			</trans-unit>
+
+
+
+			<trans-unit id="tl_content.options.linkTarget.self">
+				<source>self</source>
+				<target>selbes Fenster</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.linkTarget.blank">
+				<source>blank</source>
+				<target>Neues Fenster</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.linkTarget.lightbox">
+				<source>lightbox</source>
+				<target>Lightbox</target>
+			</trans-unit>
+
+
+
+<!-- ### REFERENCE ########################################################################################################## -->
+
+			<trans-unit id="tl_content.reference.headlineImagePosition.top">
+				<source>top</source>
+				<target>Oberhalb vom Bild</target>
+			</trans-unit>
+			<trans-unit id="tl_content.reference.headlineImagePosition.bottom">
+				<source>bottom</source>
+				<target>Unterhalb vom Bild</target>
+			</trans-unit>
+			<trans-unit id="tl_content.reference.headlineImagePosition.nextTo">
+				<source>next to</source>
+				<target>Neben dem Bild</target>
+			</trans-unit>
+
+
+		</body>
+	</file>
+</xliff>

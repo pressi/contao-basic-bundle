@@ -1,0 +1,155 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="system/modules/ziido_customize/languages/en/tl_article.php" source-language="en">
+        <body>
+
+            <trans-unit id="tl_article.navTitle.0">
+                <source>navigation title</source>
+                <target>Navigations Titel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.addBackgroundVideo.0">
+                <source>add background video</source>
+                <target>Hintergrund-Video hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.videoSRC.0">
+                <source>background video</source>
+                <target>Hintergrund Video</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.posterSRC.0">
+                <source>background video - preview image</source>
+                <target>Hintergrund Video - Vorschaubild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.addBackgroundImage.0">
+                <source>add background image</source>
+                <target>Hintergrund-Bild hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.backgroundSRC.0">
+                <source>background source</source>
+                <target>Hintergrund-Bild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.backgroundMode.0">
+                <source>background mode</source>
+                <target>Hintergrund Modus</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.backgroundPosition.0">
+                <source>background position</source>
+                <target>Hintergrund Position</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.backgroundAttachment.0">
+                <source>background attachment</source>
+                <target>Hintergrund Funktion</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.enableParallax.0">
+                <source>enable parallac</source>
+                <target>Parallax-Effekt aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.hideInMenu.0">
+                <source>hide in menu</source>
+                <target>im Menü verstecken</target>
+            </trans-unit>
+
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_article.background_legend">
+                <source>background-settings</source>
+                <target>Hintergrund-Einstellungen</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+
+            <trans-unit id="tl_article.options.backgroundMode.no-repeat">
+                <source>no-repeat</source>
+                <target>nicht Wiederholen</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundMode.repeat">
+                <source>repeat</source>
+                <target>Kacheln</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundMode.repeat-x">
+                <source>repeat-x</source>
+                <target>Horizontal Wiederholen</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundMode.repeat-y">
+                <source>repeat-y</source>
+                <target>Vertikal Wiederholen</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundMode.cover">
+                <source>cover</source>
+                <target>Volle Fläche (abgeschnitten)</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.backgroundPosition.left_top">
+                <source>top left</source>
+                <target>Links Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.center_top">
+                <source>top center</source>
+                <target>Mitte Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.right_top">
+                <source>top right</source>
+                <target>Rechts Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.left_center">
+                <source>center left</source>
+                <target>Links Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.center_center">
+                <source>center center</source>
+                <target>Zentriert</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.right_center">
+                <source>center right</source>
+                <target>Rechts Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.left_bottom">
+                <source>bottom left</source>
+                <target>Links Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.center_bottom">
+                <source>bottom center</source>
+                <target>Mitte Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundPosition.right_bottom">
+                <source>bottom right</source>
+                <target>Rechts Unten</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.backgroundAttachment.fixed">
+                <source>fixed</source>
+                <target>Fixiert</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.backgroundAttachment.scroll">
+                <source>scroll</source>
+                <target>Scroll (Bild scrolled mit)</target>
+            </trans-unit>
+
+
+
+<!-- ### REFERENCE ########################################################################################################## -->
+
+
+
+        </body>
+    </file>
+</xliff>

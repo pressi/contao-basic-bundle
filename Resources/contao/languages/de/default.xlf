@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="system/modules/ziido_customize/languages/en/default.php" source-language="en">
+        <body>
+
+<!-- ### PAGE TYPES ######################################################################################################### -->
+
+            <trans-unit id="PTY.regular_redirect.0">
+                <source>Regular page</source>
+                <target>Standard-Weiterleitungs Seite (nach bestimmter Zeit)</target>
+            </trans-unit>
+
+            <trans-unit id="PTY.regular.1">
+                <source>A regular page contains articles and content elements.</source>
+                <target>Eine reguläre Seite die nach bestimmter Zeit weitergeleitet wird.</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>
