@@ -1,0 +1,85 @@
+<?php
+// Add the fancybox style sheet
+$publicBundlePath = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true );
+
+$GLOBALS['TL_CSS']['fancybox']        = $publicBundlePath . '/css/jquery.fancybox.min.css||static';
+$GLOBALS['TL_JAVASCRIPT']['fancybox'] = $publicBundlePath . '/javascript/jquery/jquery.fancybox.min.js|static';
+
+$titleCounter   = FALSE;
+$hideTitle      = FALSE;
+
+//$titleType				= \Config::get("iidoCustomize_fancyboxTitleType");
+//$titleCounter			= \Config::get("iidoCustomize_fancyboxAddTitleCounter");
+//$hideTitle				= \Config::get("iidoCustomize_fancyboxHideTitle");
+//
+//if( $titleCounter && $titleType == "none" )
+//{
+//	$titleType	= 'outside';
+//	$hideTitle	= TRUE;
+//}
+?>
+<script>
+//$.fancybox.defaults.tpl.closeBtn            = '<div title="Close" class="fancybox-item fancybox-close">schliessen</div>';
+<?php //if($titleType == "none"): ?>
+//$.fancybox.defaults.helpers.title           = null;
+<?php //else: ?>
+//$.fancybox.defaults.helpers.title.type      = '<?php //echo $titleType; ?>//';
+<?php //endif; ?>
+$.fancybox.defaults.padding                 = 0;
+$.fancybox.defaults.margin                  = 100;
+$.fancybox.defaults.loop                    = false;
+$.fancybox.defaults.autoSize                = false;
+$.fancybox.defaults.prevEffect              = 'none';
+$.fancybox.defaults.nextEffect              = 'none';
+$.fancybox.defaults.fullscreen              = false;
+$.fancybox.defaults.touch.vertivcal         = true;
+
+$(function() {
+
+	$("[rel=gallery]").fancybox();
+
+	$(document).on("click", "[data-lightbox]", function(e) {
+		e.preventDefault();
+		var grp = $(this).data('lightbox'),
+			els = this;
+
+		if (grp) {
+			els = $('[data-lightbox=' + grp + ']');
+		}
+
+		var index = 0;
+		for(i=0; i < els.length; i++)
+		{
+			if(this.href == els[ i ].href)
+			{
+				index = i;
+				break;
+			}
+		}
+
+		$.fancybox.open(els, {
+			openEffect	: 'elastic',
+			closeEffect	: 'elastic',
+			"index"		:   index,
+
+//			helpers	: {
+//				title		: {
+//					type		: 'outside' //$.fancybox.defaults.helpers.title.type
+//				}
+//			},
+
+			afterLoad : function()
+			{
+				<?php if($titleCounter): ?>
+					<?php if($hideTitle): ?>
+						this.title = '<span class="counter">' + (this.index + 1) + ' / ' + this.group.length + '</span>';
+					<?php else: ?>
+						this.title = (this.title ? this.title : '') + '<span class="counter">' + (this.index + 1) + ' / ' + this.group.length + '</span>';
+					<?php endif; ?>
+				<?php endif; ?>
+			}
+		});
+	});
+
+});
+</script>
