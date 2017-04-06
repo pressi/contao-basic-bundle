@@ -70,13 +70,14 @@ $GLOBALS['BE_FFL']['metaWizard'] = $namespace . '\\' . $subNamespace . '\Widget\
 
 $GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerName . '.listener.system', 'initializeCustomizeSystem');
 
-//$GLOBALS['TL_HOOKS']['generatePage'][]                      = array($listenerName . '.listener.page', 'generateCustomizePage');
+$GLOBALS['TL_HOOKS']['getPageStatusIcon'][]                 = array($listenerName . '.listener.page', 'getCustomizePageStatusIcon');
+$GLOBALS['TL_HOOKS']['generatePage'][]                      = array($listenerName . '.listener.page', 'generateCustomizePage');
 //$GLOBALS['TL_HOOKS']['modifyFrontendPage'][]                = array($listenerName . '.listener.page', 'modifyCustomizeFrontendPage');
 
-//$GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerName . '.listener.content', 'getCustomizeContentElement');
+$GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerName . '.listener.content', 'getCustomizeContentElement');
 
-//$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.listener.frontend_template', 'outputCustomizeFrontendTemplate');
-//$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.listener.frontend_template', 'parseCustomizeFrontendTemplate');
+$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.listener.frontend_template', 'outputCustomizeFrontendTemplate');
+$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.listener.frontend_template', 'parseCustomizeFrontendTemplate');
 
 //$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
 
@@ -88,6 +89,14 @@ $GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerNam
 
 //$GLOBALS['TL_PERMISSIONS'][] = 'placeholders';
 //$GLOBALS['TL_PERMISSIONS'][] = 'placeholderp';
+
+
+
+/**
+ * Page types
+ */
+
+$GLOBALS['TL_PTY']['regular_redirect'] = $namespace . '\\' . $subNamespace . '\Page\RegularRedirectPage';
 
 
 

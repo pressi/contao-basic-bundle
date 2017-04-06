@@ -17,6 +17,7 @@ use IIDO\BasicBundle\Config\BundleConfig;
 class ClientSetup
 {
 
+    protected $Config;
     protected $objBackendMember;
 
     protected $objBackendEditor         = false;
@@ -179,8 +180,10 @@ class ClientSetup
 
             $varValue = $this->replaceVars( $varValue );
 
-            $this->Config->update( $varName, $varValue);
+            $this->Config->update( "\$GLOBALS['TL_CONFIG']['" . $varName . "']", $varValue);
         }
+
+        $this->Config->update( "\$GLOBALS['TL_CONFIG']['']", TRUE);
     }
 
 
