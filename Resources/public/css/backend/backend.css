@@ -2,3 +2,6 @@
     display: none;
 }
 
+.widget:not(.w50) {
+    clear: both;
+}
