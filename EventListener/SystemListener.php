@@ -91,7 +91,7 @@ class SystemListener
 //                if( $this->isBackendScope() && 'contao_backend' === $route && 'contao_install' != $route )
                 if( 'contao_backend' === $route && 'contao_install' != $route )
                 {
-                    $this->initSystem();
+//                    $this->initSystem();
                     $this->initBackend();
                 }
             }
