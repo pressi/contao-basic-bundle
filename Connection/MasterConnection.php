@@ -53,7 +53,14 @@ class MasterConnection
         
         return self::$instance;
     }
-    
+
+
+
+    public function testConnection()
+    {
+        return $this->getActionData("testConnection", array(), true);
+    }
+
     
     
     public function setPassword( $pwd )
@@ -80,7 +87,13 @@ class MasterConnection
     public function getData($returnAsArray = false)
     {
         $connectionUrl  = $this->getConnectionUrl();
-        $arrData        = file_get_contents( $connectionUrl );
+        $arrData        = @file_get_contents( $connectionUrl );
+
+        if( !$arrData )
+        {
+            return array("ERROR" => 'Connection Failed. Master not available! Please try again later.');
+        }
+
         $objData        = json_decode($arrData, $returnAsArray);
 
         return $objData;
@@ -91,7 +104,12 @@ class MasterConnection
     public function getActionData( $actionName, array $actionParams = array(), $returnAsArray = false)
     {
         $connectionUrl  = $this->getConnectionUrl() . '&act=' . $actionName . (count($actionParams)?'&':'') . implode('&', $actionParams);
-        $arrData        = file_get_contents( $connectionUrl );
+        $arrData        = @file_get_contents( $connectionUrl );
+
+        if( !$arrData )
+        {
+            return array("ERROR" => 'Connection Failed. Master not available! Please try again later.');
+        }
 
         return json_decode($arrData, $returnAsArray);
     }
@@ -115,7 +133,7 @@ class MasterConnection
 
         if( $method )
         {
-            \Controller::redirect( \Controller::addToUrl("do=iidoConfigContao&amp;method=" . $method) );
+            \Controller::redirect( \Controller::addToUrl("do=iidoConfigContao&method=" . $method) );
         }
         else
         {
@@ -135,7 +153,51 @@ class MasterConnection
     protected function getConnectionUrl()
     {
         $configData = $this->getConfigData();
-        return $configData->domain . $configData->connection->publicPath . $configData->connection->file . '?pwd=' . static::$password;
+        return $configData->domain . $configData->connection->publicPath . $configData->connection->file . '?pwd=' . static::$password . $this->getConnectionUrlVars( $configData );
+    }
+
+
+
+    protected function getConnectionUrlVars( $configData = NULL )
+    {
+        $requestVars = "";
+
+        if( $configData === NULL )
+        {
+            $configData = $this->getConfigData();
+        }
+
+        foreach( (array) $configData->vars as $varName => $varData )
+        {
+            $varDataParsed  = "";
+            $varData        = \StringUtil::deserialize( $varData );
+
+            if( is_string($varData) )
+            {
+                $varDataParsed = $varData;
+            }
+            else
+            {
+                $arrVarData = array();
+
+                foreach( (array) $varData as $key => $value )
+                {
+                    $arrVarData[ $key ] = ClientSetup::replaceStaticVars( $value );
+                }
+
+                if( count($arrVarData) )
+                {
+                    $varDataParsed = json_encode( $arrVarData );
+                }
+            }
+
+            if( $varDataParsed )
+            {
+                $requestVars .= '&' . $varName . '=' . $varDataParsed;
+            }
+        }
+
+        return $requestVars;
     }
 
 
@@ -148,7 +210,7 @@ class MasterConnection
             {
                 if( !\Input::get("method") == "login" )
                 {
-                    \Controller::redirect( \Controller::addToUrl("do=iidoConfigContao&amp;method=login") );
+                    \Controller::redirect( \Controller::addToUrl("do=iidoConfigContao&method=login") );
                 }
             }
         }

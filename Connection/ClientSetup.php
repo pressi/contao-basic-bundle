@@ -180,10 +180,12 @@ class ClientSetup
 
             $varValue = $this->replaceVars( $varValue );
 
-            $this->Config->update( "\$GLOBALS['TL_CONFIG']['" . $varName . "']", $varValue);
+            $this->Config->persist( $varName, $varValue);
+//            $this->Config->update( "\$GLOBALS['TL_CONFIG']['" . $varName . "']", $varValue);
         }
 
-        $this->Config->update( "\$GLOBALS['TL_CONFIG']['']", TRUE);
+//        $this->Config->update( "\$GLOBALS['TL_CONFIG']['']", TRUE);
+//        $this->Config->persist( 'iido_initSystem', TRUE);
     }
 
 
@@ -366,6 +368,32 @@ class ClientSetup
                             $funcName = $arrParts[1];
                             $varValue = str_replace($strChunk, $funcName(), $varValue);
                         }
+                        elseif( $arrParts[0] == "env" )
+                        {
+                            $varValue = \Environment::get( $arrParts[1] );
+                        }
+                        elseif( $arrParts[0] == "config" )
+                        {
+                            $varValue = \Config::get( $arrParts[1] );
+                        }
+                        elseif( $arrParts[0] == "cms" )
+                        {
+                            switch( $arrParts[1] )
+                            {
+                                case "version":
+                                    $packages = System::getContainer()->getParameter('kernel.packages');
+                                    $varValue = $packages['contao/core-bundle'];
+                                    break;
+
+                                case "bundles":
+                                    $varValue = array_keys(System::getContainer()->getParameter('kernel.bundles') );
+                                    break;
+
+                                case "packages":
+                                    $varValue = System::getContainer()->getParameter('kernel.packages');
+                                    break;
+                            }
+                        }
                     }
                     else
                     {
@@ -378,6 +406,14 @@ class ClientSetup
         }
 
         return $varValue;
+    }
+
+
+
+    public static function replaceStaticVars( $strContent )
+    {
+        $self = new self();
+        return $self->replaceVars( $strContent );
     }
 
 

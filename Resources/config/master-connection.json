@@ -6,5 +6,15 @@
         "path"          : "Resources/public/connection/",
         "publicPath"    : "bundles/iidomaster/connection/",
         "file"          : "connect.php"
+    },
+
+    "vars"          :
+    {
+        "request"       :
+        {
+            "host"          : "##env__host##",
+            "name"          : "##config__websiteTitle##",
+            "version"       : "##cms__version##"
+        }
     }
 }

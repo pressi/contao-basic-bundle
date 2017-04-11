@@ -72,6 +72,18 @@ class ConfigClientModule extends \BackendModule
             }
         }
 
+        $connection = MasterConnection::getInstance()->testConnection();
+
+        if( key_exists("ERROR", $connection) )
+        {
+            if( preg_match('/connection failed/', strtolower($connection['ERROR'])) )
+            {
+                $this->strTemplate  = 'be_mod_iido_errorMaster';
+                \Session::getInstance()->set("iidoMessage", $connection['ERROR']);
+                return parent::generate();
+            }
+        }
+
         return parent::generate();
     }
 
@@ -92,8 +104,13 @@ class ConfigClientModule extends \BackendModule
             if( is_array($arrMessage) && count($arrMessage) )
             {
                 $strMessage = Message::render($arrMessage);
-                \Session::getInstance()->remove("iidoMessage");
             }
+            else
+            {
+                $strMessage = Message::render( array("error"=>$arrMessage) );
+            }
+
+            \Session::getInstance()->remove("iidoMessage");
         }
 
         $this->Template->masterData     = $masterData;

@@ -112,9 +112,9 @@ class PageListener
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/waypoints/inview.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/waypoints/sticky.min.js|static';
 
-            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_base'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/iido/IIDO.Functions.js|static';
-            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Page.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_page'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Page.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
 
 //            if( $objLayout->loadJQueryUI )
@@ -126,7 +126,7 @@ class PageListener
 
         if( $footerMode )
         {
-            $GLOBALS['TL_CSS'][] = $this->bundlePathPublic . '/css/footer.css||static';
+            $GLOBALS['TL_CSS']['footer'] = $this->bundlePathPublic . '/css/footer.css||static';
         }
 
         if( $objLayout->loadDomainCSS )
@@ -287,39 +287,42 @@ class PageListener
         {
             if( preg_match('/open-fullscreen-search/', $strBuffer) )
             {
-                $strModule  = \Controller::getFrontendModule( 3 );
-                $pregMatch  = '([A-Za-z0-9\s\-=",;.:_]{0,})';
+                $objModule  = \ModuleModel::findOneBy("type", "search");
+
+                if( $objModule )
+                {
+                    $strModule = \Controller::getFrontendModule( $objModule->id ); //6
+                    $pregMatch = '([A-Za-z0-9\s\-=",;.:_]{0,})';
 
 //                if( preg_match('/<div' . $pregMatch . 'class="mod_search([A-Za-z0-9\s\-_]{0,})"' . $pregMatch . '>/', $strModule, $arrMatches) )
 //                {
 //                    $strModule = preg_replace('/' . preg_quote($arrMatches[0],  '/') . '/', '', $strModule);
 //                    $strModule = preg_replace('/<\div>$/', '', trim($strModule));
-
 //                    $strModule = preg_replace('/<form/', '<form class="' . trim(preg_replace('/block/', '', $arrMatches[2])) . '"', trim($strModule));
 //                }
-
 //                $strModule = preg_replace('/<div class="formbody">/', '', $strModule);
 //                $strModule = preg_replace('/<\/div>([\s\n]{0,})<\/form>/', '</form>', $strModule);
 
-                $strModule = preg_replace('/<input' . $pregMatch . 'type="submit"' . $pregMatch . 'value="([A-Za-z0-9öäüÖÄÜß]{0,})"' . $pregMatch . '>/', '<button$1type="submit"$2$4>$3</button>', $strModule);
-
-                $strModule = preg_replace('/<\/form>/', '<a href="" class="fullscreen-search-form-close">close</a></form>', $strModule);
-
-                $strBuffer = preg_replace('/<\/body>/', $strModule . '</body>', $strBuffer);
+                    $strModule = preg_replace('/<input' . $pregMatch . 'type="submit"' . $pregMatch . 'value="([A-Za-z0-9öäüÖÄÜß]{0,})"' . $pregMatch . '>/', '<button$1type="submit"$2$4>$3</button>', $strModule);
+                    $strModule = preg_replace('/<\/form>/', '<a href="" class="fullscreen-search-form-close">close</a></form>', $strModule);
+                    $strBuffer = preg_replace('/<\/body>/', $strModule . '</body>', $strBuffer);
+                }
             }
 
             // Mobile Menü
             $menuOpen   = '<a href="javascript:void(0)" class="main-navigation-mobile-open">navigation</a>';
             $menuClose  = '<button class=" main-navigation-mobile-close">close</button>';
 
+            $objNavModule  = \ModuleModel::findOneBy("type", "navigation");
+
 //            //TODO: set module ID flexible, make a change posible
-//            $modSearch  = \Controller::getFrontendModule( 10 );
-//            $modNavi    = \Controller::getFrontendModule( 11 );
-//            $modSocial  = ''; //TODO: Add Socialmedia links
+            $modSearch  = ''; //\Controller::getFrontendModule( 10 );
+            $modNavi    = \Controller::getFrontendModule( $objNavModule->id ); // 11
+            $modSocial  = ''; //TODO: Add Socialmedia links
 
-//            $menuMobile = '<div class="main-navigation-mobile">' . $modSearch . $modNavi . $modSocial . $menuClose . '</div>';
+            $menuMobile = '<div class="main-navigation-mobile">' . $modSearch . $modNavi . $modSocial . $menuClose . '</div>';
 
-//            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-_,;.:\{\}\(\)="\']{0,})>/',  '<body$1>' . $menuOpen . $menuMobile, $strBuffer);
+            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-_,;.:\{\}\(\)="\']{0,})>/',  '<body$1>' . $menuOpen . $menuMobile, $strBuffer);
         }
 
         return $strBuffer;
