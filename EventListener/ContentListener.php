@@ -70,6 +70,19 @@ class ContentListener
     {
         global $objPage;
 
+        $elementClass   = $objRow->typePrefix . $objRow->type;
+
+        if( $objRow->type == "module" )
+        {
+            $objModule = \ModuleModel::findByPk( $objRow->module );
+
+            if( $objModule )
+            {
+                $elementClass = 'mod_' . $objModule->type;
+            }
+        }
+
+
         if( $objRow->type == "text")
         {
             if( $objRow->addImage )
@@ -125,6 +138,8 @@ class ContentListener
                 $strBuffer = Helper::generateImageHoverTags( $strBuffer, $objRow );
             }
         }
+
+        $strBuffer = preg_replace('/class="' . $elementClass . '/', 'class="' . $elementClass . ' content-element', $strBuffer);
 
         return $strBuffer;
     }

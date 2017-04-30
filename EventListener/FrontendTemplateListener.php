@@ -22,6 +22,8 @@ use Contao\NewsFeedModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Contao\Frontend;
+use IIDO\BasicBundle\Helper\ColorHelper;
+
 
 /**
  * Class Frontend Template Hook
@@ -54,11 +56,12 @@ class FrontendTemplateListener
      */
     public function parseCustomizeFrontendTemplate($strContent, $strTemplate)
     {
+        /* @var \PageModel $objPage */
         global $objPage;
 
         $isFullpage = $this->isFullPageEnabled( $objPage );
 
-        if( $strTemplate == "mod_article" )
+        if( $strTemplate === "mod_article" )
         {
 //            $sectionHeaderID		= 3; // TODO: verwaltbar machen!!!
 //            $sectionFooterID		= 4;
@@ -70,15 +73,24 @@ class FrontendTemplateListener
             preg_match_all('/id="([A-Za-z0-9\-_]{0,})"/', $strContent, $idMatches);
             preg_match_all('/class="mod_article([A-Za-z0-9\s\-\{\}\/\',;.:\\\(\)_]{0,})"([A-Za-z0-9\s\-,;.:="\'_]{0,})id="([A-Za-z0-9\-_]{0,})"/', $strContent, $arrMatches);
 
+//            $articleID = "";
             if( is_array($idMatches) && count($idMatches[0]) > 0 )
             {
-                $objArticle = \ArticleModel::findByIdOrAlias( $idMatches[1][0] );
+//                $idOrAlias = $articleID = $idMatches[1][0];
+                $idOrAlias = $idMatches[1][0];
 
-                if( !$objArticle )
+                if( preg_match('/^article-/', $idOrAlias) )
                 {
-                    $objArticle = \ArticleModel::findByIdOrAlias( preg_replace('/^article_/', '', $idMatches[1][0]) );
+                    $idOrAlias = preg_replace('/^article-/', '', $idOrAlias);
                 }
+
+                $objArticle = \ArticleModel::findByIdOrAlias( $idOrAlias );
             }
+            
+//            if( strlen($articleID) )
+//            {
+//                $strContent = preg_replace('/id="'. $articleID . '"/', 'id="' . $objArticle->alias . '"', $strContent);
+//            }
 
             if( $isFullpage )
             {
@@ -193,16 +205,16 @@ class FrontendTemplateListener
 
                 if( $objArticle )
                 {
-                    if( $objArticle->addBackgroundVideo )
-                    {
-                        $arrArticleClasses[] = 'has-background-video';
+//                    if( $objArticle->addBackgroundVideo )
+//                    {
+//                        $arrArticleClasses[] = 'has-background-video';
+//
+//                        $strVideoTag = Helper::renderVideoTag( $objArticle->videoSRC, $objArticle->posterSRC );
+//
+//                        $strContent = preg_replace('/<\/div>$/', $strVideoTag . '</div>', $strContent);
+//                    }
 
-                        $strVideoTag = Helper::renderVideoTag( $objArticle->videoSRC, $objArticle->posterSRC );
-
-                        $strContent = preg_replace('/<\/div>$/', $strVideoTag . '</div>', $strContent);
-                    }
-
-                    if( $objArticle->addBackgroundImage )
+                    if( $objArticle->bgImage )
                     {
                         $arrArticleClasses[] = 'has-background-image';
 
@@ -211,7 +223,9 @@ class FrontendTemplateListener
                             $arrArticleClasses[] = 'full-width';
                         }
 
-                        if( $objArticle->backgroundMode == "cover" )
+                        $bgSize = deserialize($objArticle->bgSize, TRUE);
+
+                        if( $bgSize[2] == "cover" )
                         {
 //                            if( $objArticle->enableParallax )
 //                            {
@@ -223,7 +237,7 @@ class FrontendTemplateListener
 //                            }
                         }
 
-                        $objImage = \FilesModel::findByPk( $objArticle->backgroundSRC );
+                        $objImage = \FilesModel::findByPk( $objArticle->bgImage );
 
                         if( $objImage )
                         {
@@ -236,19 +250,19 @@ class FrontendTemplateListener
                             }
                         }
 
-                        if( $objArticle->enableParallax )
-                        {
-//                            if( $objArticle->backgroundPosition == "center_top" && $objArticle->backgroundMode == "cover" )
-//                            {
-//                                if( in_array("first", $objArticle->classes) )
-//                                {
-//                                    $arrAttributes[] = 'data-stellar-vertical-offset="-125"';
-//                                }
-//                            }
-
-                            $articlePattern = '/<div([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})class="mod_article([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})>/';
-                            $strContent     = preg_replace($articlePattern, '<div$1class="mod_article parallax-bg$2"$3 data-stellar-offset-parent="true" data-stellar-background-ratio="0.2">', $strContent);
-                        }
+//                        if( $objArticle->enableParallax )
+//                        {
+////                            if( $objArticle->backgroundPosition == "center_top" && $objArticle->backgroundMode == "cover" )
+////                            {
+////                                if( in_array("first", $objArticle->classes) )
+////                                {
+////                                    $arrAttributes[] = 'data-stellar-vertical-offset="-125"';
+////                                }
+////                            }
+//
+//                            $articlePattern = '/<div([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})class="mod_article([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})>/';
+//                            $strContent     = preg_replace($articlePattern, '<div$1class="mod_article parallax-bg$2"$3 data-stellar-offset-parent="true" data-stellar-background-ratio="0.2">', $strContent);
+//                        }
                     }
                 }
             }
@@ -271,6 +285,53 @@ class FrontendTemplateListener
                         $index++;
                     }
 
+                    if( $objArticle->fullWidth )
+                    {
+                        $arrArticleClasses[] = 'full-width';
+
+                        if( $objArticle->fullWidthInside )
+                        {
+                            $arrArticleClasses[] = 'full-width-inside';
+                        }
+                    }
+
+                    if( $objArticle->fullHeight )
+                    {
+                        $arrArticleClasses[] = 'full-height';
+
+                        if( $objArticle->opticalHeight )
+                        {
+                            $arrArticleClasses[] = 'full-height-optical';
+                        }
+                    }
+
+                    if( $objArticle->textMiddle )
+                    {
+                        $arrArticleClasses[] = 'text-valign-middle';
+
+                        if( $objArticle->textMiddleOptical )
+                        {
+                            $arrArticleClasses[] = 'text-valign-middle-optical';
+                        }
+                    }
+
+                    $bgColor        = ColorHelper::getBackgroundColor( $objArticle );
+
+                    if( $bgColor )
+                    {
+                        if( $bgColor->lightness < 140 )
+                        {
+                            if( $bgColor->lightness < 90)
+                            {
+                                $arrArticleClasses[] = 'lighter-color';
+                            }
+                            else
+                            {
+                                $arrArticleClasses[] = 'light-color';
+                            }
+                        }
+                    }
+
                     if( $index == 1 )
                     {
                         $arrArticleClasses[] = 'secondArticle';
@@ -291,6 +352,26 @@ class FrontendTemplateListener
 //					$strContent = preg_replace($articleWrapPattern, '<div$1class="mod_article$2"$3><div class="wrap"><div class="scroll-container">', $strContent);
 //					$strContent = preg_replace('/<\/div>$/',  '</div></div>', $strContent);
 //				}
+
+                $inMenu = false;
+
+                if( $objArticle->inColumn == "main" )
+                {
+                    if( $objPage->submenuNoPages && $objPage->submenuSRC == "articles" )
+                    {
+                        $dataAnker = ($cssID[1]?:'article-' . $objArticle->id);
+
+                        $arrAttributes[] = 'data-alias="' . $objArticle->alias . '"';
+                        $arrAttributes[] = 'data-anker="' . $dataAnker . '"';
+
+                        if( $objArticle->published && !$objArticle->hideInMenu )
+                        {
+                            $inMenu = true;
+                        }
+                    }
+                }
+
+                $arrAttributes[] = 'data-menu="' . $inMenu . '"';
             }
 
             if( is_array($articleClass) && count($articleClass) > 0 )
@@ -298,14 +379,16 @@ class FrontendTemplateListener
                 $strContent = preg_replace('/class="mod_article/', 'class="mod_article ' . implode(" ", $articleClass), $strContent);
             }
 
-
             $arrArticleClasses = array_unique($arrArticleClasses);
 
-            $strContent = preg_replace('/class="mod_article/',  ((count($arrAttributes) > 0) ? ' ' . implode(' ', $arrAttributes) : '') . 'class="mod_article' . ((count($arrArticleClasses) > 0) ? ' ' : '') . implode(' ', $arrArticleClasses), $strContent);
+            if( count($arrArticleClasses) )
+            {
+                $strContent = preg_replace('/class="mod_article/',  ((count($arrAttributes) > 0) ? ' ' . implode(' ', $arrAttributes) : '') . 'class="mod_article' . ((count($arrArticleClasses) > 0) ? ' ' : '') . implode(' ', $arrArticleClasses), $strContent);
+            }
 
-            $addAroundDivStart  = "";
-            $addAroundDivEnd    = "";
-            $articleClasses     = deserialize($objArticle->cssID, true);
+//            $addAroundDivStart  = "";
+//            $addAroundDivEnd    = "";
+//            $articleClasses     = deserialize($objArticle->cssID, true);
 
 //            if( preg_match('/add-bg/', $articleClasses[1]) )
 //            {
@@ -313,13 +396,19 @@ class FrontendTemplateListener
 //                $addAroundDivEnd    = '</div></div>';
 //            }
 
-            $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3>' . $addAroundDivStart . '<div class="article-inside">', $strContent);
+//            $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3>' . $addAroundDivStart . '<div class="article-inside">', $strContent);
 //            $strContent = preg_replace('/<\/div>$/', '</div></div>' . $addAroundDivEnd, $strContent);
-            $strContent = $strContent . '</div>' . $addAroundDivEnd;
+//            $strContent = $strContent . $addAroundDivEnd . '</div>';
+
+            if( $objArticle->inColumn === "main")
+            {
+                $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">', $strContent);
+                $strContent = $strContent . '</div>';
+            }
         }
 
 
-        elseif( $strTemplate == "mod_navigation" )
+        elseif( $strTemplate === "mod_navigation" )
         {
             preg_match_all('/id="skipNavigation([0-9]{0,})"/', $strContent, $navMatches);
 
@@ -418,7 +507,7 @@ class FrontendTemplateListener
         $objLayout          = Helper::getPageLayout( $objPage) ;
         $isFullpage         = $this->isFullPageEnabled( $objPage, $objLayout );
 
-        if( $strTemplate == 'fe_page' )
+        if( $strTemplate === 'fe_page' )
         {
             $strBuffer          = $this->replaceBodyClasses( $strBuffer );
             $strBuffer          = $this->replaceWebsiteTitle( $strBuffer );
@@ -562,15 +651,17 @@ class FrontendTemplateListener
     {
         global $objPage;
 
-        $pageTitle = $objPage->rootPageTitle?:$objPage->rootTitle;
+        $rootTitle = (($objPage->rootPageTitle) ? $objPage->rootPageTitle : $objPage->rootTitle);
 
-        preg_match_all('/<title>(.*)' . preg_quote($pageTitle, "/") . '<\/title>/', $strContent, $matches);
+        preg_match_all('/<title>(.*)' . $rootTitle . '<\/title>/', $strContent, $matches);
 
         if( count($matches[1]) > 0)
         {
-            $newTitle 	= trim( str_replace("-", "", $matches[1][0]) );
-            $strContent = preg_replace('/<title>' . $matches[1][0] . $pageTitle .'<\/title>/', '<title>' . $newTitle . ' :: ' . $pageTitle . '</title>', $strContent);
+            $newTitle   = trim( str_replace("-", "", $matches[1][0]) );
+            $strContent = preg_replace('/<title>' . preg_quote($matches[1][0] . $rootTitle, "/") .'<\/title>/', '<title>' . $newTitle . ' :: ' . $rootTitle . '</title>', $strContent);
         }
+
+        $strContent = str_replace(":: ::", "::", $strContent);
 
         return $strContent;
     }

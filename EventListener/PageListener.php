@@ -105,7 +105,7 @@ class PageListener
         {
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.scrollTo.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.slimscroll.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.smooth-scroll.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.stellar.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.waypoints.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/waypoints/infinite.min.js|static';
@@ -131,7 +131,7 @@ class PageListener
 
         if( $objLayout->loadDomainCSS )
         {
-            $objRootPage	= \PageModel::findByPk( $objPage->rootId );
+            $objRootPage = \PageModel::findByPk( $objPage->rootId );
 
             if( $objRootPage )
             {
@@ -193,77 +193,80 @@ class PageListener
 
 
 
-        if( $objArticle )
-        {
-            while( $objArticle->next() )
-            {
-                $cssID = deserialize($objArticle->cssID, true);
-
-                if( $objArticle->addBackgroundImage )
-                {
-                    $addToTag = '';
-                    if( preg_match('/bg-image-height/', $cssID[1]) )
-                    {
-                        $addToTag = ' .article-inside';
-                    }
-
-                    $objImage = \FilesModel::findByPk( $objArticle->backgroundSRC );
-
-                    if( $objImage )
-                    {
-                        $strStyles .= '#main .mod_article#' . $objArticle->alias . $addToTag . '{background-image:url("' . $objImage->path . '");';
-
-                        if( $objArticle->backgroundPosition )
-                        {
-                            $setPos = false;
-
-//                            if( $objArticle->backgroundPosition == "center_top" && $objArticle->backgroundMode == "cover" )
+//        if( $objArticle )
+//        {
+//            while( $objArticle->next() )
+//            {
+//                $cssID = deserialize($objArticle->cssID, true);
+//
+//                if( $objArticle->addBackgroundImage )
+//                {
+//                    $addToTag = '';
+//                    if( preg_match('/bg-image-height/', $cssID[1]) )
+//                    {
+//                        $addToTag = ' .article-inside';
+//                    }
+//
+//                    $objImage = \FilesModel::findByPk( $objArticle->backgroundSRC );
+//
+//                    if( $objImage )
+//                    {
+//                        $strStyles .= '#main .mod_article#' . $objArticle->alias . $addToTag . '{background-image:url("' . $objImage->path . '");';
+//
+//                        if( $objArticle->backgroundPosition )
+//                        {
+//                            $setPos = false;
+//
+////                            if( $objArticle->backgroundPosition == "center_top" && $objArticle->backgroundMode == "cover" )
+////                            {
+////                                if( in_array("first", $objArticle->classes) )
+////                                {
+////                                    $setPos = true;
+////                                    $strStyles .= 'background-position:center 125px;';
+////                                }
+////                            }
+//
+//                            if( !$setPos )
 //                            {
-//                                if( in_array("first", $objArticle->classes) )
-//                                {
-//                                    $setPos = true;
-//                                    $strStyles .= 'background-position:center 125px;';
-//                                }
+//                                $strStyles .= 'background-position:' . str_replace('_', ' ', $objArticle->backgroundPosition) . ';';
 //                            }
+//                        }
+//
+//                        if( $objArticle->backgroundMode )
+//                        {
+//                            if( preg_match('/repeat/', $objArticle->backgroundMode) )
+//                            {
+//                                $strStyles .= 'background-repeat:' . $objArticle->backgroundMode . ';';
+//                            }
+//                            else
+//                            {
+//                                $strStyles .= 'background-repeat:no-repeat;';
+////                                $strStyles .= '-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover;';
+//                            }
+//                        }
+//
+//                        if( $objArticle->backgroundAttachment )
+//                        {
+//                            if( $objArticle->backgroundAttachment == "scrol" )
+//                            {
+//                                $objArticle->backgroundAttachment = "scroll";
+//                            }
+//                            $strStyles .= 'background-attachment:' . $objArticle->backgroundAttachment . ';';
+//                        }
+//
+//                        $strStyles .= '}';
+//                    }
+//                }
+//            }
+//        }
+//
+//        if( strlen($strStyles) )
+//        {
+//            $GLOBALS['TL_HEAD'][] = '<style>' . $strStyles . '</style>';
+//        }
 
-                            if( !$setPos )
-                            {
-                                $strStyles .= 'background-position:' . str_replace('_', ' ', $objArticle->backgroundPosition) . ';';
-                            }
-                        }
-
-                        if( $objArticle->backgroundMode )
-                        {
-                            if( preg_match('/repeat/', $objArticle->backgroundMode) )
-                            {
-                                $strStyles .= 'background-repeat:' . $objArticle->backgroundMode . ';';
-                            }
-                            else
-                            {
-                                $strStyles .= 'background-repeat:no-repeat;';
-//                                $strStyles .= '-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover;';
-                            }
-                        }
-
-                        if( $objArticle->backgroundAttachment )
-                        {
-                            if( $objArticle->backgroundAttachment == "scrol" )
-                            {
-                                $objArticle->backgroundAttachment = "scroll";
-                            }
-                            $strStyles .= 'background-attachment:' . $objArticle->backgroundAttachment . ';';
-                        }
-
-                        $strStyles .= '}';
-                    }
-                }
-            }
-        }
-
-        if( strlen($strStyles) )
-        {
-            $GLOBALS['TL_HEAD'][] = '<style>' . $strStyles . '</style>';
-        }
+        $arrBodyClasses = array();
+        $arrBodyClasses = $this->createDefaultStylesheet( $arrBodyClasses );
 
         if ( is_array( $externalJavascript ) && count( $externalJavascript ) > 0 )
         {
@@ -276,6 +279,11 @@ class PageListener
                     $GLOBALS[ 'TL_JAVASCRIPT' ][ ] = $objFile->path . '|static';
                 }
             }
+        }
+
+        if( count($arrBodyClasses) )
+        {
+            $objPage->cssClass = $objPage->cssClass . ((strlen($objPage->cssClass)) ? ' ' : '') . implode(" ", $arrBodyClasses);
         }
     }
 
@@ -326,6 +334,166 @@ class PageListener
         }
 
         return $strBuffer;
+    }
+
+
+
+    protected function createDefaultStylesheet( $arrBodyClasses )
+    {
+        $arrPageStyles      = array();
+        $objAllPages        = \PageModel::findAll(); //\PageModel::findPublishedByPid( $objPage->rootId, array("order"=>"sorting") );
+        $createTime         = 0;
+        $createFile         = TRUE;
+        $objFile            = NULL;
+
+        if( file_exists(TL_ROOT . '/assets/css/page-styles.css') )
+        {
+            $objFile        = new \File('assets/css/page-styles.css');
+            $createTime     = $objFile->mtime;
+            $createFile     = FALSE;
+        }
+
+        if( $objAllPages )
+        {
+            while( $objAllPages->next() )
+            {
+                $objArticles = \ArticleModel::findPublishedByPidAndColumn( $objAllPages->id, "main");
+
+                if( $objArticles )
+                {
+                    while( $objArticles->next() )
+                    {
+                        if( $objArticles->tstamp > $createTime || $this->getArticleLastSave( $objArticles->id ) > $createTime)
+                        {
+                            $createFile     = TRUE;
+                        }
+
+                        if( $objArticles->fullWidth )
+                        {
+                            if( !preg_match('/content-width/', $objAllPages->cssClass) && !in_array('content-width', $arrBodyClasses))
+                            {
+                                $arrBodyClasses[] = 'content-width';
+                            }
+                        }
+
+                        $cssID = deserialize($objArticles->cssID, TRUE);
+
+                        $arrPageStyles[ $objArticles->id ] = array
+                        (
+                            'selector'          => '#main .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]),
+
+                            'background'        => TRUE,
+                            'bgcolor'           => $objArticles->bgColor,
+                            'bgimage'           => $objArticles->bgImage,
+                            'bgrepeat'          => $objArticles->bgRepeat,
+                            'bgposition'        => $objArticles->bgPosition,
+                            'gradientAngle'     => $objArticles->gradientAngle,
+                            'gradientColors'    => $objArticles->gradientColors
+                        );
+
+                        $bgColor        = deserialize($objArticles->bgColor, TRUE);
+                        $arrOwnStyles   = array();
+
+//                if( !empty($bgColor[0]) )
+//                {
+//                    $rgb = ColorHelper::HTMLToRGB( $bgColor[0] );
+//                    $hsl = ColorHelper::RGBToHSL( $rgb );
+//
+//                    if( $hsl->lightness < 200 )
+//                    {
+//                        $arrPageStyles[ $objArticles->id ]['font']      = TRUE;
+//                        $arrPageStyles[ $objArticles->id ]['fontcolor'] = serialize(array('fff', ''));
+//                    }
+//                }
+
+                        $arrBackgroundSize = deserialize($objArticles->bgSize, true);
+
+                        if( is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
+                        {
+                            $bgSize = $arrBackgroundSize[2];
+
+                            if( $arrBackgroundSize[2] == 'own' )
+                            {
+                                unset($arrBackgroundSize[2]);
+                                $bgSize = implode(" ", $arrBackgroundSize);
+                            }
+
+                            $arrOwnStyles[] = '-webkit-background-size:' . $bgSize . ';-moz-background-size:' . $bgSize . ';-o-background-size:' . $bgSize . ';background-size:' . $bgSize . ';';
+                        }
+
+                        if( $objArticles->bgAttachment )
+                        {
+                            $arrOwnStyles[] = 'background-attachment:' . $objArticles->bgAttachment . ';';
+                        }
+
+                        if( count($arrOwnStyles) )
+                        {
+                            $arrPageStyles[ $objArticles->id ]['own'] = implode("", $arrOwnStyles);
+                        }
+                    }
+                }
+            }
+        }
+//exit;
+
+        if( count($arrPageStyles) )
+        {
+            if( $createFile )
+            {
+                if( file_exists(TL_ROOT . '/assets/css/page-styles.css') )
+                {
+                    $objFile            = new \File('assets/css/page-styles.css');
+                    $objFile->delete();
+                }
+
+                $objStyleSheets     = new \StyleSheets();
+                $arrStyles          = array();
+
+                foreach($arrPageStyles as $arrPageStyle)
+                {
+                    $arrStyles[] = $objStyleSheets->compileDefinition($arrPageStyle, true);
+                }
+
+                if( count($arrStyles) )
+                {
+                    $objFile            = new \File('assets/css/page-styles.css');
+
+                    foreach($arrStyles as $strStyle)
+                    {
+                        $strOnlyStyles = preg_replace('/#main .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
+
+                        if( strlen(trim($strOnlyStyles)) )
+                        {
+                            $objFile->append($strStyle, '');
+                        }
+                    }
+
+                    $objFile->close();
+                }
+            }
+
+            if( file_exists(TL_ROOT . '/assets/css/page-styles.css') )
+            {
+                $GLOBALS['TL_CSS'][] = '/assets/css/page-styles.css||static';
+            }
+        }
+
+        return $arrBodyClasses;
+    }
+
+
+
+    protected function getArticleLastSave( $articleID )
+    {
+        $objResult = \Database::getInstance()->prepare("SELECT * FROM tl_version WHERE fromTable=? AND pid=? ORDER BY tstamp DESC LIMIT 1")->execute("tl_article", $articleID);
+
+        if( $objResult->numRows > 0 )
+        {
+            $objResult = $objResult->first();
+            return $objResult->tstamp;
+        }
+
+        return 0;
     }
 
 }
