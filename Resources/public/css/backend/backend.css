@@ -5,3 +5,23 @@
 .widget:not(.w50) {
     clear: both;
 }
+
+.o50 {
+    margin-left: 52%;
+}
+
+fieldset.rsce_list {
+    padding-left: 10px;
+}
+
+.rsce_list_toolbar {
+    margin-bottom: 15px;
+}
+
+.tl_content_left {
+    width: calc(100% - 210px);
+}
+
+.mt {
+    margin-top: 40px;
+}
