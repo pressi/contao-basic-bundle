@@ -28,4 +28,78 @@ class ContentHelper
         return $strContent;
     }
 
+
+
+    public static function renderText( $strText, $renderLines = false )
+    {
+        $strText = preg_replace('/;/', '<br>', $strText);
+        $strText = preg_replace('/\|\|([^\|\|]+)\|\|/', '<span class="light">$1</span>', $strText);
+        $strText = preg_replace('/\|([^\|]+)\|/', '<strong>$1</strong>', $strText);
+
+        $strText = preg_replace('/\{\{sup\}\}/', '<sup>', $strText);
+        $strText = preg_replace('/\{\{\/sup\}\}/', '</sup>', $strText);
+
+        if( $renderLines )
+        {
+            $delimiter = '<br>';
+
+            if( !preg_match('/' . $delimiter . '/', $strText) )
+            {
+                $delimiter = '{{br}}';
+
+                if( !preg_match('/' . $delimiter . '/', $strText) )
+                {
+                    $delimiter = ';';
+                }
+            }
+
+            $arrText = explode($delimiter, $strText);
+            $strText = '<span class="text-line">' . implode('</span><br><span class="text-line">', $arrText) . '</span>';
+        }
+
+        return $strText;
+    }
+
+
+
+    public static function renderPosition( $objClass )
+    {
+        $strClass       = "";
+        $strStyles      = "";
+
+        if( $objClass->position )
+        {
+            $strClass = 'pos-abs pos-' . str_replace('_', '-', $objClass->position);
+        }
+
+        $arrPosMargin = deserialize($objClass->position_margin, TRUE);
+
+        if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
+        {
+            $unit = $arrPosMargin['unit']?:'px';
+
+            if( $arrPosMargin['top'] )
+            {
+                $strStyles .= " margin-top:" . $arrPosMargin['top'] . $unit . ";";
+            }
+
+            if( $arrPosMargin['right'] )
+            {
+                $strStyles .= " margin-right:" . $arrPosMargin['right'] . $unit . ";";
+            }
+
+            if( $arrPosMargin['bottom'] )
+            {
+                $strStyles .= " margin-bottom:" . $arrPosMargin['bottom'] . $unit . ";";
+            }
+
+            if( $arrPosMargin['left'] )
+            {
+                $strStyles .= " margin-left:" . $arrPosMargin['left'] . $unit . ";";
+            }
+        }
+
+        return array( $strClass, $strStyles);
+    }
+
 }
