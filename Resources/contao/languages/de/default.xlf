@@ -16,6 +16,55 @@
             </trans-unit>
 
 
+
+<!-- ### POSITIONS ########################################################################################################## -->
+
+            <trans-unit id="RSCE.positions.left_top">
+                <source>top left</source>
+                <target>Links Oben</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.left_center">
+                <source>top center</source>
+                <target>Links Mitte</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.left_bottom">
+                <source>top left</source>
+                <target>Links Unten</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.center_top">
+                <source>center top</source>
+                <target>Mitte Oben</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.center_center">
+                <source>center center</source>
+                <target>Zentriert</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.center_bottom">
+                <source>center bottom</source>
+                <target>Mitte Unten</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.right_top">
+                <source>right top</source>
+                <target>Rechts Oben</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.right_center">
+                <source>right center</source>
+                <target>Rechts Mitte</target>
+            </trans-unit>
+
+            <trans-unit id="RSCE.positions.right_bottom">
+                <source>right bottom</source>
+                <target>Rechts Unten</target>
+            </trans-unit>
+
+
         </body>
     </file>
 </xliff>

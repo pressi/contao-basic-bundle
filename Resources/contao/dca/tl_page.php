@@ -58,13 +58,19 @@ $GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'][]          = array(
  */
 
 $GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'subPagesHasRequestLink';
+$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuNoPages';
+$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuSRC';
+$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuPageCombination';
 
 
-$GLOBALS['TL_DCA']['tl_page']['palettes']['regular_redirect']           = $GLOBALS['TL_DCA']['tl_page']['palettes']['regular'];
 
 /**
  * Palettes
  */
+
+$GLOBALS['TL_DCA']['tl_page']['palettes']['regular_redirect']           = $GLOBALS['TL_DCA']['tl_page']['palettes']['regular'];
+
+
 
 $pageFields = '';
 
@@ -103,11 +109,12 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
             $strFields      = str_replace("{meta_legend", "{redirect_legend},jumpTo,redirectTimeout;{meta_legend", $strFields);
         }
 
-        $strFields      = str_replace("{meta_legend", "{overview_legend},overviewImage;{meta_legend", $strFields);
-        $strFields      = str_replace('{meta_legend', '{page_legend},openPageInLightbox,enableFullpage;{meta_legend', $strFields);
-
-        $strFields      = str_replace(',hide', ',hide,hideTitle', $strFields);
+        $strFields      = str_replace(',hide', '', $strFields);
+        $strFields      = str_replace(',guests', '', $strFields);
         $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter', $strFields);
+
+        $strFields      = str_replace('{meta_legend', '{page_legend},enableFullpage;{meta_legend', $strFields);
+        $strFields      = str_replace('{meta_legend', '{navigation_legend},submenuNoPages,hide,hideTitle,openPageInLightbox,guests,overviewImage;{meta_legend', $strFields);
 
         if( $config->get("folderUrl") )
         {
@@ -129,6 +136,11 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
  */
 
 $GLOBALS['TL_DCA']['tl_page']['subpalettes']['subPagesHasRequestLink']  = 'requestLinkPage';
+$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuNoPages']          = 'submenuSRC,submenuPageCombination';
+$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuSRC_news']         = 'submenuNewsArchive';
+
+$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuPageCombination']  = 'submenuPageOrder';
+
 
 
 
@@ -149,6 +161,8 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['title']['eval']['allowHtml']   = TRUE;
 $GLOBALS['TL_DCA']['tl_page']['fields']['title']['eval']['tl_class']    = trim($GLOBALS['TL_DCA']['tl_page']['fields']['title']['eval']['tl_class'] . ' w50');
 $GLOBALS['TL_DCA']['tl_page']['fields']['title']['save_callback'][]     = array('IIDO\BasicBundle\Table\PageTable', 'renameArticle');
 
+$GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class'] . ' clr');
+
 
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'] = array
@@ -164,6 +178,10 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'] = array
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']                       = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']['label']              = &$GLOBALS['TL_LANG']['tl_page']['enableFullpage'];
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']               = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuPageCombination'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['eval']['submitOnChange'] = TRUE;
 
 
 
@@ -222,6 +240,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['navSubtitle']['label']         = &$GLOB
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']                    = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']['label']           = &$GLOBALS['TL_LANG']['tl_page']['hideTitle'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']['eval']['tl_class']    = 'w50';
 
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['removeHeader']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
@@ -253,3 +272,37 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['redirectTimeout'] = array
     ),
     'sql'                   => "smallint(5) unsigned NOT NULL default '0'"
 );
+
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']               = $GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuNoPages'];
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'] = array
+(
+    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['submenuSRC'],
+    'exclude'               => TRUE,
+    'inputType'             => 'select',
+    'options'               => $GLOBALS['TL_LANG']['tl_page']['options']['submenuSRC'],
+    'eval'                  => array
+    (
+        'submitOnChange'        => TRUE,
+        'tl_class'              => 'w50'
+    ),
+    'sql'                   => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNewsArchive'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_page']['submenuNewsArchive'],
+    'exclude'                 => TRUE,
+    'inputType'               => 'select',
+    'foreignKey'              => 'tl_news_archive.title',
+    'eval'                    => array('tl_class'=>'o50 w50'), // do not set mandatory (see #5453)
+    'sql'                     => "int(10) unsigned NOT NULL default '0'",
+    'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+);
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']             = $GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['label']    = &$GLOBALS['TL_LANG']['tl_page']['submenuPageOrder'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['options']  = $GLOBALS['TL_LANG']['tl_page']['options']['submenuPageOrder'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['eval']['submitOnChange'] = FALSE;

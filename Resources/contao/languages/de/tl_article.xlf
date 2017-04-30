@@ -8,6 +8,11 @@
                 <target>Navigations Titel</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.navSubTitle.0">
+                <source>navigation title</source>
+                <target>Navigations Untertitel</target>
+            </trans-unit>
+
             <trans-unit id="tl_article.addBackgroundVideo.0">
                 <source>add background video</source>
                 <target>Hintergrund-Video hinzufügen</target>
@@ -60,6 +65,84 @@
 
 
 
+            <trans-unit id="tl_article.fullHeight.0">
+                <source>full height</source>
+                <target>Volle Höhe (100%), Mindesthöhe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.opticalHeight.0">
+                <source>optical height</source>
+                <target>Optische Höhe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.textMiddle.0">
+                <source>optical height</source>
+                <target>Inhalt Horizontal zentrieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.fullWidth.0">
+                <source>optical height</source>
+                <target>Volle Breite (100%)</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.bgColor.0">
+                <source>background color</source>
+                <target>Hintergrund-Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgImage.0">
+                <source>background image</source>
+                <target>Hintergrund-Bild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgPosition.0">
+                <source>background position</source>
+                <target>Hintergrund-Position</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgRepeat.0">
+                <source>background color</source>
+                <target>Hintergrund-Wiederholung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgAttachment.0">
+                <source>background attachmend</source>
+                <target>Hintergrund-Modus</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgSize.0">
+                <source>background color</source>
+                <target>Hintergrund-Größe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.gradientAngle.0">
+                <source>gradient angle</source>
+                <target>Hintergrund-Verlaufswinkel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.gradientColors.0">
+                <source>gradient colors</source>
+                <target>Hintergrund-Verlaufsfarben</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.enableTwiceBGimage.0">
+                <source>background twice image</source>
+                <target>Zweites Hintergrund-Bild aktivieren</target>
+            </trans-unit>
+            <trans-unit id="tl_article.enableTwiceBGimage.1">
+                <source>background twice image</source>
+                <target>Es wird ein zweites Hintergrund-Bild aktiviert. Beide Bilder haben eine Breite von 50%.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgImageTwice.0">
+                <source>background color</source>
+                <target>Zweites Hintergrund-Bild</target>
+            </trans-unit>
+
+
+
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
@@ -68,85 +151,104 @@
                 <target>Hintergrund-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.config_legend">
+                <source>config-settings</source>
+                <target>Konfiguration-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.design_legend">
+                <source>design-settings</source>
+                <target>Design-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.navigation_legend">
+                <source>navigation-settings</source>
+                <target>Navigation-Einstellungen</target>
+            </trans-unit>
+
 
 
 <!-- ### OPTIONS ############################################################################################################ -->
 
 
-            <trans-unit id="tl_article.options.backgroundMode.no-repeat">
-                <source>no-repeat</source>
-                <target>nicht Wiederholen</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundMode.repeat">
-                <source>repeat</source>
-                <target>Kacheln</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundMode.repeat-x">
-                <source>repeat-x</source>
-                <target>Horizontal Wiederholen</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundMode.repeat-y">
-                <source>repeat-y</source>
-                <target>Vertikal Wiederholen</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundMode.cover">
-                <source>cover</source>
-                <target>Volle Fläche (abgeschnitten)</target>
-            </trans-unit>
-
-
-
-            <trans-unit id="tl_article.options.backgroundPosition.left_top">
-                <source>top left</source>
-                <target>Links Oben</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.center_top">
-                <source>top center</source>
-                <target>Mitte Oben</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.right_top">
-                <source>top right</source>
-                <target>Rechts Oben</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.left_center">
-                <source>center left</source>
-                <target>Links Mitte</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.center_center">
-                <source>center center</source>
-                <target>Zentriert</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.right_center">
-                <source>center right</source>
-                <target>Rechts Mitte</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.left_bottom">
-                <source>bottom left</source>
-                <target>Links Unten</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.center_bottom">
-                <source>bottom center</source>
-                <target>Mitte Unten</target>
-            </trans-unit>
-            <trans-unit id="tl_article.options.backgroundPosition.right_bottom">
-                <source>bottom right</source>
-                <target>Rechts Unten</target>
-            </trans-unit>
-
-
-
-            <trans-unit id="tl_article.options.backgroundAttachment.fixed">
+            <trans-unit id="tl_article.options.bgAttachment.fixed">
                 <source>fixed</source>
                 <target>Fixiert</target>
             </trans-unit>
-            <trans-unit id="tl_article.options.backgroundAttachment.scroll">
+            <trans-unit id="tl_article.options.bgAttachment.scroll">
                 <source>scroll</source>
-                <target>Scroll (Bild scrolled mit)</target>
+                <target>Scroll</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_article.options.bgSize.cover">
+                <source>cover</source>
+                <target>Vollflächig (abgeschnitten)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgSize.own">
+                <source>own</source>
+                <target>Eigene Größe</target>
             </trans-unit>
 
 
 
 <!-- ### REFERENCE ########################################################################################################## -->
+
+            <trans-unit id="tl_article.reference.bgRepeat.repeat">
+                <source>repeat</source>
+                <target>Wiederholung (Kacheln)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgRepeat.repeat-x">
+                <source>repeat x</source>
+                <target>Horizontale Wiederholung</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgRepeat.repeat-y">
+                <source>repeat y</source>
+                <target>Vertikale Wiederholung</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgRepeat.no-repeat">
+                <source>no repeat</source>
+                <target>Keine Wiederholung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.reference.bgPosition.left top">
+                <source>left top</source>
+                <target>Links Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.left center">
+                <source>left center</source>
+                <target>Links Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.left bottom">
+                <source>left bottom</source>
+                <target>Links Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.center top">
+                <source>center top</source>
+                <target>Mitte Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.center center">
+                <source>center center</source>
+                <target>Mitte Mitte (Zentriert)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.center bottom">
+                <source>center bottom</source>
+                <target>Mitte Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.right top">
+                <source>right top</source>
+                <target>Rechts Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.right center">
+                <source>right center</source>
+                <target>Rechts Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.reference.bgPosition.right bottom">
+                <source>right bottom</source>
+                <target>Rechts Unten</target>
+            </trans-unit>
 
 
 

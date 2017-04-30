@@ -23,9 +23,35 @@
                 <target>Navigations Untertitel</target>
             </trans-unit>
 
+
+
             <trans-unit id="tl_page.hideTitle.0">
                 <source>hide title</source>
                 <target>Titel verstecken</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.submenuNoPages.0">
+                <source>submenu has no pages</source>
+                <target>Unterseiten sind keine Seiten</target>
+            </trans-unit>
+            <trans-unit id="tl_page.submenuNoPages.1">
+                <source>submenu has no pages</source>
+                <target>Unterseiten bestehen nicht aus regulären Seiten sondern aus Artikeln oder Newseinträgen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.submenuSRC.0">
+                <source>submenu has no pages</source>
+                <target>Unterseiten Quelle</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.submenuPageCombination.0">
+                <source>submenu has no pages</source>
+                <target>Unterseiten mit "Nicht" Unterseiten kombinieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.submenuPageOrder.0">
+                <source>submenu has no pages</source>
+                <target>Unterseiten Anzeige sortierung</target>
             </trans-unit>
 
 
@@ -85,6 +111,11 @@
                 <target>Alle Unterseiten haben einen Zurück-Link zu dieser Seite.</target>
             </trans-unit>
 
+            <trans-unit id="tl_page.thisPageHasNoBacklink.0">
+                <source>submenu has no pages</source>
+                <target>Diese Seite hat keinen Zurück-Link</target>
+            </trans-unit>
+
 
             <trans-unit id="tl_page.subPagesHasRequestLink.0">
                 <source>subpages has request link</source>
@@ -98,6 +129,11 @@
             <trans-unit id="tl_page.requestLinkPage.0">
                 <source>request link page</source>
                 <target>Anfrage-Link Seite (mit dem Formular)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.thisPageHasNoRequestLink.0">
+                <source>submenu has no pages</source>
+                <target>Diese Seite hat keinen Anfrage-Link</target>
             </trans-unit>
 
 
@@ -116,18 +152,49 @@
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_page.overview_legend">
-                <source>overview-seetings</source>
+                <source>overview-settings</source>
                 <target>Übersicht-Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_page.page_legend">
-                <source>page-seetings</source>
+                <source>page-settings</source>
                 <target>Seiten-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.navigation_legend">
+                <source>navigation-settings</source>
+                <target>Navigation-Einstellungen</target>
             </trans-unit>
 
 
 
 <!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_page.options.submenuSRC.articles">
+                <source>articles</source>
+                <target>Unterseiten sind Artikel</target>
+            </trans-unit>
+            <trans-unit id="tl_page.options.submenuSRC.news">
+                <source>news</source>
+                <target>Unterseiten sind News-Artikel</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_page.options.submenuPageOrder.pagesBefore">
+                <source>pages before</source>
+                <target>Seiten davor</target>
+            </trans-unit>
+            <trans-unit id="tl_page.options.submenuPageOrder.pagesAfter">
+                <source>pages after</source>
+                <target>Seiten danach</target>
+            </trans-unit>
+            <!--<trans-unit id="tl_page.options.submenuPageOrder.pagesBetween">-->
+                <!--<source>pages between</source>-->
+                <!--<target>Seiten dazwischen</target>-->
+            <!--</trans-unit>-->
+
+
+
 <!-- ### REFERENCE ########################################################################################################## -->
         </body>
     </file>
