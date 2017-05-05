@@ -12,6 +12,7 @@
 
 namespace IIDO\BasicBundle\FrontendModule;
 
+use IIDO\BasicBundle\Helper\ContentHelper;
 
 
 /**
@@ -49,6 +50,71 @@ class NavigationModule extends \ModuleNavigation
         $level          = 1;
         $prevParentID   = 0;
         $parentID       = 0;
+        $language       = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
+
+        $arrPageItems2  = array();
+
+
+        if( $this->levelOffset == 2 && $objPage->submenuNoPages )
+        {
+            $arrCurrentSubPages = array();
+
+            switch( $objPage->submenuSRC )
+            {
+                case "articles":
+                    $arrCurrentSubPages = \ArticleModel::findBy( array('pid=?', 'published=?', 'hideInMenu=?'), array($objPage->id, '1', '') , array("order"=>"sorting") )->fetchAll();
+                    break;
+            }
+
+            if( count($arrCurrentSubPages) )
+            {
+                $langPartName   = 'artikel';
+
+                if( $language == "en" )
+                {
+                    $langPartName = 'article';
+                }
+
+                foreach( $arrCurrentSubPages as $arrSubPage )
+                {
+                    $objItem    = \ArticleModel::findByPk( $arrSubPage['id'] );
+                    $href       = $objPage->getFrontendUrl('/' . $langPartName . '/' . $objItem->alias);
+                    $class      = '';
+                    $strTitle   = ContentHelper::renderText((strlen($objItem->navTitle)) ? $objItem->navTitle : $objItem->title );
+
+                    if( $objItem->submenuSRC )
+                    {
+                        $arrSubPage[ 'submenuNoPages' ] = TRUE;
+                    }
+
+                    if( preg_match('/(<br>|{{br}})/', $strTitle) )
+                    {
+                        $class = ' double-line';
+                    }
+
+                    $arrItem = array
+                    (
+                        'object'    => (object) $arrSubPage,
+                        'item'      => '<li class="sibling' . $class . '"><a href="' . $href . '"><span itemprop="name">' . $strTitle . '</span></a>',
+                        'subitems'  => array()
+                    );
+
+                    if( $objItem->submenuSRC )
+                    {
+                        $arrItem['subitems'] = $this->renderSubNavigation( $arrItem, ($level + 1) );
+                    }
+
+                    if( ($objPage->submenuPageCombination && $objPage->submenuPageOrder == "pagesAfter") || !$objPage->submenuPageCombination )
+                    {
+                        $arrPageItems[] = $arrItem;
+                    }
+                    elseif( $objPage->submenuPageCombination && $objPage->submenuPageOrder == "pagesBefore" )
+                    {
+                        $arrPageItems2[] = $arrItem;
+                    }
+                }
+            }
+        }
 
         foreach( $arrItems as $strItem)
         {
@@ -120,7 +186,7 @@ class NavigationModule extends \ModuleNavigation
 
                     $strUrl = $arrUrl[2][0];
 
-                    if( !$strUrl )
+                    if( !$strUrl || $arrUrl[1][0] == "http" )
                     {
                         preg_match_all('/data-alias="([A-Za-z0-9\/.\{\}:\-_]{0,})"/', $strItem, $arrUrl);
                         $strUrl = $arrUrl[1][0];
@@ -156,9 +222,21 @@ class NavigationModule extends \ModuleNavigation
             }
         }
 
+        if( count($arrPageItems2) )
+        {
+            $arrPageItems = array_merge($arrPageItems, $arrPageItems2);
+        }
+
         if( count($arrPageItems) )
         {
-            $strContent = '<ul class="level_1">';
+            $className = '';
+
+            if( $this->levelOffset == 2 && $objPage->submenuSRC == "articles" )
+            {
+                $className = ' article-submenu';
+            }
+
+            $strContent = '<ul class="level_1' . $className . '">';
 
             foreach( $arrPageItems as $arrPageItem )
             {
@@ -303,7 +381,18 @@ class NavigationModule extends \ModuleNavigation
 
                     if( $level == 2 )
                     {
-                        $href = $objParentPage->getFrontendUrl('/' . $langPartName . '/' . $arrSubitem['alias']);
+                        if( $objParentPage instanceof \PageModel )
+                        {
+                            $href = $objParentPage->getFrontendUrl('/' . $langPartName . '/' . $arrSubitem['alias']);
+                        }
+                        else
+                        {
+                            if( $from == "news" )
+                            {
+                                $objNews            = \NewsModel::findByPk( $arrSubitem['id'] );
+                                $href               = \News::generateNewsUrl( $objNews, false);
+                            }
+                        }
                     }
                     elseif( $level == 3 )
                     {
