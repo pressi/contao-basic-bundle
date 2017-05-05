@@ -59,6 +59,8 @@ class FrontendTemplateListener
         /* @var \PageModel $objPage */
         global $objPage;
 
+        $objParentPage 	= \PageModel::findByPk( $objPage->pid );
+
         $isFullpage = $this->isFullPageEnabled( $objPage );
 
         if( $strTemplate === "mod_article" )
@@ -404,6 +406,34 @@ class FrontendTemplateListener
             {
                 $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">', $strContent);
                 $strContent = $strContent . '</div>';
+
+                if( $objParentPage->subPagesHasBacklink && !$objPage->thisPageHasNoBacklink && preg_match('/last/', $arrMatches[1][0]) )
+                {
+                    $linkText       = 'Zur Übersicht';
+                    $link           = '<a href="{{link_url::' . $objParentPage->id . '}}">' . $linkText . '</a>';
+                    $backLinkDivs   = '<div class="ce_backlink block"><div class="inner">' . $link . '</div></div>';
+
+//                    $strContent = preg_replace('/<\/div>$/', $backLinkDivs, $strContent);
+//                    $strContent .= $backLinkDivs;
+                    $strContent = $strContent . $backLinkDivs;
+                }
+
+                if( $objParentPage->subPagesHasRequestLink && !$objPage->thisPageHasNoReuqestLink && preg_match('/last/', $arrMatches[1][0]) )
+                {
+                    $linkText       = 'Anfragen';
+                    $linkUrl        = '{{link_url::' . $objParentPage->requestLinkPage . '}}';
+
+                    $productName    = $objParentPage->title . ' - ' . $objPage->title;
+
+                    $form           = '<div class="ce_requestForm"><form action="' . $linkUrl . '" method="post" id="request-form">
+    <input type="hidden" name="product_name" value="' . $productName . '">
+    <input type="hidden" name="REQUEST_TOKEN" value="' . REQUEST_TOKEN . '">
+    <input type="submit" value="' . $linkText . '">
+</form></div>';
+
+//                    $strContent = preg_replace('/<\/div>$/', $form, $strContent);
+                    $strContent = $strContent . $form;
+                }
             }
         }
 
@@ -584,6 +614,12 @@ class FrontendTemplateListener
             if( $objPage->removeHeader )
             {
                 $strBuffer = preg_replace('/<header([A-Za-z0-9\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/header>/', '', $strBuffer);
+            }
+
+            if( preg_match('/nav-sub/', $strBuffer) && !preg_match('/(ce_backlink|mod_newsearder)/', $strBuffer ))
+            {
+                $strBuffer = preg_replace('/nav-sub/', 'nav-sub has-bg-left', $strBuffer);
+                $strBuffer = preg_replace('/<nav([A-Za-z0-9\s\-=\",;.:_\{\}\/\(\)]{0,})class="mod_navigation([A-Za-z0-9\s\-\'\",;.:_\{\}\/\(\)]{0,})nav-sub([A-Za-z0-9\s\-\'\",;.:_\{\}\/\(\)]{0,})"([A-Za-z0-9\s\-=\",;.:_\{\}\/\(\)]{0,})>/', '<nav$1class="mod_navigation$2nav-sub$3"$4><div class="bg-subnav"></div>', $strBuffer);
             }
         }
 
