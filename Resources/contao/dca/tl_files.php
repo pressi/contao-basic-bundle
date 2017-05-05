@@ -15,4 +15,13 @@
  * Fields
  */
 
-$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['description'] = 'textarea';
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['description']   = 'textarea';
+
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['imageText']     = 'text';
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['imageSubline']  = 'text';
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['it_position']   = 'select_blank';
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['it_pos_margin'] = 'text_4';
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['it_text_align'] = 'select';
+
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['hoverTitle']    = 'text';
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['hoverSubTitle'] = 'text';

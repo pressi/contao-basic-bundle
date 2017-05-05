@@ -25,3 +25,36 @@ fieldset.rsce_list {
 .mt {
     margin-top: 40px;
 }
+
+.tl_metawizard .tl_select {
+    float: left;
+    width: 82%;
+}
+
+.tl_metawizard .tl_select_unit {
+    width: 16.6%;
+}
+
+.tl_metawizard .tl_text_trbl {
+    width: 15.3%;
+    background-color: #fff;
+}
+
+.tl_metawizard .meta-widget:after {
+    content: '';
+    display: table;
+    float: none;
+    clear: both;
+}
+
+.tl_metawizard .widget-imageText,
+.tl_metawizard .widget-hoverTitle {
+    padding: 20px 0 0;
+}
+
+.ha,
+.heightauto,
+.height-auto,
+.hauto {
+    height: auto;
+}

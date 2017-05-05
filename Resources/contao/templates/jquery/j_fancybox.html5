@@ -31,8 +31,8 @@ $.fancybox.defaults.loop                    = false;
 $.fancybox.defaults.autoSize                = false;
 $.fancybox.defaults.prevEffect              = 'none';
 $.fancybox.defaults.nextEffect              = 'none';
-$.fancybox.defaults.fullscreen              = false;
-$.fancybox.defaults.touch.vertivcal         = true;
+$.fancybox.defaults.fullScreen              = false;
+//$.fancybox.defaults.touch.vertivcal         = true;
 
 $(function() {
 
@@ -50,7 +50,7 @@ $(function() {
 		var index = 0;
 		for(i=0; i < els.length; i++)
 		{
-			if(this.href == els[ i ].href)
+			if(this.href === els[ i ].href)
 			{
 				index = i;
 				break;

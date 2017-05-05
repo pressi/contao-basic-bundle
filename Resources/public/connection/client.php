@@ -58,7 +58,7 @@ class Connection {
                 ),
 
                 'version'   => $packages['contao/core-bundle'],
-                'bundles'   => array_keys(\System::getContainer()->getParameter('kernel.bundles') ),
+                'bundles'   => array_keys(System::getContainer()->getParameter('kernel.bundles') ),
                 'packages'  => $packages
             );
 

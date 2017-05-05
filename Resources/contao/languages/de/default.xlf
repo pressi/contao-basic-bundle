@@ -17,51 +17,97 @@
 
 
 
+<!-- ### META FIELDS ######################################################################################################## -->
+
+            <trans-unit id="MSC.aw_description">
+                <source>Desciption</source>
+                <target>Beschreibung</target>
+            </trans-unit>
+
+            <trans-unit id="MSC.aw_imageText">
+                <source>Image Text</source>
+                <target>Bild Titel</target>
+            </trans-unit>
+            <trans-unit id="MSC.aw_imageSubline">
+                <source>Image Subline</source>
+                <target>Bild Sub-Titel</target>
+            </trans-unit>
+            <trans-unit id="MSC.aw_it_position">
+                <source>Image Text Position</source>
+                <target>Bild Text: Position</target>
+            </trans-unit>
+            <trans-unit id="MSC.aw_it_pos_margin">
+                <source>Image Text Position</source>
+                <target>Position Verschiebung</target>
+            </trans-unit>
+            <trans-unit id="MSC.aw_it_text_align">
+                <source>Image Text Position</source>
+                <target>Text Ausrichtung</target>
+            </trans-unit>
+
+            <trans-unit id="MSC.aw_hoverTitle">
+                <source>Desciption</source>
+                <target>Hover: Titel</target>
+            </trans-unit>
+            <trans-unit id="MSC.aw_hoverSubTitle">
+                <source>Desciption</source>
+                <target>Hover: Sub-Titel</target>
+            </trans-unit>
+
+
+
 <!-- ### POSITIONS ########################################################################################################## -->
 
             <trans-unit id="RSCE.positions.left_top">
                 <source>top left</source>
                 <target>Links Oben</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.left_center">
                 <source>top center</source>
                 <target>Links Mitte</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.left_bottom">
                 <source>top left</source>
                 <target>Links Unten</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.center_top">
                 <source>center top</source>
                 <target>Mitte Oben</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.center_center">
                 <source>center center</source>
                 <target>Zentriert</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.center_bottom">
                 <source>center bottom</source>
                 <target>Mitte Unten</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.right_top">
                 <source>right top</source>
                 <target>Rechts Oben</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.right_center">
                 <source>right center</source>
                 <target>Rechts Mitte</target>
             </trans-unit>
-
             <trans-unit id="RSCE.positions.right_bottom">
                 <source>right bottom</source>
                 <target>Rechts Unten</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="OPT.aw_it_text_align.left">
+                <source>left</source>
+                <target>Linksbündig</target>
+            </trans-unit>
+            <trans-unit id="OPT.aw_it_text_align.center">
+                <source>center</source>
+                <target>Zentriert</target>
+            </trans-unit>
+            <trans-unit id="OPT.aw_it_text_align.right">
+                <source>right</source>
+                <target>Rechtsbündig</target>
             </trans-unit>
 
 

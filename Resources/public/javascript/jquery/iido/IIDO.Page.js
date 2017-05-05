@@ -185,7 +185,7 @@ IIDO.Page = IIDO.Page || {};
 
     page.initNavigation = function()
     {
-        var articleMenu = $("ul.level_2.article-menu");
+        var articleMenu     = $("ul.article-menu");
 
         if( articleMenu.length )
         {
@@ -193,7 +193,7 @@ IIDO.Page = IIDO.Page || {};
             {
                 var el          = $(element),
                     linkMain    = el.prev("a"),
-                    elChilds    = el.children("> li");
+                    elChilds    = el.children("li");
 
                 if( !linkMain.length )
                 {
@@ -206,9 +206,36 @@ IIDO.Page = IIDO.Page || {};
                 {
                     elChilds.each( function(i, elem)
                     {
-                        var link = $(elem).find("a");
+                        var link = $(elem).find("> a");
 
                         link.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
+                    });
+                }
+            });
+        }
+
+        var articleSubMenu     = $("ul.article-submenu");
+
+        if( articleSubMenu.length )
+        {
+            articleSubMenu.each( function(index, element)
+            {
+                var el          = $( element ),
+                    elChildren  = el.children("li");
+
+                if( elChildren.length )
+                {
+                    elChildren.each( function(number, children)
+                    {
+                        var child       = $(children),
+                            childLink   = child.find("> a");
+
+                        if( !childLink.length )
+                        {
+                            childLink = child.find("> strong");
+                        }
+
+                        childLink.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( childLink, true, true ); });
                     });
                 }
             });
@@ -437,6 +464,189 @@ IIDO.Page = IIDO.Page || {};
         $(".image-point.open").removeClass("open");
 
         return false;
+    };
+
+
+
+    page.openPageInLightbox = function(e)
+    {
+        e.preventDefault();
+
+        var el              = $( e.currentTarget),
+            openType        = 'ajax',
+            canBeOpen       = true,
+            siblingLinks    = el.parent("li" ),
+            page            = el.attr("href"), //$( e.currentTarget ).href, //.split("/").pop().replace('.html', ''),
+            url             = '/SimpleAjaxFrontend.php?c=IIDO_BasicBundle_Ajax_Page&f=renderPageContent&v=' + page;
+
+        if( el.hasClass("open-type-iframe") || el.hasClass("open-iframe") || el.attr("type") === "iframe"  || el.attr("open-type") === "iframe" )
+        {
+            openType    = "iframe";
+            url         = page;
+        }
+
+        var options = {
+            src: page,
+            type: openType,
+
+            opts: {
+                margin    : [ 110, 0, 110, 0 ],
+                padding   : 0,
+                //minWidth : "100%",
+                // height    : 600,
+                minHeight : 600,
+
+                type : openType,
+
+                infobar : false,
+                buttons : false,
+
+                slideShow  : false,
+                fullScreen : false,
+                thumbs     : false,
+                closeBtn   : true,
+
+                focus : false,
+
+                beforeShow : function(e)
+                {
+                    // $( "html" ).addClass( "fancybox-lock" );
+                },
+
+                afterShow : function()
+                {
+                },
+
+                beforeClose : function()
+                {
+                },
+
+                afterClose : function()
+                {
+                    // $( "html" ).removeClass( "fancybox-lock" );
+                    //
+                    // if( activeTag.length )
+                    // {
+                    //     activeTag.removeClass( "active" );
+                    // }
+                }
+            }
+        };
+
+        var slideClassName = "page-lightbox";
+
+        if( el.hasClass("event-link") )
+        {
+            slideClassName = "event-page page-lightbox";
+        }
+
+        if( openType === "ajax" )
+        {
+            options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,selector:'#main .inside',slideClass:slideClassName}});
+        }
+
+        if( el.hasClass("fit") || el.hasClass("fit-to-view") || el.hasClass("ftv") )
+        {
+            // options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,wrapCSS:"news-lightbox"}});
+
+
+            options.opts.afterLoad = function(current, previous) {
+                setTimeout( function() {
+
+                    var $container = $('#loadingList');
+
+                    // $container.isotope({
+                    //     itemSelector: '.layout_latest',
+                    //     layoutMode: 'masonry',
+                    //     columnWidth: '100%',
+                    //     gutter: 0
+                    // });
+
+                    $container.infinitescroll({
+                            loading:
+                                {
+                                    finishedMsg: "Alle News wurden geladen!",
+                                    msgText: 'mehr News werden geladen ...</div><div class="double-bounce1"></div><div class="double-bounce2">'
+                                },
+                            nextSelector: "#loadingListParent .pagination li.next a",
+                            navSelector: "#loadingListParent .pagination",
+                            itemSelector: "#loadingList .layout_latest"
+                        },
+                        function(newElements, data)
+                        {
+                            // $container.isotope('layout');
+                        }
+                    );
+
+                    $(window).unbind('.infscr');
+
+                    $('#loadingListParent').find('.pagination li.next a').click(function(){
+                        $container.infinitescroll('retrieve');
+                        return false;
+                    });
+
+                }, 500);
+            };
+        }
+        else
+        {
+            // options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,wrapCSS:"page-lightbox"}});
+        }
+
+        // if( el.hasClass("icon-search") )
+        // {
+        //     options = $.extend({}, options, {closeBtn:false,modal:false,wrapCSS:"search-modal"});
+        // }
+
+        if($lbOpen)
+        {
+            if( el.hasClass("active") )
+            {
+                siblingLinks.each(function(index, element) { $(element).find("a").removeClass("active") });
+                $.fancybox.close();
+
+                canBeOpen   = false;
+                $lbOpen     = false;
+            }
+            else
+            {
+                $.fancybox.close();
+                $lbOpen = false;
+
+                siblingLinks.each(function(index, element) { $(element).find("a").removeClass("active") });
+            }
+        }
+
+        if( canBeOpen )
+        {
+            var activeTag   = "",
+                activeLink  = $.trim( el.html() );
+
+            siblingLinks.each(function(index, element)
+            {
+                var linkTag     = $(element).find("a"),
+                    menuLink    = $.trim( linkTag.html() );
+
+                if(menuLink === activeLink)
+                {
+                    linkTag.addClass("active");
+                    activeTag = linkTag;
+                }
+            });
+
+            $openLinkTag    = el;
+
+            $.fancybox.open(options);
+
+            $lbOpen         = true;
+        }
+    };
+
+
+
+    page.openGallery = function( galleryImages )
+    {
+        $.fancybox.open( galleryImages );
     };
 
 })(window, jQuery, IIDO.Page);
