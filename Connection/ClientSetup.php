@@ -65,7 +65,9 @@ class ClientSetup
 //        echo "<br>"; print_r( $objBackendMember );
 //        exit;
         $arrFolders         = array();
-
+//echo "<pre>";
+//print_r( $cmsConfig );
+//exit;
         foreach( $cmsConfig->files as $strFolder => $arrSubfolders)
         {
             

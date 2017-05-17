@@ -104,7 +104,9 @@ class MasterConnection
     public function getActionData( $actionName, array $actionParams = array(), $returnAsArray = false)
     {
         $connectionUrl  = $this->getConnectionUrl() . '&act=' . $actionName . (count($actionParams)?'&':'') . implode('&', $actionParams);
+echo "<pre>"; print_r( $connectionUrl ); echo "</pre>";
         $arrData        = @file_get_contents( $connectionUrl );
+        echo "<pre>"; print_r( $arrData ); echo "</pre>";
 
         if( !$arrData )
         {
