@@ -37,6 +37,8 @@ class PageListener
     protected $bundlePathPublic;
     protected $bundlePath;
 
+    private $rootDir;
+
 
 
     /**
@@ -51,6 +53,8 @@ class PageListener
         $this->bundlePathPublic = BundleConfig::getBundlePath(true );
         $this->bundlePath       = BundleConfig::getBundlePath();
 
+        $this->rootDir          = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+
     }
 
     public function getCustomizePageStatusIcon( $objPage, $strImage )
@@ -58,7 +62,6 @@ class PageListener
         if( $objPage->type == "regular_redirect" )
         {
             $strImage = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/images/pages/' . $strImage;
-
         }
 
         return $strImage;
@@ -101,6 +104,8 @@ class PageListener
             $GLOBALS['TL_JAVASCRIPT']['fullpage']   = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullPage.min.js|static';
         }
 
+        $this->addDefaultStylesheets();
+
         if( $jsPrefix == "jquery" )
         {
 //            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
@@ -137,7 +142,7 @@ class PageListener
             {
                 $domainFile	= str_replace('.', '-', $objRootPage->dns) . '.css';
 
-                if( strlen($objRootPage->dns) && file_exists( TL_ROOT . '/' . \Config::get("uploadPath") . '/' . $objRootPage->alias . '/css/' . $domainFile) )
+                if( strlen($objRootPage->dns) && file_exists( $this->rootDir . '/' . \Config::get("uploadPath") . '/' . $objRootPage->alias . '/css/' . $domainFile) )
                 {
                     $GLOBALS['TL_USER_CSS'][] = \Config::get("uploadPath") . '/' . $objRootPage->alias . '/css/' . $domainFile . '||static';
                 }
@@ -274,7 +279,7 @@ class PageListener
             {
                 $objFile = \FilesModel::findByPk( $jsFile );
 
-                if( file_exists(TL_ROOT . '/' . $objFile->path ) && strlen($objFile->path) )
+                if( file_exists($this->rootDir . '/' . $objFile->path ) && strlen($objFile->path) )
                 {
                     $GLOBALS[ 'TL_JAVASCRIPT' ][ ] = $objFile->path . '|static';
                 }
@@ -291,6 +296,13 @@ class PageListener
 
     public function modifyCustomizeFrontendPage($strBuffer, $templateName)
     {
+        /* @var \PageModel $objPage */
+        global $objPage;
+
+        $objRootPage    = \PageModel::findByPk( $objPage->rootId );
+        $objLayout      = Helper::getPageLayout( $objPage );
+        $objTheme       = \ThemeModel::findByPk( $objLayout->pid );
+
         if ('fe_page' === $templateName)
         {
             if( preg_match('/open-fullscreen-search/', $strBuffer) )
@@ -321,7 +333,8 @@ class PageListener
             $menuOpen   = '<a href="javascript:void(0)" class="main-navigation-mobile-open">navigation</a>';
             $menuClose  = '<button class=" main-navigation-mobile-close">close</button>';
 
-            $objNavModule  = \ModuleModel::findOneBy("type", "navigation");
+            $strModuleTable = \ModuleModel::getTable();
+            $objNavModule   = \ModuleModel::findOneBy(array($strModuleTable . ".type=?", $strModuleTable . ".pid=?"), array("navigation", $objTheme->id));
 
 //            //TODO: set module ID flexible, make a change posible
             $modSearch  = ''; //\Controller::getFrontendModule( 10 );
@@ -344,13 +357,19 @@ class PageListener
         $objAllPages        = \PageModel::findAll(); //\PageModel::findPublishedByPid( $objPage->rootId, array("order"=>"sorting") );
         $createTime         = 0;
         $createFile         = TRUE;
-        $objFile            = NULL;
+        $objFile            = new \File('assets/css/page-styles.css');
 
-        if( file_exists(TL_ROOT . '/assets/css/page-styles.css') )
+        if( !$objFile->exists() )
         {
-            $objFile        = new \File('assets/css/page-styles.css');
-            $createTime     = $objFile->mtime;
+            $objFile->write('.');
+            $objFile->close();
+
+            $createTime     = $objFile->ctime;
             $createFile     = FALSE;
+        }
+        else
+        {
+            $createTime     = $objFile->mtime;
         }
 
         if( $objAllPages )
@@ -440,9 +459,8 @@ class PageListener
         {
             if( $createFile )
             {
-                if( file_exists(TL_ROOT . '/assets/css/page-styles.css') )
+                if( $objFile->exists() )
                 {
-                    $objFile            = new \File('assets/css/page-styles.css');
                     $objFile->delete();
                 }
 
@@ -464,15 +482,22 @@ class PageListener
 
                         if( strlen(trim($strOnlyStyles)) )
                         {
-                            $objFile->append($strStyle, '');
+                            $objFile->append($strOnlyStyles, '');
                         }
                     }
 
                     $objFile->close();
                 }
             }
+            else
+            {
+                if( $objFile->exists() )
+                {
+                    $objFile->delete();
+                }
+            }
 
-            if( file_exists(TL_ROOT . '/assets/css/page-styles.css') )
+            if( file_exists($this->rootDir . '/assets/css/page-styles.css') )
             {
                 $GLOBALS['TL_CSS'][] = '/assets/css/page-styles.css||static';
             }
@@ -494,6 +519,57 @@ class PageListener
         }
 
         return 0;
+    }
+
+
+
+    protected function addDefaultStylesheets()
+    {
+        global $objPage;
+
+        $cssPath        = $this->bundlePathPublic . '/css/';
+        $cssPathStd     = $cssPath . 'frontend/iido/';
+        $cssPathMaster  = 'files/master/css/';
+        $cssPathCustom  = 'files/' . $objPage->rootAlias . '/css/';
+
+        $arrFiles       = array
+        (
+            'reset.css', 'animate.css', 'grid16.css', 'styles.css', 'standards.css', 'page.css'
+        );
+
+        $arrMasterFiles = array
+        (
+            'reset.css', 'animate.css', 'core.css', 'layout.css', 'navigation.css', 'bulma/columns.css'
+        );
+
+        $arrCustomFiles = array
+        (
+            'animate.css', 'core.css', 'layout.css', 'navigation.css', 'styles.css', 'page.css'
+        );
+
+        foreach($arrFiles as $strFile)
+        {
+            if( file_exists($this->rootDir . '/' . $cssPathStd . $strFile) )
+            {
+                $GLOBALS['TL_CSS'][ 'master_' . $strFile ] =  $cssPathStd . $strFile . '||static';
+            }
+        }
+
+        foreach($arrMasterFiles as $strFile)
+        {
+            if( file_exists($this->rootDir . '/' . $cssPathMaster  . $strFile) )
+            {
+                $GLOBALS['TL_CSS'][ 'master_' . $strFile ] =  $cssPathMaster . $strFile . '||static';
+            }
+        }
+
+        foreach($arrCustomFiles as $strFile)
+        {
+            if( file_exists($this->rootDir . '/' . $cssPathCustom  . $strFile) )
+            {
+                $GLOBALS['TL_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
+            }
+        }
     }
 
 }
