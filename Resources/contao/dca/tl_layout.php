@@ -96,7 +96,10 @@ $GLOBALS['TL_DCA']['tl_layout']['subpalettes']['rows_3rw']              = str_re
 //	'sql'						=> "smallint(5) unsigned NOT NULL default '0'"
 //);
 
-
+$GLOBALS['TL_DCA']['tl_layout']['fields']['master_ID'] = array
+(
+    'sql'                       => "int(10) unsigned NOT NULL"
+);
 
 
 $GLOBALS['TL_DCA']['tl_layout']['fields']['footerAtBottom'] = array
