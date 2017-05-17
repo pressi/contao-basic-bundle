@@ -1,0 +1,54 @@
+.cols:after,
+.columns:after {
+    content: '';
+    display: table;
+    float: none;
+    clear: both;
+}
+
+.col50,
+.column50,
+.column-half {
+    width: 50%;
+    float: left;
+}
+
+#container .tl_tbox:not(.login-fieldset) h3 {
+    padding: 12px 10px 15px;
+}
+
+.widget {
+    padding: 0 0 15px;
+    margin: 0 10px !important;
+}
+
+.widget > label {
+    display: block;
+}
+
+.widget .tl_checkbox_container > div span {
+    float: left;
+    width: 50%;
+}
+
+.widget .tl_checkbox_container > div:after {
+    content: '';
+    display: table;
+    float: none;
+    clear: both;
+}
+
+#main > p.tl_confirm {
+    margin: 0 20px 20px;
+}
+
+.tl_text,
+.tl_select {
+    width: 100%;
+    max-width: none;
+}
+
+fieldset.tl_checkbox_container,
+fieldset.tl_radio_container {
+    margin-top: 0;
+}
