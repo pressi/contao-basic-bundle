@@ -1,0 +1,355 @@
+<?xml version="1.0" ?><xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file datatype="plaintext" original="Resources/translations/messages.en.xlf" source-language="en" target-language="de">
+        <body>
+            <trans-unit id="1">
+                <source>connect_tool</source>
+                <target>IIDO Verbindungstool</target>
+            </trans-unit>
+
+            <trans-unit id="2">
+                <source>an_error_occurred</source>
+                <target>Es ist ein Fehler aufgetreten</target>
+            </trans-unit>
+
+            <trans-unit id="3">
+                <source>locked_headline</source>
+                <target>Das Verbindungstool wurde gesperrt!</target>
+            </trans-unit>
+
+            <trans-unit id="4">
+                <source>locked_explanation</source>
+                <target>Aus Sicherheitsgründen wurde das Verbindungstool gesperrt, nachdem dreimal hintereinander ein falsches Passwort eingegeben wurde. Um es zu entsperren, führen Sie den Befehl &lt;code&gt;app/console doctrine:cache:clear contao.cache&lt;/code&gt; auf der Konsole aus.</target>
+            </trans-unit>
+
+            <trans-unit id="5">
+                <source>file_permissions_headline</source>
+                <target>PHP kann keine Dateien schreiben!</target>
+            </trans-unit>
+
+            <trans-unit id="6">
+                <source>file_permissions_explanation</source>
+                <target>Ihr Server unterstützt den Dateizugriff per PHP nicht; vermutlich läuft PHP als Apache-Modul unter einem anderen Benutzer. Bitte wenden Sie sich an Ihren Server-Administrator, damit dieser das Problem behebt.</target>
+            </trans-unit>
+
+            <trans-unit id="7">
+                <source>file_permissions_warning</source>
+                <target> &lt;strong&gt;Versuchen Sie keinesfalls, das Problem selbst zu beheben, indem Sie die Dateien und Ordner für jedermann beschreibbar machen!&lt;/strong&gt;</target>
+            </trans-unit>
+
+            <trans-unit id="8">
+                <source>password</source>
+                <target>Passwort</target>
+            </trans-unit>
+
+            <trans-unit id="9">
+                <source>confirmation</source>
+                <target>Bestätigung</target>
+            </trans-unit>
+
+            <trans-unit id="10">
+                <source>config_headline</source>
+                <target>Website Konfigurieren / Aufsetzen</target>
+            </trans-unit>
+
+            <trans-unit id="11">
+                <source>config_legend</source>
+                <target>Installation / Client - Konfigurieren / Aufsetzen</target>
+            </trans-unit>
+
+            <trans-unit id="12">
+                <source>login</source>
+                <target>Verbindungstool-Anmeldung</target>
+            </trans-unit>
+
+            <trans-unit id="13">
+                <source>connect_login_explanation</source>
+                <target>Bitte geben Sie das Verbindungstool-Passwort ein. Das Verbindungstool-Passwort ist nicht gleich dem Contao Backend-Passwort, es ist das Passwort zur Verbindung mit der Master-Installation.</target>
+            </trans-unit>
+
+            <trans-unit id="14">
+                <source>allow_cookies</source>
+                <target>Für die Nutzung von Contao müssen Cookies erlaubt sein.</target>
+            </trans-unit>
+
+            <trans-unit id="15">
+                <source>login</source>
+                <target>Anmelden</target>
+            </trans-unit>
+
+            <trans-unit id="16">
+                <source>invalid_password</source>
+                <target>Ungültiges Passwort!</target>
+            </trans-unit>
+
+            <trans-unit id="17">
+                <source>config_save</source>
+                <target>Ausführen / Importieren</target>
+            </trans-unit>
+
+            <trans-unit id="18">
+                <source>config_widget_customer</source>
+                <target>Kunden-Name</target>
+            </trans-unit>
+
+            <trans-unit id="19">
+                <source>config_widget_email</source>
+                <target>Kunden-Email</target>
+            </trans-unit>
+
+            <trans-unit id="20">
+                <source>config_widget_alias</source>
+                <target>Kunden-Alias</target>
+            </trans-unit>
+
+            <trans-unit id="21">
+                <source>config_widget_theme</source>
+                <target>Theme</target>
+            </trans-unit>
+
+            <trans-unit id="22">
+                <source>connection_failed</source>
+                <target>Verbindungsfehler! Master-Installation nicht erreichbar! Bitte versuchen Sie es später noch einmal.</target>
+            </trans-unit>
+
+            <trans-unit id="23">
+                <source>config_widget_rsceTemplates</source>
+                <target>RSCE Content Elements</target>
+            </trans-unit>
+
+            <trans-unit id="24">
+                <source>config_error</source>
+                <target>Bitte füllen Sie alle Felder aus, um die Installation zu Konfigurieren!</target>
+            </trans-unit>
+
+            <trans-unit id="25">
+                <source>initialized_msg</source>
+                <target>Diese Installation / Client wurde bereits Konfiguriert!</target>
+            </trans-unit>
+
+            <trans-unit id="26">
+                <source>config_widget_webfont</source>
+                <target>Google Webfont</target>
+            </trans-unit>
+
+            <trans-unit id="27">
+                <source>add_config_legend</source>
+                <target>Installation / Client - Erweitern</target>
+            </trans-unit>
+
+            <trans-unit id="28">
+                <source>add_config_headline</source>
+                <target>Website - Erweitern</target>
+            </trans-unit>
+
+            <trans-unit id="29">
+                <source>add_config_save</source>
+                <target>Einstellungen hinzufügen</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="31">
+                <source>update_tables</source>
+                <target>Datenbank aktualisieren</target>
+
+            </trans-unit>
+            <trans-unit id="32">
+                <source>update_tables_explain</source>
+                <target>Bitte beachten Sie, dass der Update-Assistent nur Tabellen berücksichtigt, die mit &lt;code&gt;tl_&lt;/code&gt; beginnen.</target>
+
+            </trans-unit>
+            <trans-unit id="33">
+                <source>update_tables_confirm</source>
+                <target>Die Datenbank ist aktuell.</target>
+
+            </trans-unit>
+            <trans-unit id="34">
+                <source>update_save</source>
+                <target>Datenbank aktualisieren</target>
+
+            </trans-unit>
+            <trans-unit id="35">
+                <source>CREATE</source>
+                <target>Tabellen anlegen</target>
+
+            </trans-unit>
+            <trans-unit id="36">
+                <source>ALTER_ADD</source>
+                <target>Spalten anlegen</target>
+
+            </trans-unit>
+            <trans-unit id="37">
+                <source>ALTER_CHANGE</source>
+                <target>Spalten ändern</target>
+
+            </trans-unit>
+            <trans-unit id="38">
+                <source>ALTER_DROP</source>
+                <target>Spalten löschen</target>
+
+            </trans-unit>
+            <trans-unit id="39">
+                <source>DROP</source>
+                <target>Tabellen löschen</target>
+
+            </trans-unit>
+            <trans-unit id="40">
+                <source>select_all</source>
+                <target>Alle auswählen</target>
+
+            </trans-unit>
+            <trans-unit id="41">
+                <source>template_import</source>
+                <target>Ein Template importieren</target>
+
+            </trans-unit>
+            <trans-unit id="42">
+                <source>template_import_explain</source>
+                <target>Hier können Sie eine &lt;code&gt;.sql&lt;/code&gt;-Datei aus dem &lt;code&gt;templates&lt;/code&gt;-Verzeichnis importieren. Dabei werden alle bestehenden Daten gelöscht! Wenn Sie stattdessen lediglich ein Theme importieren wollen, nutzen Sie bitte den Theme-Manager im Contao-Backend.</target>
+
+            </trans-unit>
+            <trans-unit id="43">
+                <source>import_exception</source>
+                <target>Der Import konnte nicht abgeschlossen werden! Ist die Datenbank aktuell und die Template-Datei kompatibel mit Ihrer Contao-Version?</target>
+
+            </trans-unit>
+            <trans-unit id="44">
+                <source>import_empty_source</source>
+                <target>Bitte wählen Sie eine Template-Datei!</target>
+
+            </trans-unit>
+            <trans-unit id="45">
+                <source>import_data_will_be_deleted</source>
+                <target>Alle bestehenden Daten werden gelöscht!</target>
+
+            </trans-unit>
+            <trans-unit id="46">
+                <source>imported_on</source>
+                <target>Template importiert am %s.</target>
+
+            </trans-unit>
+            <trans-unit id="47">
+                <source>templates</source>
+                <target>Templates</target>
+
+            </trans-unit>
+            <trans-unit id="48">
+                <source>do_not_truncate</source>
+                <target>Tabellen nicht leeren</target>
+
+            </trans-unit>
+            <trans-unit id="49">
+                <source>import_confirm</source>
+                <target>Alle bestehenden Daten werden gelöscht. Möchten Sie trotzdem fortfahren?</target>
+
+            </trans-unit>
+            <trans-unit id="50">
+                <source>template_save</source>
+                <target>Template importieren</target>
+
+            </trans-unit>
+            <trans-unit id="51">
+                <source>admin_create</source>
+                <target>Ein Administratorkonto anlegen</target>
+
+            </trans-unit>
+            <trans-unit id="52">
+                <source>admin_create_explain</source>
+                <target>Hier können Sie ein Administratorkonto für die Anmeldung im Contao-Backend erstellen.</target>
+
+            </trans-unit>
+            <trans-unit id="53">
+                <source>admin_confirm</source>
+                <target>Ein Administratorkonto wurde erstellt.</target>
+
+            </trans-unit>
+            <trans-unit id="54">
+                <source>admin_username</source>
+                <target>Benutzername</target>
+
+            </trans-unit>
+            <trans-unit id="55">
+                <source>admin_name</source>
+                <target>Name</target>
+
+            </trans-unit>
+            <trans-unit id="56">
+                <source>admin_email</source>
+                <target>E-Mail</target>
+
+            </trans-unit>
+            <trans-unit id="57">
+                <source>admin_save</source>
+                <target>Administratorkonto anlegen</target>
+
+            </trans-unit>
+            <trans-unit id="58">
+                <source>admin_error_extnd</source>
+                <target>Aus Sicherheitsgründen können Sie folgende Zeichen hier nicht verwenden: #()/&lt;=&gt;</target>
+
+            </trans-unit>
+            <trans-unit id="59">
+                <source>admin_error_no_space</source>
+                <target>Der Benutzername darf keine Leerzeichen enthalten!</target>
+
+            </trans-unit>
+            <trans-unit id="60">
+                <source>admin_error_email</source>
+                <target>Bitte geben Sie eine gültige E-Mail-Adresse ein!</target>
+
+            </trans-unit>
+            <trans-unit id="61">
+                <source>admin_error_password_match</source>
+                <target>Die eingegebenen Passwörter stimmen nicht überein!</target>
+
+            </trans-unit>
+            <trans-unit id="62">
+                <source>admin_error_password_user</source>
+                <target>Der Benutzername und das Passwort dürfen nicht gleich sein!</target>
+
+            </trans-unit>
+
+
+            <trans-unit id="64">
+                <source>congratulations</source>
+                <target>Gratulation!</target>
+
+            </trans-unit>
+            <trans-unit id="65">
+                <source>congratulations_explain</source>
+                <target>Sie haben Contao erfolgreich installiert.</target>
+
+            </trans-unit>
+            <trans-unit id="66">
+                <source>installation_complete</source>
+                <target>Installation abgeschlossen</target>
+
+            </trans-unit>
+            <trans-unit id="67">
+                <source>installation_complete_explain</source>
+                <target>Rufen Sie nun das Contao-Backend auf und überprüfen Sie die Systemeinstellungen.</target>
+
+            </trans-unit>
+            <trans-unit id="68">
+                <source>back_end</source>
+                <target>Contao-Backend</target>
+
+            </trans-unit>
+            <trans-unit id="69">
+                <source>old_database</source>
+                <target>Die Datenbank ist zu alt!</target>
+
+            </trans-unit>
+            <trans-unit id="70">
+                <source>old_database_explanation</source>
+                <target>Sie benötigen mindestens Contao 3.2, um das Update auf Contao 4 durchzuführen.</target>
+
+            </trans-unit>
+            <trans-unit id="71">
+                <source>console_explanation</source>
+                <target>Eine Installationsaufgabe konnte nicht abgeschlossen werden!</target>
+
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
