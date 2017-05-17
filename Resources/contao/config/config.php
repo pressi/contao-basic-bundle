@@ -36,7 +36,7 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
 //            'tables'        => array($tablePrefix . 'placeholder', 'tl_content'),
 //            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
 //        ),
-//
+
 //        $prefix . 'ConfigContao' => array
 //        (
 //            'callback'      => $namespace . '\\' . $subNamespace . '\BackendModule\ConfigClientModule',
@@ -91,8 +91,10 @@ $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerNam
 
 //$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
 
-$GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]				= array($listenerName . '.listener.ajax', 'parseAjaxRequest');
-//$GLOBALS['TL_HOOKS']['simpleAjax'][]						= array($listenerName . '.listener.ajax', 'parseAjaxRequest');
+$GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.listener.ajax', 'parseAjaxRequest');
+//$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.listener.ajax', 'parseAjaxRequest');
+
+$GLOBALS['TL_HOOKS']['getCombinedFile'][]                   = array($listenerName . '.listener.combiner', 'getCustomizeCombinedFile');
 
 
 

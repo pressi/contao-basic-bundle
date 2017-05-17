@@ -20,7 +20,7 @@
 <!-- ### META FIELDS ######################################################################################################## -->
 
             <trans-unit id="MSC.aw_description">
-                <source>Desciption</source>
+                <source>Description</source>
                 <target>Beschreibung</target>
             </trans-unit>
 
@@ -46,11 +46,11 @@
             </trans-unit>
 
             <trans-unit id="MSC.aw_hoverTitle">
-                <source>Desciption</source>
+                <source>Hover: Title</source>
                 <target>Hover: Titel</target>
             </trans-unit>
             <trans-unit id="MSC.aw_hoverSubTitle">
-                <source>Desciption</source>
+                <source>Hover: Sub-Title</source>
                 <target>Hover: Sub-Titel</target>
             </trans-unit>
 

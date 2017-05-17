@@ -35,5 +35,6 @@ class IIDOBasicExtension extends Extension
         );
 
         $loader->load('listener.yml');
+        $loader->load('services.yml');
     }
 }

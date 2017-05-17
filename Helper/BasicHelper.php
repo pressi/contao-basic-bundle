@@ -421,35 +421,41 @@ class BasicHelper extends \Frontend
         }
 
        return $strTag . '</video></div>';
-    }public static function getConfig($field, $moduleName, $fullField = false)
-{
-    $module 			= self::renderModuleName($moduleName);
-    $arrConfig			= array();
-    $arrModuleConfig	= array();
-
-    foreach($GLOBALS['TL_CONFIG'] as $fieldName => $strValue)
-    {
-        if( preg_match('/^' . $module . '_/', $fieldName) )
-        {
-            $arrModuleConfig[ $fieldName ] = $strValue;
-        }
     }
 
-    if( count($arrModuleConfig) > 0 )
-    {
-        foreach($arrModuleConfig as $name => $value)
-        {
-            if( ($field == "" || $field == "all") || preg_match('/' . $field . '/i', $name) )
-            {
-                $modName = preg_replace('/^' . $module . '_/', '', $name);
 
-                $arrConfig[ $modName ] = $value;
+
+    public static function getConfig($field, $moduleName, $fullField = false)
+    {
+        $module 			= self::renderModuleName($moduleName);
+        $arrConfig			= array();
+        $arrModuleConfig	= array();
+
+        foreach($GLOBALS['TL_CONFIG'] as $fieldName => $strValue)
+        {
+            if( preg_match('/^' . $module . '_/', $fieldName) )
+            {
+                $arrModuleConfig[ $fieldName ] = $strValue;
             }
         }
+
+        if( count($arrModuleConfig) > 0 )
+        {
+            foreach($arrModuleConfig as $name => $value)
+            {
+                if( ($field == "" || $field == "all") || preg_match('/' . $field . '/i', $name) )
+                {
+                    $modName = preg_replace('/^' . $module . '_/', '', $name);
+
+                    $arrConfig[ $modName ] = $value;
+                }
+            }
+        }
+
+        return $arrConfig;
     }
 
-    return $arrConfig;
-}
+
 
     public static function renderModuleName($moduleName)
     {
@@ -470,6 +476,8 @@ class BasicHelper extends \Frontend
         return $module;
     }
 
+
+
     public static function checkIfFileIsVideo($file)
     {
         $isVideo	= false;
@@ -486,6 +494,8 @@ class BasicHelper extends \Frontend
 
         return $isVideo;
     }
+
+
 
     public static function setStyles($strContent, $styles, $styleTag = true)
     {
@@ -661,6 +671,8 @@ class BasicHelper extends \Frontend
 
         return $strStyles;
     }
+
+
 
     public static function getRandomHash($length = 6, $chars = '')
     {
