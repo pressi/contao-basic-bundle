@@ -1,0 +1,129 @@
+{% extends "@IIDOBasic/layout.html.twig" %}
+
+{% block main %}
+
+    {% if config_error is defined %}
+        <p class="tl_error">{{ config_error }}</p>
+    {% endif %}
+
+    {% if initialized %}
+        <p class="tl_confirm">{{ 'initialized_msg'|trans }}</p>
+    {% endif %}
+
+    <fieldset class="tl_tbox{% if initialized %} collapsed{% endif %}">
+        <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'config_legend'|trans }}</legend>
+        <div>
+            <h3>{{ 'config_headline'|trans }}</h3>
+
+            <form method="post">
+                <div class="tl_formbody">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_config">
+                    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+
+                    <div class="cols">
+                        <div class="col50">
+
+                            <div class="widget">
+                                <label for="customer_name">{{ 'config_widget_customer'|trans }}</label>
+                                <input type="text" name="customer_name" id="customer_name" class="tl_text" value="" autocapitalize="off" required>
+                            </div>
+
+                            <div class="widget">
+                                <label for="customer_email">{{ 'config_widget_email'|trans }}</label>
+                                <input type="text" name="customer_email" id="customer_email" class="tl_text" value="" required>
+                            </div>
+
+                        </div>
+
+                        <div class="col50">
+
+                            <div class="widget">
+                                <label for="customer_alias">{{ 'config_widget_alias'|trans }}</label>
+                                <input type="text" name="customer_alias" id="customer_alias" class="tl_text" value="" required>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <label for="theme">{{ 'config_widget_theme'|trans }}</label>
+                        <select name="theme" id="theme" class="tl_select" required>
+                            <option value="">---</option>
+                            {% for themeID, themeName in themes %}
+                                <option value="{{  themeID }}">{{ themeName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="widget">
+                        <label for="webfont">{{ 'config_widget_webfont'|trans }}</label>
+                        <input type="text" name="webfont" id="webfont" class="tl_text" value="">
+                    </div>
+
+                    <div class="widget">
+                        <fieldset id="rsce_templates" class="tl_checkbox_container tl_checkbox_wizard">
+                            <legend>{{ 'config_widget_rsceTemplates'|trans }}</legend>
+
+                            <input type="hidden" name="rsce_templates" value="">
+
+                            {% if( templates is defined) %}
+                                <span class="fixed">
+                                    <input type="checkbox" id="check_all_rsce_templates" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,'rsce_templates')"> <label for="check_all_rsce_templates" style="color:#a6a6a6"><em>{{ 'select_all'|trans }}n</em></label></span>
+
+                                <div class="no-sortable">
+
+                                    {% for templateFile, templateName in templates %}
+                                        <span><input type="checkbox" name="rsce_templates[]" id="opt_rsce_templates_{{ loop.index }}" class="tl_checkbox" value="{{ templateFile }}" onfocus="Backend.getScrollOffset()"> <label for="opt_rsce_templates_{{ loop.index }}>">{{ templateName|raw }}</label></span>
+                                    {% endfor %}
+
+                                </div>
+
+                            {% else %}
+                                <span style="color:#a6a6a6">Keine RSCE-Templates vorhanden.</span>
+                            {% endif %}
+
+                        </fieldset>
+
+                        <!--                    <script>Backend.checkboxWizard("rsce_templates")</script>-->
+                    </div>
+
+                </div>
+                <div class="tl_formbody_submit">
+                    <div class="tl_submit_container">
+                        <button type="submit" class="tl_submit"{% if initialized %} disabled{% endif %}>{{ 'config_save'|trans }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+
+    <fieldset class="tl_tbox {% if not initialized %} collapsed{% endif %}">
+        <legend onclick="this.getParent().toggleClass('collapsed')">{{ 'add_config_legend'|trans }}</legend>
+        <div>
+            <h3>{{ 'add_config_headline'|trans }}</h3>
+
+            <form method="post">
+                <input type="hidden" name="FORM_SUBMIT" value="tl_add_config">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+
+                <div class="tl_formbody">
+
+                    <!-- LAYOUTS > add to theme > multiple? -->
+
+                    <!-- MODULE > add to theme > multiple? -->
+
+                    <!-- IMAGE SIZES > add to theme > multiple? -->
+
+                    <!-- new theme (no existst master_ID) > multiple? -->
+
+                </div>
+                <div class="tl_formbody_submit">
+                    <div class="tl_submit_container">
+                        <button type="submit" class="tl_submit"{% if not initialized %} disabled{% endif %}>{{ 'add_config_save'|trans }}</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </fieldset>
+
+{% endblock %}
