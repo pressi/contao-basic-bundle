@@ -49,6 +49,7 @@ if($act == "edit" && $do == "page" && is_numeric($id))
  * Config
  */
 
+$GLOBALS['TL_DCA']['tl_page']['config']['oncreate_version_callback'][]  = array('IIDO\BasicBundle\Table\PageTable', 'checkThemeStylesheet');
 $GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'][]          = array('IIDO\BasicBundle\Table\PageTable', 'generateExtraArticle');
 
 
@@ -114,7 +115,7 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
         $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter', $strFields);
 
         $strFields      = str_replace('{meta_legend', '{page_legend},enableFullpage;{meta_legend', $strFields);
-        $strFields      = str_replace('{meta_legend', '{navigation_legend},submenuNoPages,hide,hideTitle,openPageInLightbox,guests,overviewImage;{meta_legend', $strFields);
+        $strFields      = str_replace('{meta_legend', '{navigation_legend},submenuNoPages,hide,hideTitle,openPageInLightbox,guests,overviewImage,pageColor,overviewText;{meta_legend', $strFields);
 
         if( $config->get("folderUrl") )
         {
@@ -124,6 +125,10 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
             $strFields      = str_replace(',type', '', $strFields);
             $strFields      = str_replace(',title', ',title,type', $strFields);
         }
+    }
+    else
+    {
+        $strFields      = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect;{cache_legend', $strFields);
     }
 
     $GLOBALS['TL_DCA']['tl_page']['palettes'][ $strPalette ] = $strFields;
@@ -178,6 +183,11 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'] = array
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']                       = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']['label']              = &$GLOBALS['TL_LANG']['tl_page']['enableFullpage'];
+
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']['label']        = &$GLOBALS['TL_LANG']['tl_page']['enablePageFadeEffect'];
+
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']               = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuPageCombination'];
@@ -254,8 +264,31 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['removeFooter']['label']        = &$GLOB
 $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']                = $GLOBALS['TL_DCA']['tl_content']['fields']['singleSRC'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['label']       = &$GLOBALS['TL_LANG']['tl_page']['overviewImage'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['mandatory']   = FALSE;
+$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['tl_class']    = trim( $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['tl_class'] . ' w50 hauto');
 $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['load_callback']       = array();
 $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['save_callback']       = array();
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']                = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['label']       = &$GLOBALS['TL_LANG']['tl_page']['overviewText'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['eval']['mandatory']    = FALSE;
+
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['pageColor']                    = array
+(
+    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['pageColor'],
+    'inputType'             => 'text',
+    'eval'                  => array
+    (
+        'maxlength'             => 6,
+        'multiple'              => TRUE,
+        'size'                  => 2,
+        'colorpicker'           => TRUE,
+        'isHexColor'            => TRUE,
+        'decodeEntities'        => TRUE,
+        'tl_class'              => 'w50 wizard'
+    ),
+    'sql'                   => "varchar(64) NOT NULL default ''"
+);
 
 
 

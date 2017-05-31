@@ -7,6 +7,13 @@
  * www.iido.at <development@iido.at>
  *******************************************************************/
 
+/**
+ * Config
+ */
+
+$GLOBALS['TL_DCA']['tl_theme']['config']['onsubmit_callback'][] = array('IIDO\BasicBundle\Table\ThemeTable', 'saveThemeTable');
+
+
 
 /**
  * Fields
