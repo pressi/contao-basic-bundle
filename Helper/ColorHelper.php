@@ -12,6 +12,11 @@ namespace IIDO\BasicBundle\Helper;
 class ColorHelper
 {
 
+    /**
+     * @param object $objRow
+     *
+     * @return bool|object
+     */
     public static function getBackgroundColor( $objRow )
     {
         $bgColor = deserialize($objRow->bgColor, TRUE);
@@ -89,6 +94,13 @@ class ColorHelper
         return false;
     }
 
+
+
+    /**
+     * @param string $htmlCode
+     *
+     * @return number
+     */
     public static function HTMLToRGB($htmlCode)
     {
         if($htmlCode[0] == '#')
@@ -110,6 +122,11 @@ class ColorHelper
 
 
 
+    /**
+     * @param $RGB
+     *
+     * @return object
+     */
     public static function RGBToHSL($RGB)
     {
         $r = 0xFF & ($RGB >> 0x10);
@@ -161,9 +178,11 @@ class ColorHelper
 
     /**
      * Compile a color value and return a hex or rgba color
+     *
      * @param mixed
      * @param boolean
      * @param array
+     *
      * @return string
      */
     public static function compileColor($color, $blnWriteToFile=false, $vars=array())
@@ -191,7 +210,9 @@ class ColorHelper
 
     /**
      * Try to shorten a hex color
+     *
      * @param string
+     *
      * @return string
      */
     public static function shortenHexColor($color)
@@ -205,11 +226,14 @@ class ColorHelper
     }
 
 
+
     /**
      * Convert hex colors to rgb
+     *
      * @param string
      * @param boolean
      * @param array
+     *
      * @return array
      * @see http://de3.php.net/manual/de/function.hexdec.php#99478
      */
@@ -252,6 +276,11 @@ class ColorHelper
 
 
 
+    /**
+     * @param $color
+     *
+     * @return string
+     */
     public static function compileRGBtoHex($color)
     {
         $hex    = "";
@@ -264,5 +293,69 @@ class ColorHelper
         $hex    .= str_pad(dechex($blue), 2, "0", STR_PAD_LEFT);
 
         return self::compileColor($hex);
+    }
+
+
+
+    /**
+     * @param null|object $objCurrentPage
+     * @param boolean $returnPageObject
+     *
+     * @return array|string
+     */
+    public static function getPageColor( $objCurrentPage = NULL, $returnPageObject = false )
+    {
+        global $objPage;
+
+        if( $objCurrentPage === NULL )
+        {
+            $objCurrentPage = $objPage;
+        }
+
+        $pageColor = self::getCurrentPageColor( $objCurrentPage );
+
+        if( $pageColor === "transparent" && $objCurrentPage->pid > 0 )
+        {
+            if( $returnPageObject )
+            {
+                list($pageColor, $objCurrentPage) = self::getPageColor( \PageModel::findByPk( $objCurrentPage->pid ), $returnPageObject );
+            }
+            else
+            {
+                $pageColor = self::getPageColor( \PageModel::findByPk( $objCurrentPage->pid ) );
+            }
+
+            return ($returnPageObject) ? array($pageColor, $objCurrentPage) : $pageColor;
+        }
+
+        return ($returnPageObject) ? array($pageColor, $objCurrentPage) : $pageColor;
+    }
+
+
+
+    public static function getCurrentPageColor( $objCurrentPage = NULL )
+    {
+        global $objPage;
+
+        if( $objCurrentPage === NULL )
+        {
+            $objCurrentPage = $objPage;
+        }
+
+        return self::compileColor( deserialize($objCurrentPage->pageColor, TRUE) );
+    }
+
+
+
+    public static function getPageColorClass( $objCurrentPage = NULL )
+    {
+        list($pageColor, $objColorPage) = self::getPageColor($objCurrentPage, TRUE);
+
+        if( $pageColor !== "transparent" )
+        {
+            return 'pc-' . preg_replace('/\//', '_', $objColorPage->alias);
+        }
+
+        return false;
     }
 }
