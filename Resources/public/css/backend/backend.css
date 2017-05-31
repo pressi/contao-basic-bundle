@@ -6,6 +6,29 @@
     clear: both;
 }
 
+.wizard .color-picker .tl_text_2 {
+    width: 41%;
+}
+
+.color-preview {
+    display: block;
+    float: left;
+
+    width: 8%;
+    height: 30px;
+
+    padding: 0;
+    margin: 2px 1% 2px 0;
+
+    border: 1px solid #aaa;
+    border-radius: 2px;
+
+    box-sizing: border-box;
+
+    -moz-appearance: none;
+    -webkit-appearance: none;
+}
+
 .o50 {
     margin-left: 52%;
 }
