@@ -14,6 +14,11 @@ services:
         arguments:
             - "@contao.framework"
 
+    iido_basic.listener.insert_tags:
+        class: IIDO\BasicBundle\EventListener\InsertTagsListener
+        arguments:
+            - "@contao.framework"
+
     iido_basic.listener.frontend_template:
         class: IIDO\BasicBundle\EventListener\FrontendTemplateListener
         arguments:
