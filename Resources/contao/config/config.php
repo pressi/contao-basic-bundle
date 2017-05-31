@@ -63,6 +63,15 @@ $GLOBALS['FE_MOD']['news']['newslist']              = $namespace . '\\' . $subNa
 
 $GLOBALS['BE_FFL']['metaWizard']        = $namespace . '\\' . $subNamespace . '\Widget\MetaWizardWidget';
 $GLOBALS['BE_FFL']['imageSize']         = $namespace . '\\' . $subNamespace . '\Widget\ImageSizeWidget';
+$GLOBALS['BE_FFL']['text']              = $namespace . '\\' . $subNamespace . '\Widget\TextFieldWidget';
+
+
+
+/**
+ * Front end form fields
+ */
+
+$GLOBALS['TL_FFL']['radioTable']        = $namespace . '\\' . $subNamespace . '\FormField\RadioButtonTable';
 
 
 
@@ -89,7 +98,7 @@ $GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerNam
 $GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.listener.frontend_template', 'outputCustomizeFrontendTemplate');
 $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.listener.frontend_template', 'parseCustomizeFrontendTemplate');
 
-//$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
 
 $GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.listener.ajax', 'parseAjaxRequest');
 //$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.listener.ajax', 'parseAjaxRequest');
