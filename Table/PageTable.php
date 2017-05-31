@@ -152,6 +152,8 @@ class PageTable extends \Backend
      */
     public function generateExtraArticle(\DataContainer $dc)
     {
+//        $this->checkThemeStylesheet( $dc );
+
         if( !$this->insertExtraArticle )
         {
             return;
@@ -212,5 +214,46 @@ class PageTable extends \Backend
                 }
             }
         }
+    }
+
+
+
+    public function checkThemeStylesheet( $strTable, $strId, $intVersion, $newRecord )
+    {
+        echo "<pre>";
+        print_r( $strTable );
+        echo "<br>";
+        print_r( $strId);
+        echo "<br>";
+        print_r( $intVersion);
+        echo "<br>";
+        print_r( $newRecord);
+        exit;
+
+//        $activeRecord   = $dc->activeRecord;
+//        $folderName     = '';
+//        $folders        = deserialize( $activeRecord->folders, TRUE);
+//        $vars           = deserialize( $activeRecord->vars, TRUE);
+//
+//        if( count($vars) )
+//        {
+//            foreach( $folders as $strFolder )
+//            {
+//                $objFolder = \FilesModel::findByUuid( $strFolder );
+//
+//                if( $objFolder && !preg_match('/master/', $objFolder->path) )
+//                {
+//                    $folderName = $objFolder->name;
+//                }
+//            }
+//
+//            $rootDir    = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+//            $filePath   = 'files/' . $folderName . '/css/theme.css';
+//
+//            if( file_exists($rootDir . '/' . $filePath) )
+//            {
+//                touch($rootDir . '/' . $filePath);
+//            }
+//        }
     }
 }
