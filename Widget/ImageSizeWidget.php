@@ -48,7 +48,7 @@ class ImageSizeWidget extends \ImageSize
 //echo "<pre>";
 //print_r($this->arrAvailableOptions);
 //exit;
-        if( preg_match('/bg-size/', $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $strField ]['eval']['tl_class']) )
+        if( preg_match('/bg-size/', $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $strField ]['eval']['tl_class']) || preg_match('/mapSize|dlh_googlemap_size/', $strField) )
         {
             $this->arrAvailableOptions = $this->renderAvailableOptions( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $strField ]['options'] );
         }
