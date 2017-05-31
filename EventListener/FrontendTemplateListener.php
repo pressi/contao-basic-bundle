@@ -59,7 +59,7 @@ class FrontendTemplateListener
         /* @var \PageModel $objPage */
         global $objPage;
 
-        $objParentPage 	= \PageModel::findByPk( $objPage->pid );
+        $objParentPage  = \PageModel::findByPk( $objPage->pid );
 
         $isFullpage = $this->isFullPageEnabled( $objPage );
 
@@ -534,8 +534,10 @@ class FrontendTemplateListener
         /** @var \PageModel $objPage */
         global $objPage;
 
+        $objRootPage        = \PageModel::findByPk( $objPage->rootId );
         $objLayout          = Helper::getPageLayout( $objPage) ;
         $isFullpage         = $this->isFullPageEnabled( $objPage, $objLayout );
+        $outerID            = 'wrapper';
 
         if( $strTemplate === 'fe_page' )
         {
@@ -572,7 +574,8 @@ class FrontendTemplateListener
             {
                 if($objLayout->addPageWrapperOuter)
                 {
-                    $strBuffer = str_replace('<div id="wrapper">', '<div id="outer"><div id="wrapper">', $strBuffer);
+                    $outerID    = 'outer';
+                    $strBuffer  = str_replace('<div id="wrapper">', '<div id="outer"><div id="wrapper">', $strBuffer);
 
                     if( preg_match('/<footer/', $strBuffer) )
                     {
@@ -586,7 +589,8 @@ class FrontendTemplateListener
 
                 if($objLayout->addPageWrapperPage)
                 {
-                    $replaceID = "wrapper";
+                    $outerID    = 'page';
+                    $replaceID  = "wrapper";
 
                     if($objLayout->addPageWrapperOuter)
                     {
@@ -606,6 +610,21 @@ class FrontendTemplateListener
                 }
             }
 
+            if( $objRootPage->enablePageFadeEffect )
+            {
+                $outerID    = 'container';
+                $strBuffer  = str_replace('<div id="' . $outerID . '">', '<div id="barba-wrapper"><div class="barba-container"><div id="' . $outerID . '">', $strBuffer);
+
+                if( preg_match('/<footer/', $strBuffer) )
+                {
+                    $strBuffer = str_replace('<footer',  '</div></div><footer', $strBuffer);
+                }
+                else
+                {
+                    $strBuffer = str_replace('</body>', '</div></div>' . "\n" . '</body>', $strBuffer);
+                }
+            }
+
             if( $objPage->removeFooter )
             {
                 $strBuffer = preg_replace('/<footer([A-Za-z0-9\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/footer>/', '', $strBuffer);
@@ -616,14 +635,47 @@ class FrontendTemplateListener
                 $strBuffer = preg_replace('/<header([A-Za-z0-9\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/header>/', '', $strBuffer);
             }
 
+            if( $objPage->removeLeft )
+            { //TODO: check DIV tags!
+                $strBuffer = preg_replace('/<aside id="left">(.*?)<\/aside>/', '', $strBuffer);
+            }
+
+            if( preg_match('/<footer/', $strBuffer) && $this->hasBodyClass("homepage", $strBuffer) )
+            {
+                $strBuffer = preg_replace('/<footer/', '<footer class="home"', $strBuffer);
+            }
+
             if( preg_match('/nav-sub/', $strBuffer) && !preg_match('/(ce_backlink|mod_newsearder)/', $strBuffer ))
             {
                 $strBuffer = preg_replace('/nav-sub/', 'nav-sub has-bg-left', $strBuffer);
                 $strBuffer = preg_replace('/<nav([A-Za-z0-9\s\-=\",;.:_\{\}\/\(\)]{0,})class="mod_navigation([A-Za-z0-9\s\-\'\",;.:_\{\}\/\(\)]{0,})nav-sub([A-Za-z0-9\s\-\'\",;.:_\{\}\/\(\)]{0,})"([A-Za-z0-9\s\-=\",;.:_\{\}\/\(\)]{0,})>/', '<nav$1class="mod_navigation$2nav-sub$3"$4><div class="bg-subnav"></div>', $strBuffer);
             }
+            
+            if( preg_match('/homepage/', $objPage->cssClass) )
+            {
+                $strBuffer = preg_replace('/<div class="page-title-container">([A-Za-z0-9öäüÖÄÜß&!?\-\n\s_.,;:<>="\{\}\(\)\/]{0,})<\/div>([\s]{0,})<div([A-Za-z0-9\-\s="]{0,})class="mod_article/', '<div$3class="mod_article', $strBuffer);
+                $strBuffer = preg_replace('/<div class="custom">([\s]{0,})<div id="main_menu_container">([A-Za-z0-9öäüÖÄÜß&!?@#\-\n\s_.,;:<>="\{\}\(\)\/]{0,})<footer/', '</div></div><footer', $strBuffer);
+            }
         }
 
         return $strBuffer;
+    }
+
+
+
+    protected function hasBodyClass( $className, $strBuffer )
+    {
+        preg_match_all('/<body([A-Za-z0-9\s\-_=",;.:]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"/', $strBuffer, $arrMatches);
+
+        if( is_array($arrMatches) && count($arrMatches) && count($arrMatches[0]) )
+        {
+            if( preg_match('/' . preg_quote($className, '/') . '/', $arrMatches[2][0]) )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -668,6 +720,13 @@ class FrontendTemplateListener
         if( $this->isFullPageEnabled() )
         {
             $arrClasses[] = 'enable-fullpage';
+        }
+
+        $colorClass = ColorHelper::getPageColorClass( $objPage );
+
+        if( $colorClass )
+        {
+            $arrClasses[] = $colorClass;
         }
 
         $arrClasses[] = 'lang-' . \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();

@@ -71,12 +71,15 @@ class PageListener
 
     public function generateCustomizePage( \PageModel $objPage, \LayoutModel $objLayout, \PageRegular $objPageRegular )
     {
+        $arrBodyClasses     = array();
+
         Helper::replaceOtherDefaultScripts();
         Helper::checkForUniqueScripts();
 
         $objRootPage        = \PageModel::findByPk( $objPage->rootId );
         $strStyles          = '';
         $objArticle         = \ArticleModel::findPublishedByPidAndColumn($objPage->id, "main");
+        $objTheme           = \ThemeModel::findByPk( $objLayout->pid );
 
         $config             = \Config::getInstance();
         $jsPrefix           = 'mootools';
@@ -97,36 +100,45 @@ class PageListener
         $layoutHasFooter    = $objLayout->rows;
         $footerMode         = (($objLayout->footerAtBottom && ($layoutHasFooter == "2rwf" || $layoutHasFooter == "3rw")) ? TRUE : FALSE);
 
+//        if( $objLayout->loadJQueryUI )
+//        {
+//            $GLOBALS['TL_JAVASCRIPT']['jquery_ui'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.min.js|static';;
+//            $GLOBALS['TL_CSS']['jquery_ui']        = $this->bundlePathPublic . '/css/frontend/jquery-ui.css||static';
+//        }
+
         if( $objPage->enableFullpage && $jsPrefix == "jquery" )
         {
-            $GLOBALS['TL_JAVASCRIPT']['easings']    = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['easings']    = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/scrolloverflow.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['fullpage']   = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullPage.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['scrolloverflow']     = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/scrolloverflow.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullPage.min.js|static';
         }
 
         $this->addDefaultStylesheets();
 
         if( $jsPrefix == "jquery" )
         {
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.scrollTo.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.smooth-scroll.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.stellar.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery.waypoints.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/waypoints/infinite.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/waypoints/inview.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/waypoints/sticky.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.scrollTo.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['smoothscroll']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.smooth-scroll.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['stellar']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.stellar.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['waypoints']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.waypoints.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT']['iido_wp_infinite']   = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/infinite.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['wp_inview']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/inview.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['wp_sticky']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/sticky.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.sticky-kit.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['isotope']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope.pkgd.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT']['iso_fit-columns']    = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/fit-columns.js|static';
 
-            $GLOBALS['TL_JAVASCRIPT']['iido_base'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/iido/IIDO.Functions.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['iido_page'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Page.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_base']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
+//            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Functions.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_page']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Page.js|static';
+//            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
+        }
 
-//            if( $objLayout->loadJQueryUI )
-//            {
-//                $GLOBALS['TL_JAVASCRIPT'][] = 'web/bundles/' . $folderName . '/javascript/' . $jsPrefix . '/jquery-ui.min.js|static';;
-//                $GLOBALS['TL_CSS'][]        = 'web/bundles/' . $folderName . '/css/frontend/jquery-ui.css||static';
-//            }
+        if( $objRootPage->enablePageFadeEffect )
+        {
+            $arrBodyClasses[] = 'page-fade-animation';
+            $GLOBALS['TL_JAVASCRIPT']['barba']              = $this->bundlePathPublic . '/javascript/barba.min.js|static';
         }
 
         if( $footerMode )
@@ -270,7 +282,6 @@ class PageListener
 //            $GLOBALS['TL_HEAD'][] = '<style>' . $strStyles . '</style>';
 //        }
 
-        $arrBodyClasses = array();
         $arrBodyClasses = $this->createDefaultStylesheet( $arrBodyClasses );
 
         if ( is_array( $externalJavascript ) && count( $externalJavascript ) > 0 )
@@ -353,6 +364,10 @@ class PageListener
 
     protected function createDefaultStylesheet( $arrBodyClasses )
     {
+        global $objPage;
+
+        $objRootPage        = \PageModel::findByPk( $objPage->rootId );
+
         $arrPageStyles      = array();
         $objAllPages        = \PageModel::findAll(); //\PageModel::findPublishedByPid( $objPage->rootId, array("order"=>"sorting") );
         $createTime         = 0;
@@ -453,7 +468,6 @@ class PageListener
                 }
             }
         }
-//exit;
 
         if( count($arrPageStyles) )
         {
@@ -499,8 +513,13 @@ class PageListener
 
             if( file_exists($this->rootDir . '/assets/css/page-styles.css') )
             {
-                $GLOBALS['TL_CSS'][] = '/assets/css/page-styles.css||static';
+                $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
             }
+        }
+
+        if( file_exists($this->rootDir . '/files/' . $objRootPage->alias . '/css/theme.css') )
+        {
+            $GLOBALS['TL_CSS']['custom_theme'] = 'files/' . $objRootPage->alias . '/css/theme.css||static';
         }
 
         return $arrBodyClasses;
@@ -534,24 +553,45 @@ class PageListener
 
         $arrFiles       = array
         (
-            'reset.css', 'animate.css', 'grid16.css', 'styles.css', 'standards.css', 'page.css'
+            'reset.css',
+            'animate.css',
+//            'grid16.css',
+            'styles.css',
+            'standards.css',
+            'page.css'
         );
 
         $arrMasterFiles = array
         (
-            'reset.css', 'animate.css', 'core.css', 'layout.css', 'navigation.css', 'bulma/columns.css'
+            'reset.css',
+            'animate.css',
+            'core.css',
+            'buttons.css',
+            'layout.css',
+            'navigation.css',
+            'bulma/columns.css',
+            'content.css',
+            'responsive.css'
         );
 
         $arrCustomFiles = array
         (
-            'animate.css', 'core.css', 'layout.css', 'navigation.css', 'styles.css', 'page.css'
+            'animate.css',
+            'core.css',
+            'buttons.css',
+            'layout.css',
+            'navigation.css',
+            'content.css',
+            'styles.css',
+            'page.css',
+            'responsive.css'
         );
 
         foreach($arrFiles as $strFile)
         {
             if( file_exists($this->rootDir . '/' . $cssPathStd . $strFile) )
             {
-                $GLOBALS['TL_CSS'][ 'master_' . $strFile ] =  $cssPathStd . $strFile . '||static';
+                $GLOBALS['TL_CSS'][ 'std_' . $strFile ] =  $cssPathStd . $strFile . '||static';
             }
         }
 

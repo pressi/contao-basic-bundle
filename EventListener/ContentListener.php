@@ -122,6 +122,8 @@ class ContentListener
                     $addClass =  ' headline-position-' . $objRow->headlineImagePosition;
                 }
 
+                $addClass .= ' ip-' . preg_replace('/float_/', '', $objRow->floating);
+
                 $strBuffer = str_replace('class="ce_text' , 'class="ce_text has-image' . $addClass, $strBuffer);
 
                 if( $objRow->fullsize && !$objRow->imageUrl )
@@ -140,6 +142,14 @@ class ContentListener
         }
 
         $strBuffer = preg_replace('/class="' . $elementClass . '/', 'class="' . $elementClass . ' content-element', $strBuffer);
+
+
+        $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
+
+        if( $count )
+        {
+            $strBuffer = $strBuffer . '</div>';
+        }
 
         return $strBuffer;
     }
