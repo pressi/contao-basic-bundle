@@ -29,6 +29,7 @@ IIDO.Page = IIDO.Page || {};
         this.initNavigation();
         this.initOnePage();
         this.initFullPage();
+        this.initPageFade();
         // this.initFooter();
 
         if( $(document.body).hasClass("url-change") )
@@ -542,7 +543,7 @@ IIDO.Page = IIDO.Page || {};
 
         if( openType === "ajax" )
         {
-            options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,selector:'#main .inside',slideClass:slideClassName}});
+            options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,selector:'#main > .inside',slideClass:slideClassName}});
         }
 
         if( el.hasClass("fit") || el.hasClass("fit-to-view") || el.hasClass("ftv") )
@@ -647,6 +648,163 @@ IIDO.Page = IIDO.Page || {};
     page.openGallery = function( galleryImages )
     {
         $.fancybox.open( galleryImages );
+    };
+
+
+
+    page.initPageFade = function()
+    {
+        if( $(document.body).hasClass("page-fade-animation") )
+        {
+            Barba.Pjax.start();
+            Barba.Prefetch.init();
+
+            Barba.Dispatcher.on('linkClicked', function(HTMLElement, MouseEvent)
+            {
+                $(document.body).addClass("start-fade-animation");
+            });
+
+            Barba.Dispatcher.on('newPageReady', function(currentStatus, oldStatus, container, rawContainer)
+            {
+                var headTag     = document.getElementsByTagName('head')[0],
+
+                    rgxp        = /<body([A-Za-z0-9\s\-_=",;.:]{0,})class="([A-Za-z0-9\s\-_]{0,})"/,
+                    rgxpMaps    = /<script src="http(s|):\/\/maps.google.com\/maps\/api\/js\?key=([A-Za-z0-9,;.:\-_#$]{0,})&(amp;|)language=([a-z]{2})"><\/script>/,
+
+                    match       = rgxp.exec( rawContainer ),
+                    matchMaps   = rgxpMaps.exec( rawContainer ),
+                    matchCurr   = rgxpMaps.exec( headTag.innerHTML ),
+
+                    footer      = $("footer");
+
+                if( rawContainer.indexOf("maps.google.com") !== -1 )
+                {
+                    if( matchCurr === null )
+                    {
+                        var rgxpMapsInit    = /<script>function gmap1_initialize\(\){([A-Za-z0-9\s\-_=\{\},;.:\(\)!\'\"\[\]]{0,})<\/script>/,
+                            matchMapsInit   = rgxpMapsInit.exec( rawContainer );
+
+                        var s = document.createElement("script");
+                        s.type = "text/javascript";
+                        s.src = "http" + matchMaps[1] + "://maps.google.com/maps/api/js?key=" + matchMaps[2] + "&language=" + matchMaps[4];
+                        $(headTag).append(s);
+
+
+                        var s1 = document.createElement("script");
+                        s1.innerHTML = 'function gmap1_initialize(){' + matchMapsInit[1];
+                        setTimeout(function() { $(document.body).append(s1); }, 1000);
+                    }
+                }
+
+                if( match.length === 3 )
+                {
+                    setTimeout(function()
+                    {
+                        $(document.body).attr("class", match[2]);
+                    }, 400);
+                }
+
+                if( footer.length )
+                {
+                    if( footer.hasClass("home") )
+                    {
+                        // footer.animate({"opacity": 0}, 350, function()
+                        footer.fadeOut(350, function()
+                        {
+                            // footer.removeClass("home").animate({"opacity": 1});
+                            footer.removeClass("home");
+                        });
+                    }
+                    else
+                    {
+                        if( $(document.body).hasClass("homepage") || match[2].match(/homepage/) !== null )
+                        {
+                            // footer.animate({"opacity": 0}, 350, function()
+                            footer.fadeIn(350, function()
+                            // footer.animate({"opacity": 1}, 350, function()
+                            {
+                                // footer.addClass("home").animate({"opacity": 1});
+                                footer.addClass("home");
+                            });
+                        }
+                    }
+                }
+            });
+
+            var FadeTransition = Barba.BaseTransition.extend(
+                {
+                start: function()
+                {
+                    /**
+                     * This function is automatically called as soon the Transition starts
+                     * this.newContainerLoading is a Promise for the loading of the new container
+                     * (Barba.js also comes with an handy Promise polyfill!)
+                     */
+
+                    // As soon the loading is finished and the old page is faded out, let's fade the new page
+                    Promise
+                        .all([this.newContainerLoading, this.fadeOut()])
+                        .then(this.fadeIn.bind(this));
+                },
+
+                fadeOut: function()
+                {
+                    /**
+                     * this.oldContainer is the HTMLElement of the old Container
+                     */
+
+                    return $(this.oldContainer).animate({ opacity: 0 }).promise();
+                },
+
+                fadeIn: function()
+                {
+                    /**
+                     * this.newContainer is the HTMLElement of the new Container
+                     * At this stage newContainer is on the DOM (inside our #barba-container and with visibility: hidden)
+                     * Please note, newContainer is available just after newContainerLoading is resolved!
+                     */
+
+                    var _this = this;
+                    var $el = $(this.newContainer);
+
+                    $(this.oldContainer).hide();
+
+                    $el.css({
+                        visibility : 'visible',
+                        opacity : 0
+                    });
+
+                    $el.animate({ opacity: 1 }, 400, function() {
+                        /**
+                         * Do not forget to call .done() as soon your transition is finished!
+                         * .done() will automatically remove from the DOM the old Container
+                         */
+
+                        _this.done();
+                        IIDO.Functions.init();
+
+                        if( !$(document.body).hasClass("homepage") )
+                        {
+                            setTimeout("gmap1_initialize()", 500);
+                        }
+                    });
+                }
+            });
+
+            /**
+             * Next step, you have to tell Barba to use the new Transition
+             */
+
+            Barba.Pjax.getTransition = function()
+            {
+                /**
+                 * Here you can use your own logic!
+                 * For example you can use different Transition based on the current page or link...
+                 */
+
+                return FadeTransition;
+            };
+        }
     };
 
 })(window, jQuery, IIDO.Page);
