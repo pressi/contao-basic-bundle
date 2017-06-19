@@ -90,9 +90,12 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
  * Palettes
  */
 
-//$defaultPaletteStart    = '{type_legend},type,headline;';
-//$defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
+$defaultPaletteStart    = '{type_legend},type,headline;';
+$defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
 
+
+
+$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']           = $defaultPaletteStart . '{config_legend},navModule;' . $defaultPaletteEnd;
 
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_divider']           = '{type_legend},type;{divide_legend},dividerSize,dividerColor,dividerStyle,addOrnament;' . $defaultPaletteEnd;
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_ticker']            = '{type_legend},type;{ticker_legend},tickerMode,usedTime,tickerDate,tickerShowMode;{text_legend},textBefore,textAfter;' . $defaultPaletteEnd;
@@ -224,6 +227,20 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineImagePosition'] = array
         'tl_class'              => 'w50'
     ),
     'sql'                   => "varchar(255) NOT NULL default ''"
+);
+
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['navModule'] = array
+(
+    'label'                 => &$GLOBALS['TL_LANG']['tl_content']['navModule'],
+    'exclude'               => true,
+    'inputType'             => 'select',
+    'options_callback'      => array('IIDO\BasicBundle\Table\ContentTable', 'getNavigationModule'),
+    'eval'                  => array
+    (
+        'tl_class'              => 'w50'
+    ),
+    'sql'                   => "int(10) unsigned NOT NULL"
 );
 
 

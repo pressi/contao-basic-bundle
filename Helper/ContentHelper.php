@@ -32,12 +32,17 @@ class ContentHelper
 
     public static function renderText( $strText, $renderLines = false )
     {
+        $strText = preg_replace(array('/&#40;/', '/&#41;/'), array('(', ')'), $strText);
+
         $strText = preg_replace('/;/', '<br>', $strText);
         $strText = preg_replace('/\|\|([^\|\|]+)\|\|/', '<span class="light">$1</span>', $strText);
         $strText = preg_replace('/\|([^\|]+)\|/', '<strong>$1</strong>', $strText);
 
         $strText = preg_replace('/\{\{sup\}\}/', '<sup>', $strText);
         $strText = preg_replace('/\{\{\/sup\}\}/', '</sup>', $strText);
+
+        $strText = preg_replace('/\{\{sub\}\}/', '<sub>', $strText);
+        $strText = preg_replace('/\{\{\/sub\}\}/', '</sub>', $strText);
 
         if( $renderLines )
         {

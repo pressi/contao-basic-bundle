@@ -39,6 +39,23 @@ IIDO.Page = IIDO.Page || {};
         }
 
         $("a.open-in-lightbox").click( function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
+
+        $(document).keyup(function(e) {
+            if (e.keyCode === 27)
+            {
+                var articles = $(".mod_article:not(.first).shown");
+
+                if( articles.length )
+                {
+                    var articleID = parseInt( $( articles[0] ).attr("id").replace("article-", "") );
+
+                    if( articleID > 0 )
+                    {
+                        IIDO.Page.hideArticle( $('a[data-id="' + articleID + '"]') );
+                    }
+                }
+            }
+        });
     };
 
 
@@ -63,7 +80,7 @@ IIDO.Page = IIDO.Page || {};
                 {
                     var el = $(element);
 
-                    if( (el.hasClass("first") && dataArticles.length) || el.attr("data-menu") == "1" )
+                    if( (el.hasClass("first") && dataArticles.length) || el.attr("data-menu") === "1" )
                     {
                         var urlPath         = location.pathname,
                             elPosTop        = (el.position().top - 50),
@@ -79,7 +96,10 @@ IIDO.Page = IIDO.Page || {};
                                 linkTag = $('.nav-main ul.level_2.article-menu').prev();
                             }
 
-                            IIDO.Page.changeUrl( linkTag, false, true );
+                            if( linkTag.length )
+                            {
+                                IIDO.Page.changeUrl( linkTag, false, true );
+                            }
                         }
                         else if( $(window).scrollTop() < elPosTop)
                         {
@@ -118,7 +138,7 @@ IIDO.Page = IIDO.Page || {};
 
     page.initArticles = function()
     {
-        var menuArticles    = $("main").find('.mod_article[data-menu="1"]');
+        var menuArticles    = $("#main").find('.mod_article[data-menu="1"]');
 
         if( menuArticles.length )
         {
@@ -127,7 +147,7 @@ IIDO.Page = IIDO.Page || {};
                 useScroll       = false,
                 articleAlias    = "",
                 scrollTop       = $(window).scrollTop(),
-                urlParam        = "aritkel";
+                urlParam        = "artikel";
 
             if( $(document.body).hasClass("lang-en") )
             {
@@ -236,7 +256,24 @@ IIDO.Page = IIDO.Page || {};
                             childLink = child.find("> strong");
                         }
 
-                        childLink.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( childLink, true, true ); });
+                        if( child.hasClass("external-link") )
+                        {
+                            if( childLink.attr("target") === "_blank" )
+                            {
+                                childLink.click( function(e) { e.preventDefault(); window.open( childLink.attr("href") ); });
+                            }
+                            else
+                            {
+                                childLink.click( function(e) { e.preventDefault(); location.href = childLink.attr("href"); });
+                            }
+                        }
+                        else
+                        {
+                            if( childLink.hasClass("article-link") )
+                            {
+                                childLink.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( childLink, true, true ); });
+                            }
+                        }
                     });
                 }
             });
@@ -656,12 +693,43 @@ IIDO.Page = IIDO.Page || {};
     {
         if( $(document.body).hasClass("page-fade-animation") )
         {
-            Barba.Pjax.start();
+            var lastElementClicked;
+            var PrevLink = document.querySelector('.mod_booknav .previous > a');
+            var NextLink = document.querySelector('.mod_booknav .next > a');
+
+            Barba.Pjax.init();
+            // Barba.Pjax.start();
             Barba.Prefetch.init();
+
+            // Barba.Pjax.originalPreventCheck = Barba.Pjax.preventCheck;
+            //
+            // Barba.Pjax.preventCheck = function(evt, element)
+            // {
+            //     if( $(element).hasClass("no-barba") )
+            //     {
+            //         return false;
+            //     }
+            //
+            //     if (!Barba.Pjax.originalPreventCheck(evt, element))
+            //     {
+            //         return false;
+            //     }
+            //
+            //     // No need to check for element.href -
+            //     // originalPreventCheck does this for us! (and more!)
+            //     if (/.pdf/.test(element.href.toLowerCase()))
+            //     {
+            //         return false;
+            //     }
+            //
+            //     return true;
+            // };
 
             Barba.Dispatcher.on('linkClicked', function(HTMLElement, MouseEvent)
             {
                 $(document.body).addClass("start-fade-animation");
+
+                lastElementClicked = HTMLElement;
             });
 
             Barba.Dispatcher.on('newPageReady', function(currentStatus, oldStatus, container, rawContainer)
@@ -669,148 +737,367 @@ IIDO.Page = IIDO.Page || {};
                 var headTag     = document.getElementsByTagName('head')[0],
 
                     rgxp        = /<body([A-Za-z0-9\s\-_=",;.:]{0,})class="([A-Za-z0-9\s\-_]{0,})"/,
-                    rgxpMaps    = /<script src="http(s|):\/\/maps.google.com\/maps\/api\/js\?key=([A-Za-z0-9,;.:\-_#$]{0,})&(amp;|)language=([a-z]{2})"><\/script>/,
+                    rgxpSlider  = /class="mod_rocksolid_slider/,
 
                     match       = rgxp.exec( rawContainer ),
-                    matchMaps   = rgxpMaps.exec( rawContainer ),
-                    matchCurr   = rgxpMaps.exec( headTag.innerHTML ),
+                    matchSlider = rgxpSlider.exec( rawContainer ),
 
-                    footer      = $("footer");
+                    rgxpMaps    = /<script src="http(s|):\/\/maps.google.com\/maps\/api\/js\?key=([A-Za-z0-9,;.:\-_#$]{0,})&(amp;|)language=([a-z]{2})"><\/script>/,
+
+                    matchMaps   = rgxpMaps.exec( rawContainer ),
+                    matchCurr   = rgxpMaps.exec( headTag.innerHTML );
+
+                    // footer      = $("footer");
+
+                if( match.length === 3 )
+                {
+                    // setTimeout(function()
+                    // {
+                    //     $(document.body).attr("class", match[2]);
+                    // }, 200);
+                    $(document.body).attr("class", match[2]);
+                }
+
+                // if( matchSlider !== null && matchSlider.length )
+                // {
+                //     var sliderEl = [].slice.call( document.getElementsByClassName( 'mod_rocksolid_slider' ), -1 )[ 0 ];
+                //
+                //     initSlider( sliderEl );
+                // }
+
+                var useMaps = false;
 
                 if( rawContainer.indexOf("maps.google.com") !== -1 )
                 {
-                    if( matchCurr === null )
+                    if( matchCurr === null && headTag.innerHTML.indexOf("maps.google.com") === -1 )
                     {
-                        var rgxpMapsInit    = /<script>function gmap1_initialize\(\){([A-Za-z0-9\s\-_=\{\},;.:\(\)!\'\"\[\]]{0,})<\/script>/,
-                            matchMapsInit   = rgxpMapsInit.exec( rawContainer );
+                        // var rgxpMapsInit    = /<script>function gmap1_initialize\(\){([A-Za-z0-9\s\-_=\{\},;.:\(\)!\'\"\[\]]{0,})<\/script>/,
+                        //     matchMapsInit   = rgxpMapsInit.exec( rawContainer );
 
                         var s = document.createElement("script");
                         s.type = "text/javascript";
                         s.src = "http" + matchMaps[1] + "://maps.google.com/maps/api/js?key=" + matchMaps[2] + "&language=" + matchMaps[4];
                         $(headTag).append(s);
 
-
-                        var s1 = document.createElement("script");
-                        s1.innerHTML = 'function gmap1_initialize(){' + matchMapsInit[1];
-                        setTimeout(function() { $(document.body).append(s1); }, 1000);
+                        // var s1 = document.createElement("script");
+                        // s1.innerHTML = 'function gmap1_initialize(){' + matchMapsInit[1];
+                        // setTimeout(function() { $(document.body).append(s1); }, 1000);
+                        useMaps = true;
                     }
                 }
 
-                if( match.length === 3 )
+                var js = container.querySelectorAll("script");
+                if(js !== null)
                 {
-                    setTimeout(function()
+                    if( useMaps )
                     {
-                        $(document.body).attr("class", match[2]);
-                    }, 400);
-                }
-
-                if( footer.length )
-                {
-                    if( footer.hasClass("home") )
-                    {
-                        // footer.animate({"opacity": 0}, 350, function()
-                        footer.fadeOut(350, function()
+                        setTimeout(function()
                         {
-                            // footer.removeClass("home").animate({"opacity": 1});
-                            footer.removeClass("home");
-                        });
+                            IIDO.Page.runScript( js );
+                            // eval(js.innerHTML);
+                            // $.each(js, function(index, scriptTag)
+                            // {
+                            //     IIDO.Page.runScript( scriptTag, js );
+                            // });
+                        }, 500);
                     }
                     else
                     {
-                        if( $(document.body).hasClass("homepage") || match[2].match(/homepage/) !== null )
-                        {
-                            // footer.animate({"opacity": 0}, 350, function()
-                            footer.fadeIn(350, function()
-                            // footer.animate({"opacity": 1}, 350, function()
-                            {
-                                // footer.addClass("home").animate({"opacity": 1});
-                                footer.addClass("home");
-                            });
-                        }
+                        IIDO.Page.runScript( js );
+                        // eval(js.innerHTML);
                     }
                 }
+
+                // if( footer.length )
+                // {
+                //     if( footer.hasClass("home") )
+                //     {
+                //         // footer.animate({"opacity": 0}, 350, function()
+                //         footer.fadeOut(350, function()
+                //         {
+                //             // footer.removeClass("home").animate({"opacity": 1});
+                //             footer.removeClass("home");
+                //         });
+                //     }
+                //     else
+                //     {
+                //         if( $(document.body).hasClass("homepage") || match[2].match(/homepage/) !== null )
+                //         {
+                //             // footer.animate({"opacity": 0}, 350, function()
+                //             footer.fadeIn(350, function()
+                //             // footer.animate({"opacity": 1}, 350, function()
+                //             {
+                //                 // footer.addClass("home").animate({"opacity": 1});
+                //                 footer.addClass("home");
+                //             });
+                //         }
+                //     }
+                // }
             });
 
-            var FadeTransition = Barba.BaseTransition.extend(
-                {
+
+
+            // var FadeTransition = Barba.BaseTransition.extend(
+            //     {
+            //     start: function()
+            //     {
+            //         /**
+            //          * This function is automatically called as soon the Transition starts
+            //          * this.newContainerLoading is a Promise for the loading of the new container
+            //          * (Barba.js also comes with an handy Promise polyfill!)
+            //          */
+            //
+            //         // As soon the loading is finished and the old page is faded out, let's fade the new page
+            //         Promise
+            //             .all([this.newContainerLoading, this.fadeOut()])
+            //             .then(this.fadeIn.bind(this));
+            //     },
+            //
+            //     fadeOut: function()
+            //     {
+            //         /**
+            //          * this.oldContainer is the HTMLElement of the old Container
+            //          */
+            //
+            //         return $(this.oldContainer).animate({ "margin-left": "-100%" }, 600).promise();
+            //     },
+            //
+            //     fadeIn: function()
+            //     {
+            //         /**
+            //          * this.newContainer is the HTMLElement of the new Container
+            //          * At this stage newContainer is on the DOM (inside our #barba-container and with visibility: hidden)
+            //          * Please note, newContainer is available just after newContainerLoading is resolved!
+            //          */
+            //
+            //         var _this = this;
+            //         var $el = $(this.newContainer);
+            //
+            //         // $(this.oldContainer).hide();
+            //
+            //         $el.css({
+            //             // visibility : 'visible',
+            //             // opacity : 0
+            //             "margin-left": '100%'
+            //         });
+            //
+            //         $el.animate({ "margin-left": 0 }, 600, function() {
+            //             /**
+            //              * Do not forget to call .done() as soon your transition is finished!
+            //              * .done() will automatically remove from the DOM the old Container
+            //              */
+            //
+            //             _this.done();
+            //             // IIDO.Functions.init();
+            //
+            //             // if( !$(document.body).hasClass("homepage") )
+            //             // {
+            //             //     setTimeout("gmap1_initialize()", 500);
+            //             // }
+            //         });
+            //     }
+            // });
+            //
+            // /**
+            //  * Next step, you have to tell Barba to use the new Transition
+            //  */
+            //
+            // Barba.Pjax.getTransition = function()
+            // {
+            //     /**
+            //      * Here you can use your own logic!
+            //      * For example you can use different Transition based on the current page or link...
+            //      */
+            //
+            //     return FadeTransition;
+            // };
+
+            var MovePage = Barba.BaseTransition.extend({
                 start: function()
                 {
-                    /**
-                     * This function is automatically called as soon the Transition starts
-                     * this.newContainerLoading is a Promise for the loading of the new container
-                     * (Barba.js also comes with an handy Promise polyfill!)
-                     */
+                    this.originalThumb = lastElementClicked;
 
-                    // As soon the loading is finished and the old page is faded out, let's fade the new page
                     Promise
-                        .all([this.newContainerLoading, this.fadeOut()])
-                        .then(this.fadeIn.bind(this));
+                        .all([this.newContainerLoading, this.scrollTop()])
+                        .then(this.movePages.bind(this));
                 },
 
-                fadeOut: function()
+                scrollTop: function()
                 {
-                    /**
-                     * this.oldContainer is the HTMLElement of the old Container
-                     */
+                    var deferred = Barba.Utils.deferred();
+                    var obj = { y: window.pageYOffset };
 
-                    return $(this.oldContainer).animate({ opacity: 0 }).promise();
-                },
+                    TweenLite.to(obj, 0.4, {
+                        y: 0,
+                        onUpdate: function()
+                        {
+                            if (obj.y === 0) {
+                                deferred.resolve();
+                            }
 
-                fadeIn: function()
-                {
-                    /**
-                     * this.newContainer is the HTMLElement of the new Container
-                     * At this stage newContainer is on the DOM (inside our #barba-container and with visibility: hidden)
-                     * Please note, newContainer is available just after newContainerLoading is resolved!
-                     */
-
-                    var _this = this;
-                    var $el = $(this.newContainer);
-
-                    $(this.oldContainer).hide();
-
-                    $el.css({
-                        visibility : 'visible',
-                        opacity : 0
+                            window.scroll(0, obj.y);
+                        },
+                        onComplete: function()
+                        {
+                            deferred.resolve();
+                        }
                     });
 
-                    $el.animate({ opacity: 1 }, 400, function() {
-                        /**
-                         * Do not forget to call .done() as soon your transition is finished!
-                         * .done() will automatically remove from the DOM the old Container
-                         */
+                    return deferred.promise;
+                },
 
+                movePages: function()
+                {
+                    var _this = this;
+                    var goingForward = true;
+                    // this.updateLinks();
+
+                    var oldLink             = Barba.HistoryManager.prevStatus().url.split('/').pop(),
+                        clickedLinkParent   = $( this.originalThumb ).parent();
+
+                    if ( clickedLinkParent.hasClass("previous") || ( clickedLinkParent.hasClass("logo") && oldLink === "produkte.html") )
+                    {
+                        goingForward = false;
+                    }
+
+                    TweenLite.set(this.newContainer, {
+                        visibility: 'visible',
+                        xPercent: goingForward ? 100 : -100,
+                        position: 'fixed',
+                        left: 0,
+                        top: 0,
+                        right: 0
+                    });
+
+                    TweenLite.to(this.oldContainer, 0.6, { xPercent: goingForward ? -100 : 100 });
+                    TweenLite.to(this.newContainer, 0.6, { xPercent: 0, onComplete: function() {
+                        TweenLite.set(_this.newContainer, { clearProps: 'all' });
                         _this.done();
-                        IIDO.Functions.init();
 
-                        if( !$(document.body).hasClass("homepage") )
+                        $(document.body).removeClass("start-fade-animation");
+                    }});
+                }
+
+                // updateLinks: function()
+                // {
+                //     PrevLink.href = this.newContainer.dataset.prev;
+                //     NextLink.href = this.newContainer.dataset.next;
+                // },
+
+                // getNewPageFile: function()
+                // {
+                //     return Barba.HistoryManager.currentStatus().url.split('/').pop();
+                // }
+            });
+
+            Barba.Pjax.getTransition = function() {
+                return MovePage;
+            };
+
+
+
+            // var ContentPage = Barba.BaseView.extend({
+            //     namespace: 'content-page',
+            //     onEnter: function() {
+            //         // The new Container is ready and attached to the DOM.
+            //     },
+            //     onEnterCompleted: function() {
+            //         // The Transition has just finished.
+            //     },
+            //     onLeave: function() {
+            //         // A new Transition toward a new page has just started.
+            //     },
+            //     onLeaveCompleted: function() {
+            //         // The Container has just been removed from the DOM.
+            //     }
+            // });
+            //
+            // // Don't forget to init the view!
+            // ContentPage.init();
+        }
+    };
+
+
+
+    page.showArticle = function( aTag )
+    {
+        var article = $("#article-" + $(aTag).attr("data-id") );
+
+        if( !article )
+        {
+            article = $(".mod_article#" + $(aTag).attr("data-alias") );
+        }
+
+        if( article )
+        {
+            article.addClass("shown").removeClass("hide-area");
+        }
+    };
+
+
+
+    page.hideArticle = function( aTag )
+    {
+        var article = $("#article-" + $(aTag).attr("data-id") );
+
+        if( !article )
+        {
+            article = $(".mod_article#" + $(aTag).attr("data-alias") );
+        }
+
+        if( article )
+        {
+            article.removeClass("shown").addClass("hide-area");
+        }
+    };
+
+
+    page.runScript = function( js )
+    {
+        $.each(js, function(index, scriptTag)
+        {
+            var scriptHTML = scriptTag.innerHTML;
+
+            if( js.length > 1 && scriptHTML.indexOf("mod_rocksolid_slider") !== -1 )
+            {
+                var sliderElements = document.getElementsByClassName('mod_rocksolid_slider');
+
+                if( sliderElements.length )
+                {
+                    $.each(sliderElements, function(seIndex, seElement )
+                    {
+                        if( seIndex === 0 )
                         {
-                            setTimeout("gmap1_initialize()", 500);
+                            eval( scriptHTML );
+                        }
+
+                        if( seIndex > 0 && seIndex < (sliderElements.length - 1) )
+                        {
+                            scriptHTML = scriptHTML.replace("{initSlider(sliderEl)}", "{var sliderElements =" +
+                                " document.getElementsByClassName('mod_rocksolid_slider');if( sliderElements.length" +
+                                " ){$.each(sliderElements, function(seIndex, seElement ){initSlider(seElement);}); }}");
+
+
+                            // initSlider( seElement );
+                            eval( scriptHTML );
                         }
                     });
                 }
-            });
 
-            /**
-             * Next step, you have to tell Barba to use the new Transition
-             */
-
-            Barba.Pjax.getTransition = function()
+                return false;
+            }
+            else
             {
-                /**
-                 * Here you can use your own logic!
-                 * For example you can use different Transition based on the current page or link...
-                 */
-
-                return FadeTransition;
-            };
-        }
+                eval( scriptHTML );
+            }
+        });
     };
 
 })(window, jQuery, IIDO.Page);
 
 // Document Ready
-$(function ()
+// $(function ()
+document.addEventListener("DOMContentLoaded", function()
 {
     IIDO.Page.init();
 });

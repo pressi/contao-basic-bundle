@@ -158,12 +158,17 @@ class ConnectTool
     {
         $arrData = $this->testConnection();
 
-        if( key_exists("ERROR", $arrData) )
+        if( is_array($arrData) && key_exists("ERROR", $arrData) )
         {
             if( $arrData[ 'ERROR' ] === $this->container->get("translator")->trans("connection_failed") )
             {
                 return true;
             }
+        }
+
+        if( !is_array($arrData) )
+        {
+            return $arrData;
         }
 
         return false;
@@ -381,6 +386,12 @@ class ConnectTool
         }
 
         $objData        = json_decode($arrData, $returnAsArray);
+        $clientID       = $this->getConfig( "clientID" );
+
+        if( !$clientID )
+        {
+            $this->persistConfig("clientID", (($returnAsArray) ? $objData['clientID'] : $objData->clientID) );
+        }
 
         return $objData;
     }
@@ -391,14 +402,51 @@ class ConnectTool
     {
         if( $actionName == "checkPassword" )
         {
-//            $this->setPassword( $actionParams['pwd'] );
+            $this->setPassword( $actionParams['pwd'] );
             unset( $actionParams['pwd'] );
         }
 
-        $connectionUrl  = $this->getConnectionUrl() . '&act=' . $actionName . (count($actionParams)?'&':'') . implode('&', $actionParams);
-        $arrData        = @file_get_contents( $connectionUrl );
-        $return         = false;
+//        $opts = array
+//        (
+//            'http'=>array
+//            (
+//                'method'=>"GET",
+//                'header'=>"Cache-Control: no-store, no-cache, must-revalidate, max-age=0\r\n" .
+//                    "Cache-Control: post-check=0, pre-check=0\r\n" .
+//                    "Pragma: no-cache\r\n" .
+//                    "Content-Type: application/json;charset=utf-8"
+//            )
+//        );
 
+//        $context = stream_context_create($opts);
+
+        $arrParams = array();
+
+        if( count($actionParams) )
+        {
+            foreach($actionParams as $paramKey => $paramValue)
+            {
+                $param = $paramKey . '=' . $paramValue;
+
+                if( is_numeric($paramKey) )
+                {
+                    $param = $paramValue;
+                }
+
+                $arrParams[] = $param;
+            }
+        }
+
+        $connectionUrl  = $this->getConnectionUrl() . '&act=' . $actionName . (count($arrParams)?'&':'') . implode('&', $arrParams);
+//        $arrData        = trim(file_get_contents( $connectionUrl, false, $context ), "\xEF\xBB\xBF");
+        $arrData        = file_get_contents( $connectionUrl );
+        $return         = false;
+//echo "<pre>";
+//print_r( $connectionUrl );
+//        print_r( $arrData );
+//echo "</pre>";
+
+//print_r( parse)
         if( !$arrData )
         {
             if( !$returnBoolean )
@@ -409,6 +457,19 @@ class ConnectTool
         else
         {
             $return = json_decode($arrData, $returnAsArray);
+
+            if( !is_array($return) && !is_object($return) )
+            {
+                $return = json_decode($return, $returnAsArray);
+            }
+        }
+
+        if( $returnBoolean )
+        {
+            if( key_exists('ERROR', $return) )
+            {
+                return false;
+            }
         }
 
         return $returnBoolean ? true : $return;
@@ -482,7 +543,7 @@ class ConnectTool
 
 
 
-    public function setUpFiles( $arrFiles )
+    public function setUpFilesFolder( $arrFiles )
     {
         $arrFolders = array();
 
@@ -498,6 +559,11 @@ class ConnectTool
             {
                 $objFolder      = new \Folder( $strFolderPath );
             }
+
+//            if( $objFolder )
+//            {
+//                $objFolder->protected =
+//            }
 
             $arrFolders[] = $objFolder->path;
 
@@ -548,6 +614,9 @@ class ConnectTool
     {
         if( is_array($arrModelValue) && count($arrModelValue) )
         {
+            $request        = $this->container->get('request_stack')->getCurrentRequest();
+            $customerAlias  = $request->request->get('customer_alias');
+
             $modelClass = '\\' . $modelName . 'Model';
             $objModel   = new $modelClass();
 
@@ -559,6 +628,14 @@ class ConnectTool
                 }
 
                 $valueVarValue = $this->replaceVars( $valueVarValue);
+
+                if( $valueVar == "password" )
+                {
+                    if( !preg_match('/^[a-f0-9]{32}$/', $valueVarValue) )
+                    {
+                        $valueVarValue = md5( $valueVarValue );
+                    }
+                }
 
                 $objModel->$valueVar = $valueVarValue;
             }
@@ -575,7 +652,39 @@ class ConnectTool
 
                     $value = $this->replaceVars( $value);
 
+                    if( $key == "password" )
+                    {
+                        if( !preg_match('/^[a-f0-9]{32}$/', $value) )
+                        {
+                            $value = md5( $value );
+                        }
+                    }
+
                     $objModel->$key = $value;
+                }
+            }
+
+            if( $modelName === "Theme" )
+            {
+                $objModel->templates        = 'templates/' . $customerAlias;
+
+                $arrFolders         = array();
+                $objMasterFolder    = \FilesModel::findByPath("files/master");
+                $objCustomerFolder  = \FilesModel::findByPath("files/" . $customerAlias );
+
+                if( $objMasterFolder )
+                {
+                    $arrFolders[] = $objMasterFolder->uuid;
+                }
+
+                if( $objCustomerFolder )
+                {
+                    $arrFolders[] = $objCustomerFolder->uuid;
+                }
+
+                if( count($arrFolders) )
+                {
+                    $objModel->folders = serialize($arrFolders);
                 }
             }
 
@@ -819,6 +928,11 @@ class ConnectTool
                             {
                                 $varValue = $request->request->get("customer_name");
                             }
+
+                            if( $arrParts[1] === "websiteTitle" )
+                            {
+                                $varValue = $this->renderTitleString( $varValue );
+                            }
                         }
                         elseif( $arrParts[0] == "cms" )
                         {
@@ -857,5 +971,27 @@ class ConnectTool
     public function isConnectToolInitialized()
     {
         return $this->getConfig("iido_initSystem");
+    }
+
+
+
+    protected function renderTitleString( $strTitle )
+    {
+        $strTitle = preg_replace(array('/ä/', '/ö/', '/ü/', '/Ä/', '/Ö/', '/Ü/'), array(';ae;', ';oe;', ';ue;', ';AE;', ';OE;', ';UE;'), $strTitle);
+        $strTitle = preg_replace('/ß/', ';ss;', $strTitle);
+        $strTitle = preg_replace('/ /', '+', $strTitle);
+
+        return $strTitle;
+    }
+
+
+
+    protected function getFilesFromMaster( $arrFolders )
+    {
+        $arrData = $this->getActionData("getFolderFiles", array('foldersPath'=>implode(",", $arrFolders)));
+
+        echo "<pre>";
+        print_r( $arrData->files );
+        exit;
     }
 }

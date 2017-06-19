@@ -108,7 +108,7 @@ class CombinerListener
 //                            {
 //                                $varName .= '_' . $objCurPage->alias;
 //                            }
-                            $varValue = preg_replace('/&#35;/', '#', $varValue);
+                            $varValue = preg_replace(array('/&#35;/', '/&#40;/', '/&#41;/'), array('#', '(', ')'), $varValue);
                         }
 
                         $strContent = preg_replace('/\/\*#' . $varName . '#\*\/' . $add . '/', $varValue, $strContent);
@@ -124,9 +124,12 @@ class CombinerListener
         {
             if( $isInFiles || $isInBundle )
             {
-                $objMinify = new Minify\JS();
-                $objMinify->add( $strContent );
-                $strContent = $objMinify->minify();
+                if( !preg_match('/min' . \Combiner::JS . '$/', trim($arrFile['name'])) )
+                {
+                    $objMinify = new Minify\JS();
+                    $objMinify->add( $strContent );
+                    $strContent = $objMinify->minify();
+                }
             }
         }
 

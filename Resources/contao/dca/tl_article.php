@@ -11,7 +11,9 @@
  ******************************************************************/
 
 \Controller::loadLanguageFile("tl_page");
+
 \Controller::loadDataContainer("tl_page");
+\Controller::loadDataContainer("tl_content");
 
 $objArticle         = FALSE;
 $objParentPage      = FALSE;
@@ -68,6 +70,7 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addField('addBackgroundVideo', 'bgSize', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
     ->addField('hideInMenu', 'navigation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+    ->addField('overviewImage', 'hideInMenu', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 //    ->addField('bgImage', 'hideInMenu', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
 
@@ -161,23 +164,23 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['bgColor'] = array
     'sql'                   => "varchar(64) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage'] = array
-(
-    'label'                 => &$GLOBALS['TL_LANG']['tl_article']['bgImage'],
-    'inputType'             => 'text',
-    'eval'                  => array
-    (
-        'filesOnly'             => TRUE,
-        'extensions'            => Config::get('validImageTypes'),
-        'fieldType'             => 'radio',
-        'tl_class'              => 'w50 wizard'
-    ),
-    'wizard' => array
-    (
-        array('iido_basic.table.all', 'filePicker')
-    ),
-    'sql'                   => "varchar(255) NOT NULL default ''"
-);
+//$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage'] = array
+//(
+//    'label'                 => &$GLOBALS['TL_LANG']['tl_article']['bgImage'],
+//    'inputType'             => 'text',
+//    'eval'                  => array
+//    (
+//        'filesOnly'             => TRUE,
+//        'extensions'            => Config::get('validImageTypes'),
+//        'fieldType'             => 'radio',
+//        'tl_class'              => 'w50 wizard'
+//    ),
+//    'wizard' => array
+//    (
+//        array('iido_basic.table.all', 'filePicker')
+//    ),
+//    'sql'                   => "varchar(255) NOT NULL default ''"
+//);
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['bgPosition'] = array
 (
@@ -185,7 +188,7 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['bgPosition'] = array
     'inputType'               => 'select',
     'options'                 => array('left top', 'left center', 'left bottom', 'center top', 'center center', 'center bottom', 'right top', 'right center', 'right bottom'),
     'reference'               => $GLOBALS['TL_LANG']['tl_article']['reference']['bgPosition'],
-    'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+    'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'clr w50'),
     'sql'                     => "varchar(32) NOT NULL default ''"
 );
 
@@ -284,3 +287,16 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['hideInMenu']['eval']['submitOnChange
 
 $GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundVideo']            = $GLOBALS['TL_DCA']['tl_article']['fields']['fullHeight'];
 $GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundVideo']['label']   = &$GLOBALS['TL_LANG']['tl_article']['addBackgroundVideo'];
+
+
+
+$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']                 = $GLOBALS['TL_DCA']['tl_content']['fields']['singleSRC'];
+$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['label']        = &$GLOBALS['TL_LANG']['tl_page']['overviewImage'];
+$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['eval']['mandatory']   = FALSE;
+$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['eval']['tl_class']    = 'w50 hauto';
+$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['load_callback']       = array();
+$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['save_callback']       = array();
+
+
+$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage']                       = $GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage'];
+$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage']['label']              = &$GLOBALS['TL_LANG']['tl_article']['bgImage'];

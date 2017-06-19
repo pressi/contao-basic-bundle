@@ -57,9 +57,9 @@ class PageListener
 
     }
 
-    public function getCustomizePageStatusIcon( $objPage, $strImage )
+    public function getCustomizePageStatusIcon( $objCurrentPage, $strImage )
     {
-        if( $objPage->type == "regular_redirect" )
+        if( $objCurrentPage->type == "regular_redirect" )
         {
             $strImage = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/images/pages/' . $strImage;
         }
@@ -80,6 +80,7 @@ class PageListener
         $strStyles          = '';
         $objArticle         = \ArticleModel::findPublishedByPidAndColumn($objPage->id, "main");
         $objTheme           = \ThemeModel::findByPk( $objLayout->pid );
+        $bundles            = array_keys(\System::getContainer()->getParameter('kernel.bundles'));
 
         $config             = \Config::getInstance();
         $jsPrefix           = 'mootools';
@@ -113,6 +114,28 @@ class PageListener
             $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullPage.min.js|static';
         }
 
+        if( $footerMode )
+        {
+            $GLOBALS['TL_CSS']['footer'] = $this->bundlePathPublic . '/css/footer.css||static';
+        }
+
+        $GLOBALS['TL_JAVASCRIPT']['j_gsap']                 = $this->bundlePathPublic . '/javascript/greensock/jquery.gsap.min.js|static';
+        $GLOBALS['TL_JAVASCRIPT']['tweenlite']              = $this->bundlePathPublic . '/javascript/greensock/TweenMax.min.js|static';
+
+        if( in_array('RockSolidSliderBundle', $bundles) && $objRootPage->enablePageFadeEffect )
+        {
+            $assetsDir = 'web/bundles/rocksolidslider';
+
+            $GLOBALS['TL_JAVASCRIPT']['rocksolid_slider']       = $assetsDir . '/js/rocksolid-slider.min.js|static';
+            $GLOBALS['TL_CSS']['rocksolid_slider']              = $assetsDir . '/css/rocksolid-slider.min.css||static';
+
+            $skinPath = $assetsDir . '/css/default-skin.min.css';
+            if (file_exists(TL_ROOT . '/' . $skinPath))
+            {
+                $GLOBALS['TL_CSS']['rocksolid_slider_default'] = $skinPath . '||static';
+            }
+        }
+
         $this->addDefaultStylesheets();
 
         if( $jsPrefix == "jquery" )
@@ -139,11 +162,6 @@ class PageListener
         {
             $arrBodyClasses[] = 'page-fade-animation';
             $GLOBALS['TL_JAVASCRIPT']['barba']              = $this->bundlePathPublic . '/javascript/barba.min.js|static';
-        }
-
-        if( $footerMode )
-        {
-            $GLOBALS['TL_CSS']['footer'] = $this->bundlePathPublic . '/css/footer.css||static';
         }
 
         if( $objLayout->loadDomainCSS )
@@ -301,6 +319,8 @@ class PageListener
         {
             $objPage->cssClass = $objPage->cssClass . ((strlen($objPage->cssClass)) ? ' ' : '') . implode(" ", $arrBodyClasses);
         }
+
+        Helper::checkForUniqueScripts();
     }
 
 
@@ -496,7 +516,7 @@ class PageListener
 
                         if( strlen(trim($strOnlyStyles)) )
                         {
-                            $objFile->append($strOnlyStyles, '');
+                            $objFile->append($strStyle, '');
                         }
                     }
 
@@ -510,11 +530,18 @@ class PageListener
                     $objFile->delete();
                 }
             }
-
-            if( file_exists($this->rootDir . '/assets/css/page-styles.css') )
+        }
+        else
+        {
+            if( $objFile->exists() )
             {
-                $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
+                $objFile->delete();
             }
+        }
+
+        if( file_exists($this->rootDir . '/assets/css/page-styles.css') )
+        {
+            $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
         }
 
         if( file_exists($this->rootDir . '/files/' . $objRootPage->alias . '/css/theme.css') )
@@ -582,6 +609,7 @@ class PageListener
             'layout.css',
             'navigation.css',
             'content.css',
+            'style.css',
             'styles.css',
             'page.css',
             'responsive.css'

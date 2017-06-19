@@ -14,7 +14,8 @@
         {
             "host"          : "##env__host##",
             "name"          : "##config__websiteTitle##",
-            "version"       : "##cms__version##"
+            "version"       : "##cms__version##",
+            "clientID"      : "##config__clientID##"
         }
     }
 }

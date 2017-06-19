@@ -88,7 +88,7 @@ class FrontendTemplateListener
 
                 $objArticle = \ArticleModel::findByIdOrAlias( $idOrAlias );
             }
-            
+
 //            if( strlen($articleID) )
 //            {
 //                $strContent = preg_replace('/id="'. $articleID . '"/', 'id="' . $objArticle->alias . '"', $strContent);
@@ -374,6 +374,7 @@ class FrontendTemplateListener
                 }
 
                 $arrAttributes[] = 'data-menu="' . $inMenu . '"';
+                $arrAttributes[] = 'data-anchor="' . $objArticle->alias . '"';
             }
 
             if( is_array($articleClass) && count($articleClass) > 0 )
@@ -404,8 +405,20 @@ class FrontendTemplateListener
 
             if( $objArticle->inColumn === "main")
             {
-                $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">', $strContent);
-                $strContent = $strContent . '</div>';
+                $divTableStart      = "";
+                $divTableEnd        = "";
+
+                if( $objArticle->textMiddle && $isFullpage )
+                {
+                    $divTableStart  = '<div class="article-table">';
+                    $divTableEnd    = '</div>';
+                }
+
+                $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">' . $divTableStart, $strContent);
+                $strContent = $strContent . $divTableEnd . '</div>';
+
+//                $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">', $strContent);
+//                $strContent = $strContent . '</div>';
 
                 if( $objParentPage->subPagesHasBacklink && !$objPage->thisPageHasNoBacklink && preg_match('/last/', $arrMatches[1][0]) )
                 {
@@ -650,7 +663,7 @@ class FrontendTemplateListener
                 $strBuffer = preg_replace('/nav-sub/', 'nav-sub has-bg-left', $strBuffer);
                 $strBuffer = preg_replace('/<nav([A-Za-z0-9\s\-=\",;.:_\{\}\/\(\)]{0,})class="mod_navigation([A-Za-z0-9\s\-\'\",;.:_\{\}\/\(\)]{0,})nav-sub([A-Za-z0-9\s\-\'\",;.:_\{\}\/\(\)]{0,})"([A-Za-z0-9\s\-=\",;.:_\{\}\/\(\)]{0,})>/', '<nav$1class="mod_navigation$2nav-sub$3"$4><div class="bg-subnav"></div>', $strBuffer);
             }
-            
+
             if( preg_match('/homepage/', $objPage->cssClass) )
             {
                 $strBuffer = preg_replace('/<div class="page-title-container">([A-Za-z0-9öäüÖÄÜß&!?\-\n\s_.,;:<>="\{\}\(\)\/]{0,})<\/div>([\s]{0,})<div([A-Za-z0-9\-\s="]{0,})class="mod_article/', '<div$3class="mod_article', $strBuffer);

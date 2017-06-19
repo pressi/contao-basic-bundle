@@ -4,6 +4,7 @@
 
 .widget:not(.w50) {
     clear: both;
+    width: 96%;
 }
 
 .wizard .color-picker .tl_text_2 {

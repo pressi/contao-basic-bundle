@@ -12,6 +12,7 @@
 
 namespace IIDO\BasicBundle\Table;
 
+use Contao\Versions;
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
 
 /**
@@ -44,8 +45,8 @@ class PageTable extends \Backend
         // Generate folder URL aliases (see #4933)
         if (\Config::get('folderUrl'))
         {
-            $objPage    = \PageModel::findWithDetails($dc->activeRecord->id);
-            $varValue   = $this->replaceExceptPages($varValue, $objPage);
+            $objCurrentPage    = \PageModel::findWithDetails($dc->activeRecord->id);
+            $varValue           = $this->replaceExceptPages($varValue, $objCurrentPage);
         }
 
         $objAlias = $this->Database->prepare("SELECT id FROM tl_page WHERE alias=?")
@@ -94,11 +95,11 @@ class PageTable extends \Backend
 
 
 
-    protected function replaceExceptPages($varValue, $objPage)
+    protected function replaceExceptPages($varValue, $objCurrentPage)
     {
-        if( $objPage->pid > 0 && $objPage->pid != $objPage->rootId )
+        if( $objCurrentPage->pid > 0 && $objCurrentPage->pid != $objCurrentPage->rootId )
         {
-            $objParentPage = \PageModel::findWithDetails( $objPage->pid );
+            $objParentPage = \PageModel::findWithDetails( $objCurrentPage->pid );
 
             if( $objParentPage && $objParentPage->excludeFromFolderUrl)
             {
@@ -191,7 +192,7 @@ class PageTable extends \Backend
 
         if ( $objLayout )
         {
-            $modules = deserialize( $objLayout->modules );
+            $modules = \StringUtil::deserialize( $objLayout->modules );
 
             foreach ( $modules as $module )
             {
@@ -220,40 +221,59 @@ class PageTable extends \Backend
 
     public function checkThemeStylesheet( $strTable, $strId, $intVersion, $newRecord )
     {
-        echo "<pre>";
-        print_r( $strTable );
-        echo "<br>";
-        print_r( $strId);
-        echo "<br>";
-        print_r( $intVersion);
-        echo "<br>";
-        print_r( $newRecord);
-        exit;
+        $touchFile = TRUE;
 
-//        $activeRecord   = $dc->activeRecord;
-//        $folderName     = '';
-//        $folders        = deserialize( $activeRecord->folders, TRUE);
-//        $vars           = deserialize( $activeRecord->vars, TRUE);
-//
-//        if( count($vars) )
-//        {
-//            foreach( $folders as $strFolder )
-//            {
-//                $objFolder = \FilesModel::findByUuid( $strFolder );
-//
-//                if( $objFolder && !preg_match('/master/', $objFolder->path) )
-//                {
-//                    $folderName = $objFolder->name;
-//                }
-//            }
-//
-//            $rootDir    = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
-//            $filePath   = 'files/' . $folderName . '/css/theme.css';
-//
-//            if( file_exists($rootDir . '/' . $filePath) )
-//            {
-//                touch($rootDir . '/' . $filePath);
-//            }
-//        }
+        if( $intVersion > 1 )
+        {
+            $objVersion = $this->Database->prepare("SELECT * FROM tl_version WHERE pid=? AND fromTable=? AND version=?")
+                                         ->execute($strId, $strTable, ($intVersion-1));
+
+            if( $objVersion )
+            {
+                $arrData = \StringUtil::deserialize( $objVersion->data, TRUE );
+
+                if( $arrData['pageColor'] === $newRecord['pageColor'])
+                {
+                    $touchFile = FALSE;
+                }
+            }
+        }
+
+        if( $touchFile )
+        {
+            $objLayout = Helper::getPageLayout(\PageModel::findByPk($strId));
+            $objTheme  = \ThemeModel::findByPk($objLayout->pid);
+
+            $folders    = \StringUtil::deserialize($objTheme->folders, TRUE);
+            $vars       = \StringUtil::deserialize($objTheme->vars, TRUE);
+            $folderName = '';
+
+            if( count($vars) )
+            {
+                foreach( $folders as $strFolder )
+                {
+                    $objFolder = \FilesModel::findByUuid($strFolder);
+                    if( $objFolder && !preg_match('/master/', $objFolder->path) )
+                    {
+                        $folderName = $objFolder->name;
+                    }
+                }
+
+                $rootDir  = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+                $filePath = 'files/' . $folderName . '/css/theme.css';
+
+                if( file_exists($rootDir . '/' . $filePath) )
+                {
+                    touch($rootDir . '/' . $filePath);
+                }
+                else
+                {
+                    touch($rootDir . '/files/master/core.css');
+
+                }
+            }
+        }
     }
+
+
 }

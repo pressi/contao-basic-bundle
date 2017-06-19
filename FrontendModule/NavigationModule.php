@@ -31,7 +31,22 @@ class NavigationModule extends \ModuleNavigation
      */
     public function generate()
     {
-        return parent::generate();
+        global $objPage;
+
+        $strBuffer = parent::generate();
+
+        if( !strlen($strBuffer) && preg_match('/nav-sub/', $this->cssID[1]) )
+        {
+            $objArticle         = \ArticleModel::findPublishedByPidAndColumn( $objPage->id, "main", array("order"=>"sorting"));
+            $objFirstArticle    = $objArticle->first();
+
+            if( $objFirstArticle && $objFirstArticle->bgImage && !preg_match('/homepage/', $objPage->cssClass))
+            {
+                $strBuffer = '<div class="bg-subnav empty-nav">';
+            }
+        }
+
+        return $strBuffer;
     }
 
 
@@ -40,6 +55,10 @@ class NavigationModule extends \ModuleNavigation
      */
     protected function compile()
     {
+        parent::compile();
+        $this->renderRealMenu();
+        return;
+
         /* @var \PageModel $objPage */
         global $objPage;
         parent::compile();
@@ -55,7 +74,7 @@ class NavigationModule extends \ModuleNavigation
         $arrPageItems2  = array();
 
 
-        if( $this->levelOffset == 2 && $objPage->submenuNoPages )
+        if( $this->levelOffset >= 1 && $objPage->submenuNoPages )
         {
             $arrCurrentSubPages = array();
 
@@ -250,6 +269,11 @@ class NavigationModule extends \ModuleNavigation
                     }
                 }
 
+                if( $arrPageItem['object']->type == "redirect" )
+                {
+                    $strItem = preg_replace('/<li([0-9A-Za-z\s\-="_]{0,})class="/', '<li$1class="external-link ', $strItem);
+                }
+
                 $strSubItems = $this->renderSubNavigation( $arrPageItem, 2 );
 
                 if( $arrPageItem['object']->id == $objPage->id )
@@ -297,7 +321,7 @@ class NavigationModule extends \ModuleNavigation
                     break;
 
                 case "news":
-                    $arrSubitems    = \NewsModel::findBy( array('pid=?', 'published=?'), array($objParentPage->submenuNewsArchive, '1'), array("order"=>"headline ASC") )->fetchAll();
+                    $arrSubitems    = \NewsModel::findBy( array('pid=?', 'published=?'), array($objParentPage->submenuNewsArchive, '1'), array("order"=>"sorting") )->fetchAll();
                     $from           = "news";
                     break;
             }
@@ -412,6 +436,11 @@ class NavigationModule extends \ModuleNavigation
                         $strClass .= ' submenu';
                     }
 
+                    if( $arrSubitem['type'] == "external" )
+                    {
+                        $strClass .= ' external-link';
+                    }
+
                     $row['isActive']    = $isActive;
                     $row['isTrail']     = false;
                     $row['subitems']    = $strSubItems;
@@ -434,5 +463,482 @@ class NavigationModule extends \ModuleNavigation
         }
 
         return $strContent;
+    }
+
+
+
+    public function renderRealMenu()
+    {
+        /* @var \PageModel $objPage */
+        global $objPage;
+
+        $arrItems       = array();
+
+        // Set the trail and level
+        if ($this->defineRoot && $this->rootPage > 0)
+        {
+            $trail = array($this->rootPage);
+            $level = 0;
+        }
+        else
+        {
+            $trail = $objPage->trail;
+            $level = ($this->levelOffset > 0) ? $this->levelOffset : 0;
+        }
+
+        $lang = null;
+        $host = null;
+
+        // Overwrite the domain and language if the reference page belongs to a differnt root page (see #3765)
+        if ($this->defineRoot && $this->rootPage > 0)
+        {
+            $objRootPage = \PageModel::findWithDetails($this->rootPage);
+
+            // Set the language
+            if (\Config::get('addLanguageToUrl') && $objRootPage->rootLanguage != $objPage->rootLanguage)
+            {
+                $lang = $objRootPage->rootLanguage;
+            }
+
+            // Set the domain
+            if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
+            {
+                $host = $objRootPage->domain;
+            }
+        }
+
+        if( $level > count($trail) )
+        {
+            $strItems = $this->getPages( $objPage->id, 1, $host, $lang );
+        }
+        else
+        {
+            if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
+            {
+                $level++;
+            }
+
+            $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
+        }
+
+        $this->Template->items = $strItems;
+    }
+
+
+    protected function getPages( $pid, $level=1, $host=null, $language=null, $type = '' )
+    {
+        /* @var \PageModel $objPage */
+        global $objPage;
+
+        $objParentPage = false;
+
+        if( $pid > 0 )
+        {
+            $objParentPage = \PageModel::findByPk( $pid );
+
+            if( $type == "article" )
+            {
+                $objParentPage = \ArticleModel::findByPk( $pid );
+
+                if( $objParentPage->submenuSRC )
+                {
+                    $objParentPage->submenuNoPages = true;
+                }
+            }
+        }
+
+        // Layout template fallback
+        if ($this->navigationTpl == '')
+        {
+            $this->navigationTpl = 'nav_default';
+        }
+
+        /** @var \FrontendTemplate|object $objTemplate */
+        $objTemplate = new \FrontendTemplate( $this->navigationTpl );
+
+        $objTemplate->pid   = $pid;
+        $objTemplate->type  = get_class($this);
+        $objTemplate->cssID = $this->cssID;
+        $objTemplate->level = 'level_' . $level++;
+
+        if( preg_match('/article-menu/', $this->cssID[1]) )
+        {
+            $objTemplate->level .=' article-submenu';
+        }
+
+        if( $objParentPage->submenuSRC == "articles" && !preg_match('/article-submenu/', $objTemplate->level) && $objPage->id == $objParentPage->id )
+        {
+            $objTemplate->level .=' article-menu';
+        }
+
+        $arrItems   = array();
+        $groups     = array();
+
+        if( $objParentPage && $objParentPage->submenuNoPages && (!$objParentPage->submenuPageCombination || ($objParentPage->submenuPageCombination && $objParentPage->submenuPageOrder === "pagesAfter")) )
+        {
+            switch( $objParentPage->submenuSRC )
+            {
+                case "articles":
+                    $arrItems = $this->getArticlePages( $objParentPage, $level, $host, $language );
+                    break;
+
+                case "news":
+                    $arrItems = $this->getNewsPages( $objParentPage, $level, $host, $language );
+                    break;
+            }
+        }
+
+        if( !$objParentPage->submenuNoPages || ($objParentPage->submenuNoPages && $objParentPage->submenuPageCombination) )
+        {
+            $objPages = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $pid, $this->showHidden );
+
+            if( $objPages )
+            {
+                while( $objPages->next() )
+                {
+                    $objItem    = $objPages->current();
+
+                    $trail      = in_array($objItem->id, $objPage->trail);
+                    $href       = null;
+                    $subitems   = '';
+                    $_groups    = \StringUtil::deserialize( $objItem->groups );
+
+                    // Override the domain (see #3765)
+                    if ($host !== null)
+                    {
+                        $objItem->domain = $host;
+                    }
+
+                    // Do not show protected pages unless a front end user is logged in
+                    if (!$objItem->protected || (is_array($_groups) && count(array_intersect($_groups, $groups))) || $this->showProtected || ($this instanceof \ModuleSitemap && $objItem->sitemap == 'map_always'))
+                    {
+                        // Check whether there will be subpages
+                        if( (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objItem->id || in_array($objPage->id, $this->Database->getChildRecords($objItem->id, 'tl_page'))))) )
+                        {
+                            $subitems = $this->getPages($objItem->id, $level, $host, $language);
+                        }
+
+                        $arrItem    = $this->setItemRow($objPages->row(), $objItem, "page", $subitems);
+
+                        $arrItems[] = $arrItem;
+                    }
+                }
+            }
+        }
+
+
+        if( $objParentPage && $objParentPage->submenuNoPages && $objParentPage->submenuPageCombination && $objParentPage->submenuPageOrder === "pagesBefore" )
+        {
+            switch( $objParentPage->submenuSRC )
+            {
+                case "articles":
+                    $arrItems = array_merge($arrItems, $this->getArticlePages( $objParentPage, $level, $host, $language ) );
+                    break;
+
+                case "news":
+                    $arrItems = array_merge($arrItems, $this->getNewsPages( $objParentPage, $level, $host, $language ) );
+                    break;
+            }
+        }
+
+        if( count($arrItems) === 1)
+        {
+            if( $arrItems[0]['id'] == $objPage->id )
+            {
+                return '';
+            }
+        }
+
+//        if( $objPage->hide && $level > 0)
+//        {
+//            if( $objPage->trail[ $level ] == $objPage->id )
+//            if( $objPage )
+//            {
+//                return '';
+//            }
+//        }
+
+
+        // Add classes first and last
+        if (!empty($arrItems))
+        {
+            $last = count($arrItems) - 1;
+
+            $arrItems[0]['class'] = trim($arrItems[0]['class'] . ' first');
+            $arrItems[$last]['class'] = trim($arrItems[$last]['class'] . ' last');
+        }
+
+        $objTemplate->items = $arrItems;
+
+        $hasSubitems = false;
+        foreach( $arrItems as $arrItem)
+        {
+            if( strlen($arrItem['subitems']) )
+            {
+                $hasSubitems = true;
+            }
+        }
+
+        if( !$hasSubitems )
+        {
+            $objTemplate->level = trim( $objTemplate->level . ' last-level');
+        }
+
+        return !empty($arrItems) ? $objTemplate->parse() : '';
+    }
+
+
+
+    protected function getArticlePages( \PageModel $objParentPage, $level, $host=null, $language=null )
+    {
+        $arrItems       = array();
+        $objArticles    = \ArticleModel::findPublishedByPidAndColumn($objParentPage->id, "main");
+
+        if( $objArticles )
+        {
+            while( $objArticles->next() )
+            {
+                $objItem    = $objArticles->current();
+
+                if( $objItem->hideInMenu || !$objItem->published )
+                {
+                    continue;
+                }
+
+                $subitems   = '';
+
+                if( $objItem->submenuSRC )
+                {
+                    $subitems = $this->getPages( $objItem->id, $level, $host, $language, "article" );
+                }
+
+                $arrItem    = $this->setItemRow($objArticles->row(), $objItem, "article", $subitems);
+
+                if( !empty($arrItem) )
+                {
+                    $arrItems[] = $arrItem;
+                }
+            }
+        }
+
+        return $arrItems;
+    }
+
+
+
+    protected function getNewsPages( $objParent, $level, $host=null, $language=null)
+    {
+        $arrItems = array();
+
+        $objNews = \NewsModel::findPublishedByPid( $objParent->submenuNewsArchive, 0, array('order'=>'sorting') );
+
+        if( $objNews )
+        {
+            while( $objNews->next() )
+            {
+                $objItem = $objNews->current();
+
+                if( !$objItem->published )
+                {
+                    continue;
+                }
+
+                $arrItem = $this->setItemRow($objNews->row(), $objItem, 'news');
+
+                $arrItems[] = $arrItem;
+            }
+        }
+
+
+        return $arrItems;
+    }
+
+
+
+//    protected function getSubPages( $objItem )
+//    {
+//        echo "<pre>"; print_r( $arrItem ); exit;
+//    }
+
+
+
+    protected function setItemRow( $arrItem, $objItem, $type, $subitems = '', $arrVars = array() )
+    {
+        global $objPage;
+
+        $language       = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
+
+        $strTitle       = ContentHelper::renderText( $objItem->title );
+        $strPageTitle   = ContentHelper::renderText( $objItem->pageTitle?:$objItem->title );
+        $isActive       = false;
+        $isTrail        = false;
+        $href           = '';
+        $strClass       = '';
+
+        if( $type == "page" )
+        {
+            $trail      = in_array($objItem->id, $objPage->trail);
+
+            // Get href
+            switch ($objItem->type)
+            {
+                case 'redirect':
+                    $href = $objItem->url;
+
+                    if (strncasecmp($href, 'mailto:', 7) === 0)
+                    {
+                        $href = \StringUtil::encodeEmail($href);
+                    }
+                    break;
+
+                case 'forward':
+                    if ($objItem->jumpTo)
+                    {
+                        /** @var ˜PageModel $objNext */
+                        $objNext = $objItem->getRelated('jumpTo');
+                    }
+                    else
+                    {
+                        $objNext = \PageModel::findFirstPublishedRegularByPid($objItem->id);
+                    }
+
+                    // Hide the link if the target page is invisible
+                    if (!($objNext instanceof \PageModel) || !$objNext->published || ($objNext->start != '' && $objNext->start > time()) || ($objNext->stop != '' && $objNext->stop < time()))
+                    {
+                        return array();
+                    }
+
+                    $href = $objNext->getFrontendUrl();
+                    break;
+
+                default:
+                    $href = $objItem->getFrontendUrl();
+                    break;
+            }
+
+            // Active page
+            if (($objPage->id == $objItem->id || $objItem->type == 'forward' && $objPage->id == $objItem->jumpTo) && !($this instanceof \ModuleSitemap) && $href == \Environment::get('request'))
+            {
+                // Mark active forward pages (see #4822)
+                $strClass = (($objItem->type == 'forward' && $objPage->id == $objItem->jumpTo) ? 'forward' . ($trail ? ' trail' : '') : 'active') . (($subitems != '') ? ' submenu' : '') . ($objItem->protected ? ' protected' : '') . (($objItem->cssClass != '') ? ' ' . $objItem->cssClass : '');
+
+                $isActive = true;
+                $isTrail = false;
+            }
+
+            // Regular page
+            else
+            {
+                $strClass = (($subitems != '') ? 'submenu' : '') . ($objItem->protected ? ' protected' : '') . ($trail ? ' trail' : '') . (($objItem->cssClass != '') ? ' ' . $objItem->cssClass : '');
+
+                // Mark pages on the same level (see #2419)
+                if ($objItem->pid == $objPage->pid)
+                {
+                    $strClass .= ' sibling';
+                }
+
+                $isActive = false;
+                $isTrail = $trail;
+            }
+        }
+        elseif( $type == "article" )
+        {
+            $langPartName   = 'artikel';
+
+            if( $language == "en" )
+            {
+                $langPartName = 'article';
+            }
+
+            $activeArticle  = \Input::get( $langPartName );
+
+            if( $activeArticle == $objItem->alias )
+            {
+                $isActive = true;
+            }
+
+            $strTitle       = ContentHelper::renderText($objItem->navTitle?:$objItem->title );
+            $strPageTitle   = $strTitle;
+
+            $objParentPage  = \PageModel::findByPk( $objItem->pid );
+            $href           = $objParentPage->getFrontendUrl('/' . $langPartName . '/' . $objItem->alias);
+            $strClass       = deserialize($objItem->cssID, true)[1] . ' article-link';
+
+            if( strlen($subitems) )
+            {
+                if( $objItem->submenuSRC === "news" )
+                {
+                    $activeAlias = \Input::get("auto_item");
+
+                    if( $activeAlias )
+                    {
+                        $objActiveNews = \NewsModel::findByIdOrAlias( $activeAlias );
+
+                        if( $objActiveNews && $objActiveNews->pid == $objItem->submenuNewsArchive )
+                        {
+                            $isTrail = true;
+                            $strClass .= ' trail';
+                        }
+                    }
+                }
+            }
+        }
+        elseif( $type == "news" )
+        {
+            $strTitle       = ContentHelper::renderText( $objItem->headline );
+            $strPageTitle   = $strTitle;
+
+            $activeAlias = \Input::get("auto_item");
+
+            if( $activeAlias == $objItem->alias )
+            {
+                $isActive = true;
+            }
+
+            $href           = \News::generateNewsUrl( $objItem, false);
+            $strClass       = $objItem->cssClass . ' news-link';
+        }
+
+        if( strlen($subitems) )
+        {
+            if( !preg_match('/submenu/', $strClass) )
+            {
+                $strClass .= ' submenu';
+            }
+        }
+
+        if( preg_match('/(<br>|{{br}})/', $strTitle) )
+        {
+            $strClass .= ' double-line';
+        }
+
+
+        $arrItem['isActive']    = $isActive;
+        $arrItem['isTrail']     = $isTrail;
+        $arrItem['subitems']    = $subitems;
+        $arrItem['class']       = trim($strClass);
+        $arrItem['title']       = \StringUtil::specialchars($strTitle, true);
+        $arrItem['pageTitle']   = \StringUtil::specialchars($strPageTitle, true);
+        $arrItem['link']        = $strTitle;
+        $arrItem['href']        = $href;
+        $arrItem['nofollow']    = (strncmp($objItem->robots, 'noindex,nofollow', 16) === 0);
+        $arrItem['target']      = '';
+        $arrItem['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objItem->description);
+
+        // Override the link target
+        if ($objItem->type == 'redirect' && $objItem->target)
+        {
+            $arrItem['target'] = ' target="_blank"';
+        }
+
+        if( count($arrVars) )
+        {
+            foreach($arrVars as $varName => $varValue )
+            {
+                $arrItem[ $varName ] = $varValue;
+            }
+        }
+
+        return $arrItem;
     }
 }

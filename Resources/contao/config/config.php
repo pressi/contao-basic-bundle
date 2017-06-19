@@ -49,7 +49,15 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
 
 
 /**
- * frontend modules
+ * Content elements
+ */
+
+$GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\ContentElement\NavigationElement';
+
+
+
+/**
+ * Front end modules
  */
 
 $GLOBALS['FE_MOD']['navigationMenu']['navigation']  = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';

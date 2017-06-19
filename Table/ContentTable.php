@@ -8,7 +8,8 @@
  *******************************************************************/
 
 namespace IIDO\BasicBundle\Table;
-use Contao\File;
+
+use IIDO\BasicBundle\Helper\BasicHelper;
 
 /**
  * Class Content Table
@@ -20,6 +21,35 @@ class ContentTable extends \Backend
     protected $strTable             = 'tl_content';
 
     protected $ornamentePath        = "files/Library/Images/Ornamente/"; //TODO: wartbar machen?!
+
+
+
+    public function getNavigationModule( $dc )
+    {
+        $activeRecord   = $dc->activeRecord;
+
+        $arrModules     = array(''=>'-');
+//        $objModules     = \ModuleModel::findByType('navigation');
+        $objModules     = \Database::getInstance()->prepare("SELECT * FROM tl_module WHERE type=? OR type=? OR type=?")->execute('navigation', 'booknav', 'articlenav');
+
+        $objArticle     = \ArticleModel::findByPk( $activeRecord->pid );
+        $objPage        = \PageModel::findByPk( $objArticle->pid );
+        $objLayout      = BasicHelper::getPageLayout( $objPage );
+        $objTheme       = \ThemeModel::findByPk( $objLayout->pid );
+
+        if( $objModules )
+        {
+            while( $objModules->next() )
+            {
+                if( $objModules->pid === $objTheme->id )
+                {
+                    $arrModules[ $objModules->id ] = $objModules->name;
+                }
+            }
+        }
+
+        return $arrModules;
+    }
 
 
     public function parseHeadlineImagePostionField(\DC_Table $dc, $strLabel)

@@ -744,4 +744,62 @@ class BasicHelper extends \Frontend
 
         return trim($filterName);
     }
+
+
+
+    public static function renderNavigation( $navModuleID, $strColumn = 'main', $strClasses = "" )
+    {
+        global $objPage;
+
+        $strBuffer = '';
+        $objModule = \ModuleModel::findByPk( $navModuleID );
+
+        if ($objModule )
+        {
+            $strClass = \Module::findClass( $objModule->type );
+
+            if (class_exists($strClass))
+            {
+                $objModule->typePrefix = 'ce_';
+
+                if( $objModule->type == "booknav" )
+                {
+                    $objModule->rootPage = $objPage->rootId;
+                }
+                $cssID = \StringUtil::deserialize($objModule->cssID, TRUE);
+
+                if( !strlen($cssID[1]) )
+                {
+                    $cssID = \StringUtil::deserialize($objClass->cssID, TRUE);
+                }
+
+                /** @var \Module $objModule */
+                $objModule = new $strClass($objModule, $strColumn);
+                $objModule->cssID = array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
+
+                $strBuffer = $objModule->generate();
+
+                if( $objModule->type == "booknav" )
+                {
+                    $strBuffer = preg_replace(array('/ (>|&gt;)<\/a>/', '/>(<|&lt;) /'), array('</a>', '>'), $strBuffer);
+                    $strBuffer = preg_replace('/<a([A-Za-z0-9\s\-\',;.:="\/]{0,})>([A-Za-z0-9\-\söäüÖÄÜß]{0,})<\/a>/', '<a$1><span>$2</span></a>', $strBuffer);
+
+                    preg_match_all('/<li class="previous">.*<\/li>/', $strBuffer, $arrMatches);
+
+                    $objRootPage = \PageModel::findByPk( $objPage->rootId );
+
+                    if( count($arrMatches) && count($arrMatches[0]) > 0 )
+                    {
+                        if( preg_match('/<span>' . preg_quote($objRootPage->title, '/') . '<\/span>/', $arrMatches[0][0]) )
+                        {
+                            $strBuffer = preg_replace('/previous/', 'previous hidden', $strBuffer);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return $strBuffer;
+    }
 }

@@ -71,6 +71,7 @@ class ContentListener
         global $objPage;
 
         $elementClass   = $objRow->typePrefix . $objRow->type;
+        $cssID          = \StringUtil::deserialize($objRow->cssID, TRUE);
 
         if( $objRow->type == "module" )
         {
@@ -131,6 +132,11 @@ class ContentListener
                     $strBuffer = Helper::generateImageHoverTags( $strBuffer, $objRow );
                 }
             }
+
+            if( preg_match('/first-p-big/', $cssID[1]) )
+            {
+                $strBuffer = preg_replace('/<p>(.*)<\/p>/', '<p><span class="big">$1</span><span class="divider"></span></p>', $strBuffer, 1);
+            }
         }
 
         elseif( $objRow->type == "gallery" )
@@ -144,11 +150,87 @@ class ContentListener
         $strBuffer = preg_replace('/class="' . $elementClass . '/', 'class="' . $elementClass . ' content-element', $strBuffer);
 
 
-        $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
+//        $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
 
-        if( $count )
+//        if( $count )
+//        {
+//            $strBuffer = $strBuffer . '</div>';
+//        }
+
+        preg_match_all('/class="ce_([A-Za-z0-9\s\-_\{\}]{0,})"/', $strBuffer, $arrClassMatches);
+
+        if( is_array($arrClassMatches) && is_array($arrClassMatches[0]) && count($arrClassMatches[0]) )
         {
-            $strBuffer = $strBuffer . '</div>';
+            $strClass       = "ce_" . $arrClassMatches[1][0];
+            $strNewClass    = $strClass;
+            $arrClass       = explode(" ", $strClass);
+            $arrAttributes  = array();
+
+            foreach($arrClass as $strClassName)
+            {
+                if( preg_match('/^v_/', $strClassName) )
+                {
+                    $arrClasses     = array();
+                    $arrParts       = array();
+                    $cAttributeName = "";
+                    $attributeName  = "";
+                    $value          = "";
+
+                    if( preg_match('/^v_ma/', $strClassName) )
+                    {
+                        $cAttributeName = "m";
+                        $attributeName  = "margin";
+
+                        $property   = substr($strClassName, 5);
+                        $arrParts   = explode("_", $property);
+                        $value      = $arrParts[0];
+                    }
+
+                    if( count($arrParts) > 1 )
+                    {
+                        $value = $arrParts[1];
+
+                        switch( $arrParts[0] )
+                        {
+                            case "t":
+                            case "to":
+                                $cAttributeName .= 't';
+                                $attributeName  .= '-top';
+                                break;
+
+                            case "b":
+                            case "bo":
+                                $cAttributeName .= 'b';
+                                $attributeName  .= '-bottom';
+                                break;
+
+                            case "l":
+                            case "le":
+                                $cAttributeName .= 'l';
+                                $attributeName  .= '-left';
+                                break;
+
+                            case "r":
+                            case "ri":
+                                $cAttributeName .= 'r';
+                                $attributeName  .= '-right';
+                                break;
+                        }
+                    }
+
+                    $strNewClass = preg_replace('/ ' . $strClassName . '/', '', $strNewClass);
+
+//                    $arrClasses[]       = 'd' . $cAttributeName;
+//                    $arrAttributes[]    = 'data-' . $attributeName . '="' . $value . '"';
+                    $arrAttributes[]    = $attributeName . ':' . $value . 'px;';
+                }
+            }
+
+            if( count($arrAttributes) )
+            {
+//                $strBuffer = preg_replace('/class="' . $strClass . '"/', 'class="' . $strClass . ' ' . implode(" ", $arrClasses) . '" ' . implode(" ", $arrAttributes), $strBuffer);
+                $strBuffer = preg_replace('/class="' . $strClass . '"/', 'class="' . $strNewClass . '" style="' . implode("", $arrAttributes) . '"', $strBuffer);
+            }
         }
 
         return $strBuffer;

@@ -25,16 +25,16 @@ class RegularRedirectPage extends \PageRegular
     /**
      * Create a new template
      *
-     * @param \PageModel   $objPage
+     * @param \PageModel   $objCurrentPage
      * @param \LayoutModel $objLayout
      */
-    protected function createTemplate($objPage, $objLayout)
+    protected function createTemplate($objCurrentPage, $objLayout)
     {
-        parent::createTemplate($objPage, $objLayout);
+        parent::createTemplate($objCurrentPage, $objLayout);
 
-        if( $objPage->jumpTo )
+        if( $objCurrentPage->jumpTo )
         {
-            $strFrontendUrl = \PageModel::findByPk( $objPage->jumpTo )->getFrontendUrl();
+            $strFrontendUrl = \PageModel::findByPk( $objCurrentPage->jumpTo )->getFrontendUrl();
             $timeout        = $this->redirectTimeout?:5;
 
             $this->Template->viewport = $this->Template->viewport . "\n" . '<meta http-equiv="refresh" content="' . $timeout . '; URL=' . $strFrontendUrl . '">';

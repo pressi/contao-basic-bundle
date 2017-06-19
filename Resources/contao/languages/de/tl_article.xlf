@@ -85,6 +85,11 @@
                 <target>Volle Breite (100%)</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.fullWidthInside.0">
+                <source>optical height</source>
+                <target>Inhalt über die volle Breite (100%)</target>
+            </trans-unit>
+
 
 
             <trans-unit id="tl_article.bgColor.0">
@@ -139,6 +144,11 @@
             <trans-unit id="tl_article.bgImageTwice.0">
                 <source>background color</source>
                 <target>Zweites Hintergrund-Bild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.submenuNewsArchive.0">
+                <source>background color</source>
+                <target>Submenü: News-Archiv</target>
             </trans-unit>
 
 

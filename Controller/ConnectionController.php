@@ -290,8 +290,10 @@ class ConnectionController implements ContainerAwareInterface
 
         $arrData = $connectTool->getActionData("getContaoInit", array('themeID=' . $themeID) );
 
-        $connectTool->setUpFiles( $arrData->files );
+        $connectTool->setUpFilesFolder( $arrData->folders );
         $connectTool->setUpTemplates( $arrData->templates );
+
+//        $connectTool->getFilesFromMaster( $arrData->files );
 
         $arrTheme   = (array) $arrData->theme;
         unset($arrTheme['layouts']);
@@ -299,13 +301,13 @@ class ConnectionController implements ContainerAwareInterface
         unset($arrTheme['imageSizes']);
         unset($arrTheme['imageSizeItems']);
 
-        $connectTool->createNewOneModelEntry("Theme", $arrTheme, array('master_ID', $themeID));
+        $connectTool->createNewOneModelEntry("Theme", $arrTheme, array('master_ID' => $themeID));
 
         // Create Layouts
-        $connectTool->createNewModelEntry("Layout", (array) $arrData->theme->layouts, array('master_ID', 'field_id'));
+        $connectTool->createNewModelEntry("Layout", (array) $arrData->theme->layouts, array('master_ID' => 'field_id'));
 
         // Create Modules
-        $connectTool->createNewModelEntry("Module", (array) $arrData->theme->modules, array('master_ID', 'field_id'));
+        $connectTool->createNewModelEntry("Module", (array) $arrData->theme->modules, array('master_ID' => 'field_id'));
 
         // Create Image Sizes
         $connectTool->createNewModelEntry("ImageSize", (array) $arrData->theme->imageSizes);
@@ -368,6 +370,7 @@ class ConnectionController implements ContainerAwareInterface
         }
 
         $connectTool->persistConfig( 'iido_initSystem', TRUE);
+        $connectTool->persistConfig( 'clientID', $arrData->clientID);
 
         return $this->getRedirectResponse();
     }

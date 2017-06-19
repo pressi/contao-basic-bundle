@@ -138,8 +138,6 @@ class AllTables
         $table      = "";
         $field      = "";
         $value      = "";
-        $title      = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']);
-        $modalTitle = \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][ $table ]['fields'][ $field ]['label'][0]));
 
         if($dc instanceof \DataContainer)
         {
@@ -156,7 +154,17 @@ class AllTables
             $field  = $dc['field'];
         }
 
-        $href = (($value == '' || strpos($value, '{{link_url::') !== false) ? 'contao/page' : 'contao/file') . '?do=' . \Input::get('do') . '&amp;table=' . $table . '&amp;field=' . $field . '&amp;value=' . rawurlencode(str_replace(array('{{link_url::', '}}'), '', $value)) . '&amp;switch=1';
+        $title      = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']);
+        $modalTitle = \StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_DCA'][ $table ]['fields'][ $field ]['label'][0]));
+        $href       = (($value == '' || strpos($value, '{{link_url::') !== false) ? 'contao/page' : 'contao/file') . '?do=' . \Input::get('do') . '&amp;table=' . $table . '&amp;field=' . $field . '&amp;value=' . rawurlencode(str_replace(array('{{link_url::', '}}'), '', $value)) . '&amp;switch=1';
+
+        if( !strlen($modalTitle) )
+        {
+            preg_match_all('/_row([0-9]{0,10})_([A-Za-z0-9\-_]{0,})$/', $field, $arrMatches);
+
+            $strField   = preg_replace('/_row([0-9]{0,10})_([A-Za-z0-9\-_]{0,})$/', '', $field);
+            $modalTitle =  \StringUtil::specialchars(str_replace("'", "\\'",  $GLOBALS['TL_DCA'][ $table ]['fields'][ $strField ]['label'][0] . ' - ' . $GLOBALS['TL_DCA'][ $table ]['fields'][ $strField ]['eval']['columnFields'][ $arrMatches[2][0] ]['label']));
+        }
 
         return ' <a href="' . $href . '" title="' . $title . '" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':768,\'title\':\'' . $modalTitle . '\',\'url\':this.href,\'id\':\'' . $field . '\',\'tag\':\'ctrl_'. $field . ((\Input::get('act') == 'editAll') ? '_' . $id : '') . '\',\'self\':this});return false">' . \Image::getHtml('pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>';
     }
