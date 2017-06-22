@@ -108,12 +108,20 @@ class CombinerListener
 //                            {
 //                                $varName .= '_' . $objCurPage->alias;
 //                            }
-                            $varValue = preg_replace(array('/&#35;/', '/&#40;/', '/&#41;/'), array('#', '(', ')'), $varValue);
+                            $varValue       = preg_replace(array('/&#35;/', '/&#40;/', '/&#41;/'), array('#', '(', ')'), $varValue);
+
+                            $varValueDark   = ColorHelper::mixColors($varValue, '#000000', 20.0);
+                            $varValueLight  = ColorHelper::mixColors($varValue, '#ffffff', 90.0);
+
+                            $strContent     = preg_replace('/\/\*#' . $varName . '_darker#\*\/' . $add . '/', $varValueDark, $strContent);
+                            $strContent     = preg_replace('/\/\*#' . $varName . '_lighter#\*\/' . $add . '/', $varValueLight, $strContent);
                         }
 
                         $strContent = preg_replace('/\/\*#' . $varName . '#\*\/' . $add . '/', $varValue, $strContent);
                     }
                 }
+
+                $strContent = $this->replaceDefaultVars( $strContent );
 
                 $objMinify = new Minify\CSS();
                 $objMinify->add( $strContent );
@@ -211,6 +219,27 @@ class CombinerListener
         }
 
         return $arrVariables;
+    }
+
+
+
+    protected function replaceDefaultVars( $strContent )
+    {
+        preg_match_all('/\/\*#[^*]+#\*\//', $strContent, $arrChunks);
+
+        foreach ($arrChunks[0] as $strChunk)
+        {
+            $strKey = strtolower(substr($strChunk, 3, -3));
+
+            switch( $strKey )
+            {
+                case "page_content_width":
+                    $strContent    = str_replace($strChunk . '1px', '100%', $strContent);
+                    break;
+            }
+        }
+
+        return $strContent;
     }
 
     
