@@ -169,6 +169,89 @@
 <!-- ### OPTIONS ############################################################################################################ -->
 
 
+            <trans-unit id="tl_content.options.buttonStyle.primary">
+                <source>left</source>
+                <target>Primär</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonStyle.secondary">
+                <source>right</source>
+                <target>Sekundär</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonStyle.tertiary">
+                <source>right</source>
+                <target>Style 3</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonStyle.quaternary">
+                <source>right</source>
+                <target>Style 4</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.buttonType.normal">
+                <source>left</source>
+                <target>Normal</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonType.border">
+                <source>right</source>
+                <target>Transparent, nur Rahmen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonType.round">
+                <source>left</source>
+                <target>Rund (Kreis)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonType.round_border">
+                <source>left</source>
+                <target>Rund (Kreis), nur Rahmen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_content.options.buttonAddonPosition.left">
+                <source>left</source>
+                <target>Links</target>
+            </trans-unit>
+			<trans-unit id="tl_content.options.buttonAddonPosition.center">
+				<source>left</source>
+				<target>Zentriert</target>
+			</trans-unit>
+            <trans-unit id="tl_content.options.buttonAddonPosition.right">
+                <source>right</source>
+                <target>Rechts</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.buttonAddon.arrow">
+                <source>left</source>
+                <target>Pfeil</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonAddon.icon">
+                <source>right</source>
+                <target>Icon</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.buttonAddonArrow.left">
+                <source>left</source>
+                <target>nach links</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonAddonArrow.right">
+                <source>right</source>
+                <target>nach rechts</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonAddonArrow.up">
+                <source>up</source>
+                <target>nach oben</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonAddonArrow.down">
+                <source>down</source>
+                <target>nach unten</target>
+            </trans-unit>
+
+
+
+
 			<trans-unit id="tl_content.options.buttonIconPosition.left">
 				<source>left</source>
 				<target>Links</target>
