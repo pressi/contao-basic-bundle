@@ -11,7 +11,7 @@ IIDO.Page = IIDO.Page || {};
 (function (window, $, page)
 {
 
-    var $header, $wrapper, $searchForm, $mobileNav, $mobileIsOpened, $tagline,
+    var $header, $wrapper, $searchForm, $mobileNav, $openButton, $mobileIsOpened, $tagline,
         $lbOpen = false, $openLinkTag = false, $headOptions = {},
 
         $navOffset = 0;
@@ -25,18 +25,23 @@ IIDO.Page = IIDO.Page || {};
 
         // this.initHeader();
         // this.initSearch();
-        // this.initMobileNavigation();
+        this.initMobileNavigation();
         this.initNavigation();
         this.initOnePage();
         this.initFullPage();
         this.initPageFade();
         // this.initFooter();
+        this.initMobile();
 
         if( $(document.body).hasClass("url-change") )
         {
             this.initArticles();
             this.initScroll();
         }
+
+        $(window).resize( function() {
+            IIDO.Page.initMobile();
+        });
 
         $("a.open-in-lightbox").click( function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
 
@@ -194,8 +199,8 @@ IIDO.Page = IIDO.Page || {};
 
                 if( useScroll && articleAlias === el.attr("data-alias") )
                 {
-                    // IIDO.Page.scrollTo( window.event, el );
-                    $(window).scrollTop( el.position().top );
+                    IIDO.Page.scrollTo( window.event, el );
+                    // $(window).scrollTop( el.position().top );
                     return true;
                 }
             });
@@ -221,6 +226,10 @@ IIDO.Page = IIDO.Page || {};
                     linkMain = el.prev("strong");
                 }
 
+                // if( linkMain.hasClass("article-link") )
+                // {
+                //     linkMain.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
+                // }
                 linkMain.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
 
                 if( elChilds.length )
@@ -229,6 +238,10 @@ IIDO.Page = IIDO.Page || {};
                     {
                         var link = $(elem).find("> a");
 
+                        // if( link.hasClass("article-link") )
+                        // {
+                        //     link.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
+                        // }
                         link.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
                     });
                 }
@@ -1092,6 +1105,156 @@ IIDO.Page = IIDO.Page || {};
             }
         });
     };
+
+
+
+    page.initMobileNavigation = function()
+    {
+        $mobileNav  = $('.main-navigation-mobile');
+
+        if( $mobileNav.length )
+        {
+            IIDO.Base.addEvent(window, 'resize', IIDO.Page.updateMobileNavigationHeight);
+            $mobileNav.addClass('is-enabled');
+
+            $openButton = $("a.main-navigation-mobile-open");
+
+            IIDO.Base.addEvent($openButton, 'click', function(event)
+            {
+                IIDO.Base.eventPreventDefault(event);
+
+                if ($mobileNav.hasClass('is-active'))
+                {
+                    IIDO.Page.closeMobileNavigation();
+                }
+                else
+                {
+                    IIDO.Page.openMobileNavigation();
+                }
+            });
+
+            var closeButton = $mobileNav.find("button.main-navigation-mobile-close");
+
+            IIDO.Base.addEvent(closeButton, 'click', function(event)
+            {
+                if( $mobileIsOpened )
+                {
+                    IIDO.Page.closeMobileNavigation();
+                }
+                IIDO.Base.eventPreventDefault(event);
+            });
+
+            var listContainers = $mobileNav.find('li.submenu'), button, listItem;
+
+            if( listContainers.length )
+            {
+                for (var i = 0; i < listContainers.length; i++)
+                {
+                    listItem    = $(listContainers[ i ]);
+                    button      = listItem.find(" > button.main-navigation-mobile-expand");
+
+                    IIDO.Base.addEvent(button, 'click', IIDO.Page.clickOnMobileNavigationButton);
+
+                    if( listItem.hasClass('active') || listItem.hasClass('trail') )
+                    {
+                        listItem.addClass('is-expanded');
+                    }
+                    else
+                    {
+                        listItem.addClass('is-collapsed');
+                    }
+                }
+            }
+        }
+    };
+
+
+
+    page.updateMobileNavigationHeight = function()
+    {
+        if( $mobileIsOpened )
+        {
+            if( !$mobileNav.offsetHeight )
+            {
+                this.closeMobileNavigation();
+            }
+            else
+            {
+                $mobileNav.css("min-height", '');
+            }
+        }
+    };
+
+
+
+    page.closeMobileNavigation = function()
+    {
+        $mobileIsOpened = false;
+        $mobileNav.removeClass('is-active');
+
+        $openButton.removeClass('is-active');
+
+        $("html").removeClass("noscroll");
+    };
+
+
+
+    page.openMobileNavigation = function()
+    {
+        $mobileIsOpened = true;
+        $mobileNav.addClass('is-active');
+
+        $openButton.addClass('is-active');
+
+        // IIDO.Page.updateMobileNavigationHeight();
+
+        $("html").addClass("noscroll");
+    };
+
+
+
+    page.clickOnMobileNavigationButton = function( event )
+    {
+        var element = this.parentNode;
+
+        if( element === undefined || element === "undefined" || element === null)
+        {
+            element = $(event.currentTarget).parent("li")
+        }
+
+        IIDO.Base.toggleElementClass(element, 'is-expanded');
+        IIDO.Base.toggleElementClass(element, 'is-collapsed');
+
+        // IIDO.Page.updateMobileNavigationHeight();
+    };
+
+
+
+    page.initMobile = function()
+    {
+        var eventMenu   = $(".mod_eventmenu"),
+            eventFilter = $(".mod_mae_event_filter a, .btn-reset a, .mod_eventmenu li a");
+
+        if( $(window).width() <= 420 )
+        {
+            if( eventMenu.length )
+            {
+                eventMenu.find("h3").click(function() { eventMenu.toggleClass("open"); });
+            }
+
+            if( eventFilter.length )
+            {
+                eventFilter.click( function(e) { IIDO.Page.scrollTo(e, $(".mod_article#article-31") ); });
+            }
+        }
+        else
+        {
+            if( eventMenu.length )
+            {
+                eventMenu.find("h3").unbind("click");
+            }
+        }
+    }
 
 })(window, jQuery, IIDO.Page);
 

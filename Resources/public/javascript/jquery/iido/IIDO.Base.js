@@ -24,7 +24,7 @@ IIDO.Base = IIDO.Base || {};
             {
                 // element.attachEvent('on' + events[i], func);
 
-                element.on(events[i], function() { func() });
+                element.on(events[i], function(e) { func(e) });
             }
         }
     };
