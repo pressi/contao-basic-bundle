@@ -361,7 +361,7 @@ class PageListener
             }
 
             // Mobile Menü
-            $menuOpen   = '<a href="javascript:void(0)" class="main-navigation-mobile-open">navigation</a>';
+            $menuOpen   = '<a href="javascript:void(0)" class="main-navigation-mobile-open hamburger hamburger--squeeze js-hamburger"><div class="hamburger-box"><div class="hamburger-inner"></div></div></a>';
             $menuClose  = '<button class=" main-navigation-mobile-close">close</button>';
 
             $strModuleTable = \ModuleModel::getTable();
@@ -369,12 +369,32 @@ class PageListener
 
 //            //TODO: set module ID flexible, make a change posible
             $modSearch  = ''; //\Controller::getFrontendModule( 10 );
-            $modNavi    = \Controller::getFrontendModule( $objNavModule->id ); // 11
+            $modNavi    = ''; //\Controller::getFrontendModule( $objNavModule->id ); // 11
+
+            if ($objNavModule )
+            {
+                $strClass = \Module::findClass( $objNavModule->type );
+
+                if (class_exists($strClass))
+                {
+                    $objNavModule->typePrefix = 'ce_';
+
+                    /** @var \Module $objNavModule */
+                    $objNavModule = new $strClass($objNavModule, "main");
+
+                    $objNavModule->cssID = array('', 'nav-mobile-main');
+                    $objNavModule->navigationTpl = 'nav_mobile';
+
+                    $modNavi = $objNavModule->generate();
+                }
+            }
+
             $modSocial  = ''; //TODO: Add Socialmedia links
 
             $menuMobile = '<div class="main-navigation-mobile">' . $modSearch . $modNavi . $modSocial . $menuClose . '</div>';
 
-            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-_,;.:\{\}\(\)="\']{0,})>/',  '<body$1>' . $menuOpen . $menuMobile, $strBuffer);
+//            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-_,;.:\{\}\(\)="\'<>%\/]{0,})>/',  '<body$1>' . $menuOpen . $menuMobile, $strBuffer);
+            $strBuffer = preg_replace('/<\/body>/',  $menuOpen . $menuMobile . '</body>', $strBuffer);
         }
 
         return $strBuffer;
@@ -391,20 +411,12 @@ class PageListener
         $arrPageStyles      = array();
         $objAllPages        = \PageModel::findAll(); //\PageModel::findPublishedByPid( $objPage->rootId, array("order"=>"sorting") );
         $createTime         = 0;
-        $createFile         = TRUE;
+        $createFile         = FALSE;
         $objFile            = new \File('assets/css/page-styles.css');
 
-        if( !$objFile->exists() )
+        if( $objFile->exists() )
         {
-            $objFile->write('.');
-            $objFile->close();
-
-            $createTime     = $objFile->ctime;
-            $createFile     = FALSE;
-        }
-        else
-        {
-            $createTime     = $objFile->mtime;
+            $createTime = $objFile->mtime;
         }
 
         if( $objAllPages )
@@ -417,7 +429,7 @@ class PageListener
                 {
                     while( $objArticles->next() )
                     {
-                        if( $objArticles->tstamp > $createTime || $this->getArticleLastSave( $objArticles->id ) > $createTime)
+                        if( $objArticles->tstamp > $createTime || $this->getArticleLastSave( $objArticles->id ) > $createTime )
                         {
                             $createFile     = TRUE;
                         }
@@ -430,7 +442,14 @@ class PageListener
                             }
                         }
 
-                        $cssID = deserialize($objArticles->cssID, TRUE);
+                        $cssID      = deserialize($objArticles->cssID, TRUE);
+                        $strImage   = '';
+                        $objImage   = \FilesModel::findByUuid( $objArticles->bgImage );
+
+                        if( $objImage && file_exists($this->rootDir . '/' . $objImage->path) )
+                        {
+                            $strImage = $objImage->path;
+                        }
 
                         $arrPageStyles[ $objArticles->id ] = array
                         (
@@ -438,7 +457,7 @@ class PageListener
 
                             'background'        => TRUE,
                             'bgcolor'           => $objArticles->bgColor,
-                            'bgimage'           => $objArticles->bgImage,
+                            'bgimage'           => $strImage,
                             'bgrepeat'          => $objArticles->bgRepeat,
                             'bgposition'        => $objArticles->bgPosition,
                             'gradientAngle'     => $objArticles->gradientAngle,
@@ -489,53 +508,36 @@ class PageListener
             }
         }
 
-        if( count($arrPageStyles) )
-        {
-            if( $createFile )
-            {
-                if( $objFile->exists() )
-                {
-                    $objFile->delete();
-                }
-
-                $objStyleSheets     = new \StyleSheets();
-                $arrStyles          = array();
-
-                foreach($arrPageStyles as $arrPageStyle)
-                {
-                    $arrStyles[] = $objStyleSheets->compileDefinition($arrPageStyle, true);
-                }
-
-                if( count($arrStyles) )
-                {
-                    $objFile            = new \File('assets/css/page-styles.css');
-
-                    foreach($arrStyles as $strStyle)
-                    {
-                        $strOnlyStyles = preg_replace('/#main .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
-
-                        if( strlen(trim($strOnlyStyles)) )
-                        {
-                            $objFile->append($strStyle, '');
-                        }
-                    }
-
-                    $objFile->close();
-                }
-            }
-            else
-            {
-                if( $objFile->exists() )
-                {
-                    $objFile->delete();
-                }
-            }
-        }
-        else
+        if( count($arrPageStyles) && $createFile )
         {
             if( $objFile->exists() )
             {
                 $objFile->delete();
+            }
+
+            $objStyleSheets     = new \StyleSheets();
+            $arrStyles          = array();
+
+            foreach($arrPageStyles as $arrPageStyle)
+            {
+                $arrStyles[] = $objStyleSheets->compileDefinition($arrPageStyle, true);
+            }
+
+            if( count($arrStyles) )
+            {
+                $objFile            = new \File('assets/css/page-styles.css');
+
+                foreach($arrStyles as $strStyle)
+                {
+                    $strOnlyStyles = preg_replace('/#main .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
+
+                    if( strlen(trim($strOnlyStyles)) )
+                    {
+                        $objFile->append($strStyle, '');
+                    }
+                }
+
+                $objFile->close();
             }
         }
 
@@ -544,11 +546,189 @@ class PageListener
             $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
         }
 
+
+
+
+//
+////echo "<pre>";
+//// print_r( $objFile->exists() );
+//        if( !$objFile->exists() )
+//        {
+//            $objFile->write('.');
+//            $objFile->close();
+////echo "<br> NO FILE";
+//            $createTime     = $objFile->ctime;
+//            $createFile     = FALSE;
+//        }
+//        else
+//        {
+//            $createTime     = $objFile->mtime;
+//        }
+////echo "<br>"; print_r( $createTime ); echo "<br>"; print_r( $createFile );
+//        if( $objAllPages )
+//        {
+//            while( $objAllPages->next() )
+//            {
+//                $objArticles = \ArticleModel::findPublishedByPidAndColumn( $objAllPages->id, "main");
+//
+//                if( $objArticles )
+//                {
+//                    while( $objArticles->next() )
+//                    {
+////                        echo "<br>Ar: ";
+////                        print_r( $objArticles->tstamp );
+////                        echo "<br>Time: ";
+////                        print_r( $createTime );
+////                        echo " ==> ";
+////                        print_r( $objArticles->tstamp > $createTime );
+////                        echo " ==> ";
+////                        print_r( $this->getArticleLastSave( $objArticles->id ) > $createTime );
+////                        echo "<br>AS: ";
+////                        print_r( $this->getArticleLastSave( $objArticles->id ) );
+//
+//                        if( $objArticles->tstamp > $createTime || $this->getArticleLastSave( $objArticles->id ) > $createTime )
+//                        {
+////                            echo "<br> YES CREATE IT";
+//                            $createFile     = TRUE;
+//                        }
+//
+//                        if( $objArticles->fullWidth )
+//                        {
+//                            if( !preg_match('/content-width/', $objAllPages->cssClass) && !in_array('content-width', $arrBodyClasses))
+//                            {
+//                                $arrBodyClasses[] = 'content-width';
+//                            }
+//                        }
+//
+//                        $cssID      = deserialize($objArticles->cssID, TRUE);
+//                        $strImage   = '';
+//                        $objImage   = \FilesModel::findByUuid( $objArticles->bgImage );
+//
+//                        if( $objImage && file_exists($this->rootDir . '/' . $objImage->path) )
+//                        {
+//                            $strImage = $objImage->path;
+//                        }
+//
+//                        $arrPageStyles[ $objArticles->id ] = array
+//                        (
+//                            'selector'          => '#main .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]),
+//
+//                            'background'        => TRUE,
+//                            'bgcolor'           => $objArticles->bgColor,
+//                            'bgimage'           => $strImage,
+//                            'bgrepeat'          => $objArticles->bgRepeat,
+//                            'bgposition'        => $objArticles->bgPosition,
+//                            'gradientAngle'     => $objArticles->gradientAngle,
+//                            'gradientColors'    => $objArticles->gradientColors
+//                        );
+//
+//                        $bgColor        = deserialize($objArticles->bgColor, TRUE);
+//                        $arrOwnStyles   = array();
+//
+////                if( !empty($bgColor[0]) )
+////                {
+////                    $rgb = ColorHelper::HTMLToRGB( $bgColor[0] );
+////                    $hsl = ColorHelper::RGBToHSL( $rgb );
+////
+////                    if( $hsl->lightness < 200 )
+////                    {
+////                        $arrPageStyles[ $objArticles->id ]['font']      = TRUE;
+////                        $arrPageStyles[ $objArticles->id ]['fontcolor'] = serialize(array('fff', ''));
+////                    }
+////                }
+//
+//                        $arrBackgroundSize = deserialize($objArticles->bgSize, true);
+//
+//                        if( is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
+//                        {
+//                            $bgSize = $arrBackgroundSize[2];
+//
+//                            if( $arrBackgroundSize[2] == 'own' )
+//                            {
+//                                unset($arrBackgroundSize[2]);
+//                                $bgSize = implode(" ", $arrBackgroundSize);
+//                            }
+//
+//                            $arrOwnStyles[] = '-webkit-background-size:' . $bgSize . ';-moz-background-size:' . $bgSize . ';-o-background-size:' . $bgSize . ';background-size:' . $bgSize . ';';
+//                        }
+//
+//                        if( $objArticles->bgAttachment )
+//                        {
+//                            $arrOwnStyles[] = 'background-attachment:' . $objArticles->bgAttachment . ';';
+//                        }
+//
+//                        if( count($arrOwnStyles) )
+//                        {
+//                            $arrPageStyles[ $objArticles->id ]['own'] = implode("", $arrOwnStyles);
+//                        }
+//                    }
+//                }
+//            }
+//        }
+////        echo "<pre>";
+////echo "<br>"; print_r( $arrPageStyles ); exit;
+//        if( count($arrPageStyles) )
+//        {
+//            if( $createFile )
+//            {
+////                echo "<br>CREATE FILE";
+////                exit;
+//                if( $objFile->exists() )
+//                {
+//                    $objFile->delete();
+//                }
+//
+//                $objStyleSheets     = new \StyleSheets();
+//                $arrStyles          = array();
+//
+//                foreach($arrPageStyles as $arrPageStyle)
+//                {
+//                    $arrStyles[] = $objStyleSheets->compileDefinition($arrPageStyle, true);
+//                }
+//
+//                if( count($arrStyles) )
+//                {
+//                    $objFile            = new \File('assets/css/page-styles.css');
+//
+//                    foreach($arrStyles as $strStyle)
+//                    {
+//                        $strOnlyStyles = preg_replace('/#main .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
+//
+//                        if( strlen(trim($strOnlyStyles)) )
+//                        {
+//                            $objFile->append($strStyle, '');
+//                        }
+//                    }
+//
+//                    $objFile->close();
+//                }
+//            }
+//            else
+//            {
+//                if( $objFile->exists() )
+//                {
+//                    $objFile->delete();
+//                }
+//            }
+//        }
+//        else
+//        {
+//            if( $objFile->exists() )
+//            {
+//                $objFile->delete();
+//            }
+//        }
+////echo "<br>"; print_r( file_exists($this->rootDir . '/assets/css/page-styles.css') ); exit;
+//        if( file_exists($this->rootDir . '/assets/css/page-styles.css') )
+//        {
+//            $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
+//        }
+
         if( file_exists($this->rootDir . '/files/' . $objRootPage->alias . '/css/theme.css') )
         {
             $GLOBALS['TL_CSS']['custom_theme'] = 'files/' . $objRootPage->alias . '/css/theme.css||static';
         }
-
+//exit;
         return $arrBodyClasses;
     }
 
@@ -561,6 +741,7 @@ class PageListener
         if( $objResult->numRows > 0 )
         {
             $objResult = $objResult->first();
+
             return $objResult->tstamp;
         }
 
@@ -603,6 +784,8 @@ class PageListener
 
         $arrCustomFiles = array
         (
+            'fonts.css',
+            'icons.css',
             'animate.css',
             'core.css',
             'buttons.css',
