@@ -378,7 +378,7 @@ class ConnectTool
     public function getData($returnAsArray = false)
     {
         $connectionUrl  = $this->getConnectionUrl();
-        $arrData        = @file_get_contents( $connectionUrl );
+        $arrData        = file_get_contents( $connectionUrl );
 
         if( !$arrData )
         {
@@ -444,9 +444,14 @@ class ConnectTool
 //echo "<pre>";
 //print_r( $connectionUrl );
 //        print_r( $arrData );
+//        echo "<br>B: ";
+//        print_r( $returnBoolean );
+//        echo "<br>A: ";
+//        print_r( $returnAsArray );
 //echo "</pre>";
 
 //print_r( parse)
+
         if( !$arrData )
         {
             if( !$returnBoolean )
@@ -457,7 +462,8 @@ class ConnectTool
         else
         {
             $return = json_decode($arrData, $returnAsArray);
-
+//            echo "<pre>2A: "; print_r( $arrData ); echo "</pre>";
+//            echo "<pre>2: "; print_r( $return ); echo "</pre>";
             if( !is_array($return) && !is_object($return) )
             {
                 $return = json_decode($return, $returnAsArray);
@@ -471,7 +477,7 @@ class ConnectTool
                 return false;
             }
         }
-
+//echo "<pre>3: "; print_r( $return ); echo "</pre>";
         return $returnBoolean ? true : $return;
     }
 
@@ -633,7 +639,7 @@ class ConnectTool
                 {
                     if( !preg_match('/^[a-f0-9]{32}$/', $valueVarValue) )
                     {
-                        $valueVarValue = md5( $valueVarValue );
+                        $valueVarValue = Encryption::hash( $valueVarValue );
                     }
                 }
 
@@ -654,13 +660,17 @@ class ConnectTool
 
                     if( $key == "password" )
                     {
-                        if( !preg_match('/^[a-f0-9]{32}$/', $value) )
+//                        if( !preg_match('/^[a-f0-9]{32}$/', $value) )
+                        if( !Encryption::test( $value) )
                         {
-                            $value = md5( $value );
+                            $value = Encryption::hash( $value );
                         }
                     }
 
-                    $objModel->$key = $value;
+                    if( is_bool($value) || is_numeric($value) || strlen($value) )
+                    {
+                        $objModel->$key = $value;
+                    }
                 }
             }
 
@@ -719,13 +729,24 @@ class ConnectTool
                     {
                         if( preg_match('/^field_/', $value) )
                         {
-                            $fieldName  = preg_replace('/^field_/', '', $value);
-                            $value      = $arrModelValue[ $fieldName ];
+                            $fieldName  = trim( preg_replace('/^field_/', '', $value));
+                            $value      = $arrValue->$fieldName;
                         }
 
                         $value = $this->replaceVars( $value);
 
-                        $objModel->$key = $value;
+                        if( $key == "password" )
+                        {
+                            if( !Encryption::test( $value) )
+                            {
+                                $value = Encryption::hash( $value );
+                            }
+                        }
+
+                        if( is_bool($value) || is_numeric($value) || strlen($value) )
+                        {
+                            $objModel->$key = $value;
+                        }
                     }
                 }
 
@@ -977,7 +998,7 @@ class ConnectTool
 
     protected function renderTitleString( $strTitle )
     {
-        $strTitle = preg_replace(array('/ä/', '/ö/', '/ü/', '/Ä/', '/Ö/', '/Ü/'), array(';ae;', ';oe;', ';ue;', ';AE;', ';OE;', ';UE;'), $strTitle);
+        $strTitle = preg_replace(array('/ä/', '/ö/', '/ü/', '/Ä/', '/Ö/', '/Ü/', '/ & /'), array(';ae;', ';oe;', ';ue;', ';AE;', ';OE;', ';UE;', ';and;'), $strTitle);
         $strTitle = preg_replace('/ß/', ';ss;', $strTitle);
         $strTitle = preg_replace('/ /', '+', $strTitle);
 

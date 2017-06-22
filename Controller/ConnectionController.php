@@ -246,6 +246,11 @@ class ConnectionController implements ContainerAwareInterface
 
         $this->context['themes']        = (array) $arrData->themes;
         $this->context['templates']     = (array) $arrData->rsce_templates;
+
+        if( !$connectTool->getConfig("clientID") )
+        {
+            $connectTool->persistConfig("clientID", $arrData->clientID);
+        }
     }
 
 
@@ -280,6 +285,8 @@ class ConnectionController implements ContainerAwareInterface
         $themeID        = $request->request->get('theme');
         $RSCE_Templates = $request->request->get('rsce_templates');
 
+        $webfont        = $request->request->get("webfont");
+
         // All fields are mandatory
         if ('' === $customerName || '' === $customerEmail || '' === $customerAlias || '' === $themeID)
         {
@@ -293,7 +300,6 @@ class ConnectionController implements ContainerAwareInterface
         $connectTool->setUpFilesFolder( $arrData->folders );
         $connectTool->setUpTemplates( $arrData->templates );
 
-//        $connectTool->getFilesFromMaster( $arrData->files );
 
         $arrTheme   = (array) $arrData->theme;
         unset($arrTheme['layouts']);
@@ -304,7 +310,7 @@ class ConnectionController implements ContainerAwareInterface
         $connectTool->createNewOneModelEntry("Theme", $arrTheme, array('master_ID' => $themeID));
 
         // Create Layouts
-        $connectTool->createNewModelEntry("Layout", (array) $arrData->theme->layouts, array('master_ID' => 'field_id'));
+        $connectTool->createNewModelEntry("Layout", (array) $arrData->theme->layouts, array('master_ID' => 'field_id', 'webfonts' => $webfont));
 
         // Create Modules
         $connectTool->createNewModelEntry("Module", (array) $arrData->theme->modules, array('master_ID' => 'field_id'));
@@ -316,7 +322,6 @@ class ConnectionController implements ContainerAwareInterface
         $connectTool->createNewModelEntry("ImageSizeItem", (array) $arrData->theme->imageSizeItems);
 
 
-
         // Create Pages
         $connectTool->createPages( (array) $arrData->pages );
 
@@ -325,7 +330,7 @@ class ConnectionController implements ContainerAwareInterface
         foreach((array) $arrData->users as $username => $arrUser)
         {
             $arrUser = (array) $arrUser;
-            $arrUser['password'] = md5($arrUser['password']);
+//            $arrUser['password'] = Encryption::hash($arrUser['password']);
 
             $connectTool->createNewOneModelEntry("User", $arrUser);
         }
@@ -333,7 +338,7 @@ class ConnectionController implements ContainerAwareInterface
 
         // Backend User & Group (Redakteur)
         $arrUser = (array) $arrData->user;
-        $arrUser['password'] = md5($arrUser['password']);
+//        $arrUser['password'] = Encryption::hash($arrUser['password']);
 
         $objUserGroup   = $connectTool->createNewOneModelEntry("UserGroup", (array) $arrData->user_group);
         $this->container->get("contao.connect_tool")->setBackendUserGroup( $objUserGroup );
@@ -354,6 +359,7 @@ class ConnectionController implements ContainerAwareInterface
 //            }
 //        }
 
+//--        $connectTool->getFilesFromMaster( $arrData->files );
 
 
         // Set Contao Settings
