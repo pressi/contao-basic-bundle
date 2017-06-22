@@ -151,7 +151,7 @@ class ClientSetup
 
         // Backend User & Group
         $arrUser = (array) $cmsConfig->user;
-        $arrUser['password'] = md5($arrUser['password']);
+        $arrUser['password'] = \Encryption::hash($arrUser['password']);
 
         $this->createNewOneModelEntry("UserGroup", (array) $cmsConfig->user_group);
         $this->createNewOneModelEntry("User", $arrUser);
