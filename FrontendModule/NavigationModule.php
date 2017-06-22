@@ -641,9 +641,9 @@ class NavigationModule extends \ModuleNavigation
             }
         }
 
-        if( count($arrItems) === 1)
+        if( count($arrItems) === 1 )
         {
-            if( $arrItems[0]['id'] == $objPage->id )
+            if( $arrItems[0]['id'] == $objPage->id && $this->name !== "Navigation Main")
             {
                 return '';
             }
@@ -852,17 +852,18 @@ class NavigationModule extends \ModuleNavigation
 
             $activeArticle  = \Input::get( $langPartName );
 
-            if( $activeArticle == $objItem->alias )
-            {
-                $isActive = true;
-            }
-
             $strTitle       = ContentHelper::renderText($objItem->navTitle?:$objItem->title );
             $strPageTitle   = $strTitle;
 
             $objParentPage  = \PageModel::findByPk( $objItem->pid );
             $href           = $objParentPage->getFrontendUrl('/' . $langPartName . '/' . $objItem->alias);
             $strClass       = deserialize($objItem->cssID, true)[1] . ' article-link';
+
+            if( $activeArticle == $objItem->alias )
+            {
+//                $isActive = true;
+                $strClass .= ' active';
+            }
 
             if( strlen($subitems) )
             {
