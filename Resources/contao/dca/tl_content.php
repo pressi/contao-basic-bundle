@@ -22,11 +22,11 @@ $act            = Input::get("act");
 $id             = (int) Input::get("id");
 $theme          = \Backend::getTheme();
 
-if ($do == 'iidoPlaceholder')
-{
-    $GLOBALS['TL_DCA']['tl_content']['config']['ptable']                    = 'tl_iido_placeholder';
-    $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['headerFields']     = array('name', 'alias');
-}
+//if ($do == 'iidoPlaceholder')
+//{
+//    $GLOBALS['TL_DCA']['tl_content']['config']['ptable']                    = 'tl_iido_placeholder';
+//    $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['headerFields']     = array('name', 'alias');
+//}
 
 if( $act == "edit" && is_numeric($id) && $id > 0 )
 {
@@ -60,20 +60,21 @@ if( $act == "edit" && is_numeric($id) && $id > 0 )
  * Selectors
  */
 
+$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'showAsButton';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'buttonAddon';
+
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = "elementIsBox";
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'addOrnament';
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'bgOnOtherColumn';
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = "usedTime";
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'addTopHeadline';
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'addSubHeadline';
-//$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'showAsButton';
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'onlyServiceLink';
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'serviceLinkAfter';
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'addHeadlineLink';
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = "addBoxText";
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = "addGalleryText";
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'blockShowMode';
-//$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'buttonWithIcon';
 
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'addBoxLinkButton';
 
@@ -112,13 +113,13 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']           = $def
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['boxStop']                         = $GLOBALS['TL_DCA']['tl_content']['palettes']['sliderStop'];
 
 
-//foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strFields)
-//{
-//    if( $strPalette == "__selector__" )
-//    {
-//        continue;
-//    }
-//
+foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strFields)
+{
+    if( $strPalette == "__selector__" )
+    {
+        continue;
+    }
+
 //    $prefix = 'type';
 //
 //    if( $strPalette == "dlh_googlemaps" )
@@ -146,16 +147,18 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']           = $def
 //
 //		$strFields = $strFields . ';{add_legend},insertClearAfter;';
 //    }
-//
-//    $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = $strFields;
-//}
-//
+
+    $strFields = preg_replace('/{expert_legend/', '{position_legend},position,position_margin,positionFixed;{expert_legend', $strFields);
+
+    $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = $strFields;
+}
+
 //if( $GLOBALS['TL_CONFIG']['iidoCustomize_backgroundInternetExplorerFallback'] )
 //{
 //    $GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_backgroundImage'] = str_replace("ieFallback,", "", $GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_backgroundImage']);
 //}
 //
-//$GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace(',rel', ',rel,showAsButton,buttonWithIcon', $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink']);
+$GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace(',rel', ',rel,showAsButton', $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink']);
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace('url,', 'hyperlinkUrlToFiles,url,', $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink']);
 
 
@@ -164,12 +167,15 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']           = $def
  * Subpalettes
  */
 
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['showAsButton']         = 'buttonStyle,buttonType,buttonAddon,buttonLinkMode';
+
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_arrow']     = 'buttonAddonPosition,buttonAddonArrow';
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_icon']      = 'buttonAddonPosition,buttonAddonIcon';
 
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxWidth,boxHeight,boxLink,boxLinkText,boxBackgroundColor";
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['usedTime']             = "tickerTime";
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addOrnament']          = 'ornamentLight,onlyOrnament,ornament,addOrnamentLinie';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['bgOnOtherColumn']      = 'bgToArticle';
-//$GLOBALS['TL_DCA']['tl_content']['subpalettes']['showAsButton']         = 'buttonBackgroundColor,buttonWithArrow,buttonLinkMode';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addTopHeadline']       = 'topHeadline,topHeadlineFloating,addTopHeadlineBorder';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addSubHeadline']       = 'subHeadline,subHeadlineFloating,addSubHeadlineBorder';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addHeadlineLink']      = 'headlineLink';
@@ -181,8 +187,6 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']           = $def
 //
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['blockShowMode_field']  = 'websiteField';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['blockShowMode_fields'] = 'addressBlock';
-//
-//$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonWithIcon']       = 'buttonIconPosition,buttonIconImage';
 
 
 
@@ -331,20 +335,20 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['floating']['eval']['submitOnChange']
 //
 //$GLOBALS['TL_DCA']['tl_content']['fields']['spaceHorizontal']					= $GLOBALS['TL_DCA']['tl_content']['fields']['space'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['spaceHorizontal']['label'] 			= &$GLOBALS['TL_LANG']['tl_content']['iidoCustomize']['spaceHorizontal'];
-//
-//
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'] = array
-//(
-//	'label'					=> &$GLOBALS['TL_LANG']['tl_content']['iidoCustomize']['addImageBorder'],
-//	'exclude'				=> TRUE,
-//	'inputType'				=> 'checkbox',
-//	'eval'					=> array
-//	(
-//		'tl_class'				=> 'w50 m12'
-//	),
-//	'sql'					=> "char(1) NOT NULL default ''"
-//);
+
+
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'] = array
+(
+	'label'					=> &$GLOBALS['TL_LANG']['tl_content']['iidoCustomize']['addImageBorder'],
+	'exclude'				=> TRUE,
+	'inputType'				=> 'checkbox',
+	'eval'					=> array
+	(
+		'tl_class'				=> 'w50 m12'
+	),
+	'sql'					=> "char(1) NOT NULL default ''"
+);
 
 
 //$GLOBALS['TL_DCA']['tl_content']['fields']['skipFirst'] = $GLOBALS['TL_DCA']['tl_module']['fields']['skipFirst'];
@@ -412,14 +416,14 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['floating']['eval']['submitOnChange']
 //	),
 //	'sql'						=> "varchar(64) NOT NULL default ''"
 //);
-//
-//
-//// Random Image
-//$GLOBALS['TL_DCA']['tl_content']['fields']['imgSize'] 		= $GLOBALS['TL_DCA']['tl_module']['fields']['imgSize'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']	= $GLOBALS['TL_DCA']['tl_module']['fields']['useCaption'];
-//
-//
-//
+
+
+// Random Image
+$GLOBALS['TL_DCA']['tl_content']['fields']['imgSize'] 		= $GLOBALS['TL_DCA']['tl_module']['fields']['imgSize'];
+$GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']	= $GLOBALS['TL_DCA']['tl_module']['fields']['useCaption'];
+
+
+
 //// Ornament
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addOrnament'] = array
 //(
@@ -736,89 +740,120 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['floating']['eval']['submitOnChange']
 //	),
 //	'sql'                     => "varchar(255) NOT NULL default ''"
 //);
-//
-//
-//
-//// Hyperlink Button
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['showAsButton'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['showAsButton'],
-//	'exclude'                 => true,
-//	'inputType'               => 'checkbox',
-//	'eval'                    => array('tl_class'=>'w50 clr m12', 'submitOnChange'=>true),
-//	'sql'                     => "char(1) NOT NULL default ''"
-//);
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonBackgroundColor'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonBackgroundColor'],
-//	'exclude'                 => true,
-//	'inputType'               => 'select',
-//	'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonBackgroundColor'],
-//	'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
-//	'sql'                     => "varchar(50) NOT NULL default ''"
-//);
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonWithArrow'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonWithArrow'],
-//	'exclude'                 => true,
-//	'inputType'               => 'checkbox',
-//	'eval'                    => array('tl_class'=>'w50 clr m12'),
-//	'sql'                     => "char(1) NOT NULL default ''"
-//);
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonLinkMode'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonLinkMode'],
-//	'exclude'                 => true,
-//	'inputType'               => 'select',
-//	'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonLinkMode'],
-//	'eval'                    => array('tl_class'=>'w50 m12'),
-//	'sql'                     => "varchar(255) NOT NULL default ''"
-//);
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['hyperlinkUrlToFiles'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['hyperlinkUrlToFiles'],
-//	'exclude'                 => true,
-//	'inputType'               => 'checkbox',
-//	'eval'                    => array('tl_class'=>'w50 m12', "submitOnChange"=>true),
-//	'sql'                     => "char(1) NOT NULL default ''"
-//);
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonWithIcon'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonWithIcon'],
-//	'exclude'                 => true,
-//	'inputType'               => 'checkbox',
-//	'eval'                    => array('tl_class'=>'w50 clr m12', 'submitOnChange'=>true),
-//	'sql'                     => "char(1) NOT NULL default ''"
-//);
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonIconPosition'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonIconPosition'],
-//	'exclude'                 => true,
-//	'inputType'               => 'select',
-//	'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonIconPosition'],
-//	'eval'                    => array('tl_class'=>'w50'),
-//	'sql'                     => "varchar(255) NOT NULL default ''"
-//);
-//
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonIconImage'] = array
-//(
-//	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonIconImage'],
-//	'exclude'                 => true,
-//	'inputType'               => 'select',
-//	'options_callback'        => array('IIDO\Customize\Table\Content', 'getFontAwsomeIcons'),
-//	'eval'                    => array('tl_class'=>'w50', 'chosen'=>true, 'includeBlankOption'=>true),
-//	'sql'                     => "varchar(255) NOT NULL default ''"
-//);
-//
-//
-//
+
+
+
+// Hyperlink Button
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['showAsButton'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['showAsButton'],
+    'exclude'                 => true,
+    'inputType'               => 'checkbox',
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50 clr m12',
+        'submitOnChange'        => true
+    ),
+    'sql'                     => "char(1) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['buttonStyle'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonStyle'],
+    'exclude'                 => true,
+    'inputType'               => 'select',
+    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonStyle'],
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50',
+//        'includeBlankOption'    => true
+    ),
+    'sql'                     => "varchar(50) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddon'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddon'],
+    'exclude'                 => true,
+    'inputType'               => 'select',
+    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonAddon'],
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50',
+        'includeBlankOption'    => true,
+        'submitOnChange'        => true
+    ),
+    'sql'                     => "varchar(50) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['buttonType'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonType'],
+    'exclude'                 => true,
+    'inputType'               => 'select',
+    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonType'],
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50'
+    ),
+    'sql'                     => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['buttonLinkMode'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonLinkMode'],
+    'exclude'                 => true,
+    'inputType'               => 'select',
+    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonLinkMode'],
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50'
+    ),
+    'sql'                     => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonPosition'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddonPosition'],
+    'exclude'                 => true,
+    'inputType'               => 'select',
+    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonAddonPosition'],
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50'
+    ),
+    'sql'                     => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddonIcon'],
+    'exclude'                 => true,
+    'inputType'               => 'rocksolid_icon_picker',
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50 hauto',
+        'iconFont'              => 'files/master/fonts/icomoon.svg',
+    ),
+    'sql'                     => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonArrow'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddonArrow'],
+    'exclude'                 => true,
+    'inputType'               => 'select',
+    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonAddonArrow'],
+    'eval'                    => array
+    (
+        'tl_class'              => 'w50'
+    ),
+    'sql'                     => "varchar(255) NOT NULL default ''"
+);
+
+
+
 //// Ticker
 //
 //$GLOBALS['TL_DCA']['tl_content']['fields']['textBefore']			= $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
@@ -1020,3 +1055,40 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['floating']['eval']['submitOnChange']
 //	'sql'                     => "int(10) unsigned NULL"
 //);
 //,
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['position'] = array
+(
+    'label'         => array( 'Position', '' ),
+    'inputType'     => 'select',
+    'options'       => $GLOBALS['TL_LANG']['RSCE']['positions'],
+    'eval'          => array
+    (
+        'includeBlankOption'    => true,
+        'tl_class'              => 'clr w50'
+    ),
+    'sql'           => "varchar(64) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['position_margin'] = array
+(
+    'label'         => array( 'Position Verschiebung', '' ),
+    'inputType'     => 'trbl',
+    'options'       => $GLOBALS['TL_CSS_UNITS'],
+    'eval'          => array
+    (
+        'tl_class'      => 'w50'
+    ),
+    'sql'           => "varchar(255) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['positionFixed'] = array
+(
+    'label'         => &$GLOBALS['TL_LANG']['tl_content']['positionFixed'],
+    'exclude'       => TRUE,
+    'inputType'     => 'checkbox',
+    'eval'          => array
+    (
+        'tl_class'          => 'clr w50'
+    ),
+    'sql'           => "char(1) NOT NULL default ''"
+);
