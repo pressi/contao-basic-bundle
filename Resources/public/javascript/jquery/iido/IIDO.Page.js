@@ -1101,7 +1101,7 @@ IIDO.Page = IIDO.Page || {};
                     });
                 }
 
-                return false;
+                return true;
             }
             else
             {
