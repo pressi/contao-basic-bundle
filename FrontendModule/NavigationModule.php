@@ -35,16 +35,16 @@ class NavigationModule extends \ModuleNavigation
 
         $strBuffer = parent::generate();
 
-        if( !strlen($strBuffer) && preg_match('/nav-sub/', $this->cssID[1]) )
-        {
-            $objArticle         = \ArticleModel::findPublishedByPidAndColumn( $objPage->id, "main", array("order"=>"sorting"));
-            $objFirstArticle    = $objArticle->first();
-
-            if( $objFirstArticle && $objFirstArticle->bgImage && !preg_match('/homepage/', $objPage->cssClass))
-            {
-                $strBuffer = '<div class="bg-subnav empty-nav">';
-            }
-        }
+//        if( !strlen($strBuffer) && preg_match('/nav-sub/', $this->cssID[1]) )
+//        {
+//            $objArticle         = \ArticleModel::findPublishedByPidAndColumn( $objPage->id, "main", array("order"=>"sorting"));
+//            $objFirstArticle    = $objArticle->first();
+//
+//            if( $objFirstArticle && $objFirstArticle->bgImage && !preg_match('/homepage/', $objPage->cssClass))
+//            {
+//                $strBuffer = '<div class="bg-subnav empty-nav">';
+//            }
+//        }
 
         return $strBuffer;
     }
@@ -473,6 +473,29 @@ class NavigationModule extends \ModuleNavigation
         global $objPage;
 
         $arrItems       = array();
+        $arrNavPages    = \StringUtil::deserialize( $this->navPagesOrder, TRUE );
+        $useCustomNav   = FALSE;
+
+        if( count($arrNavPages) > 0 && $arrNavPages[0] !== '' )
+        {
+            if( count( $arrNavPages ) > 1 )
+            {
+                $useCustomNav   = TRUE;
+            }
+            else
+            {
+                $useCustomNav   = TRUE;
+                $objSubPages    = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $arrNavPages[0] );
+
+                if( !$objSubPages )
+                {
+                    $useCustomNav       = FALSE;
+
+                    $this->defineRoot   = TRUE;
+                    $this->rootPage     = $arrNavPages[0];
+                }
+            }
+        }
 
         // Set the trail and level
         if ($this->defineRoot && $this->rootPage > 0)
@@ -507,18 +530,37 @@ class NavigationModule extends \ModuleNavigation
             }
         }
 
-        if( $level > count($trail) )
+        if( $useCustomNav )
         {
-            $strItems = $this->getPages( $objPage->id, 1, $host, $lang );
+            $arrPages = array();
+
+            foreach($arrNavPages as $navPageID)
+            {
+                $objNavPage = \PageModel::findByPk( $navPageID );
+
+                if( $objNavPage->published )
+                {
+                    $arrPages[] = $objNavPage;
+                }
+            }
+
+            $strItems = $this->getCustomPages( $arrPages, 1, $host, $lang);
         }
         else
         {
-            if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
+            if( $level > count($trail) )
             {
-                $level++;
+                $strItems = $this->getPages( $objPage->id, 1, $host, $lang );
             }
+            else
+            {
+                if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
+                {
+                    $level++;
+                }
 
-            $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
+                $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
+            }
         }
 
         $this->Template->items = $strItems;
@@ -794,7 +836,7 @@ class NavigationModule extends \ModuleNavigation
                 case 'forward':
                     if ($objItem->jumpTo)
                     {
-                        /** @var ˜PageModel $objNext */
+                        /** @var \PageModel $objNext */
                         $objNext = $objItem->getRelated('jumpTo');
                     }
                     else
@@ -941,5 +983,61 @@ class NavigationModule extends \ModuleNavigation
         }
 
         return $arrItem;
+    }
+
+
+    protected function getCustomPages( $arrPages, $level, $host, $language)
+    {
+        /** @var \PageModel $objPage */
+        global $objPage;
+
+        $arrItems   = array();
+        $groups     = array();
+
+        // Get all groups of the current front end user
+        if (FE_USER_LOGGED_IN)
+        {
+            $this->import('FrontendUser', 'User');
+            $groups = $this->User->groups;
+        }
+
+        // Set default template
+        if ($this->navigationTpl == '')
+        {
+            $this->navigationTpl = 'nav_default';
+        }
+
+        /** @var \FrontendTemplate|object $objTemplate */
+        $objTemplate = new \FrontendTemplate($this->navigationTpl);
+
+        $objTemplate->type = get_class($this);
+        $objTemplate->cssID = $this->cssID; // see #4897 and 6129
+        $objTemplate->level = 'level_1';
+
+        /** @var \PageModel[] $arrPages */
+        foreach ($arrPages as $objModel)
+        {
+            $_groups = \StringUtil::deserialize($objModel->groups);
+
+            // Do not show protected pages unless a front end user is logged in
+            if (!$objModel->protected || (is_array($_groups) && count(array_intersect($_groups, $groups))) || $this->showProtected)
+            {
+                $subitems   = $this->getPages( $objModel->id, $level, $host, $language);
+
+                $arrRow     = $objModel->row();
+                $arrRow     = $this->setItemRow($arrRow, $objModel, 'page', $subitems);
+
+               $arrItems[]  = $arrRow;
+            }
+        }
+
+        // Add classes first and last
+        $arrItems[0]['class'] = trim($arrItems[0]['class'] . ' first');
+        $last = count($arrItems) - 1;
+        $arrItems[$last]['class'] = trim($arrItems[$last]['class'] . ' last');
+
+        $objTemplate->items = $arrItems;
+
+        return !empty($arrItems) ? $objTemplate->parse() : '';;
     }
 }

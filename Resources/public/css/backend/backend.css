@@ -97,3 +97,27 @@ fieldset.rsce_list {
 
     width: calc(100vw - 240px);
 }
+body.popup #main .tl_formbody_submit {
+    width: 100vw;
+}
+
+#left .wrapper-sticky {
+    width: 100% !important;
+}
+
+#left .version {
+    padding-top: 2em;
+}
+
+#header {
+    position: fixed;
+    top: 0; right: 0; left: 0;
+
+    width: 100vw;
+
+    z-index: 50000;
+}
+
+#container {
+    padding-top: 48px;
+}

@@ -33,6 +33,6 @@ class NavigationElement extends \ContentElement
      */
     protected function compile()
     {
-        $this->Template->content = BasicHelper::renderNavigation( $this->navModule, 'main', $this->cssID[1] );
+        $this->Template->content = BasicHelper::renderNavigation( $this->navModule, 'main', $this->cssID[1], $this );
     }
 }

@@ -747,7 +747,7 @@ class BasicHelper extends \Frontend
 
 
 
-    public static function renderNavigation( $navModuleID, $strColumn = 'main', $strClasses = "" )
+    public static function renderNavigation( $navModuleID, $strColumn = 'main', $strClasses = "", $objClass )
     {
         global $objPage;
 
@@ -773,9 +773,12 @@ class BasicHelper extends \Frontend
                     $cssID = \StringUtil::deserialize($objClass->cssID, TRUE);
                 }
 
+                $objModule->navPages        = $objClass->navPages;
+                $objModule->navPagesOrder   = $objClass->navPagesOrder;
+
                 /** @var \Module $objModule */
                 $objModule = new $strClass($objModule, $strColumn);
-                $objModule->cssID = array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
+                $objModule->cssID = $cssID; //array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
 
                 $strBuffer = $objModule->generate();
 

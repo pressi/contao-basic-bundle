@@ -96,7 +96,7 @@ $defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hi
 
 
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']           = $defaultPaletteStart . '{config_legend},navModule;' . $defaultPaletteEnd;
+$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']           = $defaultPaletteStart . '{config_legend},navModule,navPages;' . $defaultPaletteEnd;
 
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_divider']           = '{type_legend},type;{divide_legend},dividerSize,dividerColor,dividerStyle,addOrnament;' . $defaultPaletteEnd;
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_ticker']            = '{type_legend},type;{ticker_legend},tickerMode,usedTime,tickerDate,tickerShowMode;{text_legend},textBefore,textAfter;' . $defaultPaletteEnd;
@@ -1091,4 +1091,23 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['positionFixed'] = array
         'tl_class'          => 'clr w50'
     ),
     'sql'           => "char(1) NOT NULL default ''"
+);
+
+
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']                 = $GLOBALS['TL_DCA']['tl_module']['fields']['rootPage'];;
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['label']        = &$GLOBALS['TL_LANG']['tl_content']['navPages'];
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['eval']['tl_class']    = 'clr';
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['eval']['fieldType']   = 'checkbox';
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['eval']['orderField']  = 'navPagesOrder';
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['eval']['mandatory']   = FALSE;
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['eval']['multiple']    = TRUE;
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['eval']['files']       = FALSE;
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['sql']         = "blob NULL";
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['relation']    = array('type'=>'hasMany', 'load'=>'lazy');
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['navPagesOrder'] = array
+(
+    'label'                 => &$GLOBALS['TL_LANG']['tl_content']['navPagesOrder'],
+    'sql'                   => "blob NULL"
 );

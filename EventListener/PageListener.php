@@ -151,6 +151,7 @@ class PageListener
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.sticky-kit.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['isotope']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope.pkgd.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT']['iso_fit-columns']    = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/fit-columns.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['hc_sticky']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.hc-sticky.min.js|static';
 
             $GLOBALS['TL_JAVASCRIPT']['iido_base']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Functions.js|static';
@@ -314,6 +315,8 @@ class PageListener
                 }
             }
         }
+
+        $this->addDefaultScripts();
 
         if( count($arrBodyClasses) )
         {
@@ -752,12 +755,12 @@ class PageListener
 
     protected function addDefaultStylesheets()
     {
-        global $objPage;
+        $rootAlias = $this->getRootAlias();
 
         $cssPath        = $this->bundlePathPublic . '/css/';
         $cssPathStd     = $cssPath . 'frontend/iido/';
         $cssPathMaster  = 'files/master/css/';
-        $cssPathCustom  = 'files/' . $objPage->rootAlias . '/css/';
+        $cssPathCustom  = 'files/' . $rootAlias . '/css/';
 
         $arrFiles       = array
         (
@@ -821,6 +824,40 @@ class PageListener
                 $GLOBALS['TL_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
             }
         }
+    }
+
+
+
+    protected function addDefaultScripts()
+    {
+        $rootAlias = $this->getRootAlias();
+
+        $jsPathCustom  = 'files/' . $rootAlias . '/js/';
+
+        if( file_exists($this->rootDir . '/' . $jsPathCustom . 'functions.js') )
+        {
+            $GLOBALS['TL_JAVASCRIPT'][] = $jsPathCustom . 'functions.js|static';
+        }
+    }
+
+
+    protected function getRootAlias()
+    {
+        global $objPage;
+
+        $strLang    = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
+
+        if( $strLang != "de" )
+        {
+            $objRooPage = \PageModel::findOneBy("language", "de");//TODO: verbdinung zwischen root pages herstellen!!
+            $rootAlias  =  $objRooPage->alias;
+        }
+        else
+        {
+            $rootAlias = $objPage->rootAlias;
+        }
+
+        return $rootAlias;
     }
 
 }

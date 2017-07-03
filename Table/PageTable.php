@@ -268,7 +268,7 @@ class PageTable extends \Backend
                 }
                 else
                 {
-                    touch($rootDir . '/files/master/core.css');
+                    touch($rootDir . '/files/master/css/core.css');
 
                 }
             }

@@ -24,6 +24,11 @@ services:
         arguments:
             - "@contao.framework"
 
+    iido_basic.listener.backend_template:
+        class: IIDO\BasicBundle\EventListener\BackendTemplateListener
+        arguments:
+            - "@contao.framework"
+
     iido_basic.listener.combiner:
         class: IIDO\BasicBundle\EventListener\CombinerListener
         arguments:

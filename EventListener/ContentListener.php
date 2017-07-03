@@ -370,6 +370,28 @@ class ContentListener
             }
         }
 
+        $arrLinkClasses = array();
+
+        switch( $objRow->buttonLinkMode )
+        {
+            case "lightbox":
+                $arrLinkClasses[] = 'open-in-lightbox';
+                break;
+
+            case "scroll":
+                $arrLinkClasses[] = 'scroll-to';
+                break;
+
+            case "nolink":
+                $arrLinkClasses[] = 'no-link';
+                break;
+        }
+
+        if( count($arrLinkClasses) )
+        {
+            $strContent = preg_replace('/class="hyperlink_txt/', 'class="hyperlink_txt ' . implode(' ', $arrLinkClasses), $strContent);
+        }
+
         $strContent = $this->addClassToContentElement( $strContent, $objRow, $arrClasses );
 
         return $strContent;

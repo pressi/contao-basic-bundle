@@ -32,6 +32,7 @@ IIDO.Page = IIDO.Page || {};
         this.initPageFade();
         // this.initFooter();
         this.initMobile();
+        this.initLinks();
 
         if( $(document.body).hasClass("url-change") )
         {
@@ -471,7 +472,10 @@ IIDO.Page = IIDO.Page || {};
 
     page.scrollTo = function( event, aTag, aOffset )
     {
-        event.preventDefault();
+        if( event !== undefined && event !== "undefined" && event !== null )
+        {
+            event.preventDefault();
+        }
 
         var target  = "#" + (($(aTag).attr("data-anker") === undefined || $(aTag).attr("data-anker") === "undefined"||$(aTag).attr("data-anker") === null)?$(aTag).attr("id"):$(aTag).attr("data-anker")),
             offset  = -$navOffset;
@@ -512,7 +516,7 @@ IIDO.Page = IIDO.Page || {};
             });
         }
 
-        $(".image-point.open").removeClass("open");
+        // $(".image-point.open").removeClass("open");
 
         return false;
     };
@@ -1253,6 +1257,51 @@ IIDO.Page = IIDO.Page || {};
             {
                 eventMenu.find("h3").unbind("click");
             }
+        }
+    };
+
+
+
+    page.initLinks = function()
+    {
+        var e = window.event;
+
+        var scrollLinks = $("a.scroll-to");
+
+        if( scrollLinks.length )
+        {
+            scrollLinks.each( function(index, linkElement)
+            {
+                var link        = $(linkElement);
+
+                link.click( function(e) { IIDO.Page.scrollLinkClicked(e, link); } );
+            });
+        }
+    };
+
+
+
+    page.scrollLinkClicked = function(e, link)
+    {
+        var linkHref    = link.attr("href");
+
+        if( linkHref === '#next-article' || linkHref === '#article-next' )
+        {
+            var linkParent = link.parent(".content-element").parent().parent(".mod_article");
+
+            if( linkParent.length )
+            {
+                var linkParentNext = linkParent.next(".mod_article");
+
+                if( linkParentNext.length )
+                {
+                    IIDO.Page.scrollTo(e, linkParentNext);
+                }
+            }
+        }
+        else
+        {
+            IIDO.Page.scrollTo(e, link);
         }
     }
 

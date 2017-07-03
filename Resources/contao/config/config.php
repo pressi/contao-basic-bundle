@@ -53,6 +53,7 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
  */
 
 $GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\ContentElement\NavigationElement';
+//$GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
 
 
 
@@ -105,6 +106,8 @@ $GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerNam
 
 $GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.listener.frontend_template', 'outputCustomizeFrontendTemplate');
 $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.listener.frontend_template', 'parseCustomizeFrontendTemplate');
+
+$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.listener.backend_template', 'outputCustomizeBackendTemplate');
 
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
 

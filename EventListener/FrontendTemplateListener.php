@@ -207,14 +207,14 @@ class FrontendTemplateListener
 
                 if( $objArticle )
                 {
-//                    if( $objArticle->addBackgroundVideo )
-//                    {
-//                        $arrArticleClasses[] = 'has-background-video';
-//
-//                        $strVideoTag = Helper::renderVideoTag( $objArticle->videoSRC, $objArticle->posterSRC );
-//
-//                        $strContent = preg_replace('/<\/div>$/', $strVideoTag . '</div>', $strContent);
-//                    }
+                    if( $objArticle->addBackgroundVideo )
+                    {
+                        $arrArticleClasses[] = 'has-background-video';
+
+                        $strVideoTag = Helper::renderVideoTag( $objArticle->videoSRC, $objArticle->posterSRC );
+
+                        $strContent = preg_replace('/<\/div>$/', '</div>' . $strVideoTag, trim($strContent));
+                    }
 
                     if( $objArticle->bgImage )
                     {
