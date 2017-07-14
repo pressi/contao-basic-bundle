@@ -3,6 +3,7 @@
     <?php foreach ($this->items as $item):
         $strStyles  = false;
         $subtitle   = $item['subtitle'];
+        $strImage   = '';
 
         if( $item['overviewImage'] )
         {
@@ -13,6 +14,8 @@
                 $strStyles = 'background-image:url(' . $objImage->path . ');';
 
 //                $item['class'] = trim($item['class'] . ' bg-image bg-cover');
+
+                $strImage = '<img src="' . $objImage->path . '">';
             }
         }
 
@@ -38,14 +41,22 @@
         $pageTitle      = $item['pageTitle']?:$item['title']?:$item['alt_pagename'];
         $pageSubTitle   = $item['subtitle']?:'&nbsp;';
 
-        $imageContainer = '<div class="bg-image bg-cover bg-image-container"' . $strStyles . '></div>';
-        $hoverContainer = '<div class="hover-image-container"><div class="hover-page-title"><div class="page-title">' . $pageTitle . '</div><div class="page-subtitle">' . $pageSubTitle . '</div></div><div class="bg-image bg-cover"' . $strStyles . '></div></div>';
+//        $imageContainer = '<div class="bg-image bg-cover bg-image-container"' . $strStyles . '></div>';
+//        $hoverContainer = '<div class="hover-image-container"><div class="hover-page-title"><div class="page-title">' . $pageTitle . '</div><div class="page-subtitle">' . $pageSubTitle . '</div></div><div class="bg-image bg-cover"' . $strStyles . '></div></div>';
+
+        $imageContainer = '<div class="image_container">' . $strImage . '</div>';
+        $hoverContainer = '';
+
+        $item['class'] = trim($item['class'] . " no-barba");
+
+        $item['target'] = $item['target'] . ' onclick="IIDO.Page.showArticle(this)" data-id="' . $item['id'] . '" data-alias="' . $item['alias'] . '"';
+        $item['href']   = 'javascript:void(0)';
 
         ?>
         <?php if ($item['isActive']): ?>
             <li class="<?= $item['class'] ?>"><?= $imageContainer ?><strong data-alias="<?= $item['alias'] ?>" class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?>><span itemprop="name"><?= $item['link'] ?></span><?php if($subtitle): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?></strong><?= $item['subitems'] ?></li>
         <?php else: ?>
-            <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?>><?= $imageContainer . $hoverContainer ?><a data-alias="<?= $item['alias'] ?>" href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><span itemprop="name"><?= $item['link'] ?></span><?php if($subtitle): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?></a><?= $item['subitems'] ?></li>
+            <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?>><a data-alias="<?= $item['alias'] ?>" href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><?= $imageContainer . $hoverContainer ?><div class="title"><span itemprop="name"><?= $item['link'] ?></span></div></a><?= $item['subitems'] ?></li>
         <?php endif; ?>
     <?php endforeach; ?>
 </ul>
