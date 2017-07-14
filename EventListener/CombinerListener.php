@@ -110,11 +110,7 @@ class CombinerListener
 //                            }
                             $varValue       = preg_replace(array('/&#35;/', '/&#40;/', '/&#41;/'), array('#', '(', ')'), $varValue);
 
-                            $varValueDark   = ColorHelper::mixColors($varValue, '#000000', 20.0);
-                            $varValueLight  = ColorHelper::mixColors($varValue, '#ffffff', 90.0);
-
-                            $strContent     = preg_replace('/\/\*#' . $varName . '_darker#\*\/' . $add . '/', $varValueDark, $strContent);
-                            $strContent     = preg_replace('/\/\*#' . $varName . '_lighter#\*\/' . $add . '/', $varValueLight, $strContent);
+                            $strContent     = $this->replaceColorVariants($varName, $varValue, $strContent, $add);
                         }
 
                         $strContent = preg_replace('/\/\*#' . $varName . '#\*\/' . $add . '/', $varValue, $strContent);
@@ -242,5 +238,38 @@ class CombinerListener
         return $strContent;
     }
 
-    
+
+
+    protected function replaceColorVariants( $varName, $varValue, $strContent, $add )
+    {
+        $varValueDark   = ColorHelper::mixColors($varValue, '#000000', 20.0);
+        $varValueLight  = ColorHelper::mixColors($varValue, '#ffffff', 90.0);
+
+        $strContent     = preg_replace('/\/\*#' . $varName . '_darker#\*\/' . $add . '/', $varValueDark, $strContent);
+        $strContent     = preg_replace('/\/\*#' . $varName . '_lighter#\*\/' . $add . '/', $varValueLight, $strContent);
+
+        $rgb = ColorHelper::convertHexColor($varValue);
+        
+        if( count($rgb) )
+        {
+            $rgba = 'rgba(' . $rgb['red'] . ',' . $rgb['green'] . ',' . $rgb['blue'] . ',';
+
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans95#\*\/' . $add . '/', $rgba . '0.95)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans90#\*\/' . $add . '/', $rgba . '0.9)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans85#\*\/' . $add . '/', $rgba . '0.85)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans80#\*\/' . $add . '/', $rgba . '0.8)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans75#\*\/' . $add . '/', $rgba . '0.75)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans70#\*\/' . $add . '/', $rgba . '0.7)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans65#\*\/' . $add . '/', $rgba . '0.65)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans60#\*\/' . $add . '/', $rgba . '0.6)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans55#\*\/' . $add . '/', $rgba . '0.55)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans50#\*\/' . $add . '/', $rgba . '0.5)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans45#\*\/' . $add . '/', $rgba . '0.45)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans40#\*\/' . $add . '/', $rgba . '0.4)', $strContent);
+        }
+
+        return $strContent;
+    }
+
+
 }
