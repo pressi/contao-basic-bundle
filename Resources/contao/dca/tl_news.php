@@ -58,13 +58,16 @@ if( $objArchive )
 	}
 }
 
-foreach($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'] as $i => $callback)
+if( is_array($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback']) && count($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback']) )
 {
-	if($callback[1] == "checkPermission")
-	{
-		unset($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][ $i ]);
-		$GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][ $i ] = array('IIDO\BasicBundle\Table\NewsTable', 'checkPermission');
-	}
+    foreach($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'] as $i => $callback)
+    {
+        if($callback[1] == "checkPermission")
+        {
+            unset($GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][ $i ]);
+            $GLOBALS['TL_DCA']['tl_news']['config']['onload_callback'][ $i ] = array('IIDO\BasicBundle\Table\NewsTable', 'checkPermission');
+        }
+    }
 }
 
 
@@ -255,4 +258,4 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsHeight']		= $GLOBALS['TL_D
 $GLOBALS['TL_DCA']['tl_news']['fields']['addVideo']             = $GLOBALS['TL_DCA']['tl_news']['fields']['addImage'];
 $GLOBALS['TL_DCA']['tl_news']['fields']['addVideo']['label']    = &$GLOBALS['TL_LANG']['tl_news']['addVideo'];
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['youtube']		= $GLOBALS['TL_DCA']['tl_content']['fields']['youtube'];
+$GLOBALS['TL_DCA']['tl_news']['fields']['youtube']              = $GLOBALS['TL_DCA']['tl_content']['fields']['youtube'];
