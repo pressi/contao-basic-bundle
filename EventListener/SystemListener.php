@@ -161,8 +161,18 @@ class SystemListener
 //        {
 //            copy($rootDir . '/system/modules/ziido_customize/templates/backend/be_unavailable.html5', $rootDir . '/templates/be_unavailable.html5');
 //        }
-/*
-        if( !file_exists($rootDir . $this->resourcePath . '/ContaoCoreBundle/views/Error/service_unavailable.html.twig') )
+
+        $arrErrorFiles = array('service_unavailable');
+
+        $this->generateErrorFiles( $arrErrorFiles );
+    }
+
+
+    protected function generateErrorFiles( $arrFiles )
+    {
+        $rootDir            = dirname(System::getContainer()->getParameter('kernel.root_dir'));
+
+        if( count($arrFiles) )
         {
             if( !is_dir($rootDir . $this->resourcePath) )
             {
@@ -196,9 +206,17 @@ class SystemListener
                 }
             }
 
-            copy($rootDir . '/vendor/iido/contao-website-bundle/Resources/views/Error/service_unavailable.html.twig', $rootDir . $this->resourcePath . '/ContaoCoreBundle/views/Error/service_unavailable.html.twig');
+            foreach( $arrFiles as $strFile )
+            {
+                if( !file_exists($rootDir . $this->resourcePath . '/ContaoCoreBundle/views/Error/' . $strFile . '.html.twig') )
+                {
+                    if( file_exists($rootDir . '/vendor/2do/contao-basic-bundle/Resources/views/Error/' . $strFile . '.html.twig') )
+                    {
+                        copy($rootDir . '/vendor/2do/contao-basic-bundle/Resources/views/Error/' . $strFile . '.html.twig', $rootDir . $this->resourcePath . '/ContaoCoreBundle/views/Error/' . $strFile . '.html.twig');
+                    }
+                }
+            }
         }
-*/
     }
     
 }
