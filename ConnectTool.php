@@ -588,6 +588,13 @@ class ConnectTool
                         $objSubFolder = new \Folder( $objFolder->path . '/' . $strSubFolder );
                     }
 
+                    if( $strSubFolder === "Uploads" || $strSubFolder === "images" )
+                    {
+                        $objSubFolder->protected = TRUE;
+
+                        $objSubFolder->save();
+                    }
+
                     $arrFolders[] = $objSubFolder->path;
                 }
             }
@@ -1007,12 +1014,44 @@ class ConnectTool
 
 
 
-    protected function getFilesFromMaster( $arrFolders )
+    public function getFoldersFromMaster( $arrFolders )
     {
         $arrData = $this->getActionData("getFolderFiles", array('foldersPath'=>implode(",", $arrFolders)));
 
         echo "<pre>";
         print_r( $arrData->files );
         exit;
+    }
+
+
+
+    public function getFilesFromMaster( $arrFiles )
+    {
+//        $arrData = $this->getActionData("getFiles", array('files'=>implode(",", $arrFiles)));
+
+        $arrFolders     = array();
+        $ftpSettings    = $this->getActionData("ftpSettings");
+
+        $conn_id        = ftp_connect($ftpSettings->host);
+
+        if( ftp_login($conn_id, $ftpSettings->username, $ftpSettings->password) )
+        {
+            foreach($arrFiles as $strFile)
+            {
+                $arrFolder = explode('/', $strFile);
+
+                ftp_get( $conn_id, $this->rootDir . '/../' . $strFile, $strFile, FTP_BINARY);
+
+                array_pop( $arrFolder);
+
+                $arrFolders[] = implode('/', $arrFolder);
+            }
+        }
+
+        $arrFolders = array_unique($arrFolders);
+        $arrFolders = array_values($arrFolders);
+
+        ftp_close($conn_id);
+        \Dbafs::updateFolderHashes($arrFolders);
     }
 }

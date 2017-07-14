@@ -3,17 +3,18 @@
 
 namespace IIDO\BasicBundle\Controller;
 
-use Contao\Encryption;
+//use Contao\Encryption;
 use Contao\Environment;
 use IIDO\BasicBundle\ConnectTool;
-use Doctrine\DBAL\DBALException;
-use Patchwork\Utf8;
+//use Doctrine\DBAL\DBALException;
+//use Patchwork\Utf8;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
+//use Symfony\Component\Filesystem\Filesystem;
+//use Symfony\Component\Finder\Finder;
+//use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -244,8 +245,10 @@ class ConnectionController implements ContainerAwareInterface
     {
         $arrData = $connectTool->getData();
 
-        $this->context['themes']        = (array) $arrData->themes;
-        $this->context['templates']     = (array) $arrData->rsce_templates;
+        $this->context['themes']            = (array) $arrData->themes;
+        $this->context['templates']         = (array) $arrData->rsce_templates;
+
+        $this->context['masterStylesheets'] = $this->renderObjectToArray( $arrData->stylesheets );
 
         if( !$connectTool->getConfig("clientID") )
         {
@@ -264,14 +267,19 @@ class ConnectionController implements ContainerAwareInterface
      */
     private function setUpClient( $connectTool )
     {
+        $request = $this->container->get('request_stack')->getCurrentRequest();
+
         if ( $connectTool->isConnectToolInitialized() )
         {
             $this->context['initialized'] = true;
 
+            if( $request->request->get('FORM_SUBMIT') === "tl_add_config")
+            {
+                return $this->addToClient( $connectTool, $request->request );
+            }
+
             return null;
         }
-
-        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         if ('tl_config' !== $request->request->get('FORM_SUBMIT'))
         {
@@ -379,6 +387,60 @@ class ConnectionController implements ContainerAwareInterface
         $connectTool->persistConfig( 'clientID', $arrData->clientID);
 
         return $this->getRedirectResponse();
+    }
+
+
+    /**
+     * Set up the client.
+     *
+     * @var ConnectTool $connectTool
+     * @var ParameterBag $request
+     *
+     * @return Response|RedirectResponse|null
+     */
+    protected function addToClient( $connectTool, $request )
+    {
+        $arrFiles       = array();
+        $arrStylesheets = $request->get("master_stylessheets");
+
+        if( $arrStylesheets )
+        {
+            foreach($arrStylesheets as $strStylesheet)
+            {
+                $arrFiles[] = 'files/master/css/' . $strStylesheet;
+            }
+        }
+
+        $connectTool->getFilesFromMaster( $arrFiles );
+
+        return $this->getRedirectResponse();
+    }
+
+
+
+    protected function renderObjectToArray( $object )
+    {
+        if( !is_object($object) && !is_array($object) )
+        {
+            $array = $object;
+            return $array;
+        }
+
+        $array = (array) $object;
+
+        foreach($array as $key => $value )
+        {
+            if( !empty($value) )
+            {
+                $array[ $key ] = $this->renderObjectToArray($value );
+            }
+            else
+            {
+                $array[ $key ] = $value;
+            }
+        }
+
+        return $array;
     }
 
 }
