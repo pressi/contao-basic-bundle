@@ -528,7 +528,10 @@ class PageListener
 
             if( count($arrStyles) )
             {
+                $writeToFile = FALSE;
+
                 $objFile            = new \File('assets/css/page-styles.css');
+                $objFile->write("/* Auto generated File - IIDO */\n");
 
                 foreach($arrStyles as $strStyle)
                 {
@@ -536,11 +539,17 @@ class PageListener
 
                     if( strlen(trim($strOnlyStyles)) )
                     {
+                        $writeToFile = TRUE;
                         $objFile->append($strStyle, '');
                     }
                 }
 
                 $objFile->close();
+
+                if( !$writeToFile )
+                {
+                    $objFile->delete();
+                }
             }
         }
 
@@ -776,6 +785,8 @@ class PageListener
         (
             'reset.css',
             'animate.css',
+            'hamburgers.css',
+            'hamburgers.min.css',
             'core.css',
             'buttons.css',
             'layout.css',
@@ -793,6 +804,8 @@ class PageListener
             'core.css',
             'buttons.css',
             'layout.css',
+            'hamburgers.css',
+            'hamburgers.min.css',
             'navigation.css',
             'content.css',
             'style.css',
