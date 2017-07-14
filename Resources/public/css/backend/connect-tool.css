@@ -26,7 +26,7 @@
     display: block;
 }
 
-.widget .tl_checkbox_container > div span {
+.widget .tl_checkbox_container > div > span {
     float: left;
     width: 50%;
 }
