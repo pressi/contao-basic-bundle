@@ -425,13 +425,23 @@ IIDO.Page = IIDO.Page || {};
     {
         if( $(document.body).hasClass("enable-fullpage") )
         {
+            var main        = $("#main"),
+                arrAnchors  = [];
+
+            main.find(".mod_article").each( function(index, articleTag)
+            {
+                var article = $(articleTag);
+
+                arrAnchors.push( article.attr("data-anchor") );
+            });
+
             //TODO: make options changeable in backend
-            $('#main').fullpage(
+            main.fullpage(
                 {
                     verticalCentered                    : true,
                     resize                              : false,
                     // slidesColor                         : ['#ccc', '#fff'],
-                    // anchors                             : ['startseite', 'handwerk', 'projekte', 'holzformer','kontakt'],// TODO: make flexible
+                    anchors                             : arrAnchors,//['startseite','handwerk', 'projekte','holzformer','kontakt'],// TODO: make flexible
                     scrollingSpeed                      : 700,
                     easing                              : 'easeInQuart',
                     menu                                : ".nav-main",
@@ -1096,7 +1106,10 @@ IIDO.Page = IIDO.Page || {};
 
 
                             // initSlider( seElement );
-                            eval( scriptHTML );
+                            // eval( scriptHTML );
+                            setTimeout(function() {
+                                eval( scriptHTML );
+                            }, 300);
                         }
                     });
                 }
@@ -1105,7 +1118,10 @@ IIDO.Page = IIDO.Page || {};
             }
             else
             {
-                eval( scriptHTML );
+                // eval( scriptHTML );
+                setTimeout(function() {
+                    eval( scriptHTML );
+                }, 300);
             }
         });
     };
@@ -1149,6 +1165,8 @@ IIDO.Page = IIDO.Page || {};
             });
 
             var listContainers = $mobileNav.find('li.submenu'), button, listItem;
+
+            $mobileNav.find("ul.level_1 > li > a").click( function() { IIDO.Page.closeMobileNavigation(); } );
 
             if( listContainers.length )
             {

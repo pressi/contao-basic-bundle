@@ -66,14 +66,14 @@
 
                             <input type="hidden" name="rsce_templates" value="">
 
-                            {% if( templates is defined) %}
+                            {% if( templates is defined and templates|length > 0 ) %}
                                 <span class="fixed">
                                     <input type="checkbox" id="check_all_rsce_templates" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,'rsce_templates')"> <label for="check_all_rsce_templates" style="color:#a6a6a6"><em>{{ 'select_all'|trans }}n</em></label></span>
 
                                 <div class="no-sortable">
 
                                     {% for templateFile, templateName in templates %}
-                                        <span><input type="checkbox" name="rsce_templates[]" id="opt_rsce_templates_{{ loop.index }}" class="tl_checkbox" value="{{ templateFile }}" onfocus="Backend.getScrollOffset()"> <label for="opt_rsce_templates_{{ loop.index }}>">{{ templateName|raw }}</label></span>
+                                        <span><input type="checkbox" name="rsce_templates[]" id="opt_rsce_templates_{{ loop.index }}" class="tl_checkbox" value="{{ templateFile }}" onfocus="Backend.getScrollOffset()"> <label for="opt_rsce_templates_{{ loop.index }}>">{{ templateName|masterStylesheetExists|raw }}</label></span>
                                     {% endfor %}
 
                                 </div>
@@ -107,6 +107,31 @@
                 <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
 
                 <div class="tl_formbody">
+
+                    <div class="widget">
+                        <fieldset id="master_stylessheets" class="tl_checkbox_container tl_checkbox_wizard">
+                            <legend>{{ 'config_widget_masterStylesheets'|trans }}</legend>
+
+                            <input type="hidden" name="master_stylessheets" value="">
+
+                            {% if( masterStylesheets is defined and masterStylesheets|length > 0 ) %}
+                                <span class="fixed">
+                                    <input type="checkbox" id="check_all_master_stylessheets" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,'master_stylessheets')"> <label for="check_all_master_stylessheets" style="color:#a6a6a6"><em>{{ 'select_all'|trans }}n</em></label></span>
+
+                                <div class="no-sortable">
+
+                                    {% for stylesheetFile, stylesheetName in masterStylesheets %}
+                                        <span><input type="checkbox" name="master_stylessheets[]" id="opt_master_stylessheets_{{ loop.index }}" class="tl_checkbox" value="{{ stylesheetFile }}" onfocus="Backend.getScrollOffset()"> <label for="opt_master_stylessheets_{{ loop.index }}">{{ stylesheetName|masterStylesheetExists|raw }}</label></span>
+                                    {% endfor %}
+
+                                </div>
+
+                            {% else %}
+                                <span style="color:#a6a6a6">Keine Master-Stylesheets vorhanden.</span>
+                            {% endif %}
+
+                        </fieldset>
+                    </div>
 
                     <!-- LAYOUTS > add to theme > multiple? -->
 
