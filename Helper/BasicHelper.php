@@ -766,11 +766,11 @@ class BasicHelper extends \Frontend
                 {
                     $objModule->rootPage = $objPage->rootId;
                 }
-                $cssID = \StringUtil::deserialize($objModule->cssID, TRUE);
+                $cssID = \StringUtil::deserialize($objClass->cssID, TRUE);
 
                 if( !strlen($cssID[1]) )
                 {
-                    $cssID = \StringUtil::deserialize($objClass->cssID, TRUE);
+                    $cssID = \StringUtil::deserialize($objModule->cssID, TRUE);
                 }
 
                 $objModule->navPages        = $objClass->navPages;

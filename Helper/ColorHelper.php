@@ -239,6 +239,8 @@ class ColorHelper
      */
     public static function convertHexColor($color, $blnWriteToFile=false, $vars=array())
     {
+        $color = preg_replace('/^\#/', '', $color);
+
         // Support global variables
         if (strncmp($color, '$', 1) === 0)
         {
