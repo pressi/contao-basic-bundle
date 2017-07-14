@@ -359,7 +359,7 @@ class NavigationModule extends \ModuleNavigation
 
                 $objTemplate->level = 'level_' . $level;
 
-                if( $objParentPage->id == $objPage->id )
+                if( $objParentPage->id == $objPage->id && !$objPage->enableFullpage )
                 {
                     $objTemplate->level = $objTemplate->level . ' article-menu';
                 }
@@ -530,36 +530,43 @@ class NavigationModule extends \ModuleNavigation
             }
         }
 
-        if( $useCustomNav )
+        if( $objPage->enableFullpage && count($this->getPageSiblings($objPage, true)) === 0 )
         {
-            $arrPages = array();
-
-            foreach($arrNavPages as $navPageID)
-            {
-                $objNavPage = \PageModel::findByPk( $navPageID );
-
-                if( $objNavPage->published )
-                {
-                    $arrPages[] = $objNavPage;
-                }
-            }
-
-            $strItems = $this->getCustomPages( $arrPages, 1, $host, $lang);
+            $strItems = $this->getPages($objPage->id, 1, $host, $lang, "articles");
         }
         else
         {
-            if( $level > count($trail) )
+            if( $useCustomNav )
             {
-                $strItems = $this->getPages( $objPage->id, 1, $host, $lang );
+                $arrPages = array();
+
+                foreach($arrNavPages as $navPageID)
+                {
+                    $objNavPage = \PageModel::findByPk( $navPageID );
+
+                    if( $objNavPage->published )
+                    {
+                        $arrPages[] = $objNavPage;
+                    }
+                }
+
+                $strItems = $this->getCustomPages( $arrPages, 1, $host, $lang);
             }
             else
             {
-                if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
+                if( $level > count($trail) )
                 {
-                    $level++;
+                    $strItems = $this->getPages( $objPage->id, 1, $host, $lang );
                 }
+                else
+                {
+                    if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
+                    {
+                        $level++;
+                    }
 
-                $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
+                    $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
+                }
             }
         }
 
@@ -578,7 +585,7 @@ class NavigationModule extends \ModuleNavigation
         {
             $objParentPage = \PageModel::findByPk( $pid );
 
-            if( $type == "article" )
+            if( $type === "article" )
             {
                 $objParentPage = \ArticleModel::findByPk( $pid );
 
@@ -587,6 +594,12 @@ class NavigationModule extends \ModuleNavigation
                     $objParentPage->submenuNoPages = true;
                 }
             }
+        }
+
+        if( $objParentPage->enableFullpage )
+        {
+            $objParentPage->submenuNoPages  = true;
+            $objParentPage->submenuSRC      = "articles";
         }
 
         // Layout template fallback
@@ -608,9 +621,12 @@ class NavigationModule extends \ModuleNavigation
             $objTemplate->level .=' article-submenu';
         }
 
-        if( $objParentPage->submenuSRC == "articles" && !preg_match('/article-submenu/', $objTemplate->level) && $objPage->id == $objParentPage->id )
+        if( $objParentPage->submenuSRC == "articles" && !preg_match('/article-submenu/', $objTemplate->level) && $objPage->id == $objParentPage->id && !$objPage->enableFullpage )
         {
-            $objTemplate->level .=' article-menu';
+            if( !preg_match('/load-articles/', $this->cssID[1]) )
+            {
+                $objTemplate->level .=' article-menu';
+            }
         }
 
         $arrItems   = array();
@@ -901,6 +917,11 @@ class NavigationModule extends \ModuleNavigation
             $href           = $objParentPage->getFrontendUrl('/' . $langPartName . '/' . $objItem->alias);
             $strClass       = deserialize($objItem->cssID, true)[1] . ' article-link';
 
+            if( $objPage->enableFullpage )
+            {
+                $href = '#' . $objItem->alias;
+            }
+
             if( $activeArticle == $objItem->alias )
             {
 //                $isActive = true;
@@ -956,22 +977,29 @@ class NavigationModule extends \ModuleNavigation
         }
 
 
-        $arrItem['isActive']    = $isActive;
-        $arrItem['isTrail']     = $isTrail;
-        $arrItem['subitems']    = $subitems;
-        $arrItem['class']       = trim($strClass);
-        $arrItem['title']       = \StringUtil::specialchars($strTitle, true);
-        $arrItem['pageTitle']   = \StringUtil::specialchars($strPageTitle, true);
-        $arrItem['link']        = $strTitle;
-        $arrItem['href']        = $href;
-        $arrItem['nofollow']    = (strncmp($objItem->robots, 'noindex,nofollow', 16) === 0);
-        $arrItem['target']      = '';
-        $arrItem['description'] = str_replace(array("\n", "\r"), array(' ' , ''), $objItem->description);
+        $arrItem['isActive']        = $isActive;
+        $arrItem['isTrail']         = $isTrail;
+        $arrItem['subitems']        = $subitems;
+        $arrItem['class']           = trim($strClass);
+        $arrItem['title']           = \StringUtil::specialchars($strTitle, true);
+        $arrItem['pageTitle']       = \StringUtil::specialchars($strPageTitle, true);
+        $arrItem['link']            = $strTitle;
+        $arrItem['href']            = $href;
+        $arrItem['nofollow']        = (strncmp($objItem->robots, 'noindex,nofollow', 16) === 0);
+        $arrItem['target']          = '';
+        $arrItem['description']     = str_replace(array("\n", "\r"), array(' ' , ''), $objItem->description);
+
+        $arrItem['listAttributes']  = '';
 
         // Override the link target
         if ($objItem->type == 'redirect' && $objItem->target)
         {
             $arrItem['target'] = ' target="_blank"';
+        }
+
+        if( $objPage->enableFullpage )
+        {
+            $arrItem['listAttributes'] = ' data-menuanchor="' . $objItem->alias . '"';
         }
 
         if( count($arrVars) )
@@ -1039,5 +1067,19 @@ class NavigationModule extends \ModuleNavigation
         $objTemplate->items = $arrItems;
 
         return !empty($arrItems) ? $objTemplate->parse() : '';;
+    }
+
+
+
+    protected function getPageSiblings( $objCurrentPage, $returAsArray = false)
+    {
+        $objPages = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $objCurrentPage->pid );
+
+        if( $objPages->count() > 1)
+        { //TODO: remove current page from return!!
+            return $returAsArray ? $objPages->fetchAll() : $objPages;
+        }
+
+        return $returAsArray ? array() : null;
     }
 }
