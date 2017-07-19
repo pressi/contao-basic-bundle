@@ -53,6 +53,7 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
  */
 
 $GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\ContentElement\NavigationElement';
+$GLOBALS['TL_CTE']['module']['iido_filesFilter']         = $namespace . '\\' . $subNamespace . '\ContentElement\FilesFilterElement';
 //$GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
 
 
@@ -73,6 +74,7 @@ $GLOBALS['FE_MOD']['news']['newslist']              = $namespace . '\\' . $subNa
 $GLOBALS['BE_FFL']['metaWizard']        = $namespace . '\\' . $subNamespace . '\Widget\MetaWizardWidget';
 $GLOBALS['BE_FFL']['imageSize']         = $namespace . '\\' . $subNamespace . '\Widget\ImageSizeWidget';
 $GLOBALS['BE_FFL']['text']              = $namespace . '\\' . $subNamespace . '\Widget\TextFieldWidget';
+$GLOBALS['BE_FFL']['iidoTag']           = $namespace . '\\' . $subNamespace . '\Widget\TagsFieldWidget';
 
 
 

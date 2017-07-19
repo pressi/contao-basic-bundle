@@ -32,7 +32,7 @@ class ImageHelper extends \Backend
 		$noGallery  = FALSE;
 		$objFiles   = FALSE;
 
-        $multiSRC = deserialize($multiSRC);
+        $multiSRC = \StringUtil::deserialize($multiSRC);
 
 		if( is_array($multiSRC) || !empty($multiSRC) )
 		{
@@ -95,7 +95,8 @@ class ImageHelper extends \Backend
 						'singleSRC' => $objFiles->path,
 						'alt'       => $arrMeta['title'],
 						'imageUrl'  => $arrMeta['link'],
-						'caption'   => $arrMeta['caption']
+						'caption'   => $arrMeta['caption'],
+                        'meta'      => $arrMeta
 					);
 
 					$auxDate[] = $objFile->mtime;
@@ -151,7 +152,8 @@ class ImageHelper extends \Backend
 							'singleSRC' => $objSubfiles->path,
 							'alt'       => $arrMeta['title'],
 							'imageUrl'  => $arrMeta['link'],
-							'caption'   => $arrMeta['caption']
+							'caption'   => $arrMeta['caption'],
+                            'meta'      => $arrMeta
 						);
 
 						$auxDate[] = $objFile->mtime;

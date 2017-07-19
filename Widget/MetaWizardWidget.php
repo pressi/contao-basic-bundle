@@ -88,6 +88,29 @@ class MetaWizardWidget extends \MetaWizard
 
                         $strField       = '<select name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $field . '_' . $count . '" class="tl_select">' . $arrOptions . '</select>';
                     }
+                    elseif( $attributes == "iidoTag")
+                    {
+                        $arrData = array
+                        (
+                            'label'     => array('', ''),
+                            'inputType' => 'iidoTag',
+                            'eval'      => array
+                            (
+                                'multipleTags' => true
+                            )
+                        );
+
+                        $strInputName   = $this->strId . '[' . $lang . '][' . $field . ']';
+                        $varValue       = $meta[ $field ];
+                        $strField       = '';
+
+                        $strClass   = $GLOBALS['BE_FFL']['iidoTag'];
+                        $objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strField, 'tl_files', $this));
+
+                        $objWidget->id = $field . '_' . $count;
+
+                        $strField .= $objWidget->parse();
+                    }
                     else
                     {
                         $arrAttributes  = explode("_", $attributes);

@@ -125,6 +125,11 @@ class SystemListener
             $GLOBALS['TL_CSS'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/css/backend/backend.css||static';
         }
 
+        if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/javascript/backend/IIDO.Backend.js') )
+        {
+            $GLOBALS['TL_JAVASCRIPT'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/javascript/backend/IIDO.Backend.js|static';
+        }
+
 //        if( \Config::get("iidoCustomize_SettingsProjectType") == "i" && $GLOBALS['IIDO']['isActiveBackendTheme'] )
 //        {
 //            $GLOBALS['TL_CSS'][]        = 'system/modules/ziido_customize/assets/css/frontend/font-awesome.css';

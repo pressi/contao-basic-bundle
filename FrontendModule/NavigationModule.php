@@ -560,10 +560,10 @@ class NavigationModule extends \ModuleNavigation
                 }
                 else
                 {
-                    if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
-                    {
-                        $level++;
-                    }
+//                    if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
+//                    {
+//                        $level++;
+//                    }
 
                     $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
                 }

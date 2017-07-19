@@ -156,7 +156,8 @@ class PageListener
             $GLOBALS['TL_JAVASCRIPT']['iido_base']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Functions.js|static';
             $GLOBALS['TL_JAVASCRIPT']['iido_page']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Page.js|static';
-//            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_content']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_filter']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Filter.js|static';
         }
 
         if( $objRootPage->enablePageFadeEffect )

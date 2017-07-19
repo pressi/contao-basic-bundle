@@ -54,6 +54,15 @@
                 <target>Hover: Sub-Titel</target>
             </trans-unit>
 
+            <trans-unit id="MSC.aw_cssClass">
+                <source>CSS-Klassen</source>
+                <target>CSS-Klassen</target>
+            </trans-unit>
+            <trans-unit id="MSC.aw_categories">
+                <source>Kategorien</source>
+                <target>Kategorien</target>
+            </trans-unit>
+
 
 
 <!-- ### POSITIONS ########################################################################################################## -->

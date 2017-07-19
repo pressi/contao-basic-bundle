@@ -50,18 +50,75 @@ fieldset.rsce_list {
     margin-top: 40px;
 }
 
+.labels {
+    background: #f3f3f3;
+    padding: 8px 8px 0;
+    border-radius: 3px;
+    margin: 5px 0;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+}
+
+.labels:after {
+    display: table;
+    content: '';
+    clear: both;
+    float: none;
+}
+
+.labels .label-link {
+    background: #909390;
+    color: #fff;
+    float: left;
+    display: block;
+    margin: 0 10px 8px 0;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.labels + input {
+    width: 100% !important;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+}
+
+.labels .label-link.active {
+    background: #000;
+}
+.labels .label-link:not(.active):hover {
+    background: #666966;
+}
+
 .tl_metawizard .tl_select {
     float: left;
     width: 82%;
 }
 
 .tl_metawizard .tl_select_unit {
-    width: 16.6%;
+    width: 16.8%;
 }
 
 .tl_metawizard .tl_text_trbl {
     width: 15.3%;
     background-color: #fff;
+}
+
+.tl_metawizard .tl_text,
+.tl_metawizard .labels {
+    float: left;
+    width: 82% !important;
+}
+
+.tl_metawizard .labels + input.tl_text {
+    margin-left: 18%;
+}
+
+.tl_metawizard .meta-widget > h3 {
+    display: none;
 }
 
 .tl_metawizard .meta-widget:after {
@@ -72,7 +129,8 @@ fieldset.rsce_list {
 }
 
 .tl_metawizard .widget-imageText,
-.tl_metawizard .widget-hoverTitle {
+.tl_metawizard .widget-hoverTitle,
+.tl_metawizard .widget-categories {
     padding: 20px 0 0;
 }
 
@@ -120,4 +178,73 @@ body.popup #main .tl_formbody_submit {
 
 #container {
     padding-top: 48px;
+}
+
+/*.tl_modulewizard tbody tr:not(:last-child) td {*/
+    /*border-bottom: 1px solid #ccc;*/
+/*}*/
+
+.tl_modulewizard tbody tr td > div.tl_text_field {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.mcw-radio-table tbody tr td .tl_text_field:before {
+    content: 'Wert: ';
+    display: block;
+}
+.mcw-radio-table tbody tr td .tl_text_field:after {
+    content: 'Bezeichnung: ';
+    display: block;
+
+    position: absolute;
+    left: 0; top: 67px;
+}
+
+.mcw-radio-table table,
+.mcw-radio-table table tbody,
+.mcw-radio-table table thead,
+.mcw-radio-table table tr,
+.mcw-radio-table table tr td {
+    display: block;
+}
+
+.mcw-radio-table table tr {
+    display: flex;
+    position: relative;
+    padding: 30px 0 0;
+}
+
+.mcw-radio-table table tr td:not(:last-child) {
+    width: 25%;
+    /*padding: 0 0 15px;*/
+}
+.mcw-radio-table table thead tr td:last-child {
+    display: none;
+}
+
+.mcw-radio-table table tbody tr td:first-child {
+    padding-left: 5px;
+}
+
+.mcw-radio-table table tbody tr {
+    border: 1px solid #ccc;
+    margin: 8px 0;
+}
+
+.mcw-radio-table table tbody tr td:not(:last-child) input:nth-child(2) {
+    margin-top: 25px;
+}
+
+.mcw-radio-table table tbody tr td:last-child {
+    float: right;
+    display: block;
+
+    position: absolute;
+    top: 0; right: 0;
+
+    background: #fcfcfc;
+    padding: 8px;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }

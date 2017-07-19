@@ -478,7 +478,7 @@ class FrontendTemplateListener
                                     {
                                         if( $objLinkPage->count() > 1 )
                                         {
-                                            $objLinkPage = \PageModel::findByPk( $this->getPageIdFromUrl() );
+                                            $objLinkPage = \PageModel::findByPk( \Frontend::getPageIdFromUrl() );
                                         }
 
                                         $subtitle = '<span class="subtitle">' . (($objLinkPage->subtitlePosition == "after") ? ' ' : '') . trim($objLinkPage->subtitle) . (($objLinkPage->subtitlePosition == "before") ? ' ' : '') . '</span>';
