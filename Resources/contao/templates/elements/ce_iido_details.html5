@@ -1,0 +1,48 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block('content'); ?>
+
+<?php
+
+$objModule = \ModuleModel::findByPk( 7 );
+
+$objModule->rsts_content_type   = 'rsts_images';
+$objModule->multiSRC            = $this->multiSRC;
+
+//$objModule->rsts_id             = '1';
+$objModule->rsts_type           = 'slide';
+$objModule->rsts_width          = '100%';
+$objModule->rsts_height         = '100%';
+$objModule->rsts_scaleMode      = 'crop';
+$objModule->rsts_imagePosition  = 'center';
+
+$objModule->rsts_navType        = 'thumbs';
+$objModule->rsts_controls       = true;
+$objModule->rsts_keyboard       = true;
+
+$objModule->rsts_thumbs_imgSize = array(140, 70, 'crop');
+$objModule->rsts_thumbs         = true;
+$objModule->rsts_thumbs_width   = '100%';
+$objModule->rsts_thumbs_height  = '2x1';
+$objModule->rsts_thumbs_gapSize = '10px';
+$objModule->rsts_thumbs_scaleMode       = 'crop';
+$objModule->rsts_thumbs_imagePosition   = 'center';
+
+$objModule->rsts_thumbs_slideMinSize    = '140';
+$objModule->rsts_thumbs_slideMaxSize    = '140';
+
+$objSlider = new \MadeYourDay\RockSolidSlider\Module\Slider( $objModule );
+
+echo $objSlider->generate();
+
+?>
+<div class="project-title"><?= $this->data['title'] ?></div>
+
+<div class="project-infos">
+    <div class="project-detail"><a href="javascript:void(0)" class="no-barba" onclick="IIDO.Project.toggleDetails(<?= $this->id ?>)">Projekt Details</a></div>
+    <div id="projectDetails<?= $this->id ?>" class="project-detail-text"><div class="inner"><?= $this->data['text'] ?></div></div>
+    <div class="back"><a href="<?= $this->backlink ?>">Projekt Übersicht</a></div>
+</div>
+<script>IIDO.Project.toggleDetails(<?= $this->id ?>, true);</script>
+
+<? $this->endblock(); ?>
