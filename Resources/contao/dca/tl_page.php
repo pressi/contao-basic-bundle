@@ -55,6 +55,14 @@ $GLOBALS['TL_DCA']['tl_page']['config']['onsubmit_callback'][]          = array(
 
 
 /**
+ * List
+ */
+
+$GLOBALS['TL_DCA']['tl_page']['list']['label']['label_callback']        = array('IIDO\BasicBundle\Table\PageTable', 'pageLabel');
+
+
+
+/**
  * Selectors
  */
 
@@ -82,7 +90,7 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
         continue;
     }
 
-    $pageFields     = ',type,alt_pagename,subtitle,navTitle,navSubtitle';
+    $pageFields     = ',type,alt_pagename,subtitle,navTitle,navSubtitle,subtitlePosition';
     $backLinkFields = ',subPagesHasBacklink';
 
 
@@ -112,7 +120,7 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
 
         $strFields      = str_replace(',hide', '', $strFields);
         $strFields      = str_replace(',guests', '', $strFields);
-        $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter', $strFields);
+        $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight', $strFields);
 
         $strFields      = str_replace('{meta_legend', '{page_legend},enableFullpage;{meta_legend', $strFields);
         $strFields      = str_replace('{meta_legend', '{navigation_legend},submenuNoPages,hide,hideTitle,openPageInLightbox,guests,overviewImage,pageColor,overviewText;{meta_legend', $strFields);
@@ -246,6 +254,21 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['navTitle']['label']            = &$GLOB
 $GLOBALS['TL_DCA']['tl_page']['fields']['navSubtitle']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['navSubtitle']['label']         = &$GLOBALS['TL_LANG']['tl_page']['navSubtitle'];
 
+$GLOBALS['TL_DCA']['tl_page']['fields']['subtitlePosition'] = array
+(
+    'label'						=> &$GLOBALS['TL_LANG']['tl_page']['subtitlePosition'],
+    'default'					=> 'after',
+    'exclude'					=> true,
+    'inputType'					=> 'select',
+    'options'					=> $GLOBALS['TL_LANG']['tl_page']['options']['subtitlePosition'],
+    'eval'						=> array
+    (
+        'maxlength'					=> 32,
+        'tl_class'					=> 'w50'
+    ),
+    'sql'						=> "varchar(32) NOT NULL default ''"
+);
+
 
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']                    = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
@@ -258,6 +281,12 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['removeHeader']['label']        = &$GLOB
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['removeFooter']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['removeFooter']['label']        = &$GLOBALS['TL_LANG']['tl_page']['removeFooter'];
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['removeLeft']                   = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['removeLeft']['label']          = &$GLOBALS['TL_LANG']['tl_page']['removeLeft'];
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['removeRight']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['removeRight']['label']         = &$GLOBALS['TL_LANG']['tl_page']['removeRight'];
 
 
 
