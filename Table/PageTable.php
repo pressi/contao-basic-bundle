@@ -276,4 +276,34 @@ class PageTable extends \Backend
     }
 
 
+
+    /**
+     * Add an image to each page in the tree
+     * @param array
+     * @param string
+     * @param \DataContainer
+     * @param string
+     * @param boolean
+     * @param boolean
+     * @return string
+     */
+    public function pageLabel($row, $label, \DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false)
+    {
+        if( strlen($row['subtitle']) || strlen($row['navSubtitle']) )
+        {
+            if( !strlen($row['subtitlePosition']) )
+            {
+                $row['subtitlePosition'] = "before";
+            }
+
+            $subTitle = '<span class="subtitle ' . $row['subtitlePosition'] . '">' . trim( strlen(trim($row['navSubtitle']))?$row['navSubtitle']:$row['subtitle'] ) . '</span>';
+
+            $label = (($row['subtitlePosition'] == "before") ? $subTitle : '') . $label . (($row['subtitlePosition'] == "after") ? $subTitle : '');
+
+        }
+
+        return \Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
+    }
+
+
 }
