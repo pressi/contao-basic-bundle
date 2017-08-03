@@ -740,9 +740,7 @@ class BasicHelper extends \Frontend
 
     public static function renderFilterName( $filterName )
     {
-        $filterName = preg_replace(array('/ü/', '/ö/', '/ä/', '/ &amp; /', '/ & /', '/&#40;/', '/&#41;/', '/\(/', '/\)/', '/, /', '/\s/'), array('ue', 'oe', 'ae', '_and_', '_and_', '', '', '', '', ',', '_'), trim($filterName));
-
-        return trim($filterName);
+        return FilterHelper::renderFilterName( $filterName );
     }
 
 
@@ -762,7 +760,7 @@ class BasicHelper extends \Frontend
             {
                 $objModule->typePrefix = 'ce_';
 
-                if( $objModule->type == "booknav" )
+                if( $objModule->type == "booknav" && !$objModule->rootPage)
                 {
                     $objModule->rootPage = $objPage->rootId;
                 }
@@ -775,6 +773,7 @@ class BasicHelper extends \Frontend
 
                 $objModule->navPages        = $objClass->navPages;
                 $objModule->navPagesOrder   = $objClass->navPagesOrder;
+                $objModule->navigationTpl   = $objClass->navigationTpl;
 
                 /** @var \Module $objModule */
                 $objModule = new $strClass($objModule, $strColumn);

@@ -24,7 +24,7 @@ class ImageHelper extends \Backend
      * @param $orderSRC
 	 * @return array
 	 */
-	static public function getMultipleImages( $multiSRC, $orderSRC )
+	static public function getMultipleImages( $multiSRC, $orderSRC = '' )
 	{
         global $objPage;
 
