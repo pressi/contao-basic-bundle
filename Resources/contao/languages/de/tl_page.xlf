@@ -23,6 +23,11 @@
                 <target>Navigations Untertitel</target>
             </trans-unit>
 
+            <trans-unit id="tl_page.subtitlePosition.0">
+                <source>subtitle postion</source>
+                <target>Untertitel Position</target>
+            </trans-unit>
+
 
 
             <trans-unit id="tl_page.hideTitle.0">
@@ -192,6 +197,27 @@
                 <!--<source>pages between</source>-->
                 <!--<target>Seiten dazwischen</target>-->
             <!--</trans-unit>-->
+
+
+
+            <trans-unit id="tl_page.options.subtitlePosition.after">
+                <source>after</source>
+                <target>Nachher</target>
+            </trans-unit>
+            <trans-unit id="tl_page.options.subtitlePosition.before">
+                <source>before</source>
+                <target>Vorher</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_page.options.fullpageDirection.vertical">
+                <source>vertical</source>
+                <target>Vertikal </target>
+            </trans-unit>
+            <trans-unit id="tl_page.options.fullpageDirection.horizontal">
+                <source>horizontal</source>
+                <target>Horizontal</target>
+            </trans-unit>
 
 
 
