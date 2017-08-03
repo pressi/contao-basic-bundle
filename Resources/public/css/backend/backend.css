@@ -1,3 +1,8 @@
+span.subtitle {
+    color: #bababa;
+    margin: 0 5px 0 0;
+}
+
 #tl_navigation .tl_level_2 a.iidoConfigContao {
     display: none;
 }
