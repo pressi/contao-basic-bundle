@@ -52,8 +52,9 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
  * Content elements
  */
 
-$GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\ContentElement\NavigationElement';
-$GLOBALS['TL_CTE']['module']['iido_filesFilter']         = $namespace . '\\' . $subNamespace . '\ContentElement\FilesFilterElement';
+$GLOBALS['TL_CTE']['module']['iido_navigation']             = $namespace . '\\' . $subNamespace . '\ContentElement\NavigationElement';
+$GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $namespace . '\\' . $subNamespace . '\ContentElement\FilesFilterElement';
+$GLOBALS['TL_CTE']['module']['iido_detail']                 = $namespace . '\\' . $subNamespace . '\ContentElement\DetailElement';
 //$GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
 
 
@@ -62,8 +63,9 @@ $GLOBALS['TL_CTE']['module']['iido_filesFilter']         = $namespace . '\\' . $
  * Front end modules
  */
 
-$GLOBALS['FE_MOD']['navigationMenu']['navigation']  = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
-$GLOBALS['FE_MOD']['news']['newslist']              = $namespace . '\\' . $subNamespace . '\FrontendModule\NewsListModule';
+$GLOBALS['FE_MOD']['inherit']['iido_inheritArticle']    = $namespace . '\\' . $subNamespace . '\FrontendModule\InheritArticleModule';
+$GLOBALS['FE_MOD']['navigationMenu']['navigation']      = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
+$GLOBALS['FE_MOD']['news']['newslist']                  = $namespace . '\\' . $subNamespace . '\FrontendModule\NewsListModule';
 
 
 
