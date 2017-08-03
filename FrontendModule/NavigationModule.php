@@ -560,7 +560,7 @@ class NavigationModule extends \ModuleNavigation
                 }
                 else
                 {
-//                    if( $this->name == "Navigation Sub" && $level == 1 && count($trail) > 2 )
+//                    if( ($this->name == "Navigation Sub" || preg_match('/nav-sub/', $this->cssID[1])) && $level < 2 ) //&& count($trail) > 2 )
 //                    {
 //                        $level++;
 //                    }
@@ -728,18 +728,44 @@ class NavigationModule extends \ModuleNavigation
 
         $objTemplate->items = $arrItems;
 
-        $hasSubitems = false;
+        $hasSubitems        = false;
+        $isActiveNoSubLevel = false;
+        $isActiveTrailLevel = false;
+
         foreach( $arrItems as $arrItem)
         {
             if( strlen($arrItem['subitems']) )
             {
                 $hasSubitems = true;
             }
+
+            if( preg_match('/active/', $arrItem['class']) && !strlen($arrItem['subitems']) )
+            {
+                $isActiveNoSubLevel = true;
+            }
+
+            if( preg_match('/active-no-sub-level/', $arrItem['subitems']) )
+            {
+                if( !preg_match('/active-trail-level/', $arrItem['subitems']) )
+                {
+                    $isActiveTrailLevel = true;
+                }
+            }
         }
 
         if( !$hasSubitems )
         {
             $objTemplate->level = trim( $objTemplate->level . ' last-level');
+        }
+
+        if( $isActiveNoSubLevel )
+        {
+            $objTemplate->level = trim( $objTemplate->level . ' active-no-sub-level');
+        }
+
+        if( $isActiveTrailLevel )
+        {
+            $objTemplate->level = trim( $objTemplate->level . ' active-trail-level');
         }
 
         return !empty($arrItems) ? $objTemplate->parse() : '';
@@ -824,6 +850,7 @@ class NavigationModule extends \ModuleNavigation
     {
         global $objPage;
 
+        $objRootPage    = \PageModel::findByPk( $objPage->rootId );
         $language       = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 
         $strTitle       = ContentHelper::renderText( $objItem->title );
@@ -831,6 +858,7 @@ class NavigationModule extends \ModuleNavigation
         $isActive       = false;
         $isTrail        = false;
         $href           = '';
+        $strTarget      = '';
         $strClass       = '';
 
         if( $type == "page" )
@@ -897,6 +925,11 @@ class NavigationModule extends \ModuleNavigation
 
                 $isActive = false;
                 $isTrail = $trail;
+
+                if( $isTrail && !preg_match('/trail/', $subitems) )
+                {
+                    $strClass .= ' last-trail';
+                }
             }
         }
         elseif( $type == "article" )
@@ -942,6 +975,11 @@ class NavigationModule extends \ModuleNavigation
                         {
                             $isTrail = true;
                             $strClass .= ' trail';
+
+                            if( !preg_match('/trail/', $subitems) )
+                            {
+                                $strClass .= ' last-trail';
+                            }
                         }
                     }
                 }
@@ -977,6 +1015,24 @@ class NavigationModule extends \ModuleNavigation
         }
 
 
+//        if( $objRootPage->enablePageFadeEffect && preg_match('/nav-main/', $this->cssID[1]) && $isActive )
+        if( $objRootPage->enablePageFadeEffect && $isActive )
+        {
+            $isActive = false;
+
+            if( !preg_match('/active/', $strClass) )
+            {
+                $strClass = $strClass . ' active';
+            }
+
+            if( preg_match('/nav-sub/', $this->cssID[1]) )
+            {
+                $isActive = true;
+//                $strTarget = ' data-href=""';
+            }
+        }
+
+
         $arrItem['isActive']        = $isActive;
         $arrItem['isTrail']         = $isTrail;
         $arrItem['subitems']        = $subitems;
@@ -986,7 +1042,7 @@ class NavigationModule extends \ModuleNavigation
         $arrItem['link']            = $strTitle;
         $arrItem['href']            = $href;
         $arrItem['nofollow']        = (strncmp($objItem->robots, 'noindex,nofollow', 16) === 0);
-        $arrItem['target']          = '';
+        $arrItem['target']          = $strTarget;
         $arrItem['description']     = str_replace(array("\n", "\r"), array(' ' , ''), $objItem->description);
 
         $arrItem['listAttributes']  = '';
