@@ -14,15 +14,22 @@ IIDO.Filter = IIDO.Filter || {};
 
     filter.init = function()
     {
-        var galleryList = $("ul.gallery-filter-list"),
-            filterList  = $("ul.filter-list");
+        var filterList  = $(".ce_rsce_project_filter");
 
-        if( galleryList.length && filterList.length )
+        if( !filterList.length )
+        {
+            filterList = $('.filter-list');
+        }
+
+        if( filterList.length )
         {
             // init Isotope
-            $grid = galleryList.isotope(
+            $grid = filterList.parent(".article-inside").isotope(
                 {
-                    itemSelector: '.gallery-filter-item'
+                    itemSelector: '.project-item',
+                    // stamp: '.project-filter',
+                    layoutMode: 'fitRows',
+                    percentPosition: true
                 });
 
             // store filter for each group
@@ -47,40 +54,42 @@ IIDO.Filter = IIDO.Filter || {};
                 else
                 {
                     $this.addClass('is-checked');
+                    $this.siblings().removeClass('is-checked');
                 }
 
                 // get group key
                 var $buttonGroup    = $this.parents('.filter-group'),
                     filterGroup     = $buttonGroup.attr('data-filter-group');
 
-                // if( filterGroup === "mainfilter" )
-                // {
-                //     var subFilterGroup  = $buttonGroup.parent(".filter").next(".sub-filter"),
-                //         checkedFilter   = $buttonGroup.find(".is-checked");
-                //
-                //     if( !checkedFilter.hasClass("all") )
-                //     {
-                //         subFilterGroup.addClass("main-is-active");
-                //
-                //         subFilterGroup.find("a:not(.all)").removeClass("is-disabled").each( function(index, element) {
-                //             var el              = $(element),
-                //                 mainFilter      = el.attr("data-mainfilter"),
-                //                 strMainFilter   = filterName.replace(/^.mainfilter\-/, ''),
-                //                 arrFilters      = mainFilter.split(",");
-                //
-                //             if( $.inArray(strMainFilter, arrFilters) )
-                //             {
-                //                 el.addClass("is-disabled");
-                //             }
-                //         })
-                //     }
-                //     else
-                //     {
-                //         subFilterGroup.removeClass("main-is-active");
-                //         subFilterGroup.find("a.all").trigger("click");
-                //         subFilterGroup.find("a:not(.all)").removeClass("is-disabled");
-                //     }
-                // }
+                if( filterGroup === "mainfilter" )
+                {
+                    var subFilterGroup  = $buttonGroup.parent(".filter").next(".sub-filter"),
+                        checkedFilter   = $buttonGroup.find(".is-checked");
+
+                    if( !checkedFilter.hasClass("all") )
+                    {
+                        subFilterGroup.addClass("main-is-active");
+
+                        subFilterGroup.find("a:not(.all)").removeClass("is-disabled").each( function(index, element)
+                        {
+                            var el              = $(element),
+                                mainFilter      = el.attr("data-mainfilter"),
+                                strMainFilter   = filterName.replace(/^.mainfilter\-/, ''),
+                                arrFilters      = mainFilter.split(",");
+
+                            if( $.inArray(strMainFilter, arrFilters) )
+                            {
+                                el.addClass("is-disabled");
+                            }
+                        })
+                    }
+                    else
+                    {
+                        subFilterGroup.removeClass("main-is-active");
+                        subFilterGroup.find("a.all").trigger("click");
+                        subFilterGroup.find("a:not(.all)").removeClass("is-disabled");
+                    }
+                }
 
                 // set filter for group
                 if( filters[ filterGroup ] === filterName )

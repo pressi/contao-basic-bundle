@@ -448,8 +448,8 @@ IIDO.Page = IIDO.Page || {};
                     navigation                          : false,
                     // navigationPosition                  : 'right',
                     // navigationTooltips                  : ['firstSlide', 'secondSlide'],
-                    slidesNavigation                    : false,
-                    // slidesNavPosition                   : 'bottom',
+                    slidesNavigation                    : true,
+                    slidesNavPosition                   : 'top',
                     loopBottom                          : false,
                     loopTop                             : false,
                     loopHorizontal                      : false,
@@ -721,36 +721,46 @@ IIDO.Page = IIDO.Page || {};
         if( $(document.body).hasClass("page-fade-animation") )
         {
             var lastElementClicked;
-            var PrevLink = document.querySelector('.mod_booknav .previous > a');
-            var NextLink = document.querySelector('.mod_booknav .next > a');
+            // var PrevLink = document.querySelector('.mod_booknav .previous > a');
+            // var NextLink = document.querySelector('.mod_booknav .next > a');
 
             Barba.Pjax.init();
             // Barba.Pjax.start();
             Barba.Prefetch.init();
 
-            // Barba.Pjax.originalPreventCheck = Barba.Pjax.preventCheck;
+            Barba.Pjax.originalPreventCheck = Barba.Pjax.preventCheck;
             //
-            // Barba.Pjax.preventCheck = function(evt, element)
-            // {
-            //     if( $(element).hasClass("no-barba") )
-            //     {
-            //         return false;
-            //     }
-            //
-            //     if (!Barba.Pjax.originalPreventCheck(evt, element))
-            //     {
-            //         return false;
-            //     }
-            //
-            //     // No need to check for element.href -
-            //     // originalPreventCheck does this for us! (and more!)
-            //     if (/.pdf/.test(element.href.toLowerCase()))
-            //     {
-            //         return false;
-            //     }
-            //
-            //     return true;
-            // };
+            Barba.Pjax.preventCheck = function(evt, element)
+            {
+                if( $(element).hasClass("no-barba") )
+                {
+                    return false;
+                }
+
+                if (!Barba.Pjax.originalPreventCheck(evt, element))
+                {
+                    return false;
+                }
+
+                var parent = element.parentNode.parentNode;
+
+                if( parent.classList.contains("image_contaier") )
+                {
+                    parent = parent.parentNode;
+                }
+
+                if( parent.classList.contains("logo") )
+                {
+                    return true;
+                }
+
+                if( !parent.classList.contains("logo") && location.href.replace(/\/$/, '') !== location.origin )
+                {
+                    return false;
+                }
+
+                return true;
+            };
 
             Barba.Dispatcher.on('linkClicked', function(HTMLElement, MouseEvent)
             {
@@ -782,6 +792,7 @@ IIDO.Page = IIDO.Page || {};
                     // {
                     //     $(document.body).attr("class", match[2]);
                     // }, 200);
+
                     $(document.body).attr("class", match[2]);
                 }
 
@@ -834,6 +845,16 @@ IIDO.Page = IIDO.Page || {};
                         // eval(js.innerHTML);
                     }
                 }
+
+                if( typeof IIDO.Functions === "object" && typeof IIDO.Functions.init === "function")
+                {
+                    IIDO.Functions.init();
+                }
+
+                setTimeout(function()
+                {
+                    IIDO.Filter.init();
+                }, 500);
 
                 // if( footer.length )
                 // {
@@ -958,7 +979,8 @@ IIDO.Page = IIDO.Page || {};
                         y: 0,
                         onUpdate: function()
                         {
-                            if (obj.y === 0) {
+                            if (obj.y === 0)
+                            {
                                 deferred.resolve();
                             }
 
@@ -982,27 +1004,106 @@ IIDO.Page = IIDO.Page || {};
                     var oldLink             = Barba.HistoryManager.prevStatus().url.split('/').pop(),
                         clickedLinkParent   = $( this.originalThumb ).parent();
 
-                    if ( clickedLinkParent.hasClass("previous") || ( clickedLinkParent.hasClass("logo") && oldLink === "produkte.html") )
+                    // console.log( oldLink );
+                    // console.log( clickedLinkParent );
+
+                    if( clickedLinkParent.hasClass("image_container") )
+                    {
+                        clickedLinkParent = clickedLinkParent.parent();
+                    }
+
+                    if ( clickedLinkParent.hasClass("logo") )
                     {
                         goingForward = false;
                     }
 
-                    TweenLite.set(this.newContainer, {
-                        visibility: 'visible',
-                        xPercent: goingForward ? 100 : -100,
-                        position: 'fixed',
-                        left: 0,
-                        top: 0,
-                        right: 0
-                    });
+                    if( (goingForward && oldLink === "") || !goingForward)
+                    {
+                        var headerTag = $("#header"),
+                            winH = $(window).height();
 
-                    TweenLite.to(this.oldContainer, 0.6, { xPercent: goingForward ? -100 : 100 });
-                    TweenLite.to(this.newContainer, 0.6, { xPercent: 0, onComplete: function() {
-                        TweenLite.set(_this.newContainer, { clearProps: 'all' });
-                        _this.done();
+                        TweenLite.set(this.newContainer, {
+                            visibility: 'visible',
+                            // yPercent: goingForward ? 100 : -100,
 
-                        $(document.body).removeClass("start-fade-animation");
-                    }});
+                            position: 'fixed',
+                            left: 0,
+                            top: goingForward ? (winH - 120) : -(winH - 120),
+                            right: 0,
+
+                            width: '100vw',
+                            height: '100vh'
+                        });
+                        TweenLite.set(this.oldContainer, {
+                            visibility: 'visible',
+
+                            position: 'fixed',
+                            left: 0,
+                            top: 0,
+                            right: 0,
+
+                            width: '100vw',
+                            height: '100vh'
+                        });
+                        TweenLite.set(headerTag, {
+                            top: goingForward ? (winH - 120) : 0
+                        });
+
+                        // TweenLite.to(this.oldContainer, 0.6, { yPercent: goingForward ? -100 : 100 });
+                        TweenLite.to(this.oldContainer, 0.6, { top: goingForward ? -(winH - 120) : (winH - 120) });
+
+                        TweenLite.to(headerTag, 0.6, { top: goingForward ? 0 : (winH - 120)});
+
+                        // TweenLite.to(this.newContainer, 0.6, { top: winH });
+                        // TweenLite.to(this.newContainer, 0.6, { yPercent: 0, onComplete: function() {
+                        TweenLite.to(this.newContainer, 0.6, { top: 0, onComplete: function() {
+                            TweenLite.set(_this.newContainer, { clearProps: 'all' });
+                            _this.done();
+
+                            $(document.body).removeClass("start-fade-animation");
+
+                            IIDO.Page.initNavigationAfterFade( _this );
+
+                            if( typeof IIDO.Functions === "object" && typeof IIDO.Functions.initAfterLoading === "function")
+                            {
+                                IIDO.Functions.initAfterLoading();
+                            }
+                        }});
+                    }
+                    else
+                    {
+                        var $el = $(this.newContainer);
+
+                        $el.css({
+                            position: 'fixed',
+                            top: 0,
+                            right: 0,
+                            bottom: 0,
+                            left: 0,
+
+                            width: '100vw',
+                            height: '100vh',
+
+                            visibility : 'visible',
+                            opacity : 0
+                        });
+
+                        $(this.oldContainer).animate({"opacity": 0}, 1000);
+
+                        $el.animate({ "opacity": 1 }, 1000, function() {
+                            _this.done();
+                            TweenLite.set(_this.newContainer, { clearProps: 'all' });
+
+                            $(document.body).removeClass("start-fade-animation");
+
+                            IIDO.Page.initNavigationAfterFade( _this );
+
+                            if( typeof IIDO.Functions === "object" && typeof IIDO.Functions.initAfterLoading === "function")
+                            {
+                                IIDO.Functions.initAfterLoading();
+                            }
+                        });
+                    }
                 }
 
                 // updateLinks: function()
@@ -1041,6 +1142,60 @@ IIDO.Page = IIDO.Page || {};
             //
             // // Don't forget to init the view!
             // ContentPage.init();
+        }
+    };
+
+
+
+    page.initNavigationAfterFade = function( fadeObject )
+    {
+        var parent = $(fadeObject.originalThumb).parent();
+
+        if( parent.hasClass("image_container") )
+        {
+            parent = parent.parent();
+        }
+
+        if( parent.hasClass("logo") )
+        {
+            $(".nav-main ul.level_1 > li").removeClass("active").removeClass("trail").addClass("sibling");
+        }
+        else
+        {
+            parent.addClass("active").removeClass("sibling");
+            parent.siblings().removeClass("active").addClass("sibling");
+        }
+
+        var activeMetaNav   = document.querySelector(".nav-meta ul > li.active"),
+            activeMainNav   = document.querySelector(".nav-main ul > li.active");
+
+        if( activeMetaNav )
+        {
+            var activeMetaNavLink       = activeMetaNav.querySelector('a'),
+                activeMetaNavLinkHref   = activeMetaNavLink.href;
+
+
+            if( activeMetaNavLinkHref !== location.href )
+            {
+                activeMetaNav.classList.remove("active");
+                activeMetaNav.classList.add("sibling");
+
+                activeMetaNavLink.classList.remove("active");
+            }
+        }
+
+        if( activeMainNav )
+        {
+            var activeMainNavLink       = activeMainNav.querySelector('a'),
+                activeMainNavLinkHref   = activeMainNavLink.href;
+
+            if( activeMainNavLinkHref !== location.href )
+            {
+                activeMainNav.classList.remove("active");
+                activeMainNav.classList.add("sibling");
+
+                activeMainNavLink.classList.remove("active");
+            }
         }
     };
 
