@@ -158,6 +158,7 @@ class PageListener
             $GLOBALS['TL_JAVASCRIPT']['iido_page']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Page.js|static';
             $GLOBALS['TL_JAVASCRIPT']['iido_content']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
             $GLOBALS['TL_JAVASCRIPT']['iido_filter']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Filter.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_project']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Project.js|static';
         }
 
         if( $objRootPage->enablePageFadeEffect )
@@ -427,12 +428,18 @@ class PageListener
         {
             while( $objAllPages->next() )
             {
-                $objArticles = \ArticleModel::findPublishedByPidAndColumn( $objAllPages->id, "main");
+                $objArticles = \ArticleModel::findAll();
+//                $objArticles = \ArticleModel::findPublishedByPidAndColumn( $objAllPages->id, "main");
 
                 if( $objArticles )
                 {
                     while( $objArticles->next() )
                     {
+                        if( !$objArticles->published )
+                        {
+                            continue;
+                        }
+
                         if( $objArticles->tstamp > $createTime || $this->getArticleLastSave( $objArticles->id ) > $createTime )
                         {
                             $createFile     = TRUE;
@@ -457,7 +464,7 @@ class PageListener
 
                         $arrPageStyles[ $objArticles->id ] = array
                         (
-                            'selector'          => '#main .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]),
+                            'selector'          => '#container .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]),
 
                             'background'        => TRUE,
                             'bgcolor'           => $objArticles->bgColor,
@@ -536,7 +543,7 @@ class PageListener
 
                 foreach($arrStyles as $strStyle)
                 {
-                    $strOnlyStyles = preg_replace('/#main .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
+                    $strOnlyStyles = preg_replace('/#container .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
 
                     if( strlen(trim($strOnlyStyles)) )
                     {

@@ -202,24 +202,28 @@ class ContentListener
                         {
                             case "t":
                             case "to":
+                            case "top":
                                 $cAttributeName .= 't';
                                 $attributeName  .= '-top';
                                 break;
 
                             case "b":
                             case "bo":
+                            case "bottom":
                                 $cAttributeName .= 'b';
                                 $attributeName  .= '-bottom';
                                 break;
 
                             case "l":
                             case "le":
+                            case "left":
                                 $cAttributeName .= 'l';
                                 $attributeName  .= '-left';
                                 break;
 
                             case "r":
                             case "ri":
+                            case "right":
                                 $cAttributeName .= 'r';
                                 $attributeName  .= '-right';
                                 break;
@@ -329,7 +333,19 @@ class ContentListener
             $strBuffer = $this->addAttributesToContentElement( $strBuffer, $objRow, $arrAttributes );
         }
 
+        $strBuffer = $this->renderHeadlines($strBuffer, $objRow);
+
         return $strBuffer;
+    }
+
+
+
+    protected function renderHeadlines( $strContent, $objRow )
+    {
+        $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="]{0,})>/', '<h$1$2><span class="headline-inside">', $strContent);
+        $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></h$1>', $strContent);
+
+        return $strContent;
     }
 
 

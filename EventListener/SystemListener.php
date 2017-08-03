@@ -93,6 +93,7 @@ class SystemListener
                 {
 //                    $this->initSystem();
                     $this->initBackend();
+//                    $this->runImport();
                 }
             }
         }
@@ -222,6 +223,165 @@ class SystemListener
                 }
             }
         }
+    }
+    
+    
+    
+    protected function runImport()
+    {
+        $oldDatabaseUsername    = '';
+        $oldDatabasePassword    = '';
+        $oldDatabaseName        = '';
+
+        $connection = new \mysqli('localhost', $oldDatabaseUsername, $oldDatabasePassword, $oldDatabaseName);
+        $result     = $connection->query("SELECT * FROM tl_content");
+
+        $arrArticles    = array();
+        $arrPages       = array();
+$count=0;
+        while( $row = $result->fetch_assoc() )
+        {
+            if( $row['ptable'] !== "tl_article" )
+            {
+                continue;
+            }
+
+            $arrArticle = $arrArticles[ $row['pid'] ];
+
+            if( !isset($arrArticles[ $row['pid'] ]) )
+            {
+                $article    = $connection->query("SELECT * FROM tl_article WHERE id=" . $row['pid']);
+                $arrArticle = $article->fetch_assoc();
+
+                $arrArticles[ $row['pid'] ] = $arrArticle;
+            }
+
+            $arrPage = $arrPages[ $arrArticle['pid'] ];
+
+            if( !isset($arrPages[ $arrArticle['pid'] ]) )
+            {
+                $page       = $connection->query("SELECT * FROM tl_page WHERE id=" . $arrArticle['pid']);
+                $arrPage    = $page->fetch_assoc();
+
+                $arrPages[ $arrArticle['pid'] ] = $arrPage;
+            }
+
+            if( $this->checkIfFirstLevelPageIsParent($connection, $arrPage, 3, $arrPages) )
+            {
+//                echo "Page: " . $arrPage['title'] . ' (' . $arrPage['id'] . ')<br>';
+//                echo "Article: " . $arrArticle['title'] . ' (' . $arrArticle['id'] . ')<br>';
+//                echo "Element: " . $row['type'] . ' (' . $row['id'] . ')<br>';
+
+                if( $row['addImage'] === "1" )
+                {
+                    $image      = $connection->query("SELECT * FROM tl_files WHERE uuid=UNHEX('" . bin2hex($row['singleSRC']) . "')");
+                    $objImage   = $image->fetch_assoc();
+
+                    $singleSRC      = str_replace('files/Uploads', 'files/instec/Uploads', $objImage['path']);
+                    $objNewImage    = \FilesModel::findByPath( $singleSRC );
+
+                    if( $objNewImage )
+                    {
+                        $row['singleSRC'] = $objNewImage->uuid;
+                    }
+                }
+//                echo "<pre>"; print_r( $row ); echo "</pre>";
+
+//                echo "<br><br>";
+
+                $objPage = \PageModel::findByTitle( utf8_encode($arrPage['title']) );
+
+                if( $objPage )
+                {
+                    $objArticle = \ArticleModel::findByPid( $objPage->id );
+
+                    if( $objArticle )
+                    {
+                        $objElement = new \ContentModel();
+                        $objElement->pid = $objArticle->id;
+                        $objElement->tstamp = time();
+
+                        foreach( $row as $field => $value)
+                        {
+                            if( in_array($field, array('id', 'pid', 'tstamp')) )
+                            {
+                                continue;
+                            }
+
+                            if( !preg_match('/SRC/', $field) )
+                            {
+                                $value = utf8_encode( $value );
+                            }
+
+                            $objElement->$field = $value;
+                        }
+
+                        $objElement->save();
+//                        echo "<pre>";
+//                        print_r( $objPage->title );
+//                        echo " == ";
+//                        print_r( $arrPage['title'] );
+//                        echo "<br><br>";
+//
+//                        $count++;
+                    }
+                }
+
+            }
+        }
+//        echo "<br><br>Counter: ";
+//        print_r( $count );
+//        exit;
+    }
+
+
+    protected function checkIfFirstLevelPageIsParent( $connection, $arrPage, $rootPageId, &$arrPages )
+    {
+        if( $arrPage['pid'] == $rootPageId )
+        {
+            return true;
+        }
+
+        $arrParentPage = $arrPages[ $arrPage['pid'] ];
+
+        if( !isset($arrPages[ $arrPage['pid'] ]) && $arrPage['pid'] > 0 )
+        {
+            $parentPage     = $connection->query("SELECT * FROM tl_page WHERE id=" . $arrPage['pid']);
+            $arrParentPage  = $parentPage->fetch_assoc();
+        }
+
+        if( $arrParentPage['pid'] == $rootPageId )
+        {
+            return true;
+        }
+
+        $arrPParentPage = $arrPages[ $arrParentPage['pid'] ];
+
+        if( !isset($arrPages[ $arrParentPage['pid'] ]) && $arrParentPage['pid'] > 0 )
+        {
+            $parentPPage     = $connection->query("SELECT * FROM tl_page WHERE id=" . $arrParentPage['pid']);
+            $arrPParentPage  = $parentPPage->fetch_assoc();
+        }
+
+        if( $arrPParentPage['pid'] == $rootPageId )
+        {
+            return true;
+        }
+
+        $arrPPParentPage = $arrPages[ $arrPParentPage['pid'] ];
+
+        if( !isset($arrPages[ $arrPParentPage['pid'] ]) && $arrPParentPage['pid'] > 0)
+        {
+            $parentPPPage     = $connection->query("SELECT * FROM tl_page WHERE id=" . $arrPParentPage['pid']);
+            $arrPPParentPage  = $parentPPPage->fetch_assoc();
+        }
+
+        if( $arrPPParentPage['pid'] == $rootPageId )
+        {
+            return true;
+        }
+
+        return false;
     }
     
 }

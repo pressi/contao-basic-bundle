@@ -375,6 +375,11 @@ class FrontendTemplateListener
 
                 $arrAttributes[] = 'data-menu="' . $inMenu . '"';
                 $arrAttributes[] = 'data-anchor="' . $objArticle->alias . '"';
+
+                if( $objArticle->inColumn === "bg_image" )
+                {
+                    $strContent = preg_replace('/<\/div>$/', '<div class="hover-article-image"><div class="hover-inside"></div><div class="hover-close"></div></div></div>', trim($strContent));
+                }
             }
 
             if( is_array($articleClass) && count($articleClass) > 0 )
@@ -403,19 +408,21 @@ class FrontendTemplateListener
 //            $strContent = preg_replace('/<\/div>$/', '</div></div>' . $addAroundDivEnd, $strContent);
 //            $strContent = $strContent . $addAroundDivEnd . '</div>';
 
-            if( $objArticle->inColumn === "main")
+            if( $objArticle->inColumn === "main" )
             {
-                $divTableStart      = "";
-                $divTableEnd        = "";
-
+                $divTableStart = "";
+                $divTableEnd   = "";
                 if( $objArticle->textMiddle && $isFullpage )
                 {
-                    $divTableStart  = '<div class="article-table">';
-                    $divTableEnd    = '</div>';
+                    $divTableStart = '<div class="article-table">';
+                    $divTableEnd   = '</div>';
                 }
+                $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">' . $divTableStart, $strContent, -1, $count);
 
-                $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">' . $divTableStart, $strContent);
-                $strContent = $strContent . $divTableEnd . '</div>';
+                if( $count > 0 )
+                {
+                    $strContent = $strContent . $divTableEnd . '</div>';
+                }
 
 //                $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">', $strContent);
 //                $strContent = $strContent . '</div>';
@@ -547,10 +554,11 @@ class FrontendTemplateListener
         /** @var \PageModel $objPage */
         global $objPage;
 
+        $arrBodyClasses     = array();
         $objRootPage        = \PageModel::findByPk( $objPage->rootId );
         $objLayout          = Helper::getPageLayout( $objPage) ;
         $isFullpage         = $this->isFullPageEnabled( $objPage, $objLayout );
-        $outerID            = 'wrapper';
+//        $outerID            = 'wrapper';
 
         if( $strTemplate === 'fe_page' )
         {
@@ -640,17 +648,17 @@ class FrontendTemplateListener
 
             if( $objPage->removeFooter )
             {
-                $strBuffer = preg_replace('/<footer([A-Za-z0-9\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/footer>/', '', $strBuffer);
+                $strBuffer = preg_replace('/<footer([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/footer>/', '', $strBuffer);
             }
 
             if( $objPage->removeHeader )
             {
-                $strBuffer = preg_replace('/<header([A-Za-z0-9\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/header>/', '', $strBuffer);
+                $strBuffer = preg_replace('/<header([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/header>/', '', $strBuffer);
             }
 
             if( $objPage->removeLeft )
             { //TODO: check DIV tags!
-                $strBuffer = preg_replace('/<aside id="left">(.*?)<\/aside>/', '', $strBuffer);
+                $strBuffer = preg_replace('/<aside id="left"([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/aside>/', '', $strBuffer);
             }
 
             if( preg_match('/<footer/', $strBuffer) && $this->hasBodyClass("homepage", $strBuffer) )
@@ -668,6 +676,71 @@ class FrontendTemplateListener
             {
                 $strBuffer = preg_replace('/<div class="page-title-container">([A-Za-z0-9öäüÖÄÜß&!?\-\n\s_.,;:<>="\{\}\(\)\/]{0,})<\/div>([\s]{0,})<div([A-Za-z0-9\-\s="]{0,})class="mod_article/', '<div$3class="mod_article', $strBuffer);
                 $strBuffer = preg_replace('/<div class="custom">([\s]{0,})<div id="main_menu_container">([A-Za-z0-9öäüÖÄÜß&!?@#\-\n\s_.,;:<>="\{\}\(\)\/]{0,})<footer/', '</div></div><footer', $strBuffer);
+            }
+
+            $arrContainerClasses    = array();
+            $arrMainClasses         = array();
+
+            if( preg_match('/id="left"/', $strBuffer) )
+            {
+                $arrBodyClasses[] = 'has-left-col';
+
+                $arrContainerClasses[] = 'has-left-col';
+            }
+
+            if( preg_match('/id="right"/', $strBuffer) )
+            {
+                $arrBodyClasses[] = 'has-right-col';
+            }
+
+            if( !preg_match('/id="bg_image"/', $strBuffer) )
+            {
+                $arrContainerClasses[]  = 'has-no-bgimage-col';
+                $arrMainClasses[]       = 'has-no-bgimage-col';
+            }
+            else
+            {
+                $arrContainerClasses[]  = 'has-bgimage-col';
+                $arrMainClasses[]       = 'has-bgimage-col';
+            }
+
+            if( count($arrBodyClasses) )
+            {
+                $strBuffer = $this->replaceBodyClasses($strBuffer, $arrBodyClasses);
+            }
+
+            if( $this->hasBodyClass("homepage", $strBuffer) )
+            {
+                $arrContainerClasses[]  = 'home-container';
+                $arrMainClasses[]       = 'home-main';
+            }
+
+            if( $this->hasBodyClass("projectpage", $strBuffer) )
+            {
+                $arrContainerClasses[]  = 'container-projectpage';
+                $arrMainClasses[]       = 'main-projectpage';
+            }
+
+            if( $this->hasBodyClass("teampage", $strBuffer) )
+            {
+                $arrContainerClasses[]  = 'container-teampage';
+                $arrMainClasses[]       = 'main-teampage';
+            }
+
+            if( $this->hasBodyClass("projectdetailpage", $strBuffer) )
+            {
+                $arrContainerClasses[]  = 'container-projectdetailpage';
+                $arrMainClasses[]       = 'main-projectdetailpage';
+            }
+
+            if( count($arrContainerClasses) )
+            {
+                $strBuffer = preg_replace('/id="container"/', 'id="container" class="' . implode(' ', $arrContainerClasses) . '"', $strBuffer);
+            }
+
+            if( count($arrMainClasses) )
+            {
+                $strBuffer = preg_replace('/id="main"/', 'id="main" class="' . implode(' ', $arrMainClasses) . '"', $strBuffer);
             }
         }
 
