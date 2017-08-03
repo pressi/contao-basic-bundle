@@ -592,7 +592,8 @@ class ConnectTool
                     {
                         $objSubFolder->protected = TRUE;
 
-                        $objSubFolder->save();
+//                        $objSubFolder->save();
+                        $objSubFolder->unprotect();
                     }
 
                     $arrFolders[] = $objSubFolder->path;
