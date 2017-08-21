@@ -931,6 +931,8 @@ class NavigationModule extends \ModuleNavigation
                     $strClass .= ' last-trail';
                 }
             }
+
+            $strClass .= ' page-item-' . $objItem->alias;
         }
         elseif( $type == "article" )
         {
