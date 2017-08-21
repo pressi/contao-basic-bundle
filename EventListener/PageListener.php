@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ScopeAwareTrait;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
+use IIDO\BasicBundle\Helper\ContentHelper;
 
 
 /**
@@ -844,6 +845,13 @@ class PageListener
             {
                 $GLOBALS['TL_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
             }
+        }
+
+        if( file_exists($this->rootDir . '/' . $cssPathCustom  . '/page-styles.css') )
+        {
+            $strFile = $this->rootDir . '/' . $cssPathCustom  . '/page-styles.css';
+
+            $GLOBALS['TL_HEAD']['custom_page_styles'] = '<style>' . ContentHelper::renderHeadStyles( file_get_contents($strFile) ) . '</style>';
         }
     }
 
