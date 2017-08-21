@@ -52,13 +52,13 @@ class ConnectToolUser
      */
     public function isAuthenticated()
     {
-        if (!$this->session->has('_auth_until') || $this->session->get('_auth_until') < time())
+        if (!$this->session->has('_iido_auth_until') || $this->session->get('_iido_auth_until') < time())
         {
             return false;
         }
 
         // Update the expiration date
-        $this->session->set('_auth_until', time() + $this->timeout);
+        $this->session->set('_iido_auth_until', time() + $this->timeout);
 
         return true;
     }
@@ -74,11 +74,11 @@ class ConnectToolUser
     {
         if (true === $authenticated)
         {
-            $this->session->set('_auth_until', time() + $this->timeout);
+            $this->session->set('_iido_auth_until', time() + $this->timeout);
         }
         else
         {
-            $this->session->remove('_auth_until');
+            $this->session->remove('_iido_auth_until');
         }
     }
 
@@ -86,13 +86,13 @@ class ConnectToolUser
 
     public function setPassword( $strPassword )
     {
-        $this->session->set('_auth_connect_pwd', md5($strPassword));
+        $this->session->set('_iido_auth_connect_pwd', md5($strPassword));
     }
 
 
 
     public function getPassword()
     {
-        return $this->session->get('_auth_connect_pwd');
+        return $this->session->get('_iido_auth_connect_pwd');
     }
 }
