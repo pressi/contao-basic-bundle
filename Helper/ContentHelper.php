@@ -9,6 +9,7 @@
 
 namespace IIDO\BasicBundle\Helper;
 
+
 class ContentHelper
 {
 
@@ -105,6 +106,247 @@ class ContentHelper
         }
 
         return array( $strClass, $strStyles);
+    }
+
+
+
+    public static function renderStyleVars( $strContent )
+    {
+        global $objPage;
+
+        $objLayout  = BasicHelper::getPageLayout( $objPage );
+        $objTheme   = \ThemeModel::findByPk( $objLayout->pid );
+
+        $themeVars  = deserialize($objTheme->vars, TRUE);
+        $themeVars  = self::combineVars($themeVars, self::getDefaultsCSS());
+
+        if( count($themeVars) )
+        {
+            foreach($themeVars as $arrValue)
+            {
+                $varName    = $arrValue['key'];
+                $varValue   = $arrValue['value'];
+//                        $objCurPage = $arrValue['page'];
+                $add        = '';
+
+                if( !preg_match('/shrink/', $varName) )
+                {
+                    $add = '1px';
+                }
+
+                if( preg_match('/color/', $varName) )
+                {
+                    $add = '#fff';
+
+//                            if( preg_match('/^page_color/', $varName) )
+//                            {
+//                                $varName .= '_' . $objCurPage->alias;
+//                            }
+                    $varValue       = preg_replace(array('/&#35;/', '/&#40;/', '/&#41;/'), array('#', '(', ')'), $varValue);
+
+                    $strContent     = self::replaceColorVariants($varName, $varValue, $strContent, $add);
+                }
+
+                $strContent = preg_replace('/\/\*#' . $varName . '#\*\/' . $add . '/', $varValue, $strContent);
+            }
+        }
+
+        return self::replaceDefaultVars( $strContent );
+    }
+
+
+
+    public static function getDefaultsCSS()
+    {
+        global $objPage;
+
+//        $objRootPage    = \PageModel::findByPk( $objPage->rootId );
+        $arrVariables   = array();
+        $pageColor      = ColorHelper::getPageColor( NULL );
+
+        if( $pageColor !== "transparent" )
+        {
+            $arrVariables[] = array
+            (
+                'key'   => 'page_color',
+                'value' => $pageColor,
+//            'page'  => $objColorPage
+            );
+        }
+
+        $objPages = \PageModel::findPublishedByPid( $objPage->rootId );
+
+        while( $objPages->next() )
+        {
+            $pageColor = ColorHelper::getCurrentPageColor( $objPages );
+
+            if( $pageColor != "transparent" )
+            {
+                $arrVariables[] = array
+                (
+                    'key'   => 'page_color_' . $objPages->alias,
+                    'value' => $pageColor
+                );
+            }
+
+            $objSubPages = \PageModel::findPublishedByPid( $objPages->id );
+
+            if( $objSubPages && $objSubPages->count() )
+            {
+                while( $objSubPages->next() )
+                {
+                    $pageColor = ColorHelper::getCurrentPageColor( $objSubPages->current() );
+
+                    if( $pageColor != "transparent" )
+                    {
+                        $arrVariables[] = array
+                        (
+                            'key'   => 'page_color_' . $objSubPages->alias,
+                            'value' => $pageColor
+                        );
+                    }
+
+                    $objSubSubPages = \PageModel::findPublishedByPid( $objSubPages->id );
+
+                    if( $objSubSubPages && $objSubSubPages->count() )
+                    {
+                        while( $objSubSubPages->next() )
+                        {
+                            $pageColor = ColorHelper::getCurrentPageColor( $objSubSubPages->current() );
+
+                            if( $pageColor != "transparent" )
+                            {
+                                $arrVariables[] = array
+                                (
+                                    'key'   => 'page_color_' . $objSubSubPages->alias,
+                                    'value' => $pageColor
+                                );
+                            }
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        return $arrVariables;
+    }
+
+
+
+    public static function combineVars($arrPrimary, $arrSecondary)
+    {
+        $arrKeys    = array();
+        $arrResult  = array();
+
+        foreach( $arrPrimary as $key => $value )
+        {
+            $vKey       = $value['key'];
+            $arrItem    = $value;
+
+            foreach($arrSecondary as $skey => $svalue )
+            {
+                if( $svalue['key'] === $vKey )
+                {
+                    if( $vKey === "page_color" && $svalue === "transparent" )
+                    {
+                        continue;
+                    }
+
+                    $arrItem    = $svalue;
+                    break;
+                }
+            }
+
+            $arrKeys[]      = $arrItem['key'];
+            $arrResult[]    = $arrItem;
+        }
+
+        foreach( $arrSecondary as $sKey => $sValue )
+        {
+            if( !in_array($sValue, $arrKeys) )
+            {
+                $arrResult[] = $sValue;
+            }
+        }
+
+        return $arrResult;
+    }
+
+
+
+    public static function replaceDefaultVars( $strContent )
+    {
+//        global $objPage;
+
+        preg_match_all('/\/\*#[^*]+#\*\//', $strContent, $arrChunks);
+
+        foreach ($arrChunks[0] as $strChunk)
+        {
+            $strKey = strtolower(substr($strChunk, 3, -3));
+
+            switch( $strKey )
+            {
+                case "page_content_width":
+                    $strContent = str_replace($strChunk . '1px', '100%', $strContent);
+                    break;
+
+//                case "page_color":
+//                    $pageColor  = ColorHelper::getPageColor( $objPage );
+//                    $strContent = str_replace($strChunk . '#fff', $pageColor, $strContent);
+//                    break;
+            }
+        }
+
+        return $strContent;
+    }
+
+
+
+    public static function replaceColorVariants( $varName, $varValue, $strContent, $add )
+    {
+        $varValueDark   = ColorHelper::mixColors($varValue, '#000000', 20.0);
+        $varValueLight  = ColorHelper::mixColors($varValue, '#ffffff', 90.0);
+
+        $strContent     = preg_replace('/\/\*#' . $varName . '_darker#\*\/' . $add . '/', $varValueDark, $strContent);
+        $strContent     = preg_replace('/\/\*#' . $varName . '_lighter#\*\/' . $add . '/', $varValueLight, $strContent);
+
+        $rgb = ColorHelper::convertHexColor($varValue);
+
+        if( count($rgb) )
+        {
+            $rgba = 'rgba(' . $rgb['red'] . ',' . $rgb['green'] . ',' . $rgb['blue'] . ',';
+
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans95#\*\/' . $add . '/', $rgba . '0.95)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans90#\*\/' . $add . '/', $rgba . '0.9)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans85#\*\/' . $add . '/', $rgba . '0.85)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans80#\*\/' . $add . '/', $rgba . '0.8)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans75#\*\/' . $add . '/', $rgba . '0.75)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans70#\*\/' . $add . '/', $rgba . '0.7)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans65#\*\/' . $add . '/', $rgba . '0.65)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans60#\*\/' . $add . '/', $rgba . '0.6)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans55#\*\/' . $add . '/', $rgba . '0.55)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans50#\*\/' . $add . '/', $rgba . '0.5)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans45#\*\/' . $add . '/', $rgba . '0.45)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans40#\*\/' . $add . '/', $rgba . '0.4)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans35#\*\/' . $add . '/', $rgba . '0.35)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans30#\*\/' . $add . '/', $rgba . '0.3)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans25#\*\/' . $add . '/', $rgba . '0.25)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans20#\*\/' . $add . '/', $rgba . '0.2)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans15#\*\/' . $add . '/', $rgba . '0.15)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans10#\*\/' . $add . '/', $rgba . '0.1)', $strContent);
+        }
+
+        return $strContent;
+    }
+
+
+
+    public static function renderHeadStyles( $strStyles )
+    {
+        return self::renderStyleVars( $strStyles );
     }
 
 }

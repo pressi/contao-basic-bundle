@@ -771,6 +771,7 @@ class BasicHelper extends \Frontend
                     $cssID = \StringUtil::deserialize($objModule->cssID, TRUE);
                 }
 
+                $objModule->pages           = $objClass->navPages;
                 $objModule->navPages        = $objClass->navPages;
                 $objModule->navPagesOrder   = $objClass->navPagesOrder;
                 $objModule->navigationTpl   = $objClass->navigationTpl;
