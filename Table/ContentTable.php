@@ -30,7 +30,9 @@ class ContentTable extends \Backend
 
         $arrModules     = array(''=>'-');
 //        $objModules     = \ModuleModel::findByType('navigation');
-        $objModules     = \Database::getInstance()->prepare("SELECT * FROM tl_module WHERE type=? OR type=? OR type=?")->execute('navigation', 'booknav', 'articlenav');
+        $objModules     = \Database::getInstance()
+                                ->prepare("SELECT * FROM tl_module WHERE type=? OR type=? OR type=? OR type=?")
+                                ->execute('navigation', 'booknav', 'articlenav', 'customnav');
 
         $objArticle     = \ArticleModel::findByPk( $activeRecord->pid );
         $objPage        = \PageModel::findByPk( $objArticle->pid );
