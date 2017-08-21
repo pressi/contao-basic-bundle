@@ -344,7 +344,7 @@ class ColorHelper
             $objCurrentPage = $objPage;
         }
 
-        return self::compileColor( deserialize($objCurrentPage->pageColor, TRUE) );
+        return self::compileColor( \StringUtil::deserialize($objCurrentPage->pageColor, TRUE) );
     }
 
 
@@ -370,10 +370,10 @@ class ColorHelper
         $baseComponentGreen     = hexdec(substr($basecolor, $baseComponentOffset+2, 2));
         $baseComponentBlue      = hexdec(substr($basecolor, $baseComponentOffset+4, 2));
 
-        $mixComponentOffset = strlen($mixcolor) == 7 ? 1 : 0;
-        $mixComponentRed = hexdec(substr($mixcolor, $mixComponentOffset, 2));
-        $mixComponentGreen = hexdec(substr($mixcolor, $mixComponentOffset+2, 2));
-        $mixComponentBlue = hexdec(substr($mixcolor, $mixComponentOffset+4, 2));
+        $mixComponentOffset     = strlen($mixcolor) == 7 ? 1 : 0;
+        $mixComponentRed        = hexdec(substr($mixcolor, $mixComponentOffset, 2));
+        $mixComponentGreen      = hexdec(substr($mixcolor, $mixComponentOffset+2, 2));
+        $mixComponentBlue       = hexdec(substr($mixcolor, $mixComponentOffset+4, 2));
 
         $Rsum = $baseComponentRed+$mixComponentRed;
         $Gsum = $baseComponentGreen+$mixComponentGreen;
@@ -383,13 +383,13 @@ class ColorHelper
         $G = ($baseComponentGreen*(100-$ratio) + $mixComponentGreen*$ratio) / 100;
         $B = ($baseComponentBlue*(100-$ratio) + $mixComponentBlue*$ratio) / 100;
 
-        $redPercentage = max($R, $G, $B) > 255 ? $R/max($Rsum, $Gsum, $Bsum) : $R/255;
-        $greenPercentage = max($R, $G, $B) > 255 ? $G/max($Rsum, $Gsum, $Bsum) : $G/255;
-        $bluePercentage = max($R, $G, $B) > 255 ? $B/max($Rsum, $Gsum, $Bsum) : $B/255;
+        $redPercentage      = max($R, $G, $B) > 255 ? $R/max($Rsum, $Gsum, $Bsum) : $R/255;
+        $greenPercentage    = max($R, $G, $B) > 255 ? $G/max($Rsum, $Gsum, $Bsum) : $G/255;
+        $bluePercentage     = max($R, $G, $B) > 255 ? $B/max($Rsum, $Gsum, $Bsum) : $B/255;
 
-        $redRGB = floor(255*$redPercentage);
-        $greenRGB = floor(255*$greenPercentage);
-        $blueRGB = floor(255*$bluePercentage);
+        $redRGB     = floor(255*$redPercentage);
+        $greenRGB   = floor(255*$greenPercentage);
+        $blueRGB    = floor(255*$bluePercentage);
 
         $color = sprintf("%02X%02X%02X", $redRGB, $greenRGB, $blueRGB);
         return $addHash ? '#'.$color : $color;
