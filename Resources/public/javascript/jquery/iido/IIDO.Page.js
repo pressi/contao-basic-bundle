@@ -744,7 +744,7 @@ IIDO.Page = IIDO.Page || {};
 
                 var parent = element.parentNode.parentNode;
 
-                if( parent.classList.contains("image_contaier") )
+                if( parent.classList.contains("image_container") )
                 {
                     parent = parent.parentNode;
                 }
