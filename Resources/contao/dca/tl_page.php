@@ -136,7 +136,7 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
     }
     else
     {
-        $strFields      = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect;{cache_legend', $strFields);
+        $strFields      = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,enableCookie;{cache_legend', $strFields);
     }
 
     $GLOBALS['TL_DCA']['tl_page']['palettes'][ $strPalette ] = $strFields;
@@ -195,6 +195,10 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']['label']              
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']['label']        = &$GLOBALS['TL_LANG']['tl_page']['enablePageFadeEffect'];
+
+$GLOBALS['TL_DCA']['tl_page']['fields']['enableCookie']                         = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+$GLOBALS['TL_DCA']['tl_page']['fields']['enableCookie']['label']                = &$GLOBALS['TL_LANG']['tl_page']['enableCookie'];
+
 
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']               = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
