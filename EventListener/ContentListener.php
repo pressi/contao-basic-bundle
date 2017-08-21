@@ -137,6 +137,8 @@ class ContentListener
             {
                 $strBuffer = preg_replace('/<p>(.*)<\/p>/', '<p><span class="big">$1</span><span class="divider"></span></p>', $strBuffer, 1);
             }
+
+            $strBuffer = Helper::renderText($strBuffer);
         }
 
         elseif( $objRow->type == "gallery" )
@@ -153,17 +155,21 @@ class ContentListener
             case "hyperlink":
                 $strBuffer = $this->renderHyperlink( $strBuffer, $objRow, $objElement );
                 break;
+
+            case "gallery":
+                $strBuffer = $this->renderGallery( $strBuffer, $objRow, $objElement );
+                break;
+        }
+
+        $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
+
+        if( $count )
+        {
+            $strBuffer = $strBuffer . '</div>';
         }
 
         $strBuffer = preg_replace('/class="' . $elementClass . '/', 'class="' . $elementClass . ' content-element', $strBuffer);
 
-
-//        $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
-
-//        if( $count )
-//        {
-//            $strBuffer = $strBuffer . '</div>';
-//        }
 
         preg_match_all('/class="ce_([A-Za-z0-9\s\-_\{\}]{0,})"/', $strBuffer, $arrClassMatches);
 
@@ -334,6 +340,7 @@ class ContentListener
         }
 
         $strBuffer = $this->renderHeadlines($strBuffer, $objRow);
+        $strBuffer = $this->renderBox($strBuffer, $objRow, $objElement);
 
         return $strBuffer;
     }
@@ -342,8 +349,8 @@ class ContentListener
 
     protected function renderHeadlines( $strContent, $objRow )
     {
-        $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="]{0,})>/', '<h$1$2><span class="headline-inside">', $strContent);
-        $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></h$1>', $strContent);
+        $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}]{0,})>/', '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
+        $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></span></h$1>', $strContent);
 
         return $strContent;
     }
@@ -415,6 +422,15 @@ class ContentListener
 
 
 
+    protected function renderGallery( $strContent, $objRow, $objElement )
+    {
+        $strContent = preg_replace('/<a/', '<a class="no-barba"', $strContent);
+
+        return $strContent;
+    }
+
+
+
     protected function addClassToContentElement( $strContent, $objRow, array $arrClasses )
     {
         $elementClass   = $this->getElementClass( $objRow );
@@ -458,5 +474,66 @@ class ContentListener
 
         return $elementClass;
     }
-    
+
+
+
+    protected function renderBox($strBuffer, $objRow, $objElement)
+    {
+        if( TL_MODE === "FE" )
+        {
+            $cssID = \StringUtil::deserialize( $objRow->cssID );
+
+            if( preg_match('/box/', $cssID[1]) )
+            {
+                $GLOBALS['IIDO']['BOXES']['OPEN'] = $GLOBALS['IIDO']['BOXES']['OPEN'] || FALSE;
+
+                if( $GLOBALS['IIDO']['BOXES']['OPEN'] === FALSE )
+                {
+                    $GLOBALS['IIDO']['BOXES']['OPEN'] = TRUE;
+
+                    $strBuffer = '<div class="box-container clr-after"><div class="box-cont-inside"><div class="box-cont-wrapper fbc">' . $strBuffer;
+                }
+
+                if( $GLOBALS['IIDO']['BOXES']['OPEN'] === TRUE && $this->checkIfLastBox( $objRow ) )
+                {
+                    $GLOBALS['IIDO']['BOXES']['OPEN'] = FALSE;
+
+                    $strBuffer = $strBuffer . '</div></div></div>';
+                }
+            }
+        }
+
+        return $strBuffer;
+    }
+
+
+
+    protected function checkIfLastBox( $objRow )
+    {
+        global $objPage;
+
+        $lastElement    = FALSE;
+        $objElements    = \ContentModel::findPublishedByPidAndTable( $objRow->pid, 'tl_article');
+
+        if( $objElements )
+        {
+            while( $objElements->next() )
+            {
+                $cssID = \StringUtil::deserialize( $objElements->cssID );
+
+                if( preg_match('/box/', $cssID[1]) )
+                {
+                    $lastElement = $objElements->current();
+                }
+            }
+        }
+
+        if( $lastElement && $lastElement->id === $objRow->id )
+        {
+            return TRUE;
+        }
+
+        return FALSE;
+    }
+
 }
