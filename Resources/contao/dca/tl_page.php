@@ -19,6 +19,8 @@ $do             = \Input::get("do");
 $act            = \Input::get("act");
 $id             = \Input::get("id");
 
+$strTable       = 'tl_page';
+
 $objCurrentPage = null;
 $objParentPage  = null;
 
@@ -136,7 +138,7 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
     }
     else
     {
-        $strFields      = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,enableCookie;{cache_legend', $strFields);
+        $strFields      = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,enableCookie,enableLazyLoad;{cache_legend', $strFields);
     }
 
     $GLOBALS['TL_DCA']['tl_page']['palettes'][ $strPalette ] = $strFields;
@@ -178,48 +180,63 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($G
 
 
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'] = array
-(
-    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['openPageInLightbox'],
-    'inputType'             => 'checkbox',
-    'eval'                  => array
-    (
-        'tl_class'              => 'w50 m12'
-    ),
-    'sql'                   => "char(1) NOT NULL default ''"
-);
+//$GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'] = array
+//(
+//    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['openPageInLightbox'],
+//    'inputType'             => 'checkbox',
+//    'eval'                  => array
+//    (
+//        'tl_class'              => 'w50 m12'
+//    ),
+//    'sql'                   => "char(1) NOT NULL default ''"
+//);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('openPageInLightbox', 'checkbox', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('enableFullpage', 'checkbox', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('enablePageFadeEffect', 'checkbox', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('enableCookie', 'checkbox', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('enableLazyLoad', 'checkbox', $strTable);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']                       = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']['label']              = &$GLOBALS['TL_LANG']['tl_page']['enableFullpage'];
-
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']['label']        = &$GLOBALS['TL_LANG']['tl_page']['enablePageFadeEffect'];
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['enableCookie']                         = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['enableCookie']['label']                = &$GLOBALS['TL_LANG']['tl_page']['enableCookie'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']                       = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enableFullpage']['label']              = &$GLOBALS['TL_LANG']['tl_page']['enableFullpage'];
 
 
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enablePageFadeEffect']['label']        = &$GLOBALS['TL_LANG']['tl_page']['enablePageFadeEffect'];
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']               = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuPageCombination'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['eval']['submitOnChange'] = TRUE;
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enableCookie']                         = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enableCookie']['label']                = &$GLOBALS['TL_LANG']['tl_page']['enableCookie'];
 
-
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']['label']         = &$GLOBALS['TL_LANG']['tl_page']['subPagesHasBacklink'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']['eval']['tl_class'] = 'clr w50 m12';
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoBacklink']                = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoBacklink']['label']       = &$GLOBALS['TL_LANG']['tl_page']['thisPageHasNoBacklink'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enableLazyLoad']                       = $GLOBALS['TL_DCA']['tl_page']['fields']['enableCookie'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['enableLazyLoad']['label']              = &$GLOBALS['TL_LANG']['tl_page']['enableLazyLoad'];
 
 
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']               = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['label']      = &$GLOBALS['TL_LANG']['tl_page']['subPagesHasRequestLink'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['tl_class']       = 'clr w50 m12';
-$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['submitOnChange'] = TRUE;
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']               = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuPageCombination'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['eval']['submitOnChange'] = TRUE;
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField('enableLazyLoad', 'checkbox', $strTable, array('submitOnChange'=>TRUE));
+
+
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']['label']         = &$GLOBALS['TL_LANG']['tl_page']['subPagesHasBacklink'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']['eval']['tl_class'] = 'clr w50 m12';
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField('enableLazyLoad', 'checkbox', $strTable, array(), 'clr');
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoBacklink']                = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoBacklink']['label']       = &$GLOBALS['TL_LANG']['tl_page']['thisPageHasNoBacklink'];
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField('thisPageHasNoBacklink', 'checkbox', $strTable);
+
+
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']               = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['label']      = &$GLOBALS['TL_LANG']['tl_page']['subPagesHasRequestLink'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['tl_class']       = 'clr w50 m12';
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['submitOnChange'] = TRUE;
+\IIDO\BasicBundle\Helper\DcaHelper::addField('enableLazyLoad', 'checkbox', $strTable, array('submitOnChange'=>TRUE), 'clr');
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['requestLinkPage']                      = $GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['requestLinkPage']['label']             = &$GLOBALS['TL_LANG']['tl_page']['requestLinkPage'];
@@ -229,8 +246,10 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoRequestLink']['label']    
 
 
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['excludeFromFolderUrl']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['excludeFromFolderUrl']['label']        = &$GLOBALS['TL_LANG']['tl_page']['excludeFromFolderUrl'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['excludeFromFolderUrl']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['excludeFromFolderUrl']['label']        = &$GLOBALS['TL_LANG']['tl_page']['excludeFromFolderUrl'];
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField('excludeFromFolderUrl', 'checkbox', $strTable);
 
 
 

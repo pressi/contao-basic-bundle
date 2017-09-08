@@ -127,8 +127,8 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 //        $prefix = 'title';
 //    }
 //
-//    if( !is_array($strFields) )
-//    {
+    if( !is_array($strFields) )
+    {
 //        $headlineFields = 'addTopHeadline,headline,headlineFloating,addHeadlineBorder,addHeadlineLink,addSubHeadline;';
 //        $strFields      = str_replace( 'headline;', $headlineFields, $strFields );
 //
@@ -146,7 +146,12 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 //        }
 //
 //		$strFields = $strFields . ';{add_legend},insertClearAfter;';
-//    }
+
+        if( !in_array($strPalette, ['boxStop','accordionStop','sliderStop','html','code','alias','article']) )
+        {
+            $strFields = $strFields . ';{animate_legend},addAnimation;';
+        }
+    }
 
     $strFields = preg_replace('/{expert_legend/', '{position_legend},position,position_margin,positionFixed;{expert_legend', $strFields);
 
@@ -187,6 +192,9 @@ $GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_icon']      = 'butt
 //
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['blockShowMode_field']  = 'websiteField';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['blockShowMode_fields'] = 'addressBlock';
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", "tl_content");
+//$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addAnimation']         = "animationType,animateRun,animationWait,animationOffset";
 
 
 
@@ -1116,3 +1124,35 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navPagesOrder'] = array
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']                 = $GLOBALS['TL_DCA']['tl_module']['fields']['navigationTpl'];
 $GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']['label']        = &$GLOBALS['TL_LANG']['tl_content']['navigationTpl'];
+
+
+
+//-- ANIMATION
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation", "checkbox_selector", "tl_content");
+//$GLOBALS['TL_DCA']['tl_content']['fields']['addAnimation']              = $GLOBALS['TL_DCA']['tl_content']['fields']['elementIsBox'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['addAnimation']['label']     = &$GLOBALS['TL_LANG']['tl_content']['addAnimation'];
+
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType", "select_short", "tl_content", array('includeBlankOption'=>true));
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']             = $GLOBALS['TL_DCA']['tl_content']['fields']['boxWidth'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['label']    = &$GLOBALS['TL_LANG']['tl_content']['animationType'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['options']  = $GLOBALS['TL_LANG']['tl_content']['options_animationType'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['eval']['includeBlankOption'] = TRUE;
+
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset", "text", "tl_content");
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationOffset']           = $GLOBALS['TL_DCA']['tl_content']['fields']['boxLinkText'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationOffset']['label']  = &$GLOBALS['TL_LANG']['tl_content']['animationOffset'];
+
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait", "checkbox", "tl_content");
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationWait']             = $GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animationWait']['label']    = &$GLOBALS['TL_LANG']['tl_content']['animationWait'];
+
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun", "select", "tl_content");
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']                = $GLOBALS['TL_DCA']['tl_content']['fields']['animationType'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['label']       = &$GLOBALS['TL_LANG']['tl_content']['animateRun'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['options']     = $GLOBALS['TL_LANG']['tl_content']['options']['animateRun'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['eval']['tl_class'] = 'w50';
