@@ -34,6 +34,7 @@ IIDO.Page = IIDO.Page || {};
         this.initMobile();
         this.initLinks();
         this.initShowArticles();
+
         if( $(document.body).hasClass("url-change") )
         {
             this.initArticles();
@@ -432,49 +433,210 @@ IIDO.Page = IIDO.Page || {};
             {
                 var article = $(articleTag);
 
-                arrAnchors.push( article.attr("data-anchor") );
+                // if( !article.hasClass("hidden-area") )
+                // {
+                    arrAnchors.push( article.attr("data-anchor") );
+                // }
             });
 
             //TODO: make options changeable in backend
             main.fullpage(
                 {
-                    verticalCentered                    : true,
-                    resize                              : false,
-                    // slidesColor                         : ['#ccc', '#fff'],
-                    anchors                             : arrAnchors,//['startseite','handwerk', 'projekte','holzformer','kontakt'],// TODO: make flexible
-                    scrollingSpeed                      : 700,
-                    easing                              : 'easeInQuart',
-                    menu                                : ".nav-main",
+                    // Navigation
+                    menu                                : '.nav-main',
+                    lockAnchors                         : false,
+                    anchors                             : arrAnchors,
                     navigation                          : false,
                     // navigationPosition                  : 'right',
                     // navigationTooltips                  : ['firstSlide', 'secondSlide'],
+                    showActiveTooltip                   : false,
                     slidesNavigation                    : true,
                     slidesNavPosition                   : 'top',
+
+                    //Scrolling
+                    css3                                : false,
+                    scrollingSpeed                      : 700,
+                    autoScrolling                       : true,
+                    fitToSection                        : true,
+                    fitToSectionDelay                   : 200,
+                    scrollBar                           : false,
+                    easing                              : 'easeInQuart',
+                    easingcss3                          : 'ease',
                     loopBottom                          : false,
                     loopTop                             : false,
                     loopHorizontal                      : false,
-                    autoScrolling                       : true,
-                    scrollOverflow                      : false,
-                    css3                                : true,
-                    // paddingTop                          : '3em',
-                    // paddingBottom                       : '70px',
-                    // fixedElements                       : '#element1, .element2',
-                    // normalScrollElements                : '#element1, .element2',
-                    normalScrollElementTouchThreshold   : 5,
-                    keyboardScrolling                   : true,
-                    touchSensitivity                    : 15,
-                    continuousVertical                  : false,
-                    animateAnchor                       : true
+                    continuousVertical: false,
+                    continuousHorizontal: false,
+                    scrollHorizontally: false,
+                    interlockedSlides: false,
+                    dragAndMove: false,
+                    offsetSections: false,
+                    resetSliders: false,
+                    fadingEffect: false,
+                    // normalScrollElements: '#element1, .element2',
+                    scrollOverflow: true,
+                    scrollOverflowReset: false,
+                    scrollOverflowOptions: null,
+                    touchSensitivity: 15,
+                    normalScrollElementTouchThreshold: 5,
+                    bigSectionsDestination: null,
 
-                    // onLeave: function(index, nextIndex, direction)
-                    // {
-                    // },
+                    //Accessibility
+                    keyboardScrolling: true,
+                    animateAnchor: true,
+                    recordHistory: true,
 
-                    // afterLoad: function(anchorLink, index)
-                    // {
-                    // }
+                    //Design
+                    controlArrows: true,
+                    verticalCentered: true,
+                    // sectionsColor : ['#ccc', '#fff'],
+                    // slidesColor                         : ['#ccc', '#fff'],
+                    // paddingTop: '3em',
+                    // paddingBottom: '10px',
+                    // fixedElements: '#header, .footer',
+                    responsiveWidth: 960,
+                    responsiveHeight: 0,
+                    responsiveSlides: false,
+                    parallax: false,
+                    // parallaxOptions: {type: 'reveal', percentage: 62, property: 'translate'},
+
+                    //Custom selectors
+                    // sectionSelector: '.section',
+                    // slideSelector: '.slide',
+
+                    lazyLoading: true,
+
+                    resize                              : false,
+
+
+                    onLeave: function(index, nextIndex, direction)
+                    {
+                        IIDO.FullPage.runLeaveSection(index, nextIndex, direction);
+                    },
+
+                    afterLoad: function(anchorLink, index)
+                    {
+                        IIDO.FullPage.runLoadSection(index, anchorLink);
+
+                        var articleTag = document.querySelector('.mod_article[data-alias="' + anchorLink + '"]');
+
+                        if( articleTag )
+                        {
+                            if( !articleTag.classList.contains("loaded") )
+                            {
+                                articleTag.classList.add( "loaded" );
+
+                                var animateBoxes = articleTag.querySelectorAll( '.animate-box' );
+
+                                if( animateBoxes.length )
+                                {
+                                    for(var i= 0; i < animateBoxes.length; i++)
+                                    {
+                                        var item        = animateBoxes[ i ],
+                                            animation   = item.getAttribute( "data-animate" );
+
+                                        if( item.classList.contains("animate-wait") )
+                                        {
+                                            var waitIt      = item.getAttribute("data-wait"),
+                                                waitTime    = (waitIt * 250);
+
+                                            setTimeout(IIDO.Content.animateClasses.bind(this, item, animation), waitTime );
+                                        }
+                                        else
+                                        {
+                                            IIDO.Content.animateClasses(item, animation)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             );
+
+            var logoLink = document.querySelector("header .logo a");
+
+            if( logoLink )
+            {
+                logoLink.addEventListener("click", function(e) { e.preventDefault(); IIDO.Page.goToSection(1);  });
+            }
+
+            var nextLinks = document.querySelectorAll(".scroll-to-next-page"),
+                pageLinks = document.querySelectorAll(".scroll-to-section-page");
+
+            if( nextLinks.length )
+            {
+                for(var i=0; i<nextLinks.length; i++)
+                {
+                    var nextLink = nextLinks[ i ];
+
+                    nextLink.addEventListener("click", function(e)
+                    {
+                        e.preventDefault();
+
+                        $.fn.fullpage.moveSectionDown();
+
+                        return false;
+                    });
+                }
+            }
+
+            if( pageLinks.length )
+            {
+                for(var num=0; num<pageLinks.length; num++)
+                {
+                    var pageLink = pageLinks[ num ];
+
+                    pageLink.addEventListener("click", function(e)
+                    {
+                        e.preventDefault();
+
+                        var sectionLink     = e.target.parentNode.getAttribute("href"),
+                            sectionAlias    = sectionLink.split("/").pop().replace(/.html$/, ''),
+                            sectionIndex    = document.querySelector('.mod_article[data-anchor="' + sectionAlias + '"]').getAttribute("data-index");
+
+                        $.fn.fullpage.moveTo( (parseInt(sectionIndex) + 1) );
+
+                        return false;
+                    });
+                }
+            }
+        }
+    };
+
+
+
+    page.goToSection = function( sectionIndex )
+    {
+        $.fn.fullpage.moveTo( sectionIndex );
+
+        return false;
+    };
+
+
+
+    page.sectionBack = function(navTag)
+    {
+        var articleTag  = navTag.parentNode.parentNode,
+            index       = (parseInt(articleTag.getAttribute("data-index")) + 1);
+
+        if( index > 1 )
+        {
+            $.fn.fullpage.moveTo( (index - 1) );
+        }
+    };
+
+
+
+    page.sectionForward = function(navTag)
+    {
+        var articleTag  = navTag.parentNode.parentNode,
+            index       = (parseInt(articleTag.getAttribute("data-index")) + 1),
+            maxIndex    = document.querySelectorAll("#main .mod_article").length;
+
+        if( index < maxIndex)
+        {
+            $.fn.fullpage.moveTo( (index + 1) );
         }
     };
 

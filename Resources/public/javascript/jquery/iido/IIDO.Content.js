@@ -12,6 +12,7 @@ IIDO.Content = IIDO.Content || {};
 {
     content.init = function()
     {
+        this.initStyleGuide();
         this.initAnimations();
     };
 
@@ -39,7 +40,7 @@ IIDO.Content = IIDO.Content || {};
         Array.prototype.forEach.call(animateBoxes, function(item, index)
         {
             var animation   = item.getAttribute("data-animate"),
-                triggerOnce = item.getAttribute("data-aniamte-trigger-once"),
+                triggerOnce = item.getAttribute("data-animate-trigger-once"),
                 offset      = item.getAttribute("data-animate-offset");
 
             if( offset === undefined || offset === "undefined" || offset === null || offset.length === 0 )
@@ -107,6 +108,51 @@ IIDO.Content = IIDO.Content || {};
         {
             $(item).removeClass('animated ' + animation);
         });
+    };
+
+
+
+    content.initStyleGuide = function()
+    {
+        var styleguide = document.querySelectorAll(".ce_rsce_styleguide");
+
+        if( styleguide.length )
+        {
+            Array.prototype.forEach.call(styleguide, function(sgContainer, index)
+            {
+                var imageTag    = sgContainer.querySelector("img"),
+
+                    imgWidth    = imageTag.offsetWidth,
+                    imgHeight   = imageTag.offsetHeight,
+
+                    imgCont     = sgContainer.querySelector(".image-container"),
+                    imgOriginW  = imgCont.getAttribute("data-width"),
+                    imgOriginH  = imgCont.getAttribute("data-height"),
+
+                    imagePoints = sgContainer.querySelectorAll(".image-point"),
+
+                    percentW    = ((imgWidth / (imgOriginW / 100)) / 100),
+                    percentH    = ((imgHeight / (imgOriginH / 100)) / 100);
+
+                Array.prototype.forEach.call(imagePoints, function( imagePoint, pointIndex)
+                {
+                    var posX = parseInt(imagePoint.getAttribute("data-x"));
+
+                    imagePoint.style.top    = (parseInt(imagePoint.getAttribute("data-y")) * percentH) + 'px';
+                    imagePoint.style.left   = (posX * percentW) + 'px';
+
+                    if( (imgOriginW / 2) > posX )
+                    {
+                        imagePoint.classList.add("side-right");
+                    }
+                    else
+                    {
+                        imagePoint.classList.add("side-left");
+                    }
+                });
+            });
+
+        }
     };
 
 })(window, jQuery, IIDO.Content);

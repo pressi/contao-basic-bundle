@@ -10,12 +10,13 @@ IIDO.Project = IIDO.Project || {};
 
 (function(window, $, project)
 {
+    var $projectImages = {};
 
     project.open = function( openType, arrImagesOrUrl )
     {
         if( openType === "images" )
         {
-            $.fancybox.open( arrImagesOrUrl );
+            $.fancybox.open( IIDO.Project.getProjectImages(arrImagesOrUrl) );
         }
         else if( openType === "details" )
         {
@@ -52,7 +53,21 @@ IIDO.Project = IIDO.Project || {};
                 }, 500);
             }
         }
-    }
+    };
+
+
+
+    project.setProjectImages = function( projectID, arrImages )
+    {
+        $projectImages[ projectID ] = arrImages;
+    };
+
+
+
+    project.getProjectImages = function( projectID )
+    {
+        return $projectImages[ projectID ];
+    };
 
 })(window, jQuery, IIDO.Project);
 var huhu;
