@@ -172,6 +172,29 @@ class ContentHelper
                 'value' => $pageColor,
 //            'page'  => $objColorPage
             );
+
+            $rgb = ColorHelper::convertHexColor($pageColor);
+
+            if( count($rgb) )
+            {
+                $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
+
+                for($i = 5; $i <= 100; $i+=5)
+                {
+                    $trans = $i;
+
+                    if( strlen($i) === 1 )
+                    {
+                        $trans = '0' . $trans;
+                    }
+
+                    $arrVariables[] = array
+                    (
+                        'key'   => 'page_color_trans' . $trans,
+                        'value' => $rgba . $i . ')',
+                    );
+                }
+            }
         }
 
         $objPages = \PageModel::findPublishedByPid( $objPage->rootId );
@@ -187,6 +210,29 @@ class ContentHelper
                     'key'   => 'page_color_' . $objPages->alias,
                     'value' => $pageColor
                 );
+
+                $rgb = ColorHelper::convertHexColor($pageColor);
+
+                if( count($rgb) )
+                {
+                    $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
+
+                    for($i = 5; $i <= 100; $i+=5)
+                    {
+                        $trans = $i;
+
+                        if( strlen($i) === 1 )
+                        {
+                            $trans = '0' . $trans;
+                        }
+
+                        $arrVariables[] = array
+                        (
+                            'key'   => 'page_color_' . $objPages->alias . '_trans' . $trans,
+                            'value' => $rgba . $i . ')',
+                        );
+                    }
+                }
             }
 
             $objSubPages = \PageModel::findPublishedByPid( $objPages->id );
@@ -204,6 +250,29 @@ class ContentHelper
                             'key'   => 'page_color_' . $objSubPages->alias,
                             'value' => $pageColor
                         );
+
+                        $rgb = ColorHelper::convertHexColor($pageColor);
+
+                        if( count($rgb) )
+                        {
+                            $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
+
+                            for($i = 5; $i <= 100; $i+=5)
+                            {
+                                $trans = $i;
+
+                                if( strlen($i) === 1 )
+                                {
+                                    $trans = '0' . $trans;
+                                }
+
+                                $arrVariables[] = array
+                                (
+                                    'key'   => 'page_color_' . $objSubPages->alias . '_trans' . $trans,
+                                    'value' => $rgba . $i . ')',
+                                );
+                            }
+                        }
                     }
 
                     $objSubSubPages = \PageModel::findPublishedByPid( $objSubPages->id );
@@ -221,6 +290,29 @@ class ContentHelper
                                     'key'   => 'page_color_' . $objSubSubPages->alias,
                                     'value' => $pageColor
                                 );
+
+                                $rgb = ColorHelper::convertHexColor($pageColor);
+
+                                if( count($rgb) )
+                                {
+                                    $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
+
+                                    for($i = 5; $i <= 100; $i+=5)
+                                    {
+                                        $trans = $i;
+
+                                        if( strlen($i) === 1 )
+                                        {
+                                            $trans = '0' . $trans;
+                                        }
+
+                                        $arrVariables[] = array
+                                        (
+                                            'key'   => 'page_color_' . $objSubSubPages->alias . '_trans' . $trans,
+                                            'value' => $rgba . $i . ')',
+                                        );
+                                    }
+                                }
                             }
 
                         }
