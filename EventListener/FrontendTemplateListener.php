@@ -94,6 +94,12 @@ class FrontendTemplateListener
 //                $strContent = preg_replace('/id="'. $articleID . '"/', 'id="' . $objArticle->alias . '"', $strContent);
 //            }
 
+
+            if( $objArticle && $objArticle->noContent )
+            {
+                return '';
+            }
+
             if( $isFullpage )
             {
                 if( $objArticle )
@@ -156,8 +162,8 @@ class FrontendTemplateListener
                         }
                         else
                         {
-                            $navNext = '<div class="navigation-top" onClick="DPS.Fullpage.sectionBack(this);"><span>zur vorigen Seite</span></div>';
-                            $navPrev = '<div class="navigation-bottom" onClick="DPS.Fullpage.sectionForward(this);"><span>zur nächsten Seite</span></div>';
+                            $navNext = '<div class="navigation-top" onClick="IIDO.FullPage.sectionBack(this);"><span>zur vorigen Seite</span></div>';
+                            $navPrev = '<div class="navigation-bottom" onClick="IIDO.FullPage.sectionForward(this);"><span>zur nächsten Seite</span></div>';
                         }
 
                         $navigationTags = '<div class="fullpage-navigation">' . $navNext . $navPrev .'</div>';
@@ -317,6 +323,21 @@ class FrontendTemplateListener
                         }
                     }
 
+                    if( $objArticle->hiddenArea )
+                    {
+                        $arrArticleClasses[] = 'hidden-area';
+
+//                        foreach($articleClass as $classIndex => $className)
+//                        {
+//                            if( $className === "section" )
+//                            {
+//                                unset($articleClass[ $classIndex ]);
+//                                $articleClass = array_values($articleClass);
+//                                break;
+//                            }
+//                        }
+                    }
+
                     $bgColor        = ColorHelper::getBackgroundColor( $objArticle );
 
                     if( $bgColor )
@@ -380,6 +401,11 @@ class FrontendTemplateListener
                 {
                     $strContent = preg_replace('/<\/div>$/', '<div class="hover-article-image"><div class="hover-inside"></div><div class="hover-close"></div></div></div>', trim($strContent));
                 }
+
+                if( $objArticle->hideInMenu )
+                {
+                    $articleClass[] = 'hide-in-menu';
+                }
             }
 
             if( is_array($articleClass) && count($articleClass) > 0 )
@@ -410,17 +436,44 @@ class FrontendTemplateListener
 
             if( $objArticle->inColumn === "main" )
             {
-                $divTableStart = "";
-                $divTableEnd   = "";
-                if( $objArticle->textMiddle && $isFullpage )
+                $divTableStart  = "";
+                $divTableEnd    = "";
+                $divOverlay     = "";
+
+//                if( $objArticle->textMiddle && $isFullpage )
+                if( $objArticle->textMiddle )
                 {
                     $divTableStart = '<div class="article-table">';
                     $divTableEnd   = '</div>';
                 }
-                $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">' . $divTableStart, $strContent, -1, $count);
+
+                if( $objArticle->addBackgroundOverlay )
+                {
+                    $divOverlay = '<div class="bg-container-overlay"></div>';
+                }
+
+                $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3>' . $divOverlay . '<div class="article-inside">' . $divTableStart, $strContent, -1, $count);
 
                 if( $count > 0 )
                 {
+                    if( $objArticle->toNextArrow )
+                    {
+                        $divTableEnd = '<div class="pos-abs pos-center-bottom arrow arrow-down arrow-style2"><div class="arrow-inside-container"><div class="arrow-inside"></div></div></div>' . $divTableEnd;
+                    }
+
+                    if( preg_match('/add-footer/', $cssID[1]) )
+                    {
+                        $lang       = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
+                        $strFooter  = \Frontend::replaceInsertTags( '{{insert_article::ge_footer_' . $objPage->rootAlias . '_' . $lang . '}}' );
+
+                        if( strlen($strFooter) )
+                        {
+                            $strFooter = '<div class="article-footer"><div class="inside">' . $strFooter . '</div></div>';
+                        }
+
+                        $divTableEnd = $strFooter . $divTableEnd;
+                    }
+
                     $strContent = $strContent . $divTableEnd . '</div>';
                 }
 

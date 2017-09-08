@@ -13,9 +13,6 @@
 namespace IIDO\BasicBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
-use Contao\System;
-use Contao\Config;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
@@ -31,8 +28,6 @@ use IIDO\BasicBundle\Helper\ContentHelper as Helper;
  */
 class ContentListener
 {
-    use ScopeAwareTrait;
-
 
     /**
      * @var ContaoFrameworkInterface
@@ -54,7 +49,7 @@ class ContentListener
      */
     public function __construct(ContaoFrameworkInterface $framework)
     {
-        $this->framework = $framework;
+        $this->framework        = $framework;
 
         $this->bundlePathPublic = BundleConfig::getBundlePath(true);
         $this->bundlePath       = BundleConfig::getBundlePath();
@@ -72,6 +67,7 @@ class ContentListener
 
         $elementClass   = $objRow->typePrefix . $objRow->type;
         $cssID          = \StringUtil::deserialize($objRow->cssID, TRUE);
+        $objArticle     = \ArticleModel::findByPk( $objRow->pid );
 
         if( $objRow->type == "module" )
         {
@@ -138,7 +134,7 @@ class ContentListener
                 $strBuffer = preg_replace('/<p>(.*)<\/p>/', '<p><span class="big">$1</span><span class="divider"></span></p>', $strBuffer, 1);
             }
 
-            $strBuffer = Helper::renderText($strBuffer);
+//            $strBuffer = Helper::renderText($strBuffer);
         }
 
         elseif( $objRow->type == "gallery" )
@@ -161,11 +157,14 @@ class ContentListener
                 break;
         }
 
-        $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
-
-        if( $count )
+        if( !in_array($objRow->type, array('sliderStart')) )
         {
-            $strBuffer = $strBuffer . '</div>';
+            $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
+
+            if( $count )
+            {
+                $strBuffer = $strBuffer . '</div>';
+            }
         }
 
         $strBuffer = preg_replace('/class="' . $elementClass . '/', 'class="' . $elementClass . ' content-element', $strBuffer);
@@ -329,6 +328,32 @@ class ContentListener
             }
         }
 
+        if( preg_match('/<h([1-6])>/', $strBuffer) )
+        {
+            $strBuffer = preg_replace('/<h([1-6])>/', '<h$1 class="headline">', $strBuffer);
+        }
+
+        if( $objRow->addAnimation || $objArticle->addAnimation )
+        {
+            $arrClasses[] = 'animate-box';
+
+            $arrAttributes['data-animate']          = $objRow->animationType    ?:$objArticle->animationType;
+            $arrAttributes['data-animate-offset']   = $objRow->animationOffset  ?:$objArticle->animationOffset;
+
+            if( $objRow->animateRun === "once" || $objArticle->animateRun === "once" )
+            {
+                $arrAttributes['data-animate-trigger-once'] = 'true';
+            }
+
+            if( $objRow->animationWait || $objArticle->animationWait )
+            {
+                $arrClasses[] = 'animate-wait';
+
+                $arrAttributes['data-wait'] = 1;
+            }
+        }
+
+
         if( count($arrClasses) )
         {
             $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrClasses );
@@ -341,6 +366,7 @@ class ContentListener
 
         $strBuffer = $this->renderHeadlines($strBuffer, $objRow);
         $strBuffer = $this->renderBox($strBuffer, $objRow, $objElement);
+        $strBuffer = $this->renderImages( $strBuffer, $objRow );
 
         return $strBuffer;
     }
@@ -351,6 +377,21 @@ class ContentListener
     {
         $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}]{0,})>/', '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
         $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></span></h$1>', $strContent);
+
+        return $strContent;
+    }
+
+
+
+    protected function renderImages( $strContent, $objRow )
+    {
+        global $objPage;
+
+        $objRootPage = \PageModel::findByPk( $objPage->rootId );
+
+        if( $objRootPage->enableLazyLoad || $objPage->enableLazyLoad )
+        {
+        }
 
         return $strContent;
     }
@@ -413,6 +454,17 @@ class ContentListener
         if( count($arrLinkClasses) )
         {
             $strContent = preg_replace('/class="hyperlink_txt/', 'class="hyperlink_txt ' . implode(' ', $arrLinkClasses), $strContent);
+        }
+
+//        $strContent = Helper::renderText( $strContent, true);
+        preg_match_all('/<a([A-Za-z0-9\s\-="_,;.:\{\}\(\)\/]{0,})>([A-Za-z0-9\s\-,;\{\}:.!?\(\)]{0,})<\/a>/', $strContent, $arrMatches);
+
+        if( count($arrMatches[0]) )
+        {
+            $strTitle   = trim(preg_replace('/;/', '', $arrMatches[2][0]));
+//            $strContent = preg_replace('/title="' . preg_quote($arrMatches[2][0], '/') . '"/', 'title="' . $strTitle . '"', $strContent);
+            $strContent = preg_replace('/>' . preg_quote($arrMatches[2][0], '/') . '</', '>' . Helper::renderText($arrMatches[2][0], true). '<', $strContent);
+//            $strContent = preg_replace('/title="([A-Za-z0-9\s\-;,.:\{\}<>="]{0,})" rel="/', 'title="' . $strTitle . '" rel="', $strContent);
         }
 
         $strContent = $this->addClassToContentElement( $strContent, $objRow, $arrClasses );
@@ -483,7 +535,7 @@ class ContentListener
         {
             $cssID = \StringUtil::deserialize( $objRow->cssID );
 
-            if( preg_match('/box/', $cssID[1]) )
+            if( preg_match('/box-item/', $cssID[1]) )
             {
                 $GLOBALS['IIDO']['BOXES']['OPEN'] = $GLOBALS['IIDO']['BOXES']['OPEN'] || FALSE;
 
@@ -491,7 +543,19 @@ class ContentListener
                 {
                     $GLOBALS['IIDO']['BOXES']['OPEN'] = TRUE;
 
-                    $strBuffer = '<div class="box-container clr-after"><div class="box-cont-inside"><div class="box-cont-wrapper fbc">' . $strBuffer;
+                    $strClass = 'fbc';
+
+                    if( preg_match('/box-col/', $cssID[1]))
+                    {
+                        $strClass = 'columns';
+                    }
+
+                    $strBuffer = '<div class="box-container clr-after"><div class="box-cont-inside"><div class="box-cont-wrapper ' . $strClass . '">' . $strBuffer;
+                }
+
+                if( preg_match('/box-col/', $cssID[1]))
+                {
+                    $strBuffer = $this->addClassToContentElement($strBuffer, $objRow, array('column'));
                 }
 
                 if( $GLOBALS['IIDO']['BOXES']['OPEN'] === TRUE && $this->checkIfLastBox( $objRow ) )

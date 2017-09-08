@@ -88,7 +88,7 @@ class PageListener
 
         $ua                 = \Environment::get( "agent" );
 
-        $jquery             = ($objLayout->addJQuery) ? TRUE : FALSE;
+        $jquery             = ($objLayout->addJQuery)   ? TRUE : FALSE;
         $mootools           = ($objLayout->addMooTools) ? TRUE : FALSE;
 
 //        $externalJavascript = deserialize( $objLayout->externalJavascript, TRUE );
@@ -108,11 +108,15 @@ class PageListener
 //            $GLOBALS['TL_CSS']['jquery_ui']        = $this->bundlePathPublic . '/css/frontend/jquery-ui.css||static';
 //        }
 
+//        $GLOBALS['TL_JAVASCRIPT']['easing']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easing.min.js|static';
+
         if( $objPage->enableFullpage && $jsPrefix == "jquery" )
         {
             $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['scrolloverflow']     = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/scrolloverflow.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullPage.min.js|static';
+
+            $GLOBALS['TL_JAVASCRIPT']['iido_fullpage']      = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.FullPage.js|static';
         }
 
         if( $footerMode )
@@ -153,6 +157,8 @@ class PageListener
             $GLOBALS['TL_JAVASCRIPT']['isotope']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope.pkgd.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT']['iso_fit-columns']    = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/fit-columns.js|static';
             $GLOBALS['TL_JAVASCRIPT']['hc_sticky']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.hc-sticky.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['number']             = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.number.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['count_to']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/count-to.min.js|static';
 
             $GLOBALS['TL_JAVASCRIPT']['iido_base']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Functions.js|static';
@@ -798,9 +804,14 @@ class PageListener
             'hamburgers.min.css',
             'core.css',
             'buttons.css',
+            'form.css',
+            'forms.css',
             'layout.css',
             'navigation.css',
             'bulma/columns.css',
+            'bulma/tile.css',
+            'bulma/form.css',
+            'bulma/checkradio.css',
             'content.css',
             'responsive.css'
         );
@@ -812,6 +823,8 @@ class PageListener
             'animate.css',
             'core.css',
             'buttons.css',
+            'form.css',
+            'forms.css',
             'layout.css',
             'hamburgers.css',
             'hamburgers.min.css',
