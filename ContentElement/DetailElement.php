@@ -51,7 +51,9 @@ class DetailElement extends \ContentElement
                     {
                         while( $objElements->next() )
                         {
-                            if( $objElements->alias === $getItem || $objElements->id === $getItem )
+                            $rsceData = json_decode($objElements->rsce_data, true);
+
+                            if( (key_exists('alias', $rsceData) && $rsceData['alias'] === $getItem) || $objElements->id === $getItem )
                             {
                                 $arrData    = json_decode($objElements->rsce_data, true);
 //                                $arrImages  = ImageHelper::getMultipleImages($objElements->multiSRC, $objElements->orderSRC);
