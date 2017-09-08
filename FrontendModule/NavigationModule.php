@@ -1133,7 +1133,7 @@ class NavigationModule extends \ModuleNavigation
     {
         $objPages = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $objCurrentPage->pid );
 
-        if( $objPages->count() > 1)
+        if( $objPages && $objPages->count() > 1)
         { //TODO: remove current page from return!!
             return $returAsArray ? $objPages->fetchAll() : $objPages;
         }
