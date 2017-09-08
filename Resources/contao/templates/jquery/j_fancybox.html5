@@ -11,7 +11,7 @@ $hideTitle      = FALSE;
 //$titleType				= \Config::get("iidoCustomize_fancyboxTitleType");
 //$titleCounter			= \Config::get("iidoCustomize_fancyboxAddTitleCounter");
 //$hideTitle				= \Config::get("iidoCustomize_fancyboxHideTitle");
-//
+
 //if( $titleCounter && $titleType == "none" )
 //{
 //	$titleType	= 'outside';

@@ -1,4 +1,7 @@
-
+<?
+$containerOutside   = false;
+$arrHoverContainers = array();
+?>
 <ul class="<?= $this->level ?>">
     <?php foreach ($this->items as $item):
         $strStyles  = false;
@@ -51,13 +54,55 @@
 //        $item['class'] = trim($item['class'] . " no-barba");
 
 //        $item['target'] = $item['target'] . ' onclick="IIDO.Page.showArticle(this)" data-id="' . $item['id'] . '" data-alias="' . $item['alias'] . '"';
-//        $item['href']   = 'javascript:void(0)';
+
+
+        if( $item['noContent'] )
+        {
+            $item['href']   = 'javascript:void(0)';
+            $item['class']  = trim($item['class'] . ' no-content');
+
+            if( !$containerOutside )
+            {
+                $hoverContainer = '<div class="menu-hover-container">' . $item['teaser'] . '</div>';
+            }
+        }
+
+        $item['class']  = trim($item['class'] . ' item-' . $item['alias']);
 
         ?>
         <?php if ($item['isActive']): ?>
-            <li class="<?= $item['class'] ?>"><?= $imageContainer ?><strong data-alias="<?= $item['alias'] ?>" class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?>><?php if($subtitle && $subtitlePos === "before"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?><span itemprop="name"><?= $item['link'] ?></span><?php if($subtitle && $subtitlePos === "after"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?></strong><?= $item['subitems'] ?></li>
+            <li class="<?= $item['class'] ?>"<?= $item['listAttributes'] ?>>
+                <strong data-alias="<?= $item['alias'] ?>" class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?>>
+                    <?= $imageContainer ?>
+                    <?php if($subtitle && $subtitlePos === "before"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?>
+                    <span itemprop="name"><?= $item['link'] ?></span>
+                    <?php if($subtitle && $subtitlePos === "after"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?>
+                </strong>
+                <?= $hoverContainer ?>
+
+                <?= $item['subitems'] ?>
+            </li>
         <?php else: ?>
-            <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?>><a data-alias="<?= $item['alias'] ?>" href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><?= $imageContainer . $hoverContainer ?><?php if($subtitle && $subtitlePos === "before"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?><span itemprop="name"><?= $item['link'] ?></span><?php if($subtitle && $subtitlePos === "after"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?></a><?= $item['subitems'] ?></li>
+            <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?= $item['listAttributes'] ?>>
+                <a data-alias="<?= $item['alias'] ?>" href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url">
+                    <?= $imageContainer ?>
+                    <?php if($subtitle && $subtitlePos === "before"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?>
+                    <span itemprop="name"><?= $item['link'] ?></span>
+                    <?php if($subtitle && $subtitlePos === "after"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?>
+                </a>
+                <?= $hoverContainer ?>
+
+                <?= $item['subitems'] ?>
+            </li>
         <?php endif; ?>
     <?php endforeach; ?>
 </ul>
+<? if( count($arrHoverContainers) && $containerOutside ): ?>
+<div class="menu-hover-container">
+    <? foreach($arrHoverContainers as $hoverContainer): ?>
+        <div class="menu-hover-item" id="menuHoverItem_<?= $hoverContainer['id'] ?>">
+            <?= $hoverContainer['teaser'] ?>
+        </div>
+    <? endforeach ?>
+</div>
+<? endif ?>

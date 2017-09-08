@@ -1,0 +1,29 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block('content'); ?>
+
+    <div class="article-teaser-container">
+        <? foreach($this->articles as $article): ?>
+            <div class="article-teaser-item" id="articleTeaser_<?= $article->id ?>" data-alias="<?= $article->alias ?>">
+                <div class="infos">
+                    <div class="headline">
+                        <?= $article->teaserHeadline ?>
+                    </div>
+                    <div class="text">
+                        <?= $article->teaser ?>
+                    </div>
+                </div>
+                <? if( count($article->teaserImages) ): ?>
+                <div class="images-container">
+                    <? foreach($article->teaserImages as $teaserImage): ?>
+                        <div class="image-item">
+                            <img src="<?= $teaserImage['singleSRC'] ?>" alt="<?= $teaserImage['alt'] ?>">
+                        </div>
+                    <? endforeach; ?>
+                </div>
+                <? endif; ?>
+            </div>
+        <? endforeach; ?>
+    </div>
+
+<? $this->endblock(); ?>
