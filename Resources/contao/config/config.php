@@ -45,6 +45,21 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
 //   )
 //
 //));
+//$beUser = \BackendUser::getContainer();
+//
+//if( ($beUser->getParameter("id") === 1 || $beUser->getParameter("id") === 2) && $beUser->getParameter("isAdmin") )
+//{
+//    array_insert($GLOBALS['BE_MOD'], 3, array
+//    (
+//        $prefix => array
+//        (
+//            $prefix . 'System' => array
+//            (
+//                'callback'      => $namespace . '\\' . $subNamespace . '\BackendModule\SystemModule'
+//            )
+//        )
+//    ));
+//}
 
 
 
@@ -55,6 +70,7 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
 $GLOBALS['TL_CTE']['module']['iido_navigation']             = $namespace . '\\' . $subNamespace . '\ContentElement\NavigationElement';
 $GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $namespace . '\\' . $subNamespace . '\ContentElement\FilesFilterElement';
 $GLOBALS['TL_CTE']['module']['iido_detail']                 = $namespace . '\\' . $subNamespace . '\ContentElement\DetailElement';
+$GLOBALS['TL_CTE']['module']['iido_articleTeaser']          = $namespace . '\\' . $subNamespace . '\ContentElement\ArticleTeaserElement';
 //$GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
 
 
@@ -119,6 +135,10 @@ $GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerNam
 //$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.listener.ajax', 'parseAjaxRequest');
 
 $GLOBALS['TL_HOOKS']['getCombinedFile'][]                   = array($listenerName . '.listener.combiner', 'getCustomizeCombinedFile');
+
+//$GLOBALS['TL_HOOKS']['getForm'][]                           = array($listenerName . '.listener.form', 'getCustomizeForm');
+$GLOBALS['TL_HOOKS']['loadFormField'][]                     = array($listenerName . '.listener.form', 'loadCustomizeFormField');
+$GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerName . '.listener.form', 'parseCustomizeWidget');
 
 
 
