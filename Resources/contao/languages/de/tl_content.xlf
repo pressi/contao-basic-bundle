@@ -559,6 +559,341 @@
 
 
 
+			<!--<trans-unit id="tl_content.options_animationType.attsee">-->
+			<!--<source>Attention Seekers</source>-->
+			<!--<target>Aufmerksamkeitssuchende</target>-->
+			<!--</trans-unit>-->
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.bounce">
+				<source>bounce</source>
+				<target>bounce</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.flash">
+				<source>flash</source>
+				<target>flash</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.pulse">
+				<source>pulse</source>
+				<target>pulse</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.rubberBand">
+				<source>rubberBand</source>
+				<target>rubberBand</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.shake">
+				<source>shake</source>
+				<target>shake</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.swing">
+				<source>swing</source>
+				<target>swing</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.tada">
+				<source>tada</source>
+				<target>tada</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.wobble">
+				<source>wobble</source>
+				<target>wobble (Flattern)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.jello">
+				<source>jello</source>
+				<target>jello (Wackelpudding)</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceIn">
+				<source>bounceIn</source>
+				<target>bounceIn</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInDown">
+				<source>bounceInDown</source>
+				<target>bounceInDown</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInLeft">
+				<source>bounceInLeft</source>
+				<target>bounceInLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInRight">
+				<source>bounceInRight</source>
+				<target>bounceInRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInUp">
+				<source>bounceInUp</source>
+				<target>bounceInUp</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOut">
+				<source>bounceOut</source>
+				<target>bounceOut</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutDown">
+				<source>bounceOutDown</source>
+				<target>bounceOutDown</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutLeft">
+				<source>bounceOutLeft</source>
+				<target>bounceOutLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutRight">
+				<source>bounceOutRight</source>
+				<target>bounceOutRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutUp">
+				<source>bounceOutUp</source>
+				<target>bounceOutUp</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeIn">
+				<source>fadeIn</source>
+				<target>fadeIn</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInDown">
+				<source>fadeInDown</source>
+				<target>fadeInDown</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInDownBig">
+				<source>fadeInDownBig</source>
+				<target>fadeInDownBig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInLeft">
+				<source>fadeInLeft</source>
+				<target>fadeInLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInLeftBig">
+				<source>fadeInLeftBig</source>
+				<target>fadeInLeftBig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInRight">
+				<source>fadeInRight</source>
+				<target>fadeInRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInRightBig">
+				<source>fadeInRightBig</source>
+				<target>fadeInRightBig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInUp">
+				<source>fadeInUp</source>
+				<target>fadeInUp</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInUpBig">
+				<source>fadeInUpBig</source>
+				<target>fadeInUpBig</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOut">
+				<source>fadeOut</source>
+				<target>fadeOut</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutDown">
+				<source>fadeOutDown</source>
+				<target>fadeOutDown</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutDownBig">
+				<source>fadeOutDownBig</source>
+				<target>fadeOutDownBig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutLeft">
+				<source>fadeOutLeft</source>
+				<target>fadeOutLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutLeftBig">
+				<source>fadeOutLeftBig</source>
+				<target>fadeOutLeftBig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutRight">
+				<source>fadeOutRight</source>
+				<target>fadeOutRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutRightBig">
+				<source>fadeOutRightBig</source>
+				<target>fadeOutRightBig</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutUp">
+				<source>fadeOutUp</source>
+				<target>fadeOutUp</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutUpBig">
+				<source>fadeOutUpBig</source>
+				<target>fadeOutUpBig</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Flippers.flip">
+				<source>flip</source>
+				<target>flip</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Flippers.flipInX">
+				<source>flipInX</source>
+				<target>flipInX (Horizontal)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Flippers.flipInY">
+				<source>flipInY</source>
+				<target>flipInY (Horizontal)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Flippers.flipOutX">
+				<source>flipOutX</source>
+				<target>flipOutX (Vertikal)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Flippers.flipOutY">
+				<source>flipOutY</source>
+				<target>flipOutY (Vertikal)</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Lichtgeschwindigkeit.lightSpeedIn">
+				<source>lightSpeedIn</source>
+				<target>lightSpeedIn</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Lichtgeschwindigkeit.lightSpeedOut">
+				<source>lightSpeedOut</source>
+				<target>lightSpeedOut</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateIn">
+				<source>rotateIn</source>
+				<target>rotateIn</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInDownLeft">
+				<source>rotateInDownLeft</source>
+				<target>rotateInDownLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInDownRight">
+				<source>rotateInDownRight</source>
+				<target>rotateInDownRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInUpLeft">
+				<source>rotateInUpLeft</source>
+				<target>rotateInUpLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInUpRight">
+				<source>rotateInUpRight</source>
+				<target>rotateInUpRight</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOut">
+				<source>rotateOut</source>
+				<target>rotateOut</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutDownLeft">
+				<source>rotateOutDownLeft</source>
+				<target>rotateOutDownLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutDownRight">
+				<source>rotateOutDownRight</source>
+				<target>rotateOutDownRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutUpLeft">
+				<source>rotateOutUpLeft</source>
+				<target>rotateOutUpLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutUpRight">
+				<source>rotateOutUpRight</source>
+				<target>rotateOutUpRight</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInUp">
+				<source>slideInUp</source>
+				<target>slideInUp</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInLeft">
+				<source>slideInLeft</source>
+				<target>slideInLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInRight">
+				<source>slideInRight</source>
+				<target>slideInRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInDown">
+				<source>slideInDown</source>
+				<target>slideInDown</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutDown">
+				<source>slideOutDown</source>
+				<target>slideOutDown</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutLeft">
+				<source>slideOutLeft</source>
+				<target>slideOutLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutRight">
+				<source>slideOutRight</source>
+				<target>slideOutRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutDown">
+				<source>slideOutDown</source>
+				<target>slideOutDown</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomIn">
+				<source>zoomIn</source>
+				<target>zoomIn</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInDown">
+				<source>zoomInDown</source>
+				<target>zoomInDown</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInLeft">
+				<source>zoomInLeft</source>
+				<target>zoomInLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInRight">
+				<source>zoomInRight</source>
+				<target>zoomInRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInUp">
+				<source>zoomInUp</source>
+				<target>zoomInUp</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOut">
+				<source>zoomOut</source>
+				<target>zoomOut</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutDown">
+				<source>zoomOutDown</source>
+				<target>zoomOutDown</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutLeft">
+				<source>zoomOutLeft</source>
+				<target>zoomOutLeft</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutRight">
+				<source>zoomOutRight</source>
+				<target>zoomOutRight</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutUp">
+				<source>zoomOutUp</source>
+				<target>zoomOutUp</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.options_animationType.Spezielles.hinge">
+				<source>hinge</source>
+				<target>hinge</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Spezielles.rollIn">
+				<source>rollIn</source>
+				<target>rollIn</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options_animationType.Spezielles.rollOut">
+				<source>rollOut</source>
+				<target>rollOut</target>
+			</trans-unit>
+
+
+
+			<trans-unit id="tl_content.options.animateRun.once">
+				<source>once</source>
+				<target>nach unten (nur einmal)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.animateRun.down">
+				<source>down</source>
+				<target>nach unten (immer)</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.animateRun.down_up">
+				<source>down and up</source>
+				<target>nach unten und nach oben (immer)</target>
+			</trans-unit>
+
+
+
 <!-- ### REFERENCE ########################################################################################################## -->
 
 			<trans-unit id="tl_content.reference.headlineImagePosition.top">
