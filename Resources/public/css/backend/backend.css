@@ -182,7 +182,7 @@ body.popup #main .tl_formbody_submit {
 }
 
 #container {
-    padding-top: 48px;
+    padding-top: 40px;
 }
 
 /*.tl_modulewizard tbody tr:not(:last-child) td {*/
@@ -252,4 +252,9 @@ body.popup #main .tl_formbody_submit {
     padding: 8px;
     border-left: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
+}
+
+.w50.nclra + .subpal,
+.w50.no-clr-after + .subpal {
+    clear: none;
 }
