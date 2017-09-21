@@ -3,6 +3,30 @@
     <file datatype="php" original="system/modules/ziido_customize/languages/en/default.php" source-language="en">
         <body>
 
+<!-- ### CONTENT ELEMENTS ################################################################################################### -->
+
+            <trans-unit id="CTE.iido_navigation.0">
+                <source>Navigation</source>
+                <target>Navigation</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_filesFilter.0">
+                <source>Galerie Filter</source>
+                <target>Gallery filter</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_detail.0">
+                <source>Detailinfos (Produkte / Referenzen)</source>
+                <target>Details infos</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_articleTeaser.0">
+                <source>Artikel Teaser - Liste</source>
+                <target>Article teaser list</target>
+            </trans-unit>
+
+
+
 <!-- ### PAGE TYPES ######################################################################################################### -->
 
             <trans-unit id="PTY.regular_redirect.0">

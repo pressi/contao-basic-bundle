@@ -201,65 +201,60 @@
             </trans-unit>
 
 
-
-<!-- ### REFERENCE ########################################################################################################## -->
-
-            <trans-unit id="tl_article.reference.bgRepeat.repeat">
-                <source>repeat</source>
-                <target>Wiederholung (Kacheln)</target>
-            </trans-unit>
-            <trans-unit id="tl_article.reference.bgRepeat.repeat-x">
-                <source>repeat x</source>
-                <target>Horizontale Wiederholung</target>
-            </trans-unit>
-            <trans-unit id="tl_article.reference.bgRepeat.repeat-y">
-                <source>repeat y</source>
-                <target>Vertikale Wiederholung</target>
-            </trans-unit>
-            <trans-unit id="tl_article.reference.bgRepeat.no-repeat">
-                <source>no repeat</source>
-                <target>Keine Wiederholung</target>
-            </trans-unit>
-
-
-
-            <trans-unit id="tl_article.reference.bgPosition.left top">
+            <trans-unit id="tl_article.options.bgPosition.left top">
                 <source>left top</source>
                 <target>Links Oben</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.left center">
+            <trans-unit id="tl_article.options.bgPosition.left center">
                 <source>left center</source>
                 <target>Links Mitte</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.left bottom">
+            <trans-unit id="tl_article.options.bgPosition.left bottom">
                 <source>left bottom</source>
                 <target>Links Unten</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.center top">
+            <trans-unit id="tl_article.options.bgPosition.center top">
                 <source>center top</source>
                 <target>Mitte Oben</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.center center">
+            <trans-unit id="tl_article.options.bgPosition.center center">
                 <source>center center</source>
                 <target>Mitte Mitte (Zentriert)</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.center bottom">
+            <trans-unit id="tl_article.options.bgPosition.center bottom">
                 <source>center bottom</source>
                 <target>Mitte Unten</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.right top">
+            <trans-unit id="tl_article.options.bgPosition.right top">
                 <source>right top</source>
                 <target>Rechts Oben</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.right center">
+            <trans-unit id="tl_article.options.bgPosition.right center">
                 <source>right center</source>
                 <target>Rechts Mitte</target>
             </trans-unit>
-            <trans-unit id="tl_article.reference.bgPosition.right bottom">
+            <trans-unit id="tl_article.options.bgPosition.right bottom">
                 <source>right bottom</source>
                 <target>Rechts Unten</target>
             </trans-unit>
 
+
+            <trans-unit id="tl_article.options.bgRepeat.repeat">
+                <source>repeat</source>
+                <target>Wiederholung (Kacheln)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgRepeat.repeat-x">
+                <source>repeat x</source>
+                <target>Horizontale Wiederholung</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgRepeat.repeat-y">
+                <source>repeat y</source>
+                <target>Vertikale Wiederholung</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgRepeat.no-repeat">
+                <source>no repeat</source>
+                <target>Keine Wiederholung</target>
+            </trans-unit>
 
 
         </body>
