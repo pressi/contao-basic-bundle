@@ -23,7 +23,7 @@ $table 			= Input::get("table");
 $id				= (int) Input::get("id");
 $theme			= \Backend::getTheme();
 
-$enableCarouFredSel		= in_array("dk_caroufredsel", \ModuleLoader::getActive());
+$enableCarouFredSel		= false; //in_array("dk_caroufredsel", \ModuleLoader::getActive());
 
 
 if( count( $db->listTables() ) > 0 )
@@ -226,7 +226,7 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['useCarouFredSel'] = array
 	'sql'					=> "char(1) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['carouFredSelConfig'] = $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsCarouFredSel'];
+//$GLOBALS['TL_DCA']['tl_news']['fields']['carouFredSelConfig'] = $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsCarouFredSel'];
 
 
 
@@ -245,11 +245,11 @@ $GLOBALS['TL_DCA']['tl_news']['fields']['useCarouFredSelThumbnails'] = array
 	'sql'					=> "char(1) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailSize']			= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailSize'];
-$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsPosition'] 	= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsPosition'];
-$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsAlign']		= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsAlign'];
-$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsWidth']		= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsWidth'];
-$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsHeight']		= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsHeight'];
+//$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailSize']			= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailSize'];
+//$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsPosition'] 	= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsPosition'];
+//$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsAlign']		= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsAlign'];
+//$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsWidth']		= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsWidth'];
+//$GLOBALS['TL_DCA']['tl_news']['fields']['cfsThumbnailsHeight']		= $GLOBALS['TL_DCA']['tl_content']['fields']['dk_cfsThumbnailsHeight'];
 
 
 

@@ -68,10 +68,10 @@ $GLOBALS['TL_DCA']['tl_page']['list']['label']['label_callback']        = array(
  * Selectors
  */
 
-$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'subPagesHasRequestLink';
-$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuNoPages';
-$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuSRC';
-$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuPageCombination';
+//$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'subPagesHasRequestLink';
+//$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuNoPages';
+//$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuSRC';
+//$GLOBALS['TL_DCA']['tl_page']['palettes']['__selector__'][]             = 'submenuPageCombination';
 
 
 
@@ -150,12 +150,16 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
  * Subpalettes
  */
 
-$GLOBALS['TL_DCA']['tl_page']['subpalettes']['subPagesHasRequestLink']  = 'requestLinkPage';
-$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuNoPages']          = 'submenuSRC,submenuPageCombination';
-$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuSRC_news']         = 'submenuNewsArchive';
+//$GLOBALS['TL_DCA']['tl_page']['subpalettes']['subPagesHasRequestLink']  = 'requestLinkPage';
+//$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuNoPages']          = 'submenuSRC,submenuPageCombination';
+//$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuSRC_news']         = 'submenuNewsArchive';
 
-$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuPageCombination']  = 'submenuPageOrder';
+//$GLOBALS['TL_DCA']['tl_page']['subpalettes']['submenuPageCombination']  = 'submenuPageOrder';
 
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("subPagesHasRequestLink", "requestLinkPage", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuNoPages", "submenuSRC,submenuPageCombination", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuSRC_news", "submenuNewsArchive", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuPageCombination", "submenuPageOrder", $strTable);
 
 
 
@@ -215,7 +219,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($G
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuPageCombination'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['eval']['submitOnChange'] = TRUE;
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField('enableLazyLoad', 'checkbox', $strTable, array('submitOnChange'=>TRUE));
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuPageCombination', 'checkbox_selector', $strTable, array('submitOnChange'=>TRUE));
 
 
 
@@ -223,7 +227,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($G
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']['label']         = &$GLOBALS['TL_LANG']['tl_page']['subPagesHasBacklink'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasBacklink']['eval']['tl_class'] = 'clr w50 m12';
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField('enableLazyLoad', 'checkbox', $strTable, array(), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addField('subPagesHasBacklink', 'checkbox', $strTable, array(), 'clr');
 
 //$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoBacklink']                = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoBacklink']['label']       = &$GLOBALS['TL_LANG']['tl_page']['thisPageHasNoBacklink'];
@@ -236,13 +240,14 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($G
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['label']      = &$GLOBALS['TL_LANG']['tl_page']['subPagesHasRequestLink'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['tl_class']       = 'clr w50 m12';
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['submitOnChange'] = TRUE;
-\IIDO\BasicBundle\Helper\DcaHelper::addField('enableLazyLoad', 'checkbox', $strTable, array('submitOnChange'=>TRUE), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addField('subPagesHasRequestLink', 'checkbox_selector', $strTable, array('submitOnChange'=>TRUE), 'clr');
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['requestLinkPage']                      = $GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['requestLinkPage']['label']             = &$GLOBALS['TL_LANG']['tl_page']['requestLinkPage'];
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoRequestLink']             = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoRequestLink']['label']    = &$GLOBALS['TL_LANG']['tl_page']['thisPageHasNoRequestLink'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoRequestLink']             = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoRequestLink']['label']    = &$GLOBALS['TL_LANG']['tl_page']['thisPageHasNoRequestLink'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField('thisPageHasNoRequestLink', 'checkbox', $strTable);
 
 
 
@@ -253,76 +258,87 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['thisPageHasNoRequestLink']['label']    
 
 
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'] = array
-(
-    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['subtitle'],
-    'exclude'               => TRUE,
-    'inputType'             => 'text',
-    'eval'                  => array
-    (
-        'maxlength'             => 255,
-        'decodeEntities'        => TRUE,
-        'tl_class'              => 'w50'
-    ),
-    'sql'                   => "varchar(255) NOT NULL default ''"
-);
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'] = array
+//(
+//    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['subtitle'],
+//    'exclude'               => TRUE,
+//    'inputType'             => 'text',
+//    'eval'                  => array
+//    (
+//        'maxlength'             => 255,
+//        'decodeEntities'        => TRUE,
+//        'tl_class'              => 'w50'
+//    ),
+//    'sql'                   => "varchar(255) NOT NULL default ''"
+//);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("subtitle", "text", $strTable);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['alt_pagename']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['alt_pagename']['label']        = &$GLOBALS['TL_LANG']['tl_page']['alt_pagename'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['alt_pagename']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['alt_pagename']['label']        = &$GLOBALS['TL_LANG']['tl_page']['alt_pagename'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField("alt_pagename", "text", $strTable);
 
+//$GLOBALS['TL_DCA']['tl_page']['fields']['navTitle']                     = $GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['navTitle']['label']            = &$GLOBALS['TL_LANG']['tl_page']['navTitle'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navTitle", "text", $strTable);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['navTitle']                     = $GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['navTitle']['label']            = &$GLOBALS['TL_LANG']['tl_page']['navTitle'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['navSubtitle']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['navSubtitle']['label']         = &$GLOBALS['TL_LANG']['tl_page']['navSubtitle'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navSubtitle", "text", $strTable);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['navSubtitle']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['subtitle'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['navSubtitle']['label']         = &$GLOBALS['TL_LANG']['tl_page']['navSubtitle'];
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['subtitlePosition'] = array
-(
-    'label'						=> &$GLOBALS['TL_LANG']['tl_page']['subtitlePosition'],
-    'default'					=> 'after',
-    'exclude'					=> true,
-    'inputType'					=> 'select',
-    'options'					=> $GLOBALS['TL_LANG']['tl_page']['options']['subtitlePosition'],
-    'eval'						=> array
-    (
-        'maxlength'					=> 32,
-        'tl_class'					=> 'w50'
-    ),
-    'sql'						=> "varchar(32) NOT NULL default ''"
-);
-
-
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']                    = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']['label']           = &$GLOBALS['TL_LANG']['tl_page']['hideTitle'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']['eval']['tl_class']    = 'w50';
-
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeHeader']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeHeader']['label']        = &$GLOBALS['TL_LANG']['tl_page']['removeHeader'];
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeFooter']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeFooter']['label']        = &$GLOBALS['TL_LANG']['tl_page']['removeFooter'];
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeLeft']                   = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeLeft']['label']          = &$GLOBALS['TL_LANG']['tl_page']['removeLeft'];
-
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeRight']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['removeRight']['label']         = &$GLOBALS['TL_LANG']['tl_page']['removeRight'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['subtitlePosition'] = array
+//(
+//    'label'						=> &$GLOBALS['TL_LANG']['tl_page']['subtitlePosition'],
+//    'default'					=> 'after',
+//    'exclude'					=> true,
+//    'inputType'					=> 'select',
+//    'options'					=> $GLOBALS['TL_LANG']['tl_page']['options']['subtitlePosition'],
+//    'eval'						=> array
+//    (
+//        'maxlength'					=> 32,
+//        'tl_class'					=> 'w50'
+//    ),
+//    'sql'						=> "varchar(32) NOT NULL default ''"
+//);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("subtitlePosition", "select", $strTable, array(), "", false, "after");
 
 
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']                = $GLOBALS['TL_DCA']['tl_content']['fields']['singleSRC'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['label']       = &$GLOBALS['TL_LANG']['tl_page']['overviewImage'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['mandatory']   = FALSE;
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['tl_class']    = trim( $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['tl_class'] . ' w50 hauto');
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['load_callback']       = array();
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['save_callback']       = array();
+//$GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']                    = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']['label']           = &$GLOBALS['TL_LANG']['tl_page']['hideTitle'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['hideTitle']['eval']['tl_class']    = 'w50';
+\IIDO\BasicBundle\Helper\DcaHelper::addField("hideTitle", "checkbox", $strTable);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']                = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['label']       = &$GLOBALS['TL_LANG']['tl_page']['overviewText'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['eval']['mandatory']    = FALSE;
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeHeader']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeHeader']['label']        = &$GLOBALS['TL_LANG']['tl_page']['removeHeader'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField('removeHeader', 'checkbox', $strTable);
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeFooter']                 = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeFooter']['label']        = &$GLOBALS['TL_LANG']['tl_page']['removeFooter'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField('removeFooter', 'checkbox', $strTable);
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeLeft']                   = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeLeft']['label']          = &$GLOBALS['TL_LANG']['tl_page']['removeLeft'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField('removeLeft', 'checkbox', $strTable);
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeRight']                  = $GLOBALS['TL_DCA']['tl_page']['fields']['openPageInLightbox'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['removeRight']['label']         = &$GLOBALS['TL_LANG']['tl_page']['removeRight'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField('removeRight', 'checkbox', $strTable);
+
+
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']                = $GLOBALS['TL_DCA']['tl_content']['fields']['singleSRC'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['label']       = &$GLOBALS['TL_LANG']['tl_page']['overviewImage'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['mandatory']   = FALSE;
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['tl_class']    = trim( $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['eval']['tl_class'] . ' w50 hauto');
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['load_callback']       = array();
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage']['save_callback']       = array();
+\IIDO\BasicBundle\Helper\DcaHelper::addField('overviewImage', 'image', $strTable);
+
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']                = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['label']       = &$GLOBALS['TL_LANG']['tl_page']['overviewText'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['eval']['mandatory']    = FALSE;
+\IIDO\BasicBundle\Helper\DcaHelper::addField('overviewText', 'textarea_rte', $strTable);
 
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['pageColor']                    = array
@@ -359,8 +375,9 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['redirectTimeout'] = array
 );
 
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']               = $GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuNoPages'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']               = $GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuNoPages'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNoPages', 'checkbox_selector', $strTable);
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'] = array
 (
@@ -375,6 +392,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'] = array
     ),
     'sql'                   => "varchar(255) NOT NULL default ''"
 );
+//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuSRC', 'select', $strTable);
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['submenuNewsArchive'] = array
 (
@@ -386,6 +404,13 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['submenuNewsArchive'] = array
     'sql'                     => "int(10) unsigned NOT NULL default '0'",
     'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 );
+$arrFieldConfig = array
+(
+    'foreignKey'              => 'tl_news_archive.title',
+    'sql'                     => "int(10) unsigned NOT NULL default '0'",
+    'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+);
+//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNewsArchive', 'select', $strTable, array(), "o50", false, "", $arrFieldConfig);
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']             = $GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['label']    = &$GLOBALS['TL_LANG']['tl_page']['submenuPageOrder'];
