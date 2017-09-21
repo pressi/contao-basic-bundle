@@ -805,4 +805,70 @@ class BasicHelper extends \Frontend
 
         return $strBuffer;
     }
+
+
+
+    public static function replaceLastMatch($search, $replace, $replaceOther, $text)
+    {
+        preg_match_all($search, $text, $matches);
+
+        $arr = preg_split($search, $text);
+
+        if(count($arr) > 1)
+        {
+            $return = $arr[0];
+
+            for($i=1; $i <= (count($arr) - 2); $i++)
+            {
+                $arrReplace = array
+                (
+                    $matches[1][ ($i - 1) ],
+                    $matches[2][ ($i - 1) ],
+                    $matches[3][ ($i - 1) ]
+                );
+
+                $return .= preg_replace(array('/\$1/', '/\$2/', '/\$3/'), $arrReplace, $replaceOther) . $arr[$i];
+            }
+
+            $arrReplace = array
+            (
+                $matches[1][ (count($arr) - 2) ],
+                $matches[2][ (count($arr) - 2) ],
+                $matches[3][ (count($arr) - 2) ]
+            );
+
+            $return .= preg_replace(array('/\$1/', '/\$2/', '/\$3/'), $arrReplace, $replace) . $arr[ (count($arr) - 1) ];
+
+            return $return;
+        }
+        else
+        {
+            return $text;
+        }
+    }
+
+
+
+    public static function getThemeVar( $varName )
+    {
+        global $objPage;
+
+        $objLayout  = self::getPageLayout( $objPage );
+        $objTheme   = \ThemeModel::findByPk( $objLayout->pid );
+
+        if( $objTheme )
+        {
+            $arrVars = \StringUtil::deserialize( $objTheme->vars, true);
+
+            foreach($arrVars as $arrVar)
+            {
+                if( $arrVar['key'] === $varName )
+                {
+                    return preg_replace('/&#35;/', '#', $arrVar['value']);
+                }
+            }
+        }
+
+        return '';
+    }
 }

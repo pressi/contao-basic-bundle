@@ -101,10 +101,15 @@ class FilterHelper extends \Frontend
 
     public static function getFilters( $pid, $type, $fieldName = 'mainFilter', $hasSubfilter = false, $subfilterName = 'subFilter' )
     {
+        \Controller::loadDataContainer("tl_content");
         $subfilters     = array();
         $mainfilters    = array();
 
         $objElements    = \ContentModel::findBy(array('pid=?', 'type=?'), array($pid, $type));
+        $arrConfig      = glob(TL_ROOT . '/templates/*/' . $type . '_config.php');
+
+        $arrFileConfig  = include  $arrConfig[0];
+        $arrFieldConfig = $arrFileConfig['fields'][ $fieldName ];
 
         if( $objElements )
         {
@@ -118,12 +123,34 @@ class FilterHelper extends \Frontend
                 }
 
                 $arrData        = BasicHelper::deserializeDataRecursive($arrData);
-                $mainFilter     = trim(self::renderFilterName( $arrData->$fieldName ));
 
-                if( $mainFilter )
+                if( $arrFieldConfig['eval']['multipleTags'] )
                 {
-                    $mainfilters[ $mainFilter ] = $arrData->$fieldName;
+                    $arrMainFiltter = explode(",", $arrData->$fieldName);
+
+                    if( count($arrMainFiltter) )
+                    {
+                        foreach($arrMainFiltter as $strMainFilter)
+                        {
+                            $mainFilter     = self::renderFilterName( trim($strMainFilter) );
+
+                            if( $mainFilter )
+                            {
+                                $mainfilters[ $mainFilter ] = $strMainFilter;
+                            }
+                        }
+                    }
                 }
+                else
+                {
+                    $mainFilter     = trim(self::renderFilterName( $arrData->$fieldName ));
+
+                    if( $mainFilter )
+                    {
+                        $mainfilters[ $mainFilter ] = $arrData->$fieldName;
+                    }
+                }
+
 
                 if( $hasSubfilter )
                 {
@@ -155,5 +182,12 @@ class FilterHelper extends \Frontend
 
         return $hasSubfilter ? array($mainfilters, $subfilters) : $mainfilters;
     }
+
+
+
+//    public static function getElementFilters( $id, $type, $fieldName = 'mainFilter', $hasSubfilter = false, $subfilterName = 'subFilter' )
+//    {
+//
+//    }
 
 }
