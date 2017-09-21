@@ -67,7 +67,7 @@ $arrHoverContainers = array();
             }
         }
 
-        $item['class']  = trim($item['class'] . ' item-' . $item['alias']);
+//        $item['class']  = trim($item['class'] . ' item-' . $item['alias']);
 
         ?>
         <?php if ($item['isActive']): ?>

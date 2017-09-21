@@ -23,17 +23,18 @@ IIDO.Page = IIDO.Page || {};
         $wrapper    = $("#wrapper");
         $navOffset  = $("header").height();
 
-        // this.initHeader();
-        // this.initSearch();
+        /* this.initHeader();
+        // this.initSearch(); */
         this.initMobileNavigation();
         this.initNavigation();
         this.initOnePage();
         this.initFullPage();
         this.initPageFade();
-        // this.initFooter();
+        /* this.initFooter(); */
         this.initMobile();
         this.initLinks();
         this.initShowArticles();
+        this.initSticky();
 
         if( $(document.body).hasClass("url-change") )
         {
@@ -110,7 +111,7 @@ IIDO.Page = IIDO.Page || {};
                         }
                         else if( $(window).scrollTop() < elPosTop)
                         {
-                            // if( !el.hasClass("first") )
+                            /* if( !el.hasClass("first") )
                             // {
                             //     var prevArticle     = el.prevAll('.mod_article[data-menu="1"]'),
                             //         firstArticle    = false;
@@ -133,7 +134,7 @@ IIDO.Page = IIDO.Page || {};
                             //     {
                             //         IIDO.Page.changeUrl( linkTagPart, false, true );
                             //     }
-                            // }
+                            // } */
                         }
                     }
                 })
@@ -161,7 +162,7 @@ IIDO.Page = IIDO.Page || {};
                 urlParam = "article";
             }
 
-            // var rgxp    = new RegExp(urlParam, 'g'),
+            /* var rgxp    = new RegExp(urlParam, 'g'),
             //     rgxpUrl = new RegExp(urlParam + '\/(.*).html', 'g');
             //
             // if( urlPath.match(rgxp) )
@@ -177,7 +178,7 @@ IIDO.Page = IIDO.Page || {};
             //     {
             //         $(window).scrollTop( goTo.position().top );
             //     }
-            // }
+            // } */
 
             $.each( urlParthParts, function(i, urlPart)
             {
@@ -202,7 +203,7 @@ IIDO.Page = IIDO.Page || {};
                 if( useScroll && articleAlias === el.attr("data-alias") )
                 {
                     IIDO.Page.scrollTo( window.event, el );
-                    // $(window).scrollTop( el.position().top );
+                    /* $(window).scrollTop( el.position().top );*/
                     return true;
                 }
             });
@@ -228,10 +229,10 @@ IIDO.Page = IIDO.Page || {};
                     linkMain = el.prev("strong");
                 }
 
-                // if( linkMain.hasClass("article-link") )
+                /* if( linkMain.hasClass("article-link") )
                 // {
                 //     linkMain.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
-                // }
+                // } */
                 linkMain.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
 
                 if( elChilds.length )
@@ -240,10 +241,10 @@ IIDO.Page = IIDO.Page || {};
                     {
                         var link = $(elem).find("> a");
 
-                        // if( link.hasClass("article-link") )
+                        /* if( link.hasClass("article-link") )
                         // {
                         //     link.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
-                        // }
+                        // } */
                         link.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
                     });
                 }
@@ -336,17 +337,17 @@ IIDO.Page = IIDO.Page || {};
         var rgxp    = new RegExp(urlParam, 'g'),
             rgxpUrl = new RegExp(urlParam + '\/(.*).html', 'g');
 
-        // if(newUrl.match(rgxp))
+        /* if(newUrl.match(rgxp))
         // {
         //     newUrl  = newUrl.replace(rgxpUrl, urlParam + "/" + $(element).attr("data-alias")) + '.html';
         // }
         // else
         // {
         //     newUrl  = newUrl.replace(".html", "") + '/' + urlParam + '/' + $(element).attr("data-alias") + '.html';
-        // }
+        // } */
         if(url !== newUrl)
         {
-            // newTitle = newTitle.replace(/(.*)::/,   '$1 - ' + linkTitle + ' ::');
+            /* newTitle = newTitle.replace(/(.*)::/,   '$1 - ' + linkTitle + ' ::'); */
 
             history.pushState(site, newTitle, newUrl);
             document.title = newTitle;
@@ -688,7 +689,7 @@ IIDO.Page = IIDO.Page || {};
             });
         }
 
-        // $(".image-point.open").removeClass("open");
+        /* $(".image-point.open").removeClass("open");*/
 
         return false;
     };
@@ -703,7 +704,7 @@ IIDO.Page = IIDO.Page || {};
             openType        = 'ajax',
             canBeOpen       = true,
             siblingLinks    = el.parent("li" ),
-            page            = el.attr("href"), //$( e.currentTarget ).href, //.split("/").pop().replace('.html', ''),
+            page            = el.attr("href"), /*$( e.currentTarget ).href, //.split("/").pop().replace('.html', ''),*/
             url             = '/SimpleAjaxFrontend.php?c=IIDO_BasicBundle_Ajax_Page&f=renderPageContent&v=' + page;
 
         if( el.hasClass("open-type-iframe") || el.hasClass("open-iframe") || el.attr("type") === "iframe"  || el.attr("open-type") === "iframe" )
@@ -719,8 +720,8 @@ IIDO.Page = IIDO.Page || {};
             opts: {
                 margin    : [ 110, 0, 110, 0 ],
                 padding   : 0,
-                //minWidth : "100%",
-                // height    : 600,
+                /*minWidth : "100%",
+                // height    : 600,*/
                 minHeight : 600,
 
                 type : openType,
@@ -737,7 +738,7 @@ IIDO.Page = IIDO.Page || {};
 
                 beforeShow : function(e)
                 {
-                    // $( "html" ).addClass( "fancybox-lock" );
+                    /* $( "html" ).addClass( "fancybox-lock" );*/
                 },
 
                 afterShow : function()
@@ -750,12 +751,12 @@ IIDO.Page = IIDO.Page || {};
 
                 afterClose : function()
                 {
-                    // $( "html" ).removeClass( "fancybox-lock" );
+                    /* $( "html" ).removeClass( "fancybox-lock" );
                     //
                     // if( activeTag.length )
                     // {
                     //     activeTag.removeClass( "active" );
-                    // }
+                    // }*/
                 }
             }
         };
@@ -774,7 +775,9 @@ IIDO.Page = IIDO.Page || {};
 
         if( el.hasClass("fit") || el.hasClass("fit-to-view") || el.hasClass("ftv") )
         {
-            // options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,wrapCSS:"news-lightbox"}});
+            /* options = $.extend({}, options,
+             {opts:{fitToView:true,width:'100%',height:'100%',margin:0,wrapCSS:"news-lightbox"}});
+              */
 
 
             options.opts.afterLoad = function(current, previous) {
@@ -782,12 +785,12 @@ IIDO.Page = IIDO.Page || {};
 
                     var $container = $('#loadingList');
 
-                    // $container.isotope({
+                    /* $container.isotope({
                     //     itemSelector: '.layout_latest',
                     //     layoutMode: 'masonry',
                     //     columnWidth: '100%',
                     //     gutter: 0
-                    // });
+                    // }); */
 
                     $container.infinitescroll({
                             loading:
@@ -801,7 +804,7 @@ IIDO.Page = IIDO.Page || {};
                         },
                         function(newElements, data)
                         {
-                            // $container.isotope('layout');
+                            /* $container.isotope('layout');*/
                         }
                     );
 
@@ -817,13 +820,15 @@ IIDO.Page = IIDO.Page || {};
         }
         else
         {
-            // options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,wrapCSS:"page-lightbox"}});
+            /* options = $.extend({}, options,
+             {opts:{fitToView:true,width:'100%',height:'100%',margin:0,wrapCSS:"page-lightbox"}});
+              */
         }
 
-        // if( el.hasClass("icon-search") )
+        /* if( el.hasClass("icon-search") )
         // {
         //     options = $.extend({}, options, {closeBtn:false,modal:false,wrapCSS:"search-modal"});
-        // }
+        // } */
 
         if($lbOpen)
         {
@@ -883,15 +888,15 @@ IIDO.Page = IIDO.Page || {};
         if( $(document.body).hasClass("page-fade-animation") )
         {
             var lastElementClicked;
-            // var PrevLink = document.querySelector('.mod_booknav .previous > a');
-            // var NextLink = document.querySelector('.mod_booknav .next > a');
+            /* var PrevLink = document.querySelector('.mod_booknav .previous > a');
+            // var NextLink = document.querySelector('.mod_booknav .next > a');*/
 
             Barba.Pjax.init();
-            // Barba.Pjax.start();
+            /* Barba.Pjax.start(); */
             Barba.Prefetch.init();
 
             Barba.Pjax.originalPreventCheck = Barba.Pjax.preventCheck;
-            //
+
             Barba.Pjax.preventCheck = function(evt, element)
             {
                 if( $(element).hasClass("no-barba") )
@@ -946,24 +951,24 @@ IIDO.Page = IIDO.Page || {};
                     matchMaps   = rgxpMaps.exec( rawContainer ),
                     matchCurr   = rgxpMaps.exec( headTag.innerHTML );
 
-                    // footer      = $("footer");
+                    /* footer      = $("footer");*/
 
                 if( match.length === 3 )
                 {
-                    // setTimeout(function()
+                    /* setTimeout(function()
                     // {
                     //     $(document.body).attr("class", match[2]);
-                    // }, 200);
+                    // }, 200); */
 
                     $(document.body).attr("class", match[2]);
                 }
 
-                // if( matchSlider !== null && matchSlider.length )
+                /* if( matchSlider !== null && matchSlider.length )
                 // {
                 //     var sliderEl = [].slice.call( document.getElementsByClassName( 'mod_rocksolid_slider' ), -1 )[ 0 ];
                 //
                 //     initSlider( sliderEl );
-                // }
+                // }*/
 
                 var useMaps = false;
 
@@ -971,17 +976,19 @@ IIDO.Page = IIDO.Page || {};
                 {
                     if( matchCurr === null && headTag.innerHTML.indexOf("maps.google.com") === -1 )
                     {
-                        // var rgxpMapsInit    = /<script>function gmap1_initialize\(\){([A-Za-z0-9\s\-_=\{\},;.:\(\)!\'\"\[\]]{0,})<\/script>/,
-                        //     matchMapsInit   = rgxpMapsInit.exec( rawContainer );
+                        /* var rgxpMapsInit    = /<script>function
+                         gmap1_initialize\(\){([A-Za-z0-9\s\-_=\{\},;.:\(\)!\'\"\[\]]{0,})<\/script>/,
+                          */
+                        /*     matchMapsInit   = rgxpMapsInit.exec( rawContainer ); */
 
                         var s = document.createElement("script");
                         s.type = "text/javascript";
                         s.src = "http" + matchMaps[1] + "://maps.google.com/maps/api/js?key=" + matchMaps[2] + "&language=" + matchMaps[4];
                         $(headTag).append(s);
 
-                        // var s1 = document.createElement("script");
+                        /* var s1 = document.createElement("script");
                         // s1.innerHTML = 'function gmap1_initialize(){' + matchMapsInit[1];
-                        // setTimeout(function() { $(document.body).append(s1); }, 1000);
+                        // setTimeout(function() { $(document.body).append(s1); }, 1000);*/
                         useMaps = true;
                     }
                 }
@@ -994,17 +1001,17 @@ IIDO.Page = IIDO.Page || {};
                         setTimeout(function()
                         {
                             IIDO.Page.runScript( js );
-                            // eval(js.innerHTML);
+                            /* eval(js.innerHTML);
                             // $.each(js, function(index, scriptTag)
                             // {
                             //     IIDO.Page.runScript( scriptTag, js );
-                            // });
+                            // });*/
                         }, 500);
                     }
                     else
                     {
                         IIDO.Page.runScript( js );
-                        // eval(js.innerHTML);
+                        /* eval(js.innerHTML);*/
                     }
                 }
 
@@ -1018,7 +1025,7 @@ IIDO.Page = IIDO.Page || {};
                     IIDO.Filter.init();
                 }, 500);
 
-                // if( footer.length )
+                /* if( footer.length )
                 // {
                 //     if( footer.hasClass("home") )
                 //     {
@@ -1042,12 +1049,12 @@ IIDO.Page = IIDO.Page || {};
                 //             });
                 //         }
                 //     }
-                // }
+                // }*/
             });
 
 
 
-            // var FadeTransition = Barba.BaseTransition.extend(
+            /* var FadeTransition = Barba.BaseTransition.extend(
             //     {
             //     start: function()
             //     {
@@ -1055,7 +1062,7 @@ IIDO.Page = IIDO.Page || {};
             //          * This function is automatically called as soon the Transition starts
             //          * this.newContainerLoading is a Promise for the loading of the new container
             //          * (Barba.js also comes with an handy Promise polyfill!)
-            //          */
+            //          * /
             //
             //         // As soon the loading is finished and the old page is faded out, let's fade the new page
             //         Promise
@@ -1067,7 +1074,7 @@ IIDO.Page = IIDO.Page || {};
             //     {
             //         /**
             //          * this.oldContainer is the HTMLElement of the old Container
-            //          */
+            //          * /
             //
             //         return $(this.oldContainer).animate({ "margin-left": "-100%" }, 600).promise();
             //     },
@@ -1078,7 +1085,7 @@ IIDO.Page = IIDO.Page || {};
             //          * this.newContainer is the HTMLElement of the new Container
             //          * At this stage newContainer is on the DOM (inside our #barba-container and with visibility: hidden)
             //          * Please note, newContainer is available just after newContainerLoading is resolved!
-            //          */
+            //          * /
             //
             //         var _this = this;
             //         var $el = $(this.newContainer);
@@ -1095,7 +1102,7 @@ IIDO.Page = IIDO.Page || {};
             //             /**
             //              * Do not forget to call .done() as soon your transition is finished!
             //              * .done() will automatically remove from the DOM the old Container
-            //              */
+            //              * /
             //
             //             _this.done();
             //             // IIDO.Functions.init();
@@ -1110,17 +1117,18 @@ IIDO.Page = IIDO.Page || {};
             //
             // /**
             //  * Next step, you have to tell Barba to use the new Transition
-            //  */
+            //  * /
             //
             // Barba.Pjax.getTransition = function()
             // {
             //     /**
             //      * Here you can use your own logic!
             //      * For example you can use different Transition based on the current page or link...
-            //      */
+            //      * /
             //
             //     return FadeTransition;
             // };
+            */
 
             var MovePage = Barba.BaseTransition.extend({
                 start: function()
@@ -1161,13 +1169,13 @@ IIDO.Page = IIDO.Page || {};
                 {
                     var _this = this;
                     var goingForward = true;
-                    // this.updateLinks();
+                    /* this.updateLinks();*/
 
                     var oldLink             = Barba.HistoryManager.prevStatus().url.split('/').pop(),
                         clickedLinkParent   = $( this.originalThumb ).parent();
 
-                    // console.log( oldLink );
-                    // console.log( clickedLinkParent );
+                    /* console.log( oldLink );
+                    // console.log( clickedLinkParent );*/
 
                     if( clickedLinkParent.hasClass("image_container") )
                     {
@@ -1186,7 +1194,7 @@ IIDO.Page = IIDO.Page || {};
 
                         TweenLite.set(this.newContainer, {
                             visibility: 'visible',
-                            // yPercent: goingForward ? 100 : -100,
+                            /* yPercent: goingForward ? 100 : -100,*/
 
                             position: 'fixed',
                             left: 0,
@@ -1211,13 +1219,13 @@ IIDO.Page = IIDO.Page || {};
                             top: goingForward ? (winH - 120) : 0
                         });
 
-                        // TweenLite.to(this.oldContainer, 0.6, { yPercent: goingForward ? -100 : 100 });
+                        /* TweenLite.to(this.oldContainer, 0.6, { yPercent: goingForward ? -100 : 100 });*/
                         TweenLite.to(this.oldContainer, 0.6, { top: goingForward ? -(winH - 120) : (winH - 120) });
 
                         TweenLite.to(headerTag, 0.6, { top: goingForward ? 0 : (winH - 120)});
 
-                        // TweenLite.to(this.newContainer, 0.6, { top: winH });
-                        // TweenLite.to(this.newContainer, 0.6, { yPercent: 0, onComplete: function() {
+                        /* TweenLite.to(this.newContainer, 0.6, { top: winH });
+                        // TweenLite.to(this.newContainer, 0.6, { yPercent: 0, onComplete: function() {*/
                         TweenLite.to(this.newContainer, 0.6, { top: 0, onComplete: function() {
                             TweenLite.set(_this.newContainer, { clearProps: 'all' });
                             _this.done();
@@ -1268,7 +1276,7 @@ IIDO.Page = IIDO.Page || {};
                     }
                 }
 
-                // updateLinks: function()
+                /* updateLinks: function()
                 // {
                 //     PrevLink.href = this.newContainer.dataset.prev;
                 //     NextLink.href = this.newContainer.dataset.next;
@@ -1277,7 +1285,7 @@ IIDO.Page = IIDO.Page || {};
                 // getNewPageFile: function()
                 // {
                 //     return Barba.HistoryManager.currentStatus().url.split('/').pop();
-                // }
+                // }*/
             });
 
             Barba.Pjax.getTransition = function() {
@@ -1286,7 +1294,7 @@ IIDO.Page = IIDO.Page || {};
 
 
 
-            // var ContentPage = Barba.BaseView.extend({
+            /* var ContentPage = Barba.BaseView.extend({
             //     namespace: 'content-page',
             //     onEnter: function() {
             //         // The new Container is ready and attached to the DOM.
@@ -1303,7 +1311,7 @@ IIDO.Page = IIDO.Page || {};
             // });
             //
             // // Don't forget to init the view!
-            // ContentPage.init();
+            // ContentPage.init();*/
         }
     };
 
@@ -1424,7 +1432,7 @@ IIDO.Page = IIDO.Page || {};
 
                     if( modArticle.length )
                     {
-                        // var urlPath         = location.pathname.split('/'),
+                        /* var urlPath         = location.pathname.split('/'),
                         //     urlElement      = false,
                         //     urlAlias        = "";
                         //
@@ -1450,7 +1458,7 @@ IIDO.Page = IIDO.Page || {};
                         //     {
                         //         page.hideArticle( modCurrentArticle.attr("id") );
                         //     }
-                        // }
+                        // }*/
 
                         $(".mod_article.shown").removeClass("shown").addClass("hide-area");
 
@@ -1535,8 +1543,8 @@ IIDO.Page = IIDO.Page || {};
                                 " ){$.each(sliderElements, function(seIndex, seElement ){initSlider(seElement);}); }}");
 
 
-                            // initSlider( seElement );
-                            // eval( scriptHTML );
+                            /* initSlider( seElement );
+                            // eval( scriptHTML );*/
                             setTimeout(function() {
                                 eval( scriptHTML );
                             }, 300);
@@ -1548,10 +1556,16 @@ IIDO.Page = IIDO.Page || {};
             }
             else
             {
-                // eval( scriptHTML );
-                setTimeout(function() {
-                    eval( scriptHTML );
-                }, 300);
+                /* if( scriptHTML.indexOf('data-rsts-type="image"') === -1 && scriptHTML.indexOf('var arrImages_')
+                 === -1) */
+                if( scriptHTML.indexOf('data-rsts-type="image"') === -1 && scriptHTML.indexOf('data-rsts-type="video"') === -1 )
+                {
+                    /* console.log( scriptHTML );
+                    // eval( scriptHTML );*/
+                    setTimeout(function() {
+                        eval( scriptHTML );
+                    }, 300);
+                }
             }
         });
     };
@@ -1659,7 +1673,7 @@ IIDO.Page = IIDO.Page || {};
 
         $openButton.addClass('is-active');
 
-        // IIDO.Page.updateMobileNavigationHeight();
+        /* IIDO.Page.updateMobileNavigationHeight();*/
 
         $("html").addClass("noscroll");
         $(document.body).addClass("mobile-menu-open");
@@ -1679,7 +1693,7 @@ IIDO.Page = IIDO.Page || {};
         IIDO.Base.toggleElementClass(element, 'is-expanded');
         IIDO.Base.toggleElementClass(element, 'is-collapsed');
 
-        // IIDO.Page.updateMobileNavigationHeight();
+        /* IIDO.Page.updateMobileNavigationHeight();*/
     };
 
 
@@ -1753,12 +1767,51 @@ IIDO.Page = IIDO.Page || {};
         {
             IIDO.Page.scrollTo(e, link);
         }
-    }
+    };
+
+
+
+    page.initSticky = function()
+    {
+        var stickyElements = document.querySelectorAll(".is-sticky-element");
+
+        if( stickyElements.length )
+        {
+            Array.prototype.forEach.call(stickyElements, function(element, index)
+            {
+                var stickyElement = new Waypoint.Sticky(
+                    {
+                        element: $(element),
+                        handler: function( direction )
+                        {
+                            // var footer = pageTitle.parent().next(".footer");
+                            // $(document.body).toggleClass("fixed-page-title");
+                            // pageContainer.toggleClass("is-fixed");
+                        },
+                        offset: function()
+                        {
+                            var stickyOffset = 0;
+
+                            Array.prototype.forEach.call(this.element.children[0].classList, function(classTitle)
+                            {
+                                if( classTitle.indexOf("sticky-offset") !== -1 )
+                                {
+                                    stickyOffset = parseInt( classTitle.replace('sticky-offset-', '') );
+                                }
+                            });
+
+                            return -(stickyOffset);
+                        }
+                    });
+
+            });
+        }
+    };
 
 })(window, jQuery, IIDO.Page);
 
-// Document Ready
-// $(function ()
+/* Document Ready */
+/* $(function () */
 document.addEventListener("DOMContentLoaded", function()
 {
     IIDO.Page.init();

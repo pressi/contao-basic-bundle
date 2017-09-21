@@ -12,6 +12,8 @@ namespace IIDO\BasicBundle\Translation;
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
+//TODO: NOT IN USE!!
+
 /**
  * Maps the accepted languages to the available locales.
  *

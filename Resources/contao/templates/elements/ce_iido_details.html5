@@ -36,7 +36,7 @@ $objSlider = new \MadeYourDay\RockSolidSlider\Module\Slider( $objModule );
 echo $objSlider->generate();
 
 ?>
-<div class="project-title"><?= $this->data['title'] ?></div>
+<div class="project-title"><?= \IIDO\BasicBundle\Helper\ContentHelper::renderText($this->data['title']) ?></div>
 
 <div class="project-infos">
     <div class="project-detail"><a href="javascript:void(0)" class="no-barba" onclick="IIDO.Project.toggleDetails(<?= $this->id ?>)">Projekt Details</a></div>

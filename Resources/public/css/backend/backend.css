@@ -2,6 +2,9 @@ span.subtitle {
     color: #bababa;
     margin: 0 5px 0 0;
 }
+span.subtitle.after {
+    margin: 0 0 0 5px;
+}
 
 #tl_navigation .tl_level_2 a.iidoConfigContao {
     display: none;
@@ -164,7 +167,8 @@ body.popup #main .tl_formbody_submit {
     width: 100vw;
 }
 
-#left .wrapper-sticky {
+#left .wrapper-sticky,
+.wrapper-sticky #left:not(.sticky) {
     width: 100% !important;
 }
 
