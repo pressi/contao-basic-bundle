@@ -19,7 +19,7 @@ $assetsPath     = 'bundles/iidobasic/';
 
 list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName ) = \IIDO\BasicBundle\Config\BundleConfig::getBundleConfigArray();
 
-
+$ns = $namespace . '\\' . $subNamespace;
 
 /**
  * Backend modules
@@ -32,14 +32,14 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
 //   (
 //        $prefix . 'Placeholder' => array
 //        (
-//            'callback'      => $namespace . '\\' . $subNamespace . '\Backend\Module\Placeholder',
+//            'callback'      => $ns . '\Backend\Module\Placeholder',
 //            'tables'        => array($tablePrefix . 'placeholder', 'tl_content'),
 //            'stylesheet'    => $assetsPath . 'css/backend/contao-placeholder.css'
 //        ),
 
 //        $prefix . 'ConfigContao' => array
 //        (
-//            'callback'      => $namespace . '\\' . $subNamespace . '\BackendModule\ConfigClientModule',
+//            'callback'      => $ns . '\BackendModule\ConfigClientModule',
 //            'stylesheet'    => $assetsPath . 'css/backend/config-contao.css'
 //        )
 //   )
@@ -55,7 +55,7 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
 //        (
 //            $prefix . 'System' => array
 //            (
-//                'callback'      => $namespace . '\\' . $subNamespace . '\BackendModule\SystemModule'
+//                'callback'      => $ns . '\BackendModule\SystemModule'
 //            )
 //        )
 //    ));
@@ -67,11 +67,12 @@ list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName 
  * Content elements
  */
 
-$GLOBALS['TL_CTE']['module']['iido_navigation']             = $namespace . '\\' . $subNamespace . '\ContentElement\NavigationElement';
-$GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $namespace . '\\' . $subNamespace . '\ContentElement\FilesFilterElement';
-$GLOBALS['TL_CTE']['module']['iido_detail']                 = $namespace . '\\' . $subNamespace . '\ContentElement\DetailElement';
-$GLOBALS['TL_CTE']['module']['iido_articleTeaser']          = $namespace . '\\' . $subNamespace . '\ContentElement\ArticleTeaserElement';
-//$GLOBALS['TL_CTE']['module']['iido_navigation']          = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
+$GLOBALS['TL_CTE']['module']['iido_navigation']             = $ns . '\ContentElement\NavigationElement';
+$GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $ns . '\ContentElement\FilesFilterElement';
+$GLOBALS['TL_CTE']['module']['iido_detail']                 = $ns . '\ContentElement\DetailElement';
+$GLOBALS['TL_CTE']['module']['iido_articleTeaser']          = $ns . '\ContentElement\ArticleTeaserElement';
+$GLOBALS['TL_CTE']['module']['iido_weather']                = $ns . '\ContentElement\WeatherElement';
+//$GLOBALS['TL_CTE']['module']['iido_navigation']          = $ns . '\FrontendModule\NavigationModule';
 
 
 
@@ -79,9 +80,9 @@ $GLOBALS['TL_CTE']['module']['iido_articleTeaser']          = $namespace . '\\' 
  * Front end modules
  */
 
-$GLOBALS['FE_MOD']['inherit']['iido_inheritArticle']    = $namespace . '\\' . $subNamespace . '\FrontendModule\InheritArticleModule';
-$GLOBALS['FE_MOD']['navigationMenu']['navigation']      = $namespace . '\\' . $subNamespace . '\FrontendModule\NavigationModule';
-$GLOBALS['FE_MOD']['news']['newslist']                  = $namespace . '\\' . $subNamespace . '\FrontendModule\NewsListModule';
+$GLOBALS['FE_MOD']['inherit']['iido_inheritArticle']    = $ns . '\FrontendModule\InheritArticleModule';
+$GLOBALS['FE_MOD']['navigationMenu']['navigation']      = $ns . '\FrontendModule\NavigationModule';
+$GLOBALS['FE_MOD']['news']['newslist']                  = $ns . '\FrontendModule\NewsListModule';
 
 
 
@@ -89,10 +90,10 @@ $GLOBALS['FE_MOD']['news']['newslist']                  = $namespace . '\\' . $s
  * Back end form fields
  */
 
-$GLOBALS['BE_FFL']['metaWizard']        = $namespace . '\\' . $subNamespace . '\Widget\MetaWizardWidget';
-$GLOBALS['BE_FFL']['imageSize']         = $namespace . '\\' . $subNamespace . '\Widget\ImageSizeWidget';
-$GLOBALS['BE_FFL']['text']              = $namespace . '\\' . $subNamespace . '\Widget\TextFieldWidget';
-$GLOBALS['BE_FFL']['iidoTag']           = $namespace . '\\' . $subNamespace . '\Widget\TagsFieldWidget';
+$GLOBALS['BE_FFL']['metaWizard']        = $ns . '\Widget\MetaWizardWidget';
+$GLOBALS['BE_FFL']['imageSize']         = $ns . '\Widget\ImageSizeWidget';
+$GLOBALS['BE_FFL']['text']              = $ns . '\Widget\TextFieldWidget';
+$GLOBALS['BE_FFL']['iidoTag']           = $ns . '\Widget\TagsFieldWidget';
 
 
 
@@ -100,7 +101,7 @@ $GLOBALS['BE_FFL']['iidoTag']           = $namespace . '\\' . $subNamespace . '\
  * Front end form fields
  */
 
-$GLOBALS['TL_FFL']['radioTable']        = $namespace . '\\' . $subNamespace . '\FormField\RadioButtonTable';
+$GLOBALS['TL_FFL']['radioTable']        = $ns . '\FormField\RadioButtonTable';
 
 
 
@@ -108,7 +109,7 @@ $GLOBALS['TL_FFL']['radioTable']        = $namespace . '\\' . $subNamespace . '\
  * Maintenance
  */
 
-//$GLOBALS['TL_MAINTENANCE'][] = $namespace . '\\' . $subNamespace . '\Maintenance\InitContao';
+//$GLOBALS['TL_MAINTENANCE'][] = $ns . '\Maintenance\InitContao';
 
 
 
@@ -155,7 +156,7 @@ $GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerNam
  * Page types
  */
 
-$GLOBALS['TL_PTY']['regular_redirect'] = $namespace . '\\' . $subNamespace . '\Page\RegularRedirectPage';
+$GLOBALS['TL_PTY']['regular_redirect'] = $ns . '\Page\RegularRedirectPage';
 
 
 
@@ -163,7 +164,7 @@ $GLOBALS['TL_PTY']['regular_redirect'] = $namespace . '\\' . $subNamespace . '\P
  * Register models
  */
 
-//$GLOBALS['TL_MODELS']['tl_iido_placeholder']        = $namespace . '\\' . $subNamespace . '\Model\PlaceholderModel';
+//$GLOBALS['TL_MODELS']['tl_iido_placeholder']        = $ns . '\Model\PlaceholderModel';
 
 
 
@@ -174,3 +175,11 @@ $GLOBALS['TL_PTY']['regular_redirect'] = $namespace . '\\' . $subNamespace . '\P
 //$GLOBALS['TL_AUTO_ITEM'][] = "article";
 //$GLOBALS['TL_AUTO_ITEM'][] = "artikel";
 //$GLOBALS['TL_AUTO_ITEM'][] = "event";
+
+
+
+/**
+ * Cron jobs
+ */
+
+$GLOBALS['TL_CRON']['hourly']['generateWeatherData'] = array($ns . '\Cron\WeatherDataCron', 'generateCustomizeWeatherData');

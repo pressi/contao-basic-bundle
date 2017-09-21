@@ -1,0 +1,24 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block('content'); ?>
+
+<? if( $this->addIcon ): ?>
+    <div class="weather-icon">
+        <img src="<?= $this->imageSRC ?>" alt="<?= $this->iconName ?>" title="<?= $this->iconName ?>" width="50" height="50">
+    </div>
+<? endif ?>
+
+<? if( $this->addSnow ): ?>
+    <div class="snow">
+        <span class="depth"><?= $this->snowDepth ?></span><span class="unit"><?= $this->snowUnit ?></span>
+        <span class="subline"><?= $this->snowSubline ?></span>
+    </div>
+<? endif ?>
+
+<? if( $this->addTemperature ): ?>
+    <div class="temperature">
+        <span class="number"><?= $this->temperature ?></span><span class="condition">°</span>
+    </div>
+<? endif ?>
+
+<? $this->endblock(); ?>
