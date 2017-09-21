@@ -36,6 +36,8 @@ class TagsFieldWidget extends \TextField
      */
     public function generate()
     {
+        $this->varValue = preg_replace('/,([^!\s]{1})/', ', $1', $this->varValue);
+
         $objElement     = \ContentModel::findByPk( $this->currentRecord );
         $strField       = parent::generate();
         $strLabels      = '';
@@ -83,7 +85,7 @@ class TagsFieldWidget extends \TextField
 
                         if( $this->multipleTags )
                         {
-                            $arrFilter      = explode(",", $strFieldValue);
+                            $arrFilter      = array_map('trim', explode(',', $strFieldValue)); //explode(",", $strFieldValue);
 
                             foreach($arrFilter as $strFilter)
                             {
@@ -114,7 +116,7 @@ class TagsFieldWidget extends \TextField
 
                     if( $this->multipleTags )
                     {
-                        $arrFilter      = explode(",", $objData->$fieldName);
+                        $arrFilter      = array_map('trim', explode(',', $objData->$fieldName)); //explode(",", $objData->$fieldName);
 
                         foreach($arrFilter as $strFilter)
                         {
@@ -141,7 +143,7 @@ class TagsFieldWidget extends \TextField
 
                 if( $this->multipleTags )
                 {
-                    if( in_array($strFilter, explode(",", $varValue)) )
+                    if( in_array($strFilter, array_map('trim', explode(',', $varValue))) ) //explode(",", $varValue)) )
                     {
                         $labelClass = 'active';
                     }

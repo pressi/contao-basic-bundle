@@ -8,6 +8,47 @@
 var IIDO        = IIDO          || {};
 IIDO.Backend    = IIDO.Backend  || {};
 
+AjaxRequest.toggleFieldset = function(el, id, table)
+{
+    el.blur();
+    var fs = $('pal_' + id);
+
+    if (fs.hasClass('collapsed'))
+    {
+        fs.removeClass('collapsed');
+        new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+    }
+    else
+    {
+        var form        = fs.getParent('form'),
+            inp         = fs.getElements('[required]'),
+            collapse    = true;
+
+        for (var i=0; i<inp.length; i++)
+        {
+            if (!inp[i].get('value'))
+            {
+                collapse = false;
+                break;
+            }
+        }
+
+        if (!collapse)
+        {
+            if (typeof(form.checkValidity) === 'function') form.getElement('button[type="submit"]').click();
+        }
+        else
+            {
+            fs.addClass('collapsed');
+            new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
+        }
+    }
+
+    jQuery("#left").hcSticky("reinit");
+
+    return false;
+};
+
 (function(backend)
 {
     backend.setMainFilterLabel = function(labelName, fieldName, labelTag)
@@ -47,12 +88,12 @@ IIDO.Backend    = IIDO.Backend  || {};
 
             if( varValue.length )
             {
-                var arrValue    = varValue.split(","),
+                var arrValue    = varValue.split(/[,\s]+/g).join().split(","),
                     newValue    = varValue;
 
                 if( arrValue.indexOf(labelName) === -1 )
                 {
-                    newValue = varValue + ',' + labelName;
+                    newValue = varValue + ', ' + labelName;
                 }
                 else
                 {
@@ -65,7 +106,9 @@ IIDO.Backend    = IIDO.Backend  || {};
                     //     rgxp        = new RegExp(labelName + "(,)");
                     //     newValue    = newValue.replace(rgxp, '');
                     // }
-                    newValue = newValue.replace(labelName, '').replace(',,', ',').replace(/,$/, '').replace(/^,/, '');
+                    // var rgxp = '(^[ ]{1})';
+
+                    newValue = newValue.replace(labelName, '').replace(',,', ',').replace(', ,', ',').trim().replace(/,$/, '').replace(/^,/, '');
                 }
 
                 field.set("value", newValue.trim() );
