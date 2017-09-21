@@ -90,7 +90,7 @@ class BackendTemplateListener
 <script>setTimeout(function(){var fromTop = jQuery("#header").height(); jQuery("#left").hcSticky({top:fromTop});jQuery("#container").css("padding-top", fromTop);}, 500);</script>';
 
 
-            $strContent = preg_replace('/<\/body>/', $scripts . '</body>', $strContent);
+//            $strContent = preg_replace('/<\/body>/', $scripts . '</body>', $strContent);
         }
 
         return $strContent;

@@ -271,6 +271,13 @@ class FrontendTemplateListener
 //                            $articlePattern = '/<div([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})class="mod_article([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})>/';
 //                            $strContent     = preg_replace($articlePattern, '<div$1class="mod_article parallax-bg$2"$3 data-stellar-offset-parent="true" data-stellar-background-ratio="0.2">', $strContent);
 //                        }
+
+                        if( preg_match('/bg-in-container/', $cssID[1]) )
+                        {
+                            $strBGContainer = '<div class="background-container"></div>';
+
+                            $strContent = preg_replace('/<\/div>$/', '</div>' . $strBGContainer, trim($strContent));
+                        }
                     }
                 }
             }
@@ -611,6 +618,7 @@ class FrontendTemplateListener
         $objRootPage        = \PageModel::findByPk( $objPage->rootId );
         $objLayout          = Helper::getPageLayout( $objPage) ;
         $isFullpage         = $this->isFullPageEnabled( $objPage, $objLayout );
+        $strLanguage        = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 //        $outerID            = 'wrapper';
 
         if( $strTemplate === 'fe_page' )
@@ -707,6 +715,16 @@ class FrontendTemplateListener
             if( $objPage->removeHeader )
             {
                 $strBuffer = preg_replace('/<header([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/header>/', '', $strBuffer);
+            }
+            else
+            {
+                $objHeaderArticle   = \ArticleModel::findByAlias("ge_header_" . $objRootPage->alias . '_' . $strLanguage);
+                $headerClass        = \StringUtil::deserialize($objHeaderArticle->cssID, true)[1];
+
+                if( strlen($headerClass) )
+                {
+                    $strBuffer = preg_replace('/<header/', '<header class="' . $headerClass . '"', $strBuffer);
+                }
             }
 
             if( $objPage->removeLeft )

@@ -121,15 +121,15 @@ class SystemListener
         $backendThemePath   = $rootDir . '/system/themes/' . \Backend::getTheme() . '/images/';
         $backendImagePath   = $rootDir . $this->bundlePathPublic . '/images/backend/';
 
-        if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/css/backend/backend.css') )
-        {
-            $GLOBALS['TL_CSS'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/css/backend/backend.css||static';
-        }
-
-        if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/javascript/backend/IIDO.Backend.js') )
-        {
-            $GLOBALS['TL_JAVASCRIPT'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/javascript/backend/IIDO.Backend.js|static';
-        }
+//        if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/css/backend/backend.css') )
+//        {
+//            $GLOBALS['TL_CSS'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/css/backend/backend.css||static';
+//        }
+//
+//        if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/javascript/backend/IIDO.Backend.js') )
+//        {
+//            $GLOBALS['TL_JAVASCRIPT'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/javascript/backend/IIDO.Backend.js|static';
+//        }
 
 //        if( \Config::get("iidoCustomize_SettingsProjectType") == "i" && $GLOBALS['IIDO']['isActiveBackendTheme'] )
 //        {

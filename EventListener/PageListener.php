@@ -469,9 +469,16 @@ class PageListener
                             $strImage = $objImage->path;
                         }
 
+                        $addContainer = '';
+
+                        if( preg_match('/bg-in-container/', $cssID[1]) )
+                        {
+                            $addContainer = ' .background-container';
+                        }
+
                         $arrPageStyles[ $objArticles->id ] = array
                         (
-                            'selector'          => '#container .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]),
+                            'selector'          => '#container .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]) . $addContainer,
 
                             'background'        => TRUE,
                             'bgcolor'           => $objArticles->bgColor,

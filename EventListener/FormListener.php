@@ -35,6 +35,7 @@ class FormListener
     private $rootDir;
 
 
+
     /**
      * Constructor.
      *
@@ -47,6 +48,7 @@ class FormListener
         $this->bundlePath       = BundleConfig::getBundlePath();
         $this->rootDir          = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
     }
+
 
 
     public function parseCustomizeWidget($strBuffer, $objClass)
@@ -77,22 +79,41 @@ class FormListener
 
                     if( preg_match('/<input/', $strBuffer) )
                     {
-                        $strBuffer = preg_replace('/<input([A-Za-z0-9\s\-_="\{\}:]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:]{0,})>/', '<input$1class="input $2"$3>', $strBuffer, -1, $count);
+                        $strBuffer = preg_replace('/<input([A-Za-z0-9\s\-_="\{\}:,.;]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:,.;]{0,})>/', '<input$1class="input $2"$3>', $strBuffer, -1, $count);
                     }
                     elseif( preg_match('/<textarea/', $strBuffer) )
                     {
-                        $strBuffer = preg_replace('/<textarea([A-Za-z0-9\s\-_="\{\}:]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:]{0,})>/', '<textarea$1class="textarea $2"$3>', $strBuffer, -1, $count);
+                        $strBuffer = preg_replace('/<textarea([A-Za-z0-9\s\-_="\{\}:,.;]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:,.;]{0,})>/', '<textarea$1class="textarea $2"$3>', $strBuffer, -1, $count);
                     }
                 }
                 else
                 {
                     $strBuffer = preg_replace('/<input([A-Za-z0-9\s\-_="\{\}:]{0,})class="checkbox/', '<input$1class="checkbox is-checkbox', $strBuffer);
                 }
+
+                if( $objClass->mandatory )
+                {
+                    if( $objClass->placeholder )
+                    {
+                        $strBuffer = preg_replace('/placeholder="' . preg_quote($objClass->placeholder, '/') . '"/', 'placeholder="' . $objClass->placeholder . ' *"', $strBuffer);
+                    }
+
+                    if( preg_match('/select/', $strBuffer) )
+                    {
+                        $arrOptions = $objClass->options;
+
+                        if( strlen($arrOptions[0]['value']) === 0 )
+                        {
+                            $strBuffer = preg_replace('/<option value="">' . preg_quote($arrOptions[0]['label'], '/') . '<\/option>/', '<option value="">' . $arrOptions[0]['label'] . ' *</option>', $strBuffer);
+                        }
+                    }
+                }
             }
         }
 
         return $strBuffer;
     }
+
 
 
     public function getCustomizeForm($objRow, $strBuffer)
@@ -102,6 +123,7 @@ class FormListener
 //        exit;
         return $strBuffer;
     }
+
 
 
     public function loadCustomizeFormField($objWidget, $strForm, $arrForm)
@@ -125,10 +147,12 @@ class FormListener
     }
 
 
+
     private function replaceLabel( $matches )
     {
         return $this->replaceTag('label', $matches, 'label' );
     }
+
 
 
     private function replaceSelect( $matches )
@@ -137,16 +161,20 @@ class FormListener
     }
 
 
+
     private function replaceSelectDiv( $matches )
     {
         return $this->replaceTag('div', $matches, 'field' );
     }
 
 
+
     protected function replaceTag( $tagName, $matches, $firstClass = '' )
     {
         return preg_replace('/ class=""/', '', '<' . $tagName . $matches[ 1 ] . 'class="' . trim($firstClass . ' ' . $this->replaceClass($matches[2])) . '"' . $matches[ 3 ] . '>');
     }
+
+
 
     protected function replaceClass( $className )
     {

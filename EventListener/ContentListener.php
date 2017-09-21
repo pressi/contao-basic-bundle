@@ -15,6 +15,7 @@ namespace IIDO\BasicBundle\EventListener;
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 
 use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
 
 
@@ -39,6 +40,13 @@ class ContentListener
     protected $bundlePath;
 
     protected $resourcePath     = '/app/Resources';
+
+    protected $arrNotInsideClassElements = array
+    (
+        'sliderStart',
+        'slick-content-start',
+//        'slick-slide-separator'
+    );
 
 
 
@@ -157,7 +165,7 @@ class ContentListener
                 break;
         }
 
-        if( !in_array($objRow->type, array('sliderStart')) )
+        if( !in_array($objRow->type, $this->arrNotInsideClassElements) )
         {
             $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
 
@@ -377,6 +385,12 @@ class ContentListener
     {
         $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}]{0,})>/', '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
         $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></span></h$1>', $strContent);
+
+        if( preg_match('/<\/h([1-6]{1})>([\s\n]{0,})<h([1-6]{1})/', trim($strContent)) )
+        {
+            $strContent = preg_replace('/class="headline([^\-])/', 'class="headline has-subline$1', $strContent, 1);
+            $strContent = BasicHelper::replaceLastMatch('/class="headline([^\-])/', 'class="headline is-subline$1', 'class="headline$1', $strContent);
+        }
 
         return $strContent;
     }
