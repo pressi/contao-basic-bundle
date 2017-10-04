@@ -87,6 +87,11 @@
                 <target>Kategorien</target>
             </trans-unit>
 
+            <trans-unit id="MSC.aw_color">
+                <source>Farbe</source>
+                <target>Farbe</target>
+            </trans-unit>
+
 
 
 <!-- ### POSITIONS ########################################################################################################## -->
