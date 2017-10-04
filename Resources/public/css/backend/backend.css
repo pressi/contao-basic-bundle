@@ -121,6 +121,30 @@ fieldset.rsce_list {
     width: 82% !important;
 }
 
+.tl_metawizard .color-preview {
+    width: 4%;
+}
+.tl_metawizard .color-picker {
+    float: left;
+    width: 45%;
+    margin-right: 1%;
+}
+
+.tl_metawizard .color-picker + img {
+    float: left;
+    margin: 9px 0 0;
+}
+
+.tl_metawizard .tl_text_2 {
+    width: 49%;
+}
+
+.tl_metawizard .widget-color .tl_select {
+    float: left;
+    width: calc(30% - 16px);
+    margin-left: 1%;
+}
+
 .tl_metawizard .labels + input.tl_text {
     margin-left: 18%;
 }
@@ -136,6 +160,7 @@ fieldset.rsce_list {
     clear: both;
 }
 
+.tl_metawizard .widget-color,
 .tl_metawizard .widget-imageText,
 .tl_metawizard .widget-hoverTitle,
 .tl_metawizard .widget-categories {
@@ -149,45 +174,45 @@ fieldset.rsce_list {
     height: auto;
 }
 
-#main {
-    padding: 0 0 50px;
+/*#main {*/
+    /*padding: 0 0 50px;*/
+    /**/
+    /*-webkit-box-sizing : border-box;*/
+    /*-moz-box-sizing    : border-box;*/
+    /*box-sizing         : border-box;*/
+/*}*/
 
-    -webkit-box-sizing : border-box;
-    -moz-box-sizing    : border-box;
-    box-sizing         : border-box;
-}
-
-#main .tl_formbody_submit {
-    position: fixed;
-    right: 0; bottom: 0; left: 240px;
-
-    width: calc(100vw - 240px);
-}
+/*#main .tl_formbody_submit {*/
+    /*position: fixed;*/
+    /*right: 0; bottom: 0; left: 240px;*/
+    /**/
+    /*width: calc(100vw - 240px);*/
+/*}*/
 body.popup #main .tl_formbody_submit {
     width: 100vw;
 }
 
-#left .wrapper-sticky,
-.wrapper-sticky #left:not(.sticky) {
-    width: 100% !important;
-}
+/*#left .wrapper-sticky,*/
+/*.wrapper-sticky #left:not(.sticky) {*/
+    /*width: 100% !important;*/
+/*}*/
 
-#left .version {
-    padding-top: 2em;
-}
+/*#left .version {*/
+    /*padding-top: 2em;*/
+/*}*/
 
-#header {
-    position: fixed;
-    top: 0; right: 0; left: 0;
+/*#header {*/
+    /*position: fixed;*/
+    /*top: 0; right: 0; left: 0;*/
+    /**/
+    /*width: 100vw;*/
+    /**/
+    /*z-index: 50000;*/
+/*}*/
 
-    width: 100vw;
-
-    z-index: 50000;
-}
-
-#container {
-    padding-top: 40px;
-}
+/*#container {*/
+    /*padding-top: 40px;*/
+/*}*/
 
 /*.tl_modulewizard tbody tr:not(:last-child) td {*/
     /*border-bottom: 1px solid #ccc;*/
@@ -259,6 +284,8 @@ body.popup #main .tl_formbody_submit {
 }
 
 .w50.nclra + .subpal,
-.w50.no-clr-after + .subpal {
+.w50.no-clr-after + .subpal,
+.w50.nclra-clr + .clr,
+.w50.no-clr-after-clr + .clr {
     clear: none;
 }
