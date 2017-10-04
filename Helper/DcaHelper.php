@@ -60,8 +60,8 @@ class DcaHelper extends \Frontend
                 break;
 
             case "select":
-                self::addSelectField($fieldName, $strTable, $eval, $classes, $replaceClasses, $defaultValue, $typeAdd, $langTable);
-//                self::addSelectField($fieldName, $strTable, $eval, $classes, $replaceClasses, $defaultValue, $typeAdd, $langTable, $defaultConfig);
+//                self::addSelectField($fieldName, $strTable, $eval, $classes, $replaceClasses, $defaultValue, $typeAdd, $langTable);
+                self::addSelectField($fieldName, $strTable, $eval, $classes, $replaceClasses, $defaultValue, $typeAdd, $langTable, $defaultConfig);
                 break;
 
             case "size":
@@ -148,7 +148,7 @@ class DcaHelper extends \Frontend
 
 
 
-    protected static function addCheckboxField($fieldName, $strTable, $eval = array() ,$classes = '', $replaceClasses = false, $isSelector = false, $langTable = '')
+    protected static function addCheckboxField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $isSelector = false, $langTable = '')
     {
         if( strlen($langTable) )
         {
@@ -169,7 +169,7 @@ class DcaHelper extends \Frontend
         {
             $defaultEval['submitOnChange'] = true;
 
-            $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][] = $fieldName;
+            $GLOBALS['TL_DCA'][ $strTable ]['palettes']['__selector__'][] = $fieldName;
         }
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
@@ -248,7 +248,7 @@ class DcaHelper extends \Frontend
 
 
 
-    protected static function addSelectField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $defaultValue = '', $shortOptions = FALSE, $langTable = '')
+    protected static function addSelectField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $defaultValue = '', $shortOptions = FALSE, $langTable = '', $defaultConfig = array())
     {
         if( strlen($langTable) )
         {
@@ -287,6 +287,14 @@ class DcaHelper extends \Frontend
         {
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['default'] = $defaultValue;
         }
+
+        if( count( $defaultConfig) )
+        {
+            foreach( $defaultConfig as $configKey => $configValue )
+            {
+                $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ][ $configKey ] = $configValue;
+            }
+        }
     }
 
 
@@ -311,6 +319,10 @@ class DcaHelper extends \Frontend
         if( count($eval) )
         {
             $defaultEval = array_merge($GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'], $defaultEval, $eval);
+        }
+        else
+        {
+            $defaultEval = array_merge($GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'], $defaultEval);
         }
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']            = &$GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ];
