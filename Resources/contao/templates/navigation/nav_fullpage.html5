@@ -3,6 +3,27 @@
   <?php foreach ($this->items as $item):
 
       $item['href'] = '#' . $item['alias'];
+
+  if( $item['noContent'] || preg_match('/no-content/', $item['class']))
+  {
+      $item['href'] = 'javascript:void(0);';
+
+      if( !preg_match('/no-content/', $item['class']) )
+      {
+          $item['class'] = trim($item['class'] . ' no-content');
+      }
+  }
+
+      if( preg_match('/go-to-section/', $item['class']) && preg_match('/article_url/', $item['url']) )
+      {
+          $objArticle = \ArticleModel::findByPk( preg_replace(array('/\{\{article_url::/', '/\}\}/'), array('', ''), $item['url']) );
+
+          if( $objArticle )
+          {
+              $item['target'] = $item['target'] . ' data-article="' . $objArticle->alias . '"';
+          }
+      }
+
       ?>
     <?php if ($item['isActive']): ?>
       <li class="<?= $item['class'] ?>"><strong class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="name"><?= $item['link'] ?></strong><?= $item['subitems'] ?></li>

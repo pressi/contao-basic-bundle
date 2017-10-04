@@ -69,6 +69,16 @@ $arrHoverContainers = array();
 
 //        $item['class']  = trim($item['class'] . ' item-' . $item['alias']);
 
+        if( preg_match('/go-to-section/', $item['class']) && preg_match('/article_url/', $item['url']) )
+        {
+            $objArticle = \ArticleModel::findByPk( preg_replace(array('/\{\{article_url::/', '/\}\}/'), array('', ''), $item['url']) );
+
+            if( $objArticle )
+            {
+                $item['target'] = $item['target'] . ' data-article="' . $objArticle->alias . '"';
+            }
+        }
+
         ?>
         <?php if ($item['isActive']): ?>
             <li class="<?= $item['class'] ?>"<?= $item['listAttributes'] ?>>
