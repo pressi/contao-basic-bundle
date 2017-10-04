@@ -122,7 +122,7 @@ foreach($GLOBALS['TL_DCA']['tl_page']['palettes'] as $strPalette => $strFields)
 
         $strFields      = str_replace(',hide', '', $strFields);
         $strFields      = str_replace(',guests', '', $strFields);
-        $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight', $strFields);
+        $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight,addPageLoader', $strFields);
 
         $strFields      = str_replace('{meta_legend', '{page_legend},enableFullpage;{meta_legend', $strFields);
         $strFields      = str_replace('{meta_legend', '{navigation_legend},submenuNoPages,hide,hideTitle,openPageInLightbox,guests,overviewImage,pageColor,overviewText;{meta_legend', $strFields);
@@ -379,40 +379,43 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['redirectTimeout'] = array
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuNoPages'];
 \IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNoPages', 'checkbox_selector', $strTable);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'] = array
-(
-    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['submenuSRC'],
-    'exclude'               => TRUE,
-    'inputType'             => 'select',
-    'options'               => $GLOBALS['TL_LANG']['tl_page']['options']['submenuSRC'],
-    'eval'                  => array
-    (
-        'submitOnChange'        => TRUE,
-        'tl_class'              => 'w50'
-    ),
-    'sql'                   => "varchar(255) NOT NULL default ''"
-);
-//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuSRC', 'select', $strTable);
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'] = array
+//(
+//    'label'                 => &$GLOBALS['TL_LANG']['tl_page']['submenuSRC'],
+//    'exclude'               => TRUE,
+//    'inputType'             => 'select',
+//    'options'               => $GLOBALS['TL_LANG']['tl_page']['options']['submenuSRC'],
+//    'eval'                  => array
+//    (
+//        'submitOnChange'        => TRUE,
+//        'tl_class'              => 'w50'
+//    ),
+//    'sql'                   => "varchar(255) NOT NULL default ''"
+//);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuSRC', 'select', $strTable, array('maxlength'=>255,'submitOnChange'=>TRUE));
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNewsArchive'] = array
-(
-    'label'                   => &$GLOBALS['TL_LANG']['tl_page']['submenuNewsArchive'],
-    'exclude'                 => TRUE,
-    'inputType'               => 'select',
-    'foreignKey'              => 'tl_news_archive.title',
-    'eval'                    => array('tl_class'=>'o50 w50'), // do not set mandatory (see #5453)
-    'sql'                     => "int(10) unsigned NOT NULL default '0'",
-    'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
-);
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNewsArchive'] = array
+//(
+//    'label'                   => &$GLOBALS['TL_LANG']['tl_page']['submenuNewsArchive'],
+//    'exclude'                 => TRUE,
+//    'inputType'               => 'select',
+//    'foreignKey'              => 'tl_news_archive.title',
+//    'eval'                    => array('tl_class'=>'o50 w50'), // do not set mandatory (see #5453)
+//    'sql'                     => "int(10) unsigned NOT NULL default '0'",
+//    'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+//);
 $arrFieldConfig = array
 (
     'foreignKey'              => 'tl_news_archive.title',
     'sql'                     => "int(10) unsigned NOT NULL default '0'",
     'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 );
-//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNewsArchive', 'select', $strTable, array(), "o50", false, "", $arrFieldConfig);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNewsArchive', 'select', $strTable, array(), "o50", false, "", $arrFieldConfig);
 
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']             = $GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['label']    = &$GLOBALS['TL_LANG']['tl_page']['submenuPageOrder'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['options']  = $GLOBALS['TL_LANG']['tl_page']['options']['submenuPageOrder'];
-$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['eval']['submitOnChange'] = FALSE;
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']             = $GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['label']    = &$GLOBALS['TL_LANG']['tl_page']['submenuPageOrder'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['options']  = $GLOBALS['TL_LANG']['tl_page']['options']['submenuPageOrder'];
+//$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageOrder']['eval']['submitOnChange'] = FALSE;
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuPageOrder', 'select', $strTable, array('maxlength'=>255));
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField('addPageLoader', 'checkbox', $strTable);

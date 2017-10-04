@@ -179,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['title']['eval']['tl_class'] = trim($
 //    'sql'                   => "varchar(64) NOT NULL default ''"
 //);
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("bgColor", "color", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bgColor", "color", $strTable, array(), 'no-clr-after-clr');
 
 //$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage'] = array
 //(
@@ -375,8 +375,10 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['videoSRC'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addField("enableSticky", "checkbox", $strTable);
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation_content", "checkbox_selector", "tl_article");
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType_content", "select_short", "tl_article", array('includeBlankOption'=>true));
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset_content", "text", "tl_article");
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait_content", "checkbox", "tl_article");
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun_content", "select", "tl_article");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation_content", "checkbox_selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType_content", "select_short", $strTable, array('includeBlankOption'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset_content", "text", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait_content", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun_content", "select", $strTable);
+
+//echo "<pre>"; print_r( $GLOBALS['TL_DCA']['tl_article'] ); exit;

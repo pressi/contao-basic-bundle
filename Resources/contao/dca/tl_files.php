@@ -28,3 +28,5 @@ $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['hoverSub
 
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['cssClass']      = 'text';
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['categories']    = 'iidoTag';
+
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['color']         = 'color';
