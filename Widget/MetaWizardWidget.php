@@ -39,7 +39,15 @@ class MetaWizardWidget extends \MetaWizard
 
         // Only show the root page languages (see #7112, #7667)
         $objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
-        $languages = array_intersect_key($languages, array_flip($objRootLangs->fetchEach('language')));
+        $existing = $objRootLangs->fetchEach('language');
+
+        // Also add the existing keys (see #878)
+        if (!empty($this->varValue))
+        {
+            $existing = array_unique(array_merge($existing, array_keys($this->varValue)));
+        }
+
+        $languages = array_intersect_key($languages, array_flip($existing));
 
         // Make sure there is at least an empty array
         if (!is_array($this->varValue) || empty($this->varValue))
@@ -65,7 +73,7 @@ class MetaWizardWidget extends \MetaWizard
                 $return .= '
     <li class="' . (($count % 2 == 0) ? 'even' : 'odd') . '" data-language="' . $lang . '">';
 
-                $return .= '<span class="lang">' . (isset($languages[$lang]) ? $languages[$lang] : $lang) . ' ' . \Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" onclick="Backend.metaDelete(this)"') . '</span>';
+                $return .= '<span class="lang">' . (isset($languages[$lang]) ? $languages[$lang] : $lang) . ' ' . \Image::getHtml('delete.svg', '', 'class="tl_metawizard_img" title="' . $GLOBALS['TL_LANG']['MSC']['delete'] . '" onclick="Backend.metaDelete(this)"') . '</span>';
 
                 // Take the fields from the DCA (see #4327)
                 foreach ($this->metaFields as $field=>$attributes)
@@ -109,7 +117,174 @@ class MetaWizardWidget extends \MetaWizard
 
                         $objWidget->id = $field . '_' . $count;
 
-                        $strField .= $objWidget->parse();
+                        $strField = $objWidget->parse();
+                    }
+                    elseif( $attributes == "color")
+                    {
+                        $arrData = array
+                        (
+                            'label'     => array('', ''),
+                            'inputType' => 'text',
+                            'eval'      => array
+                            (
+                                'maxlength'         => 6,
+                                'multiple'          => true,
+                                'size'              => 2,
+                                'colorpicker'       => true,
+                                'isHexColor'        => true,
+                                'decodeEntities'    => true,
+                                'tl_class'          => 'w50 wizard'
+                            )
+                        );
+
+                        $strInputName   = $this->strId . '[' . $lang . '][' . $field . ']';
+                        $varValue       = $meta[ $field ];
+                        $arrValue       = \StringUtil::deserialize($varValue, true);
+                        $strFieldName   = $field . '_' . $count;
+
+                        $strClass   = $GLOBALS['BE_FFL']['text'];
+                        $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strFieldName, 'tl_files', $this));
+
+                        $objWidget->id = $field . '_' . $count;
+
+                        $strField   = $objWidget->generate();
+                        $wizard     = '';
+
+                        if( $arrData['eval']['colorpicker'] )
+                        {
+                            // Support single fields as well (see #5240)
+                            $strKey     = $arrData['eval']['multiple'] ? $strFieldName . '_0' : $strFieldName;
+                            $strKey2    = $arrData['eval']['multiple'] ? $strFieldName . '_1' : $strFieldName;
+
+                            $wizard .= ' ' . \Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $strFieldName . '" style="cursor:pointer"') . '
+  <script>
+    window.addEvent("domready", function() {
+      var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
+      new MooRainbow("moo_' . $strFieldName . '", {
+        id: "ctrl_' . $strKey . '",
+        startColor: cl,
+        imgPath: "assets/colorpicker/images/",
+        onComplete: function(color) {
+          $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
+          
+          var strColor = color.hex, 
+              strField = $("ctrl_' . $strKey2 . '");
+          
+          if(strField.value)
+          {
+              strColor= \'rgba(\' + color.rgb[0] + \',\' + color.rgb[1] + \',\' + color.rgb[2] + \',\' + (strField.value/100) + \')\';
+          }
+          
+          $("colorPreview_' . $strFieldName . '").setStyle("background", strColor);
+        }
+      });
+    });
+    var fn = function( el, mode )
+            {
+                var strField, strColor, varValue = el.value;
+                
+                if( mode === "color" )
+                {
+                    strField = $("ctrl_' . $strKey2 . '");
+                    varValue = strField.value.toInt();
+                    
+                    strColor = el.value;
+                    
+                    if( strColor.length < 3 || (strColor.length > 3 && strColor.length < 6) )
+                    {
+                        strColor = false;
+                    }
+                }
+                else
+                {
+                    strField = $("ctrl_' . $strKey . '");
+                    strColor = strField.value;
+                    
+                    varValue = varValue.toInt();                
+                }
+                     
+                if(varValue > 0 && strColor) 
+                {
+                    var arrColor = strColor.hexToRgb(true);
+                    
+                    if( varValue > 100 )
+                    {
+                        varValue = 100;
+                    }
+                   
+                    strColor = \'rgba(\' + arrColor[0] + \',\' + arrColor[1] + \',\' + arrColor[2] + \',\' + (varValue/100) + \')\';
+                }
+                else
+                {
+                    if( strColor )
+                    { 
+                        strColor = \'#\' + strColor;
+                    }
+                    else
+                    {
+                        strColor = \'transparent\';
+                    }
+                }
+                
+                $("colorPreview_' . $strFieldName . '").setStyle("background", strColor);
+            };
+            
+            $("ctrl_' . $strKey2 . '").addEvents({
+    "change": function() { fn(this, "trans"); },
+    "keyup": function() { fn(this, "trans"); }
+});
+            $("ctrl_' . $strKey . '").addEvents({
+    "change": function() { fn(this, "color"); },
+    "keyup": function() { fn(this, "color"); }
+});
+  </script>';
+                        }
+
+                        $strSelectField     = '';
+                        $arrSelectOptions   = $this->getThemeColors();
+
+                        if( count($arrSelectOptions) )
+                        {
+                            $strSelectField = '<select name="' . $strInputName . '[]" id="ctrl_' . $strFieldName . '_3" class="tl_select">';
+                            $strSelectField .= '<option value="">-</option>';
+
+                            foreach($arrSelectOptions as $key => $value)
+                            {
+                                if( is_array($value) )
+                                {
+                                    $strSelectField .= '<optgroup label="' . $key . '">';
+
+                                    foreach($value as $strKey => $strValue)
+                                    {
+                                        $selected = '';
+
+                                        if( $arrValue[2] === preg_replace('/&#35;/', '#', $strKey) )
+                                        {
+                                            $selected = ' selected';
+                                        }
+
+                                        $strSelectField .= '<option value="' . $strKey . '"' . $selected . '>' . $strValue . '</option>';
+                                    }
+
+                                    $strSelectField .= '</optgroup>';
+                                }
+                                else
+                                {
+                                    $selected = '';
+
+                                    if( $arrValue[2] === preg_replace('/&#35;/', '#', $key) )
+                                    {
+                                        $selected = ' selected';
+                                    }
+
+                                    $strSelectField .= '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
+                                }
+                            }
+
+                            $strSelectField .= '</select>';
+                        }
+
+                        $strField = $strField . $wizard . $strSelectField;
                     }
                     else
                     {
@@ -133,6 +308,8 @@ class MetaWizardWidget extends \MetaWizard
                             $strField   = '<input name="' . $this->strId . '[' . $lang . '][' . $field . ']" type="text" name="' . $this->strId . '[' . $lang . '][' . $field . ']" id="ctrl_' . $field . '_' . $count . '" class="tl_text" value="' . \StringUtil::specialchars($meta[$field]) . '"' . (!empty($attributes) ? ' ' . $attributes : '') . '>';
                         }
                     }
+
+                    $strField = preg_replace('/<h3><\/h3>/', '', $strField);
 
                     $return .= '<div class="meta-widget widget-' . $field . '"><label for="ctrl_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label> ' . $strField . '</div>';
                 }
@@ -222,5 +399,68 @@ class MetaWizardWidget extends \MetaWizard
         }
 
         return parent::validator( $varInput );
+    }
+
+
+
+    protected function getThemeColors()
+    {
+        $arrOptions = array();
+
+        $objThemes = \ThemeModel::findAll();
+
+        if( $objThemes )
+        {
+            while( $objThemes->next() )
+            {
+                $arrVars = \StringUtil::deserialize($objThemes->vars, true);
+
+                foreach($arrVars as $arrVar)
+                {
+                    if( preg_match('/color/', $arrVar['key']) )
+                    {
+                        $strValue = preg_replace('/color_/', '', $arrVar['key']);
+
+                        $arrOptions[ $objThemes->name ][ $arrVar['value'] ] = $this->renderLangValue($strValue);
+                    }
+                }
+            }
+        }
+
+        return $arrOptions;
+    }
+
+
+
+    protected function renderLangValue( $strText )
+    {
+        switch( $strText )
+        {
+            case "yellow":
+                $strText = 'Gelb';
+                break;
+
+            case "pink":
+                $strText = 'Pink / Rosa';
+                break;
+
+            case "darkblue":
+                $strText = 'Dunkelblau';
+                break;
+
+            case "blue":
+                $strText = 'Blau';
+                break;
+
+            case "green":
+                $strText = 'Grün';
+                break;
+
+            case "red":
+                $strText = 'Rot';
+                break;
+        }
+
+        return $strText;
     }
 }
