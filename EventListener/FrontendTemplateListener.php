@@ -272,12 +272,12 @@ class FrontendTemplateListener
 //                            $strContent     = preg_replace($articlePattern, '<div$1class="mod_article parallax-bg$2"$3 data-stellar-offset-parent="true" data-stellar-background-ratio="0.2">', $strContent);
 //                        }
 
-                        if( preg_match('/bg-in-container/', $cssID[1]) )
-                        {
-                            $strBGContainer = '<div class="background-container"></div>';
+//                        if( preg_match('/bg-in-container/', $cssID[1]) )
+//                        {
+                            $strBGContainer = '<div class="background-container"></div><div class="bg-container-inner"></div>';
 
                             $strContent = preg_replace('/<\/div>$/', '</div>' . $strBGContainer, trim($strContent));
-                        }
+//                        }
                     }
                 }
             }
@@ -292,9 +292,14 @@ class FrontendTemplateListener
 
                     while($objArticles->next())
                     {
-                        if( $objArticle->id == $objArticles->id )
+                        if( $objArticle->id === $objArticles->id )
                         {
                             break;
+                        }
+
+                        if( $objArticles->noContent )
+                        {
+                            continue;
                         }
 
                         $index++;
@@ -465,7 +470,7 @@ class FrontendTemplateListener
                 {
                     if( $objArticle->toNextArrow )
                     {
-                        $divTableEnd = '<div class="pos-abs pos-center-bottom arrow arrow-down arrow-style2"><div class="arrow-inside-container"><div class="arrow-inside"></div></div></div>' . $divTableEnd;
+                        $divTableEnd = '<div class="pos-abs pos-center-bottom arrow arrow-down arrow-style3 scroll-to-next-page"><div class="arrow-inside-container"><div class="arrow-inside"></div></div></div>' . $divTableEnd;
                     }
 
                     if( preg_match('/add-footer/', $cssID[1]) )

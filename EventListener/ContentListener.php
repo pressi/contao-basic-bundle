@@ -549,7 +549,18 @@ class ContentListener
         {
             $cssID = \StringUtil::deserialize( $objRow->cssID );
 
-            if( preg_match('/box-item/', $cssID[1]) )
+            $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] = $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] || FALSE;
+
+            if( $objRow->type === "slick-content-start" )
+            {
+                $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] = TRUE;
+            }
+            elseif( $objRow->type === "slick-content-stop" && $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'])
+            {
+                $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] = FALSE;
+            }
+
+            if( (preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box") && !$GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] )
             {
                 $GLOBALS['IIDO']['BOXES']['OPEN'] = $GLOBALS['IIDO']['BOXES']['OPEN'] || FALSE;
 
@@ -557,14 +568,21 @@ class ContentListener
                 {
                     $GLOBALS['IIDO']['BOXES']['OPEN'] = TRUE;
 
-                    $strClass = 'fbc';
+                    $strClass       = 'fbc';
+                    $strBoxClass    = '';
 
                     if( preg_match('/box-col/', $cssID[1]))
                     {
                         $strClass = 'columns';
                     }
 
-                    $strBuffer = '<div class="box-container clr-after"><div class="box-cont-inside"><div class="box-cont-wrapper ' . $strClass . '">' . $strBuffer;
+                    if( $objRow->type === "rsce_box" )
+                    {
+                        $strClass       = 'boxes';
+                        $strBoxClass    = ' no-padding';
+                    }
+
+                    $strBuffer = '<div class="box-container clr-after' . $strBoxClass . '"><div class="box-cont-inside"><div class="box-cont-wrapper ' . $strClass . '">' . $strBuffer;
                 }
 
                 if( preg_match('/box-col/', $cssID[1]))
@@ -599,7 +617,7 @@ class ContentListener
             {
                 $cssID = \StringUtil::deserialize( $objElements->cssID );
 
-                if( preg_match('/box/', $cssID[1]) )
+                if( preg_match('/box/', $cssID[1]) || $objRow->type === "rsce_box" )
                 {
                     $lastElement = $objElements->current();
                 }

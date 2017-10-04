@@ -141,6 +141,12 @@ class PageListener
             }
         }
 
+        if( $objPage->addPageLoader )
+        {
+            $GLOBALS['TL_CSS']['fakeloader']                = $this->bundlePathPublic . '/css/fakeloader.css||static';
+            $GLOBALS['TL_JAVASCRIPT']['fakeloader']         = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/fakeLoader.min.js|static';
+        }
+
         $this->addDefaultStylesheets();
 
         if( $jsPrefix == "jquery" )
@@ -383,30 +389,47 @@ class PageListener
             $modSearch  = ''; //\Controller::getFrontendModule( 10 );
             $modNavi    = ''; //\Controller::getFrontendModule( $objNavModule->id ); // 11
 
-            if ($objNavModule )
+            $objArticle = \ArticleModel::findByAlias('ge_mobile-menu_' . $objRootPage->alias . '_' . $objPage->language);
+
+            if( $objArticle )
             {
-                $strClass = \Module::findClass( $objNavModule->type );
-
-                if (class_exists($strClass))
+                $modNavi = \Controller::replaceInsertTags('{{insert_article::ge_mobile-menu_' . $objRootPage->alias . '_' . $objPage->language . '}}');
+            }
+            else
+            {
+                if ($objNavModule )
                 {
-                    $objNavModule->typePrefix = 'ce_';
+                    $strClass = \Module::findClass( $objNavModule->type );
 
-                    /** @var \Module $objNavModule */
-                    $objNavModule = new $strClass($objNavModule, "main");
+                    if (class_exists($strClass))
+                    {
+                        $objNavModule->typePrefix = 'ce_';
 
-                    $objNavModule->cssID = array('', 'nav-mobile-main');
-                    $objNavModule->navigationTpl = 'nav_mobile';
+                        /** @var \Module $objNavModule */
+                        $objNavModule = new $strClass($objNavModule, "main");
 
-                    $modNavi = $objNavModule->generate();
+                        $objNavModule->cssID = array('', 'nav-mobile-main');
+                        $objNavModule->navigationTpl = 'nav_mobile';
+
+                        $modNavi = $objNavModule->generate();
+                    }
                 }
             }
 
             $modSocial  = ''; //TODO: Add Socialmedia links
 
-            $menuMobile = '<div class="main-navigation-mobile">' . $modSearch . $modNavi . $modSocial . $menuClose . '</div>';
+            $menuMobile = '<div class="main-navigation-mobile"><div class="mobile-menu-inside">' . $modSearch . $modNavi . $modSocial . $menuClose . '</div></div>';
 
 //            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-_,;.:\{\}\(\)="\'<>%\/]{0,})>/',  '<body$1>' . $menuOpen . $menuMobile, $strBuffer);
             $strBuffer = preg_replace('/<\/body>/',  $menuOpen . $menuMobile . '</body>', $strBuffer);
+
+            if( $objPage->addPageLoader )
+            {
+                $loaderTag      = '<div id="fakeLoader"></div>';
+                $loaderScript   = '<script type="text/javascript">$("#fakeLoader").fakeLoader({timeToHide:1600,zIndex:"9999",spinner:"spinner1",bgColor:"#484848"})</script>';
+
+                $strBuffer = preg_replace('/<\/body>/',  $loaderTag . $loaderScript . '</body>', $strBuffer);
+            }
         }
 
         return $strBuffer;
