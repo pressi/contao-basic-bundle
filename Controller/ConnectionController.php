@@ -286,21 +286,27 @@ class ConnectionController implements ContainerAwareInterface
             return null;
         }
 
-        $customerName   = $request->request->get('customer_name');
-        $customerEmail  = $request->request->get('customer_email');
-        $customerAlias  = $request->request->get('customer_alias');
+        $customerName       = $request->request->get('customer_name');
+        $customerEmail      = $request->request->get('customer_email');
+        $customerAlias      = $request->request->get('customer_alias');
+        $customerUsername   = $request->request->get('customer_username');
 
-        $themeID        = $request->request->get('theme');
-        $RSCE_Templates = $request->request->get('rsce_templates');
+        $themeID            = $request->request->get('theme');
+        $RSCE_Templates     = $request->request->get('rsce_templates');
 
-        $webfont        = $request->request->get("webfont");
+        $webfont            = $request->request->get("webfont");
 
         // All fields are mandatory
-        if ('' === $customerName || '' === $customerEmail || '' === $customerAlias || '' === $themeID)
+        if( '' === $customerName || '' === $customerEmail || '' === $customerAlias || '' === $themeID )
         {
             $this->context['config_error'] = $this->trans('config_error');
 
             return null;
+        }
+
+        if( $customerUsername === '' )
+        {
+            $customerUsername = 'user';
         }
 
         $arrData = $connectTool->getActionData("getContaoInit", array('themeID=' . $themeID) );
@@ -340,6 +346,11 @@ class ConnectionController implements ContainerAwareInterface
             $arrUser = (array) $arrUser;
 //            $arrUser['password'] = Encryption::hash($arrUser['password']);
 
+            if( $arrUser['username'] === "##customer_username##" )
+            {
+                $arrUser['username'] = $customerUsername;
+            }
+
             $connectTool->createNewOneModelEntry("User", $arrUser);
         }
 
@@ -355,19 +366,26 @@ class ConnectionController implements ContainerAwareInterface
         $this->container->get("contao.connect_tool")->setBackendUser( $objUser );
 
 
-
         // Get RSCE Templates
-//        if( is_array($RSCE_Templates) && count($RSCE_Templates) )
-//        {
-//            foreach($RSCE_Templates as $fileName)
-//            {
-//                echo "<pre>";
-//                print_r( $fileName );
-//                exit;
-//            }
-//        }
+        if( is_array($RSCE_Templates) && count($RSCE_Templates) )
+        {
+            $arrTemplateFiles = array();
 
-//--        $connectTool->getFilesFromMaster( $arrData->files );
+            foreach($RSCE_Templates as $fileName)
+            {
+                $arrTemplateFiles[] = 'templates/' . $customerAlias . '/' . $fileName;
+
+                if( preg_match('/^rsce_/', $fileName) && preg_match('/.html5$/', $fileName) )
+                {
+                    $arrTemplateFiles[] = 'templates/' . $customerAlias . '/' . preg_replace('/.html5$/', '_config.php', $fileName);
+                }
+            }
+
+            if( count($arrTemplateFiles) )
+            {
+                $connectTool->getFilesFromMaster( $arrTemplateFiles, $customerAlias );
+            }
+        }
 
 
         // Set Contao Settings

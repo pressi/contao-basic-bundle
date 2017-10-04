@@ -88,17 +88,17 @@
 
             <trans-unit id="18">
                 <source>config_widget_customer</source>
-                <target>Kunden-Name</target>
+                <target>Kunden Name</target>
             </trans-unit>
 
             <trans-unit id="19">
                 <source>config_widget_email</source>
-                <target>Kunden-Email</target>
+                <target>Kunden Email</target>
             </trans-unit>
 
             <trans-unit id="20">
                 <source>config_widget_alias</source>
-                <target>Kunden-Alias</target>
+                <target>Kunden Alias</target>
             </trans-unit>
 
             <trans-unit id="21">
@@ -146,6 +146,11 @@
                 <target>Einstellungen hinzufügen</target>
             </trans-unit>
 
+
+            <trans-unit id="30">
+                <source>config_widget_username</source>
+                <target>Kunden Backend-Benutzername</target>
+            </trans-unit>
 
 
             <trans-unit id="31">
@@ -343,12 +348,16 @@
             <trans-unit id="70">
                 <source>old_database_explanation</source>
                 <target>Sie benötigen mindestens Contao 3.2, um das Update auf Contao 4 durchzuführen.</target>
-
             </trans-unit>
             <trans-unit id="71">
                 <source>console_explanation</source>
                 <target>Eine Installationsaufgabe konnte nicht abgeschlossen werden!</target>
+            </trans-unit>
 
+
+            <trans-unit id="72">
+                <source>config_widget_masterStylesheets</source>
+                <target>Master Stylesheets</target>
             </trans-unit>
         </body>
     </file>

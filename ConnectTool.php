@@ -643,7 +643,7 @@ class ConnectTool
 
                 $valueVarValue = $this->replaceVars( $valueVarValue);
 
-                if( $valueVar == "password" )
+                if( $valueVar === "password" )
                 {
                     if( !preg_match('/^[a-f0-9]{32}$/', $valueVarValue) )
                     {
@@ -856,6 +856,12 @@ class ConnectTool
                     $varValue = str_replace($strChunk, $request->request->get("customer_email"), $varValue);
                     break;
 
+                case "customer_username":
+                case "customerUsername":
+                case "customerusername":
+                    $varValue = str_replace($strChunk, $request->request->get("customer_username")?:'user', $varValue);
+                    break;
+
                 case "admin_email":
                 case "adminEmail":
                 case "adminemail":
@@ -1026,7 +1032,7 @@ class ConnectTool
 
 
 
-    public function getFilesFromMaster( $arrFiles )
+    public function getFilesFromMaster( $arrFiles, $customerAlias = '' )
     {
 //        $arrData = $this->getActionData("getFiles", array('files'=>implode(",", $arrFiles)));
 
@@ -1039,20 +1045,59 @@ class ConnectTool
         {
             foreach($arrFiles as $strFile)
             {
-                $arrFolder = explode('/', $strFile);
+                $arrFolder      = explode('/', $strFile);
+                $strMasterFile  = $strFile;
 
-                ftp_get( $conn_id, $this->rootDir . '/../' . $strFile, $strFile, FTP_BINARY);
+                if( preg_match('/^templates/', $strMasterFile) )
+                {
+                    $strMasterFile = preg_replace('/templates\/' . $customerAlias . '\//', 'templates/global/', $strMasterFile);
+                }
+                else
+                {
+                    array_pop( $arrFolder);
 
-                array_pop( $arrFolder);
+                    $arrFolders[] = $strFolder = implode('/', $arrFolder);
 
-                $arrFolders[] = implode('/', $arrFolder);
+                    if( preg_match('/files\/master\/css/', $strFolder) && !preg_match('/css$/', $strFolder) )
+                    {
+                        $this->createFolder( $strFolder );
+                    }
+                }
+
+                ftp_get( $conn_id, $this->rootDir . '/../' . $strFile, $strMasterFile, FTP_BINARY);
             }
         }
 
-        $arrFolders = array_unique($arrFolders);
-        $arrFolders = array_values($arrFolders);
-
         ftp_close($conn_id);
-        \Dbafs::updateFolderHashes($arrFolders);
+
+        if( count($arrFolders) )
+        {
+            $arrFolders = array_unique($arrFolders);
+            $arrFolders = array_values($arrFolders);
+
+            \Dbafs::updateFolderHashes($arrFolders);
+        }
+    }
+
+
+
+    protected function createFolder( $strFolderPath )
+    {
+        $arrFolders = array();
+
+        if( !is_dir($this->rootDir . '/../' . $strFolderPath) )
+        {
+            $objFolder = new \Folder( $strFolderPath );
+
+            $arrFolders[] = $objFolder->path;
+        }
+
+        if( count($arrFolders) )
+        {
+            $arrFolders = array_unique($arrFolders);
+            $arrFolders = array_values($arrFolders);
+
+            \Dbafs::updateFolderHashes($arrFolders);
+        }
     }
 }
