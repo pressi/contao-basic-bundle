@@ -8,46 +8,46 @@
 var IIDO        = IIDO          || {};
 IIDO.Backend    = IIDO.Backend  || {};
 
-AjaxRequest.toggleFieldset = function(el, id, table)
-{
-    el.blur();
-    var fs = $('pal_' + id);
-
-    if (fs.hasClass('collapsed'))
-    {
-        fs.removeClass('collapsed');
-        new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
-    }
-    else
-    {
-        var form        = fs.getParent('form'),
-            inp         = fs.getElements('[required]'),
-            collapse    = true;
-
-        for (var i=0; i<inp.length; i++)
-        {
-            if (!inp[i].get('value'))
-            {
-                collapse = false;
-                break;
-            }
-        }
-
-        if (!collapse)
-        {
-            if (typeof(form.checkValidity) === 'function') form.getElement('button[type="submit"]').click();
-        }
-        else
-            {
-            fs.addClass('collapsed');
-            new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
-        }
-    }
-
-    jQuery("#left").hcSticky("reinit");
-
-    return false;
-};
+// AjaxRequest.toggleFieldset = function(el, id, table)
+// {
+//     el.blur();
+//     var fs = $('pal_' + id);
+//
+//     if (fs.hasClass('collapsed'))
+//     {
+//         fs.removeClass('collapsed');
+//         new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
+//     }
+//     else
+//     {
+//         var form        = fs.getParent('form'),
+//             inp         = fs.getElements('[required]'),
+//             collapse    = true;
+//
+//         for (var i=0; i<inp.length; i++)
+//         {
+//             if (!inp[i].get('value'))
+//             {
+//                 collapse = false;
+//                 break;
+//             }
+//         }
+//
+//         if (!collapse)
+//         {
+//             if (typeof(form.checkValidity) === 'function') form.getElement('button[type="submit"]').click();
+//         }
+//         else
+//             {
+//             fs.addClass('collapsed');
+//             new Request.Contao().post({'action':'toggleFieldset', 'id':id, 'table':table, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
+//         }
+//     }
+//
+//     jQuery("#left").hcSticky("reinit");
+//
+//     return false;
+// };
 
 (function(backend)
 {

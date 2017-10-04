@@ -434,32 +434,33 @@ IIDO.Page = IIDO.Page || {};
             {
                 var article = $(articleTag);
 
-                // if( !article.hasClass("hidden-area") )
-                // {
+                /*/ if( !article.hasClass("hidden-area") )
+                // {*/
                     arrAnchors.push( article.attr("data-anchor") );
-                // }
+                /*/ }*/
             });
 
-            //TODO: make options changeable in backend
+            /*/TODO: make options changeable in backend*/
             main.fullpage(
                 {
-                    // Navigation
+                    /*Navigation*/
                     menu                                : '.nav-main',
                     lockAnchors                         : false,
                     anchors                             : arrAnchors,
                     navigation                          : false,
-                    // navigationPosition                  : 'right',
-                    // navigationTooltips                  : ['firstSlide', 'secondSlide'],
+                    /* navigationPosition                  : 'right',
+                    // navigationTooltips                  : ['firstSlide', 'secondSlide'],*/
                     showActiveTooltip                   : false,
                     slidesNavigation                    : true,
                     slidesNavPosition                   : 'top',
 
-                    //Scrolling
-                    css3                                : false,
-                    scrollingSpeed                      : 700,
+                    /*Scrolling*/
+                    css3                                : true,
+                    scrollingSpeed                      : 1000,
+                    /*scrollDelay                         : 600,*/
                     autoScrolling                       : true,
                     fitToSection                        : true,
-                    fitToSectionDelay                   : 200,
+                    fitToSectionDelay                   : 600,
                     scrollBar                           : false,
                     easing                              : 'easeInQuart',
                     easingcss3                          : 'ease',
@@ -474,36 +475,36 @@ IIDO.Page = IIDO.Page || {};
                     offsetSections: false,
                     resetSliders: false,
                     fadingEffect: false,
-                    // normalScrollElements: '#element1, .element2',
+                    /*/ normalScrollElements: '#element1, .element2',*/
                     scrollOverflow: true,
                     scrollOverflowReset: false,
                     scrollOverflowOptions: null,
-                    touchSensitivity: 15,
-                    normalScrollElementTouchThreshold: 5,
+                    /*touchSensitivity: 500,*/
+                    /*normalScrollElementTouchThreshold: 5,*/
                     bigSectionsDestination: null,
 
-                    //Accessibility
+                    /*/Accessibility*/
                     keyboardScrolling: true,
                     animateAnchor: true,
                     recordHistory: true,
 
-                    //Design
+                    /*/Design*/
                     controlArrows: true,
                     verticalCentered: true,
-                    // sectionsColor : ['#ccc', '#fff'],
+                    /*/ sectionsColor : ['#ccc', '#fff'],
                     // slidesColor                         : ['#ccc', '#fff'],
                     // paddingTop: '3em',
-                    // paddingBottom: '10px',
-                    // fixedElements: '#header, .footer',
-                    responsiveWidth: 960,
-                    responsiveHeight: 0,
+                    // paddingBottom: '10px',*/
+                    fixedElements: '#header', /*/'#header, .footer'*/
+                    // responsiveWidth: 700,
+                    // responsiveHeight: 0,
                     responsiveSlides: false,
                     parallax: false,
-                    // parallaxOptions: {type: 'reveal', percentage: 62, property: 'translate'},
+                    /*/ parallaxOptions: {type: 'reveal', percentage: 62, property: 'translate'},*/
 
-                    //Custom selectors
-                    // sectionSelector: '.section',
-                    // slideSelector: '.slide',
+                    /*/Custom selectors*/
+                    /*/ sectionSelector: '.section',
+                    // slideSelector: '.slide',*/
 
                     lazyLoading: true,
 
@@ -513,11 +514,13 @@ IIDO.Page = IIDO.Page || {};
                     onLeave: function(index, nextIndex, direction)
                     {
                         IIDO.FullPage.runLeaveSection(index, nextIndex, direction);
+                        IIDO.FullPage.runLeaveSectionAll(index, nextIndex, direction);
                     },
 
                     afterLoad: function(anchorLink, index)
                     {
                         IIDO.FullPage.runLoadSection(index, anchorLink);
+                        IIDO.FullPage.runLoadSectionAll(anchorLink);
 
                         var articleTag = document.querySelector('.mod_article[data-alias="' + anchorLink + '"]');
 
@@ -557,13 +560,19 @@ IIDO.Page = IIDO.Page || {};
 
             var logoLink = document.querySelector("header .logo a");
 
+            if( !logoLink )
+            {
+                logoLink = document.querySelector("header .logo");
+            }
+
             if( logoLink )
             {
                 logoLink.addEventListener("click", function(e) { e.preventDefault(); IIDO.Page.goToSection(1);  });
             }
 
             var nextLinks = document.querySelectorAll(".scroll-to-next-page"),
-                pageLinks = document.querySelectorAll(".scroll-to-section-page");
+                pageLinks = document.querySelectorAll(".scroll-to-section-page"),
+                goToSection = document.querySelectorAll("a.go-to-section");
 
             if( nextLinks.length )
             {
@@ -599,6 +608,24 @@ IIDO.Page = IIDO.Page || {};
                         $.fn.fullpage.moveTo( (parseInt(sectionIndex) + 1) );
 
                         return false;
+                    });
+                }
+            }
+
+            if( goToSection.length )
+            {
+                for(var iNum=0; iNum<goToSection.length; iNum++)
+                {
+                    var sectionLink = goToSection[ iNum ];
+
+                    sectionLink.addEventListener("click", function(e)
+                    {
+                       e.preventDefault();
+
+                       var articleTag       = document.querySelector('.mod_article[data-anchor="' + e.target.parentNode.getAttribute("data-article") + '"]'),
+                           articleIndex     = articleTag.getAttribute("data-index");
+
+                        $.fn.fullpage.moveTo( (parseInt(articleIndex) + 1) );
                     });
                 }
             }
@@ -1784,9 +1811,9 @@ IIDO.Page = IIDO.Page || {};
                         element: $(element),
                         handler: function( direction )
                         {
-                            // var footer = pageTitle.parent().next(".footer");
+                            /*/ var footer = pageTitle.parent().next(".footer");
                             // $(document.body).toggleClass("fixed-page-title");
-                            // pageContainer.toggleClass("is-fixed");
+                            // pageContainer.toggleClass("is-fixed");*/
                         },
                         offset: function()
                         {
