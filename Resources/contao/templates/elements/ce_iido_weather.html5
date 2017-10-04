@@ -4,7 +4,7 @@
 
 <? if( $this->addIcon ): ?>
     <div class="weather-icon">
-        <img src="<?= $this->imageSRC ?>" alt="<?= $this->iconName ?>" title="<?= $this->iconName ?>" width="50" height="50">
+        <img src="<?= $this->imageSRC ?>" alt="<?= $this->iconName ?>" title="<?= $this->iconName ?>" width="40" height="40">
     </div>
 <? endif ?>
 

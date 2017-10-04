@@ -41,7 +41,8 @@ class WeatherElement extends \ContentElement
             $arrFileData    = json_decode( file_get_contents( $rootDir . '/system/tmp/weather-data.txt' ) );
             $objData        = $arrFileData->current_observation;
 
-            $this->Template->imageSRC       = 'http://icons.wxug.com/i/c/i/' . $objData->icon . '.gif';
+//            $this->Template->imageSRC       = 'http://icons.wxug.com/i/c/i/' . $objData->icon . '.gif';
+            $this->Template->imageSRC       = 'files/skischule-russbach/Uploads/Icons/Wetter/' . $objData->icon . '.png';
             $this->Template->iconName       = $objData->weather;
 
             $this->Template->temperature    = $objData->temp_c;
