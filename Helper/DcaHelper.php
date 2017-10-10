@@ -19,6 +19,10 @@ namespace IIDO\BasicBundle\Helper;
  */
 class DcaHelper extends \Frontend
 {
+    protected static $paletteStart    = '{type_legend},type,headline;';
+    protected static $paletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
+
+
 
     public static function addField($fieldName, $fieldType, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $defaultValue = '', $defaultConfig = array())
     {
@@ -88,6 +92,56 @@ class DcaHelper extends \Frontend
 
 
 
+    public static function addPalette($strName, $arrFields, $strTable, $override = FALSE, $addDefaultBefore = TRUE, $addDefaultAfter = TRUE)
+    {
+        $strFields = $arrFields;
+
+        if( is_array($arrFields) )
+        {
+            $strFields = implode(",", $arrFields);
+        }
+
+        if( key_exists($strName, $GLOBALS['TL_DCA'][ $strTable ]['palettes']) )
+        {
+            if( !$override )
+            {
+                $arrNewFields   = explode(",", $strFields);
+                $arrUsedFields  = explode(",", $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ]);
+
+                foreach($arrNewFields as $strField)
+                {
+                    if( !in_array($strField, $arrUsedFields))
+                    {
+                        $arrUsedFields[] = $strField;
+                    }
+                }
+
+                $strFields = implode(",", $arrUsedFields);
+            }
+        }
+
+        if( $addDefaultBefore )
+        {
+            $strFields = static::$paletteStart . $strFields;
+        }
+
+        if( $addDefaultAfter )
+        {
+            $strFields = $strFields . static::$paletteEnd;
+        }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ] = $strFields;
+    }
+
+
+
+    public static function replacePaletteFields($strName, $oldFields, $newFields, $strTable)
+    {
+        $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ] = preg_replace('/' . $oldFields . '/', $newFields, $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ]);
+    }
+
+
+
     public static function addSubpalette($strName, $arrFields, $strTable, $override = FALSE)
     {
         $strFields = $arrFields;
@@ -114,13 +168,16 @@ class DcaHelper extends \Frontend
 
                 $strFields = implode(",", $arrUsedFields);
             }
+        }
 
-            $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ] = $strFields;
-        }
-        else
-        {
-            $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ] = $strFields;
-        }
+        $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ] = $strFields;
+    }
+
+
+
+    public static function replaceSubpaletteFields($strName, $oldFields, $newFields, $strTable)
+    {
+        $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ] = preg_replace('/' . $oldFields . '/', $newFields, $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ]);
     }
 
 

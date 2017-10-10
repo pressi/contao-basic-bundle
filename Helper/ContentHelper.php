@@ -15,7 +15,7 @@ class ContentHelper
 
     public static function generateImageHoverTags( $strContent, $objRow )
     {
-        $hoverTags = '<div class="image-hover-container"></div>';
+        $hoverTags = '<div class="image-hover-container"><div class="image-hover-inside"></div></div>';
 
         if( $objRow->caption || preg_match('/figcaption/', $strContent) )
         {
