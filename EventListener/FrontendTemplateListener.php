@@ -272,12 +272,12 @@ class FrontendTemplateListener
 //                            $strContent     = preg_replace($articlePattern, '<div$1class="mod_article parallax-bg$2"$3 data-stellar-offset-parent="true" data-stellar-background-ratio="0.2">', $strContent);
 //                        }
 
-//                        if( preg_match('/bg-in-container/', $cssID[1]) )
-//                        {
-                            $strBGContainer = '<div class="background-container"></div><div class="bg-container-inner"></div>';
+                        if( preg_match('/bg-in-container/', $cssID[1]) )
+                        {
+                            $strBGContainer = '<div class="background-container"></div>';
 
                             $strContent = preg_replace('/<\/div>$/', '</div>' . $strBGContainer, trim($strContent));
-//                        }
+                        }
                     }
                 }
             }

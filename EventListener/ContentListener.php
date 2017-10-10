@@ -167,6 +167,12 @@ class ContentListener
 
         if( !in_array($objRow->type, $this->arrNotInsideClassElements) )
         {
+            if( $elementClass === "ce_alias" )
+            {
+                $objAliasElement    = \ContentModel::findByPk ( $objRow->cteAlias );
+                $elementClass       = 'ce_' . $objAliasElement->type;
+            }
+
             $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
 
             if( $count )
@@ -547,7 +553,8 @@ class ContentListener
     {
         if( TL_MODE === "FE" )
         {
-            $cssID = \StringUtil::deserialize( $objRow->cssID );
+            $cssID      = \StringUtil::deserialize( $objRow->cssID );
+            $strType    = '';
 
             $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] = $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] || FALSE;
 
@@ -560,7 +567,13 @@ class ContentListener
                 $GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] = FALSE;
             }
 
-            if( (preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box") && !$GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] )
+            if( $objRow->type === "alias" )
+            {
+                $objAliasElement = \ContentModel::findByPk( $objRow->cteAlias );
+                $strType = $objAliasElement->type;
+            }
+
+            if( (preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box" || $strType === "rsce_box" ) && !$GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] )
             {
                 $GLOBALS['IIDO']['BOXES']['OPEN'] = $GLOBALS['IIDO']['BOXES']['OPEN'] || FALSE;
 
