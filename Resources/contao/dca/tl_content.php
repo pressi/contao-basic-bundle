@@ -21,6 +21,7 @@ $do             = Input::get("do");
 $act            = Input::get("act");
 $id             = (int) Input::get("id");
 $theme          = \Backend::getTheme();
+$strTable       = \ContentModel::getTable();
 
 //if ($do == 'iidoPlaceholder')
 //{
@@ -97,7 +98,7 @@ $defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hi
 
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']         = $defaultPaletteStart . '{config_legend},navModule,navPages,navigationTpl;' . $defaultPaletteEnd;
-$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_weather']            = $defaultPaletteStart . '{config_legend},addIcon,addSnow,addTemperature;' . $defaultPaletteEnd;
+$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_weather']            = $defaultPaletteStart . '{config_legend},addIcon,addSnow,addTemperature,snowUrl;' . $defaultPaletteEnd;
 
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_divider']           = '{type_legend},type;{divide_legend},dividerSize,dividerColor,dividerStyle,addOrnament;' . $defaultPaletteEnd;
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_ticker']            = '{type_legend},type;{ticker_legend},tickerMode,usedTime,tickerDate,tickerShowMode;{text_legend},textBefore,textAfter;' . $defaultPaletteEnd;
@@ -194,8 +195,8 @@ $GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_icon']      = 'butt
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['blockShowMode_field']  = 'websiteField';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['blockShowMode_fields'] = 'addressBlock';
 
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", "tl_content");
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addSnow", "snowDepth,snowUnit,snowSubline", "tl_content");
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addSnow", "snowDepth,snowUnit,snowSubline", $strTable);
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addAnimation']         = "animationType,animateRun,animationWait,animationOffset";
 
 
@@ -1128,41 +1129,44 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']                 = $G
 $GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']['label']        = &$GLOBALS['TL_LANG']['tl_content']['navigationTpl'];
 
 
+$GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']                 = $GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl'];
+$GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['label']        = &$GLOBALS['TL_LANG']['tl_content']['snowUrl'];
+$GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim($GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] . ' clr');
 
 //-- ANIMATION
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation", "checkbox_selector", "tl_content");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation", "checkbox_selector", $strTable);
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addAnimation']              = $GLOBALS['TL_DCA']['tl_content']['fields']['elementIsBox'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addAnimation']['label']     = &$GLOBALS['TL_LANG']['tl_content']['addAnimation'];
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType", "select_short", "tl_content", array('includeBlankOption'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType", "select_short", $strTable, array('includeBlankOption'=>true));
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']             = $GLOBALS['TL_DCA']['tl_content']['fields']['boxWidth'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['label']    = &$GLOBALS['TL_LANG']['tl_content']['animationType'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['options']  = $GLOBALS['TL_LANG']['tl_content']['options_animationType'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['eval']['includeBlankOption'] = TRUE;
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset", "text", "tl_content");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset", "text", $strTable);
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationOffset']           = $GLOBALS['TL_DCA']['tl_content']['fields']['boxLinkText'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationOffset']['label']  = &$GLOBALS['TL_LANG']['tl_content']['animationOffset'];
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait", "checkbox", "tl_content");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait", "checkbox", $strTable);
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationWait']             = $GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animationWait']['label']    = &$GLOBALS['TL_LANG']['tl_content']['animationWait'];
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun", "select", "tl_content");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun", "select", $strTable);
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']                = $GLOBALS['TL_DCA']['tl_content']['fields']['animationType'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['label']       = &$GLOBALS['TL_LANG']['tl_content']['animateRun'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['options']     = $GLOBALS['TL_LANG']['tl_content']['options']['animateRun'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['eval']['tl_class'] = 'w50';
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addIcon", "checkbox", "tl_content");
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addSnow", "checkbox_selector", "tl_content");
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addTemperature", "checkbox", "tl_content");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addIcon", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addSnow", "checkbox_selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addTemperature", "checkbox", $strTable);
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowDepth", "text", "tl_content", array('rgxp'=>'digit'));
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowUnit", "text", "tl_content");
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowSubline", "text", "tl_content");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowDepth", "text", $strTable, array('rgxp'=>'digit'));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowUnit", "text", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowSubline", "text", $strTable);
