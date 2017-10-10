@@ -2,6 +2,10 @@
 
 <? $this->block('content'); ?>
 
+    <? if( $this->snowUrl ): ?>
+        <a href="<?= $this->snowUrl ?>" class="snow-url">
+    <? endif; ?>
+
 <? if( $this->addIcon ): ?>
     <div class="weather-icon">
         <img src="<?= $this->imageSRC ?>" alt="<?= $this->iconName ?>" title="<?= $this->iconName ?>" width="40" height="40">
@@ -20,5 +24,9 @@
         <span class="number"><?= $this->temperature ?></span><span class="condition">°</span>
     </div>
 <? endif ?>
+
+    <? if( $this->snowUrl ): ?>
+        </a>
+    <? endif; ?>
 
 <? $this->endblock(); ?>
