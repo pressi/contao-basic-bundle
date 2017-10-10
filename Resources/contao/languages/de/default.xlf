@@ -25,6 +25,11 @@
                 <target>Article teaser list</target>
             </trans-unit>
 
+            <trans-unit id="CTE.iido_weather.0">
+                <source>Wetter</source>
+                <target>Wetter</target>
+            </trans-unit>
+
 
 
 <!-- ### PAGE TYPES ######################################################################################################### -->

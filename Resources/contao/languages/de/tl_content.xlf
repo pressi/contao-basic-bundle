@@ -149,6 +149,41 @@
 				<target>Ornament hinzufügen</target>
 			</trans-unit>
 
+			<trans-unit id="tl_content.addIcon.0">
+				<source>add icon</source>
+				<target>Icon hinzufügen</target>
+			</trans-unit>
+
+            <trans-unit id="tl_content.addSnow.0">
+                <source>add snow</source>
+                <target>Schnee hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.addTemperature.0">
+                <source>add temperature</source>
+                <target>Temperatur hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.snowDepth.0">
+                <source>Schnee Tiefe</source>
+                <target>Schnee Tiefe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.snowUnit.0">
+                <source>Schnee Tiefe</source>
+                <target>Schnee Tiefe-Einheit (cm, m, ...)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.snowSubline.0">
+                <source>Schnee Subline</source>
+                <target>Schnee Subline</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.snowUrl.0">
+                <source>Schneebericht Link</source>
+                <target>Schneebericht Link</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
@@ -162,6 +197,11 @@
 			<trans-unit id="tl_content.caroufredsel_thumbnails_legend">
 				<source>carouFredSel-Vorschaubilder</source>
 				<target>Slideshow-Vorschaubilder</target>
+			</trans-unit>
+
+			<trans-unit id="tl_content.config_legend">
+				<source>Config-Einstellungen</source>
+				<target>Element-Einstellungen</target>
 			</trans-unit>
 
 
