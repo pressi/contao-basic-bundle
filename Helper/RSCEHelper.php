@@ -280,6 +280,32 @@ class RSCEHelper extends \Frontend
 
 
 
+    public static function getPagePickerFieldConfig( $label )
+    {
+        if( !is_array($label) )
+        {
+            $label = array($label, '');
+        }
+
+        return array
+        (
+            'label'         => $label,
+            'inputType'     => 'pageTree',
+            'foreignKey'    => 'tl_page.title',
+            'eval'          => array
+            (
+                'fieldType'     => 'radio'
+            ),
+            'relation'      => array
+            (
+                'type'          => 'hasOne',
+                'load'          => 'lazy'
+            )
+        );
+    }
+
+
+
     public static function getGroupConfig( $label )
     {
         if( !is_array($label) )
