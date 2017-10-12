@@ -14,22 +14,26 @@ IIDO.Filter = IIDO.Filter || {};
 
     filter.init = function()
     {
-        var filterList  = $(".ce_rsce_project_filter");
+        var filterList          = $(".ce_rsce_project_filter"),
+            filterContainer     = $(".project-container-inside");
 
         if( !filterList.length )
         {
             filterList = $('.filter-list');
         }
 
-        if( filterList.length )
+        if( filterList.length && filterContainer )
         {
             // init Isotope
-            $grid = filterList.parent(".article-inside").isotope(
+            $grid = filterContainer.isotope(
                 {
                     itemSelector: '.project-item',
                     // stamp: '.project-filter',
-                    layoutMode: 'fitRows',
-                    percentPosition: true
+                    layoutMode: 'masonry',
+                    percentPosition: true,
+                    masonry: {
+                        columnWidth: (filterContainer.width() / 4)
+                    }
                 });
 
             // store filter for each group
@@ -60,6 +64,13 @@ IIDO.Filter = IIDO.Filter || {};
                 // get group key
                 var $buttonGroup    = $this.parents('.filter-group'),
                     filterGroup     = $buttonGroup.attr('data-filter-group');
+
+                var filterUrl = filterList.attr("data-url");
+
+                if( filterUrl && filterUrl.length )
+                {
+                    location.href = filterUrl + '?' + filterGroup + '=' + filterName.replace(/^.mainfilter\-/, '');
+                }
 
                 if( filterGroup === "mainfilter" )
                 {

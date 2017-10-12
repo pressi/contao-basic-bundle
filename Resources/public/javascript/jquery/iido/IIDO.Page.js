@@ -677,7 +677,14 @@ IIDO.Page = IIDO.Page || {};
             event.preventDefault();
         }
 
-        var target  = "#" + (($(aTag).attr("data-anker") === undefined || $(aTag).attr("data-anker") === "undefined"||$(aTag).attr("data-anker") === null)?$(aTag).attr("id"):$(aTag).attr("data-anker")),
+        var isString = true;
+
+        if( typeof aTag === "string" )
+        {
+            isString = true;
+        }
+
+        var target  = "#" + (isString ? aTag : (($(aTag).attr("data-anker") === undefined || $(aTag).attr("data-anker") === "undefined"||$(aTag).attr("data-anker") === null)?$(aTag).attr("id"):$(aTag).attr("data-anker"))),
             offset  = -$navOffset;
 
         if( aTag === "top" )
@@ -710,6 +717,7 @@ IIDO.Page = IIDO.Page || {};
         }
         else
         {
+
             $.smoothScroll({
                 offset          : offset,
                 scrollTarget    : target
