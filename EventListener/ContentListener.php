@@ -101,20 +101,11 @@ class ContentListener
                     $headlineUnit       = $arrHeadline['unit'];
                     $headlineValue      = $arrHeadline['value'];
 
-                    $strHeadline        = '<' . $headlineUnit . '>' . $headlineValue . '</' . $headlineUnit . '>';
-
-                    if( $objRow->floating == "above" && $objRow->headlineImagePosition == "bottom" )
+                    if( strlen($headlineValue) )
                     {
-                        if( $arrHeadline['value'] != "" )
-                        {
-                            $strBuffer = str_replace($strHeadline , '', $strBuffer);
-                        }
+                        $strHeadline        = '<' . $headlineUnit . '>' . $headlineValue . '</' . $headlineUnit . '>';
 
-                        $strBuffer = str_replace('</figure>' , '</figure>' . $strHeadline, $strBuffer);
-                    }
-                    elseif( $objRow->floating == "left" || $objRow->floating == "right" )
-                    {
-                        if( $objRow->headlineImagePosition == "nextTo" || $objRow->headlineImagePosition == "bottom" )
+                        if( $objRow->floating == "above" && $objRow->headlineImagePosition == "bottom" )
                         {
                             if( $arrHeadline['value'] != "" )
                             {
@@ -123,8 +114,21 @@ class ContentListener
 
                             $strBuffer = str_replace('</figure>' , '</figure>' . $strHeadline, $strBuffer);
                         }
+                        elseif( $objRow->floating == "left" || $objRow->floating == "right" )
+                        {
+                            if( $objRow->headlineImagePosition == "nextTo" || $objRow->headlineImagePosition == "bottom" )
+                            {
+                                if( $arrHeadline['value'] != "" )
+                                {
+                                    $strBuffer = str_replace($strHeadline , '', $strBuffer);
+                                }
+
+                                $strBuffer = str_replace('</figure>' , '</figure>' . $strHeadline, $strBuffer);
+                            }
+                        }
+
+                        $addClass =  ' headline-position-' . $objRow->headlineImagePosition;
                     }
-                    $addClass =  ' headline-position-' . $objRow->headlineImagePosition;
                 }
 
                 $addClass .= ' ip-' . preg_replace('/float_/', '', $objRow->floating);
