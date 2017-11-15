@@ -13,9 +13,10 @@
 namespace IIDO\BasicBundle\Ajax;
 
 /**
- * IIDO System Listener
+ * IIDO Page Ajax
  *
  * @author Stephan Preßl <https://github.com/pressi>
+ * @deprecated NOT IN USE!
  */
 class Page extends \Frontend
 {

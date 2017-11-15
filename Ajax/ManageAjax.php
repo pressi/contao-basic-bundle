@@ -18,6 +18,7 @@ namespace IIDO\BasicBundle\Ajax;
  * IIDO Ajax Manager
  *
  * @author Stephan Preßl <https://github.com/pressi>
+ * @deprecated NOT IN USE!
  */
 class ManageAjax extends \Frontend
 {

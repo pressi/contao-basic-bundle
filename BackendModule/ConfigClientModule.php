@@ -21,6 +21,7 @@ use IIDO\BasicBundle\Helper\Message;
  * Backend Module: Contao Init
  *
  * @author Stephan Preßl <development@prestep.at>
+ * @deprecated NO MORE IN USE!!
  */
 class ConfigClientModule extends \BackendModule
 {
