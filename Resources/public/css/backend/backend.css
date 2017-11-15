@@ -174,6 +174,13 @@ fieldset.rsce_list {
     height: auto;
 }
 
+.w50.ha,
+.w50.heightauto,
+.w50.height-auto,
+.w50.hauto {
+    min-height: 80px;
+}
+
 /*#main {*/
     /*padding: 0 0 50px;*/
     /**/
@@ -223,6 +230,11 @@ body.popup #main .tl_formbody_submit {
     padding-bottom: 10px;
 }
 
+.mcw-radio-table table {
+    width: 100% !important;
+    max-width: none !important;
+}
+
 .mcw-radio-table tbody tr td .tl_text_field:before {
     content: 'Wert: ';
     display: block;
@@ -249,21 +261,32 @@ body.popup #main .tl_formbody_submit {
     padding: 30px 0 0;
 }
 
+.mcw-radio-table table tr th:not(:last-child),
 .mcw-radio-table table tr td:not(:last-child) {
     width: 25%;
     /*padding: 0 0 15px;*/
 }
+.mcw-radio-table table thead tr th:last-child,
 .mcw-radio-table table thead tr td:last-child {
     display: none;
 }
 
+.mcw-radio-table table thead tr th:first-child,
 .mcw-radio-table table tbody tr td:first-child {
     padding-left: 5px;
+}
+
+.mcw-radio-table table tbody tr td:last-child {
+    width: auto !important;
 }
 
 .mcw-radio-table table tbody tr {
     border: 1px solid #ccc;
     margin: 8px 0;
+}
+
+.mcw-radio-table table tbody tr td input {
+    width: 95% !important;
 }
 
 .mcw-radio-table table tbody tr td:not(:last-child) input:nth-child(2) {

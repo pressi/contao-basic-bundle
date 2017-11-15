@@ -445,68 +445,71 @@ IIDO.Page = IIDO.Page || {};
                 {
                     /*Navigation*/
                     menu                                : '.nav-main',
-                    lockAnchors                         : false,
+                    //lockAnchors                         : false,
                     anchors                             : arrAnchors,
-                    navigation                          : false,
+                    //navigation                          : false,
                     /* navigationPosition                  : 'right',
                     // navigationTooltips                  : ['firstSlide', 'secondSlide'],*/
-                    showActiveTooltip                   : false,
-                    slidesNavigation                    : true,
-                    slidesNavPosition                   : 'top',
+                    //showActiveTooltip                   : false,
+                    //slidesNavigation                    : true,
+                    //slidesNavPosition                   : 'top',
 
                     /*Scrolling*/
                     css3                                : true,
                     scrollingSpeed                      : 1000,
                     /*scrollDelay                         : 600,*/
-                    autoScrolling                       : true,
-                    fitToSection                        : true,
-                    fitToSectionDelay                   : 600,
-                    scrollBar                           : false,
-                    easing                              : 'easeInQuart',
-                    easingcss3                          : 'ease',
-                    loopBottom                          : false,
-                    loopTop                             : false,
-                    loopHorizontal                      : false,
-                    continuousVertical: false,
-                    continuousHorizontal: false,
-                    scrollHorizontally: false,
-                    interlockedSlides: false,
-                    dragAndMove: false,
-                    offsetSections: false,
-                    resetSliders: false,
-                    fadingEffect: false,
+                    //autoScrolling                       : true,
+                    //fitToSection                        : true,
+                    //fitToSectionDelay                   : 600,
+                    //scrollBar                           : false,
+                    //easing                              : 'easeInQuart',
+                    //easingcss3                          : 'ease',
+                    //loopBottom                          : false,
+                    //loopTop                             : false,
+                    //loopHorizontal                      : false,
+                    //continuousVertical: false,
+                    //continuousHorizontal: false,
+                    //scrollHorizontally: false,
+                    //interlockedSlides: false,
+                    //dragAndMove: false,
+                    //offsetSections: false,
+                    //resetSliders: false,
+                    //fadingEffect: false,
                     /*/ normalScrollElements: '#element1, .element2',*/
                     scrollOverflow: true,
-                    scrollOverflowReset: false,
-                    scrollOverflowOptions: null,
+                    //scrollOverflowReset: false,
+                    scrollOverflowOptions:
+                    {
+                        preventDefault: false
+                    },
                     /*touchSensitivity: 500,*/
                     /*normalScrollElementTouchThreshold: 5,*/
-                    bigSectionsDestination: null,
+                    //bigSectionsDestination: null,
 
                     /*/Accessibility*/
-                    keyboardScrolling: true,
-                    animateAnchor: true,
-                    recordHistory: true,
+                    //keyboardScrolling: true,
+                    //animateAnchor: true,
+                    //recordHistory: true,
 
                     /*/Design*/
-                    controlArrows: true,
-                    verticalCentered: true,
+                    //controlArrows: true,
+                    //verticalCentered: true,
                     /*/ sectionsColor : ['#ccc', '#fff'],
                     // slidesColor                         : ['#ccc', '#fff'],
                     // paddingTop: '3em',
                     // paddingBottom: '10px',*/
-                    fixedElements: '#header', /*/'#header, .footer'*/
-                    // responsiveWidth: 700,
+                    //fixedElements: '#header', /*/'#header, .footer'*/
+                    responsiveWidth: 500,
                     // responsiveHeight: 0,
                     responsiveSlides: false,
-                    parallax: false,
+                    //parallax: false,
                     /*/ parallaxOptions: {type: 'reveal', percentage: 62, property: 'translate'},*/
 
                     /*/Custom selectors*/
                     /*/ sectionSelector: '.section',
                     // slideSelector: '.slide',*/
 
-                    lazyLoading: true,
+                    //lazyLoading: true,
 
                     resize                              : false,
 
@@ -717,7 +720,6 @@ IIDO.Page = IIDO.Page || {};
         }
         else
         {
-
             $.smoothScroll({
                 offset          : offset,
                 scrollTarget    : target
