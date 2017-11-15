@@ -152,6 +152,25 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_article.navLinkMode.0">
+                <source>link mode</source>
+                <target>Verlinkungs Modus</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.navLinkPage.0">
+                <source>link mode</source>
+                <target>Verlinkungs-Seite</target>
+            </trans-unit>
+            <trans-unit id="tl_article.navLinkUrl.0">
+                <source>link mode</source>
+                <target>Verlinkungs-URL</target>
+            </trans-unit>
+            <trans-unit id="tl_article.navLinkNewWindow.0">
+                <source>link mode</source>
+                <target>Verlinkung in neuem Fenster öffnen</target>
+            </trans-unit>
+
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
@@ -254,6 +273,17 @@
             <trans-unit id="tl_article.options.bgRepeat.no-repeat">
                 <source>no repeat</source>
                 <target>Keine Wiederholung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.navLinkMode.intern">
+                <source>intern</source>
+                <target>Interne-Verlinkung</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.navLinkMode.extern">
+                <source>extern</source>
+                <target>Externe-Verlinkung</target>
             </trans-unit>
 
 

@@ -28,6 +28,17 @@
                 <target>4. Spalte (Radio-Button)</target>
             </trans-unit>
 
+
+
+            <trans-unit id="FFL.radioTable.0">
+                <source>Radio button table</source>
+                <target>Radio-Button-Tabelle</target>
+            </trans-unit>
+            <trans-unit id="FFL.radioTable.1">
+                <source>A table of multiple options from which one can be selected.</source>
+                <target>Eine Tabelle mehrerer Optionen, von denen eine ausgewählt werden kann.</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
