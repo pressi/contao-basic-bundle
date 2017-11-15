@@ -22,6 +22,11 @@ class RSCEHelper extends \Frontend
 
     public static function getImageFieldConfig( $label )
     {
+        if( !is_array($label) )
+        {
+            $label = array($label, '');
+        }
+
         return array
         (
             'label'         => $label,
@@ -60,7 +65,7 @@ class RSCEHelper extends \Frontend
 
 
 
-    public static function getTextFieldConfig( $label, $newLine = false )
+    public static function getTextFieldConfig( $label, $newLine = false, $isLong = false )
     {
         if( !is_array($label) )
         {
@@ -73,7 +78,28 @@ class RSCEHelper extends \Frontend
             'inputType'     => 'text',
             'eval'          => array
             (
-                'tl_class'          => 'w50' . ($newLine ? ' clr': '')
+                'tl_class'          => ($isLong ? 'long' : 'w50') . ($newLine ? ' clr': '')
+            )
+        );
+    }
+
+
+
+    public static function getDoubleTextFieldConfig( $label, $newLine = false, $isLong = false )
+    {
+        if( !is_array($label) )
+        {
+            $label = array($label, '');
+        }
+
+        return array
+        (
+            'label'         => $label,
+            'inputType'     => 'text',
+            'eval'          => array
+            (
+                'size'              => 2,
+                'tl_class'          => ($isLong ? 'long' : 'w50') . ($newLine ? ' clr': '')
             )
         );
     }
@@ -319,6 +345,22 @@ class RSCEHelper extends \Frontend
             'inputType' => 'group',
         );
     }
+
+
+
+    public static function getPicture( &$objClass, $image, $arrSize = array() )
+    {
+        return $objClass->getImageObject($image, $arrSize);
+    }
+
+
+    public static function getPictureSRC( &$objClass, $image, $arrSize = array() )
+    {
+        $objPicture = self::getPicture($objClass, $image, $arrSize);
+
+        return $objPicture->src;
+    }
+
 
 
 

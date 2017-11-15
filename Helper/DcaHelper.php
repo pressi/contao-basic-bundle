@@ -64,8 +64,14 @@ class DcaHelper extends \Frontend
                 break;
 
             case "select":
+                if( $arrFieldType[ 1 ] === "selector" )
+                {
+                    $typeAdd    = FALSE;
+                    $isSelector = TRUE;
+                }
+
 //                self::addSelectField($fieldName, $strTable, $eval, $classes, $replaceClasses, $defaultValue, $typeAdd, $langTable);
-                self::addSelectField($fieldName, $strTable, $eval, $classes, $replaceClasses, $defaultValue, $typeAdd, $langTable, $defaultConfig);
+                self::addSelectField($fieldName, $strTable, $eval, $classes, $replaceClasses, $defaultValue, $typeAdd, $isSelector, $langTable, $defaultConfig);
                 break;
 
             case "size":
@@ -87,9 +93,18 @@ class DcaHelper extends \Frontend
             case "imagesfield":
                 self::addImagesField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
                 break;
+
+            case "page":
+            case "pagetree":
+                self::addPageField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
+                break;
+
+            case "url":
+            case "link":
+                self::addUrlField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
+                break;
         }
     }
-
 
 
     public static function addPalette($strName, $arrFields, $strTable, $override = FALSE, $addDefaultBefore = TRUE, $addDefaultAfter = TRUE)
@@ -168,9 +183,13 @@ class DcaHelper extends \Frontend
 
                 $strFields = implode(",", $arrUsedFields);
             }
-        }
 
-        $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ] = $strFields;
+            $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ] = $strFields;
+        }
+        else
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['subpalettes'][ $strName ] = $strFields;
+        }
     }
 
 
@@ -305,7 +324,7 @@ class DcaHelper extends \Frontend
 
 
 
-    protected static function addSelectField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $defaultValue = '', $shortOptions = FALSE, $langTable = '', $defaultConfig = array())
+    protected static function addSelectField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $defaultValue = '', $shortOptions = FALSE, $isSelector = FALSE, $langTable = '', $defaultConfig = array())
     {
         if( strlen($langTable) )
         {
@@ -330,6 +349,13 @@ class DcaHelper extends \Frontend
             $arrOptions = $GLOBALS['TL_LANG'][ $langTable?:$strTable ]['options_' . $fieldName ];
         }
 
+        if( $isSelector )
+        {
+            $defaultEval['submitOnChange'] = TRUE;
+
+            $GLOBALS['TL_DCA'][ $strTable ]['palettes']['__selector__'][] = $fieldName;
+        }
+
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
         (
             'label'                 => &$GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ],
@@ -337,7 +363,7 @@ class DcaHelper extends \Frontend
             'inputType'             => 'select',
             'options'               => $arrOptions,
             'eval'                  => $defaultEval,
-            'sql'                   => "varchar(" . $defaultEval['maxlength']  . ") NOT NULL default ''"
+            'sql'                   => "varchar(" . $defaultEval['maxlength']?:32  . ") NOT NULL default ''"
         );
 
         if( strlen($defaultValue) )
@@ -499,5 +525,222 @@ class DcaHelper extends \Frontend
         {
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'] = array_merge($GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'], $eval);
         }
+    }
+
+
+
+    protected static function addPageField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
+    {
+        if( strlen($langTable) )
+        {
+            \Controller::loadLanguageFile( $langTable );
+        }
+
+        $defaultEval = array
+        (
+            'fieldType'         => 'radio',
+            'tl_class'          => ($replaceClasses ? $classes : 'w50 hauto' . (strlen($classes) ? ' ' . $classes : ''))
+        );
+
+        if( count($eval) )
+        {
+            $defaultEval = array_merge($defaultEval, $eval);
+        }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
+        (
+            'label'                 => &$GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ],
+            'exclude'               => true,
+            'inputType'             => 'pageTree',
+            'foreignKey'            => 'tl_page.title',
+            'eval'                  => $defaultEval,
+            'sql'                   => "int(10) unsigned NOT NULL default '0'",
+            'relation'              => array('type'=>'hasOne', 'load'=>'lazy')
+        );
+    }
+
+
+
+    protected static function addUrlField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
+    {
+        if( strlen($langTable) )
+        {
+            \Controller::loadLanguageFile( $langTable );
+        }
+
+        $defaultEval = array
+        (
+            'mandatory'         => true,
+            'rgxp'              => 'url',
+            'decodeEntities'    => true,
+            'maxlength'         => 255,
+            'tl_class'          => ($replaceClasses ? $classes : 'w50' . (strlen($classes) ? ' ' . $classes : ''))
+        );
+
+        if( count($eval) )
+        {
+            $defaultEval = array_merge($defaultEval, $eval);
+        }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
+        (
+            'label'                 => &$GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ],
+            'exclude'               => true,
+            'inputType'             => 'text',
+            'eval'                  => $defaultEval,
+            'sql'                   => "varchar(" . $defaultEval['maxlength']?:255 . ") NOT NULL default ''"
+        );
+    }
+
+
+
+    public static function addProtectedFieldsToTable( $strTable, $toPalette = '', $replaceLegend = '', $replacePosition = 'after' )
+    {
+        \Controller::loadLanguageFile( $strTable );
+
+        $strLegend = '{protected_legend:hide},protected;';
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields']['protected'] = array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['protected'],
+            'exclude'                 => true,
+            'filter'                  => true,
+            'inputType'               => 'checkbox',
+            'eval'                    => array
+            (
+                'submitOnChange'    => true
+            ),
+            'sql'                     => "char(1) NOT NULL default ''"
+        );
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields']['groups'] = array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['groups'],
+            'exclude'                 => true,
+            'inputType'               => 'checkbox',
+            'foreignKey'              => 'tl_member_group.name',
+            'eval'                    => array
+            (
+                'mandatory'         => true,
+                'multiple'          => true
+            ),
+            'sql'                     => "blob NULL",
+            'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
+        );
+
+        $GLOBALS['TL_DCA'][ $strTable ]['palettes']['__selector__'][] = 'protected';
+        $GLOBALS['TL_DCA'][ $strTable ]['subpalettes']['protected'] = 'groups';
+
+        self::renderTableLegend( $strTable, $strLegend, $toPalette, $replaceLegend, $replacePosition);
+    }
+
+
+
+    public static function addPublishedFieldsToTable( $strTable, $toPalette = '', $replaceLegend = '', $replacePosition = 'after' )
+    {
+        \Controller::loadLanguageFile( $strTable );
+
+        $strLegend = '{publish_legend},published,start,stop;';
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields']['published'] = array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['published'],
+            'exclude'                 => true,
+            'filter'                  => true,
+            'flag'                    => 1,
+            'inputType'               => 'checkbox',
+            'eval'                    => array
+            (
+                'doNotCopy'         => true
+            ),
+            'sql'                     => "char(1) NOT NULL default ''"
+        );
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields']['start'] = array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['start'],
+            'exclude'                 => true,
+            'inputType'               => 'text',
+            'eval'                    => array
+            (
+                'rgxp'              => 'datim',
+                'datepicker'        => true,
+                'tl_class'          => 'w50 wizard'
+            ),
+            'sql'                     => "varchar(10) NOT NULL default ''"
+        );
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields']['stop'] = array
+        (
+            'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['stop'],
+            'exclude'                 => true,
+            'inputType'               => 'text',
+            'eval'                    => array
+            (
+                'rgxp'              => 'datim',
+                'datepicker'        => true,
+                'tl_class'          => 'w50 wizard'
+            ),
+            'sql'                     => "varchar(10) NOT NULL default ''"
+        );
+
+        unset($GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['pid']);
+        $GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['pid,start,stop,published'] = 'index';
+
+        self::renderTableLegend( $strTable, $strLegend, $toPalette, $replaceLegend, $replacePosition);
+    }
+
+
+
+    protected static function renderTableLegend( $strTable, $strLegend, $toPalette = '', $replaceLegend = false, $replacePosition = 'after')
+    {
+        if( !strlen($toPalette) )
+        {
+            foreach($GLOBALS['TL_DCA'][ $strTable ]['palettes'] as $strPalette => $strFields)
+            {
+                if( $strPalette === "__selector__" )
+                {
+                    continue;
+                }
+
+                $strFields = self::renderLegendFields( $strFields, $strLegend, $replaceLegend, $replacePosition);
+
+                $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ] = $strFields;
+            }
+        }
+        else
+        {
+            $strFields = self::renderLegendFields( $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $toPalette ], $strLegend, $replaceLegend, $replacePosition);
+
+            $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $toPalette ] = $strFields;
+        }
+    }
+
+
+
+    protected static function renderLegendFields( $strFields, $strLegend, $replaceLegend = false, $replacePosition = 'after' )
+    {
+        if( $replaceLegend )
+        {
+            if( !preg_match('/_legend$/', $replaceLegend) )
+            {
+                $replaceLegend = $replaceLegend . '_legend';
+            }
+
+            if( $replacePosition === "after" )
+            {
+                $strFields = preg_replace('/\{' . preg_quote($replaceLegend, '/') . '([A-Za-z0-9\-:]{0,})\},([A-Za-z0-9\-_,;.:]);/', '{' . $replaceLegend . '$1},$2;' . $strLegend, $strFields);
+            }
+            else
+            {
+                $strFields = preg_replace('/\{' . preg_quote($replaceLegend, '/') . '([A-Za-z0-9\-:]{0,})\}/', $strLegend . '{' . $replaceLegend . '$1}', $strFields);
+            }
+        }
+        else
+        {
+            $strFields = $strFields . $strLegend;
+        }
+
+        return $strFields;
     }
 }

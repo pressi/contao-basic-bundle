@@ -441,4 +441,20 @@ class ContentHelper
         return self::renderStyleVars( $strStyles );
     }
 
+
+
+    public function generateImageTag( $strImage, $arrImageSize = array() )
+    {
+        $objImage = \FilesModel::findByPk( $strImage );
+
+        if( $objImage )
+        {
+            $objFactory = \System::getContainer()->get('contao.image.image_factory');
+            /* @var $objFactory \Contao\CoreBundle\Image\ImageFactory */
+
+            $objFactory->create( $objImage->path, $arrImageSize );
+            return \Image::getHtml( $objImage->path );
+        }
+    }
+
 }
