@@ -55,10 +55,11 @@ class FormListener
     {
         if( \System::getContainer()->get('request_stack')->getCurrentRequest()->get("_scope") === ContaoCoreBundle::SCOPE_FRONTEND )
         {
-            if( $objClass->type !== "submit" && $objClass->type !== "rocksolid_antispam" && $objClass->type !== "" && !preg_match('/rsas-field/', $strBuffer) )
+            if( $objClass->type !== "submit" && $objClass->type !== "rocksolid_antispam" && $objClass->type !== "" && !preg_match('/rsas-field/', $strBuffer) && $objClass->type !== "radioTable")
             {
-                $isSelect  = FALSE;
-                $strBuffer = preg_replace('/class="widget/', 'class="field widget', $strBuffer);
+                $isSelect   = FALSE;
+                $isRadio    = FALSE;
+                $strBuffer  = preg_replace('/class="widget/', 'class="field widget', $strBuffer);
 
                 if( preg_match('/select/', $strBuffer) )
                 {
@@ -67,19 +68,70 @@ class FormListener
                     $strBuffer = preg_replace_callback('/<select([A-Za-z0-9\s\-_="\{\}:]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:]{0,})>/', 'self::replaceSelect', $strBuffer, -1, $count);
                 }
 
+                if( preg_match('/type="radio"/', $strBuffer) )
+                {
+                    $isRadio = TRUE;
+                }
+
                 if( !preg_match('/checkbox/', $strBuffer) )
                 {
                     $strBuffer = preg_replace_callback('/<label([A-Za-z0-9\s\-_="\{\}:]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:]{0,})>/', 'self::replaceLabel', $strBuffer, -1, $count);
-                    $strBuffer = preg_replace('/<\/label>/', '</label><div class="control">' . ($isSelect ? '<div class="select">' : ''), $strBuffer, -1, $count);
+
+                    if( !$isRadio )
+                    {
+                        $strBuffer = preg_replace('/<\/label>/', '</label><div class="control">' . ($isSelect ? '<div class="select">' : ''), $strBuffer, -1, $count);
+                    }
 
                     if( $count )
                     {
                         $strBuffer = $strBuffer . '</div>' . ($isSelect ? '</div>' : '');
                     }
 
-                    if( preg_match('/<input/', $strBuffer) )
+                    if( preg_match('/<input([A-Za-z0-9\s\-_="\{\}:,.;]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"/', $strBuffer, $arrInputMatches) )
                     {
-                        $strBuffer = preg_replace('/<input([A-Za-z0-9\s\-_="\{\}:,.;]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:,.;]{0,})>/', '<input$1class="input $2"$3>', $strBuffer, -1, $count);
+                        if( !$isRadio )
+                        {
+                            $strBuffer = preg_replace('/<input([A-Za-z0-9\s\-_="\{\}:,.;]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:,.;]{0,})>/', '<input$1class="input $2"$3>', $strBuffer, -1, $count);
+                        }
+                        else
+                        {
+                            preg_match_all('/<span>(.*)<\/span>/', $strBuffer, $arrRadioMatches);
+
+                            if( count($arrRadioMatches[0]) )
+                            {
+                                foreach($arrRadioMatches[1] as $strRadioField)
+                                {
+                                    $strNewRadioField = $strRadioField;
+
+                                    if( preg_match('/<label([A-Za-z0-9\s\-_,;.:\/\(\)=\"\']{0,})>/', $strRadioField, $arrRadioInputMatches) )
+                                    {
+                                        $strNewRadioField = preg_replace('/<label([A-Za-z0-9\s\-_,;.:\/\(\)=\"\']{0,})>/', '', $strRadioField, -1, $count);
+
+                                        if( $count )
+                                        {
+                                            $radioMatch = $arrRadioInputMatches[0];
+
+                                            if( preg_match('/class="/', $radioMatch) )
+                                            {
+                                                $radioMatch = preg_replace('/class="/', 'class="radio ', $radioMatch);
+                                            }
+                                            else
+                                            {
+                                                $radioMatch = preg_replace('/<label/', '<label class="radio"', $radioMatch);
+                                            }
+
+                                            $strNewRadioField = $radioMatch . $strNewRadioField;
+                                        }
+                                    }
+
+                                    $strBuffer = preg_replace('/' . preg_quote($strRadioField, '/') . '/', $strNewRadioField, $strBuffer);
+                                }
+
+                                $strBuffer = preg_replace('/<span><label/', '<div class="control"><label', $strBuffer, 1);
+                                $strBuffer = preg_replace(array('/<span><label/', '/<\/label><\/span>/'), array('<label', '</label>'), $strBuffer, -1);
+                                $strBuffer = preg_replace('/<\/fieldset>/', '</div></fieldset>', $strBuffer, 1);
+                            }
+                        }
                     }
                     elseif( preg_match('/<textarea/', $strBuffer) )
                     {

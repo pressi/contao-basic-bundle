@@ -640,6 +640,8 @@ class FrontendTemplateListener
                 {
                     $strBuffer = preg_replace('/<div id="main">([A-Za-z0-9\s\n]{0,})<div class="inside">/', '<div id="main">$1<div class="inside section">', $strBuffer);
                 }
+
+                $strBuffer = preg_replace('/<html/', '<html class="enable-fullpage"', $strBuffer);
             }
 
             if($footerMode)
@@ -817,6 +819,23 @@ class FrontendTemplateListener
             if( count($arrMainClasses) )
             {
                 $strBuffer = preg_replace('/id="main"/', 'id="main" class="' . implode(' ', $arrMainClasses) . '"', $strBuffer);
+            }
+
+            if( $objPage->addPageLoader )
+            {
+                preg_match_all('/<html([A-Za-z0-9\s\-_:.;,="%]{0,})>/', $strBuffer, $arrHtmlMatches);
+
+                if( count($arrHtmlMatches[0]) )
+                {
+                    if( preg_match('/class="/', $arrHtmlMatches[1][0]) )
+                    {
+                        $strBuffer = preg_replace('/<html([A-Za-z0-9\s\-_:.;,="%]{0,})class="/', '<html$1class="enable-pageloader ', $strBuffer);
+                    }
+                    else
+                    {
+                        $strBuffer = preg_replace('/<html/', '<html class="enable-pageloader"', $strBuffer);
+                    }
+                }
             }
         }
 

@@ -104,9 +104,10 @@ class PageListener
 
 //        if( $objLayout->loadJQueryUI )
 //        {
-//            $GLOBALS['TL_JAVASCRIPT']['jquery_ui'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.min.js|static';;
+//            $GLOBALS['TL_JAVASCRIPT']['jquery_ui'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.min.js|static';
 //            $GLOBALS['TL_CSS']['jquery_ui']        = $this->bundlePathPublic . '/css/frontend/jquery-ui.css||static';
 //        }
+        $GLOBALS['TL_JAVASCRIPT']['jquery_ui']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.1.12.1.min.js|static';
 
 //        $GLOBALS['TL_JAVASCRIPT']['easing']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easing.min.js|static';
 
@@ -114,7 +115,7 @@ class PageListener
         {
             $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['scrolloverflow']     = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/scrolloverflow.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullPage.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullpage.min.js|static';
 
             $GLOBALS['TL_JAVASCRIPT']['iido_fullpage']      = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.FullPage.js|static';
         }
@@ -146,6 +147,8 @@ class PageListener
             $GLOBALS['TL_CSS']['fakeloader']                = $this->bundlePathPublic . '/css/fakeloader.css||static';
             $GLOBALS['TL_JAVASCRIPT']['fakeloader']         = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/fakeLoader.min.js|static';
         }
+
+//        $GLOBALS['TL_JAVASCRIPT']['hdpi_canvas']         = $this->bundlePathPublic . '/javascript/hidpi-canvas.min.js|static';
 
         $this->addDefaultStylesheets();
 
