@@ -20,16 +20,15 @@
  */
 namespace IIDO\BasicBundle\Util;
 
-// Exit if accessed directly.
-//if ( ! defined( 'ABSPATH' ) ) {
-//    exit;
-//}
 
-if ( ! class_exists( 'ColorUtil' ) ) {
+if ( ! class_exists( 'ColorUtil' ) )
+{
+
     /**
      * The color calculations class.
      */
-    class ColorUtil {
+    class ColorUtil
+    {
 
         /**
          * An array of our instances.
@@ -729,8 +728,10 @@ if ( ! class_exists( 'ColorUtil' ) ) {
          * @since 1.0.0
          * @return array
          */
-        protected function get_word_colors() {
-            return array(
+        protected function get_word_colors()
+        {
+            return array
+            (
                 'aliceblue'            => 'F0F8FF',
                 'antiquewhite'         => 'FAEBD7',
                 'aqua'                 => '00FFFF',
@@ -891,10 +892,14 @@ if ( ! class_exists( 'ColorUtil' ) ) {
          * @param mixed  $arguments The method arguments.
          * @return mixed
          */
-        public function __call( $name, $arguments ) {
-            if ( method_exists( $this, $name ) ) {
+        public function __call( $name, $arguments )
+        {
+            if ( method_exists( $this, $name ) )
+            {
                 call_user_func( array( $this, $name ), $arguments );
-            } else {
+            }
+            else
+            {
                 return $arguments;
             }
         }
