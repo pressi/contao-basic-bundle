@@ -98,6 +98,7 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
 
     ->addField('hideInMenu', 'navigation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
     ->addField('overviewImage', 'hideInMenu', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+    ->addField('navLinkMode', 'overviewImage', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
     ->addField('navTitle', 'title', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
     ->addField('navSubTitle', 'navTitle', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
@@ -143,6 +144,9 @@ if( $objParentPage && $objParentPage->enableFullpage )
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addBackgroundVideo", "videoSRC,posterSRC", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuSRC_news", "submenuNewsArchive", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strTable);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_intern", "navLinkPage", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_extern", "navLinkUrl,navLinkNewWindow", $strTable);
 
 
 
@@ -314,6 +318,13 @@ $GLOBALS['TL_DCA']['tl_article']['fields']['videoSRC'] = array
 //$GLOBALS['TL_DCA']['tl_article']['fields']['hideInMenu']['label']           = &$GLOBALS['TL_LANG']['tl_article']['hideInMenu'];
 //$GLOBALS['TL_DCA']['tl_article']['fields']['hideInMenu']['eval']['submitOnChange'] = FALSE;
 \IIDO\BasicBundle\Helper\DcaHelper::addField("hideInMenu", "checkbox", $strTable, array(), "clr no-clr-after");
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkMode", "select_selector", $strTable, array('includeBlankOption'=>true), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkPage", "page", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkUrl", "url", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkNewWindow", "checkbox", $strTable);
+
+
 
 //$GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundVideo']            = $GLOBALS['TL_DCA']['tl_article']['fields']['fullHeight'];
 //$GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundVideo']['label']   = &$GLOBALS['TL_LANG']['tl_article']['addBackgroundVideo'];

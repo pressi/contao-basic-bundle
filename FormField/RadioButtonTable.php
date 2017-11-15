@@ -48,7 +48,7 @@ class RadioButtonTable extends \RadioButton
 
     public function getRealOptions( $arrOptions )
     {
-        if( key_exists('rowTitle', $arrOptions[0]) )
+        if( is_array($arrOptions) && key_exists('rowTitle', $arrOptions[0]) )
         {
             $arrNewOptions = array();
 
@@ -184,6 +184,7 @@ class RadioButtonTable extends \RadioButton
         $arrHeader  = deserialize($this->tableHeader, TRUE);
         $strHeader  = '';
         $strBody    = '';
+        $noTable    = preg_match('/no-table/', $this->class);
 
         foreach($arrHeader as $headerValue)
         {
@@ -191,35 +192,35 @@ class RadioButtonTable extends \RadioButton
             {
                 if( !strlen($strHeader) )
                 {
-                    $strHeader = '<thead><th>' . $headerValue . '</th>';
+                    $strHeader = $noTable ? '<div class="table-head"><div class="table-item head-item">' . $headerValue . '</div>' : '<thead><th>' . $headerValue . '</th>';
                 }
                 else
                 {
-                    $strHeader .= '<th>' . $headerValue . '</th>';
+                    $strHeader .= $noTable ? '<div class="table-item head-item">' . $headerValue . '</div>' : '<th>' . $headerValue . '</th>';
                 }
             }
         }
 
         if( strlen($strHeader) )
         {
-            $strHeader .= '</thead>';
+            $strHeader .= $noTable ? '</div>' : '</thead>';
         }
 
         foreach ($this->arrTableOptions as $i => $arrOption)
         {
             if( !strlen($strBody) )
             {
-                $strBody = '<tbody>';
+                $strBody = $noTable ? '<div class="table-body">' : '<tbody>';
             }
 
-            $strBody .= '<tr>';
+            $strBody .= $noTable ? '<div class="table-row">' : '<tr>';
 
             $col = 0;
             foreach($arrOption as $arrField)
             {
                 if( !is_array($arrField) )
                 {
-                    $strBody .= '<td>' . $arrField . '</td>';
+                    $strBody .= $noTable ? '<div class="table-item">' . $arrField . '</div>' : '<td>' . $arrField . '</td>';
                 }
                 else
                 {
@@ -228,7 +229,7 @@ class RadioButtonTable extends \RadioButton
 
                     if( strlen($strName) )
                     {
-                        $strBody .= sprintf('<td><span><input type="radio" name="%s" id="opt_%s" class="radio" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span></td>',
+                        $strBody .= ($noTable ? '<div class="table-item">' : '<td>') . sprintf('<span><input type="radio" name="%s" id="opt_%s" class="radio" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span>',
                             $this->strName,
                             $this->strId . '_' . $i . '_' . $col,
                             $arrOption['rowTitle'] . ' ' . $strName,
@@ -238,21 +239,23 @@ class RadioButtonTable extends \RadioButton
                             $this->strId . '_' . $i . '_' . $col,
                             $this->strId . '_' . $i . '_' . $col,
                             $strLabel
-                        );
+                        ) . ($noTable ? '</div>' : '</td>');
                     }
                 }
 
                 $col++;
             }
 
-            $strBody .= '</tr>';
+            $strBody .= $noTable ? '</div>' : '</tr>';
         }
 
-        if( !strlen($strBody) )
+        if( strlen($strBody) )
         {
-            $strBody .= '</tbody>';
+            $strBody .= $noTable ? '</div>' : '</tbody>';
         }
 
-        return ((strlen($strBody)) ? '<div class="widget widget-radio widget-radio-table"><table>' . $strHeader . $strBody . '</table></div>' : '');
+        $strTable = $noTable ? '<div class="table-tag-container">' . $strHeader . $strBody . '</div>' : '<table>' . $strHeader . $strBody . '</table>';
+
+        return ((strlen($strBody)) ? '<div class="widget widget-radio widget-radio-table"><div class="label">' . $this->label . '</div>' . $strTable . '</div>' : '');
     }
 }

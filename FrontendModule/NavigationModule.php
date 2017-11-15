@@ -487,7 +487,7 @@ class NavigationModule extends \ModuleNavigation
                 $useCustomNav   = TRUE;
                 $objSubPages    = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $arrNavPages[0] );
 
-                if( !$objSubPages )
+                if( $objSubPages || $this->navigationTpl === "nav_fullpage" )
                 {
                     $useCustomNav       = FALSE;
 
@@ -530,9 +530,16 @@ class NavigationModule extends \ModuleNavigation
             }
         }
 
-        if( $objPage->enableFullpage && count($this->getPageSiblings($objPage, true)) === 0 )
+        if( $objPage->enableFullpage || ($this->navigationTpl === "nav_fullpage" && $this->rootPage) ) // && count($this->getPageSiblings($objPage, true)) === 0
         {
-            $strItems = $this->getPages($objPage->id, 1, $host, $lang, "articles");
+            $searchPageId = $objPage->id;
+
+            if( $this->navigationTpl === "nav_fullpage" && $this->rootPage )
+            {
+                $searchPageId = $this->rootPage;
+            }
+
+            $strItems = $this->getPages($searchPageId, 1, $host, $lang, "articles");
         }
         else
         {

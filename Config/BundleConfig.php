@@ -9,6 +9,12 @@
 
 namespace IIDO\BasicBundle\Config;
 
+/**
+ * Class BundleConfig
+ *
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
+ */
 class BundleConfig
 {
     static $namespace           = 'IIDO';
@@ -18,14 +24,26 @@ class BundleConfig
     static $bundleGroup         = "2do";
 
 
-
+    /**
+     * Get all Bundle Data in one array
+     *
+     * @return array
+     */
     public static function getBundleConfigArray() // TODO: custom order?
     {
         return array(self::getNamespace(), self::getSubNamespace(), self::getSubName(), self::getPrefix(), self::getTablePrefix(), self::getListenerName());
     }
 
 
-    public static function getBundleConfig( $funcName )
+    /**
+     * Get Bundle Config Data from function name
+     *
+     * @param string       $funcName  Name of the get function
+     * @param null|string  $funcVar   function variable
+     *
+     * @return string
+     */
+    public static function getBundleConfig( $funcName, $funcVar = null )
     {
         $functionName = 'get' . $funcName;
 
@@ -59,6 +77,13 @@ class BundleConfig
                     $return = self::getTablePrefix();
                     break;
 
+                case "field":
+                case "fieldprefix":
+                case "tablefield":
+                case "tablefieldprefix":
+                    $return = self::getTableFieldPrefix();
+                    break;
+
                 case "listener":
                 case "listenername":
                     $return = self::getListenerName();
@@ -83,7 +108,8 @@ class BundleConfig
                 case "publicbundlepath":
                 case "bundlePathPublic":
                 case "publicBundlePath":
-                    $return = self::getBundlePath( true );
+                    $funcVar    = (($funcVar === null) ? false : $funcVar);
+                    $return     = self::getBundlePath( true, $funcVar );
                     break;
 
                 default:
@@ -96,59 +122,122 @@ class BundleConfig
     }
 
 
+    /**
+     * Get Bundle Namespace
+     *
+     * @return string
+     */
     public static function getNamespace()
     {
         return static::$namespace;
     }
 
 
+
+    /**
+     * Get Bundle Sub-Namespace
+     *
+     * @return string
+     */
     public static function getSubNamespace()
     {
         return static::$subNamespace;
     }
 
 
+
+    /**
+     * Get Bundle Sub Name
+     *
+     * @return string
+     */
     public static function getSubName()
     {
         return strtolower( preg_replace('/Bundle$/', '', static::$subNamespace) );
     }
 
 
+
+    /**
+     * Get Bundle Prefix
+     *
+     * @return string
+     */
     public static function getPrefix()
     {
         return strtolower(static::$namespace);
     }
 
 
+
+    /**
+     * Get Bundle Table Prefix
+     *
+     * @return string
+     */
     public static function getTablePrefix()
     {
-        return $tablePrefix = 'tl_' . self::getPrefix() . '_';
+        return 'tl_' . self::getPrefix() . '_' . self::getSubName() . '_';
     }
 
 
+
+    /**
+     * Get Bundle Table Field Prefix
+     *
+     * @return string
+     */
+    public static function getTableFieldPrefix()
+    {
+        return strtolower( self::getNamespace() ) . ucfirst( self::getSubName() ) . '_';
+    }
+
+
+
+    /**
+     * Get Bundle Listener Name
+     *
+     * @return string
+     */
     public static function getListenerName()
     {
         return self::getPrefix() . '_' . self::getSubName();
     }
 
 
+
+    /**
+     * Get Bundle Name
+     *
+     * @return string
+     */
     public static function getBundleName()
     {
         return static::$bundleName;
     }
 
 
+
+    /**
+     * Get Bundle Group
+     *
+     * @return string
+     */
     public static function getBundleGroup()
     {
         return static::$bundleGroup;
     }
 
-
-    public static function getBundlePath( $public = false )
+    /**
+     * Get Bundle Path
+     *
+     * @return string
+     */
+    public static function getBundlePath( $public = false, $includeWebFolder = true )
     {
         if( $public )
         {
-            return 'web/bundles/' . self::getPrefix() . self::getSubName();
+            return ($includeWebFolder ? 'web/' : '') .'bundles/' . self::getPrefix() . self::getSubName();
         }
         else
         {

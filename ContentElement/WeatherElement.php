@@ -9,6 +9,7 @@
  */
 
 namespace IIDO\BasicBundle\ContentElement;
+use IIDO\BasicBundle\Cron\WeatherDataCron;
 use IIDO\BasicBundle\Helper\ImageHelper;
 
 
@@ -22,9 +23,11 @@ class WeatherElement extends \ContentElement
 
     /**
      * Template
+     * 
      * @var string
      */
     protected $strTemplate = 'ce_iido_weather';
+
 
 
     /**
@@ -35,6 +38,12 @@ class WeatherElement extends \ContentElement
         global $objPage;
 
         $rootDir = $rootDir            = dirname(\System::getContainer()->getParameter('kernel.root_dir'));;
+
+        if( !file_exists($rootDir . '/system/tmp/weather-data.txt') )
+        {
+            $objWeatherCron = new WeatherDataCron();
+            $objWeatherCron->generateCustomizeWeatherData();
+        }
 
         if( file_exists($rootDir . '/system/tmp/weather-data.txt') )
         {
