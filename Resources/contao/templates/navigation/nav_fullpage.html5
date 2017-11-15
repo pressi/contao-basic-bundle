@@ -1,16 +1,44 @@
-
+<? global $objPage ?>
 <ul class="<?= $this->level ?>">
   <?php foreach ($this->items as $item):
 
       $item['href'] = '#' . $item['alias'];
 
-  if( $item['noContent'] || preg_match('/no-content/', $item['class']))
+  if( ($item['noContent'] || preg_match('/no-content/', $item['class'])) && $item['navLinkMode'] === "" )
   {
       $item['href'] = 'javascript:void(0);';
 
       if( !preg_match('/no-content/', $item['class']) )
       {
           $item['class'] = trim($item['class'] . ' no-content');
+      }
+  }
+  else
+  {
+      $objParentPage = \PageModel::findByPk( $item['pid'] );
+
+      if( $objParentPage && $objParentPage->id != $objPage->id )
+      {
+          $item['href'] = $objParentPage->getFrontendUrl() . $item['href'];
+      }
+
+      if( $item['navLinkMode'] === "intern" )
+      {
+          $objLinkPage = \PageModel::findByPk( $item['navLinkPage'] );
+
+          if( $objLinkPage )
+          {
+              $item['href'] = $objLinkPage->getFrontendUrl();
+          }
+      }
+      elseif( $item['navLinkMode'] === "extern" )
+      {
+          $item['href'] = $item['navLinkUrl'];
+
+          if( $item['navLinkNewWindow'] )
+          {
+              $item['target'] = ' target="_blank"';
+          }
       }
   }
 

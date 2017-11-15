@@ -1,4 +1,10 @@
-<? $this->extend("block_searchable") ?>
+<? $this->extend("block_searchable");
+
+if( !$this->addSnow || $this->snowDepth <= 0 )
+{
+    $this->class = trim($this->class . ' no-snow');
+}
+?>
 
 <? $this->block('content'); ?>
 
@@ -12,7 +18,7 @@
     </div>
 <? endif ?>
 
-<? if( $this->addSnow ): ?>
+<? if( $this->addSnow && $this->snowDepth > 0 ): ?>
     <div class="snow">
         <span class="depth"><?= $this->snowDepth ?></span><span class="unit"><?= $this->snowUnit ?></span>
         <span class="subline"><?= $this->snowSubline ?></span>
