@@ -127,7 +127,7 @@ class MetaWizardWidget extends \MetaWizard
                             'inputType' => 'text',
                             'eval'      => array
                             (
-                                'maxlength'         => 6,
+                                'maxlength'         => 64,
                                 'multiple'          => true,
                                 'size'              => 2,
                                 'colorpicker'       => true,
@@ -241,50 +241,51 @@ class MetaWizardWidget extends \MetaWizard
                         }
 
                         $strSelectField     = '';
-                        $arrSelectOptions   = $this->getThemeColors();
+//                        $arrSelectOptions   = $this->getThemeColors();
+//
+//                        if( count($arrSelectOptions) )
+//                        {
+//                            $strSelectField = '<select name="' . $strInputName . '[]" id="ctrl_' . $strFieldName . '_2" class="tl_select color-select">';
+//                            $strSelectField .= '<option value="">-</option>';
+//
+//                            foreach($arrSelectOptions as $key => $value)
+//                            {
+//                                if( is_array($value) )
+//                                {
+//                                    $strSelectField .= '<optgroup label="' . $key . '">';
+//
+//                                    foreach($value as $strKey => $strValue)
+//                                    {
+//                                        $selected = '';
+//
+//                                        if( $arrValue[2] === preg_replace('/&#35;/', '#', $strKey) )
+//                                        {
+//                                            $selected = ' selected';
+//                                        }
+//
+//                                        $strSelectField .= '<option value="' . $strKey . '"' . $selected . '>' . $strValue . '</option>';
+//                                    }
+//
+//                                    $strSelectField .= '</optgroup>';
+//                                }
+//                                else
+//                                {
+//                                    $selected = '';
+//
+//                                    if( $arrValue[2] === preg_replace('/&#35;/', '#', $key) )
+//                                    {
+//                                        $selected = ' selected';
+//                                    }
+//
+//                                    $strSelectField .= '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
+//                                }
+//                            }
+//
+//                            $strSelectField .= '</select>';
+//                        }
 
-                        if( count($arrSelectOptions) )
-                        {
-                            $strSelectField = '<select name="' . $strInputName . '[]" id="ctrl_' . $strFieldName . '_3" class="tl_select">';
-                            $strSelectField .= '<option value="">-</option>';
-
-                            foreach($arrSelectOptions as $key => $value)
-                            {
-                                if( is_array($value) )
-                                {
-                                    $strSelectField .= '<optgroup label="' . $key . '">';
-
-                                    foreach($value as $strKey => $strValue)
-                                    {
-                                        $selected = '';
-
-                                        if( $arrValue[2] === preg_replace('/&#35;/', '#', $strKey) )
-                                        {
-                                            $selected = ' selected';
-                                        }
-
-                                        $strSelectField .= '<option value="' . $strKey . '"' . $selected . '>' . $strValue . '</option>';
-                                    }
-
-                                    $strSelectField .= '</optgroup>';
-                                }
-                                else
-                                {
-                                    $selected = '';
-
-                                    if( $arrValue[2] === preg_replace('/&#35;/', '#', $key) )
-                                    {
-                                        $selected = ' selected';
-                                    }
-
-                                    $strSelectField .= '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
-                                }
-                            }
-
-                            $strSelectField .= '</select>';
-                        }
-
-                        $strField = $strField . $wizard . $strSelectField;
+//                        $strField = $strField . $wizard . $strSelectField;
+                        $strField = $strField . $wizard;
                     }
                     else
                     {
@@ -399,68 +400,5 @@ class MetaWizardWidget extends \MetaWizard
         }
 
         return parent::validator( $varInput );
-    }
-
-
-
-    protected function getThemeColors()
-    {
-        $arrOptions = array();
-
-        $objThemes = \ThemeModel::findAll();
-
-        if( $objThemes )
-        {
-            while( $objThemes->next() )
-            {
-                $arrVars = \StringUtil::deserialize($objThemes->vars, true);
-
-                foreach($arrVars as $arrVar)
-                {
-                    if( preg_match('/color/', $arrVar['key']) )
-                    {
-                        $strValue = preg_replace('/color_/', '', $arrVar['key']);
-
-                        $arrOptions[ $objThemes->name ][ $arrVar['value'] ] = $this->renderLangValue($strValue);
-                    }
-                }
-            }
-        }
-
-        return $arrOptions;
-    }
-
-
-
-    protected function renderLangValue( $strText )
-    {
-        switch( $strText )
-        {
-            case "yellow":
-                $strText = 'Gelb';
-                break;
-
-            case "pink":
-                $strText = 'Pink / Rosa';
-                break;
-
-            case "darkblue":
-                $strText = 'Dunkelblau';
-                break;
-
-            case "blue":
-                $strText = 'Blau';
-                break;
-
-            case "green":
-                $strText = 'Grün';
-                break;
-
-            case "red":
-                $strText = 'Rot';
-                break;
-        }
-
-        return $strText;
     }
 }
