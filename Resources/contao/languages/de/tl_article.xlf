@@ -3,15 +3,57 @@
     <file datatype="php" original="system/modules/ziido_customize/languages/en/tl_article.php" source-language="en">
         <body>
 
-            <trans-unit id="tl_article.navTitle.0">
-                <source>navigation title</source>
-                <target>Navigations Titel</target>
+            <trans-unit id="tl_article.articleType.0">
+                <source>type</source>
+                <target>Typ</target>
             </trans-unit>
 
             <trans-unit id="tl_article.navSubTitle.0">
                 <source>navigation title</source>
                 <target>Navigations Untertitel</target>
             </trans-unit>
+
+            <trans-unit id="tl_article.navTitle.0">
+                <source>navigation title</source>
+                <target>Navigations Titel</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.isFixed.0">
+                <source>is fixed</source>
+                <target>Fixiert</target>
+            </trans-unit>
+            <trans-unit id="tl_article.isFixed.1">
+                <source>is fixed</source>
+                <target>Aktiviert die Klasse "is-fixed". Standard CSS-Wert: position:fixed;</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.position.0">
+                <source>position</source>
+                <target>Position</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.articleWidth.0">
+                <source>article width</source>
+                <target>Breite</target>
+            </trans-unit>
+            <trans-unit id="tl_article.articleHeight.0">
+                <source>article height</source>
+                <target>Höhe</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_article.enableSticky.0">
+                <source>enable sticky</source>
+                <target>Sticky aktivieren</target>
+            </trans-unit>
+            <trans-unit id="tl_article.enableSticky.1">
+                <source>enable sticky</source>
+                <target>Aktiviert die Sticky-Funktion. Beim scrollen wird das Element fixiert wenn es den oberen Browser-Bereich erreicht.</target>
+            </trans-unit>
+
+
 
             <trans-unit id="tl_article.addBackgroundVideo.0">
                 <source>add background video</source>
@@ -57,6 +99,19 @@
                 <source>enable parallac</source>
                 <target>Parallax-Effekt aktivieren</target>
             </trans-unit>
+
+
+            <trans-unit id="tl_article.addBackgroundOverlay.0">
+                <source>add background overlay</source>
+                <target>Hintergrund-Overlay hinzufügen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_article.overviewImage.0">
+                <source>overview image</source>
+                <target>Übersicht-Bild</target>
+            </trans-unit>
+
 
             <trans-unit id="tl_article.hideInMenu.0">
                 <source>hide in menu</source>
@@ -170,6 +225,22 @@
                 <target>Verlinkung in neuem Fenster öffnen</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.teaserMultiSRC.0">
+                <source>Teaser Gallery</source>
+                <target>Teaser Galerie</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_article.hiddenArea.0">
+                <source>hidden area</source>
+                <target>Versteckter Artikel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.noContent.0">
+                <source>no content</source>
+                <target>Kein Inhalt / Inhaltselemente deaktivieren</target>
+            </trans-unit>
+
 
 
 
@@ -178,6 +249,11 @@
             <trans-unit id="tl_article.background_legend">
                 <source>background-settings</source>
                 <target>Hintergrund-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.animation_legend">
+                <source>background-settings</source>
+                <target>Animations-Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_article.config_legend">
@@ -210,6 +286,7 @@
             </trans-unit>
 
 
+
             <trans-unit id="tl_article.options.bgSize.cover">
                 <source>cover</source>
                 <target>Vollflächig (abgeschnitten)</target>
@@ -218,6 +295,7 @@
                 <source>own</source>
                 <target>Eigene Größe</target>
             </trans-unit>
+
 
 
             <trans-unit id="tl_article.options.bgPosition.left top">
@@ -258,6 +336,7 @@
             </trans-unit>
 
 
+
             <trans-unit id="tl_article.options.bgRepeat.repeat">
                 <source>repeat</source>
                 <target>Wiederholung (Kacheln)</target>
@@ -273,6 +352,44 @@
             <trans-unit id="tl_article.options.bgRepeat.no-repeat">
                 <source>no repeat</source>
                 <target>Keine Wiederholung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.articleType.content">
+                <source>Content</source>
+                <target>Inhalt</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.header">
+                <source>Header</source>
+                <target>Kopfzeile</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.footer">
+                <source>Footer</source>
+                <target>Fußzeile</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.ge">
+                <source>global Element</source>
+                <target>Global Element</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.position.top">
+                <source>top</source>
+                <target>Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.position.right">
+                <source>right</source>
+                <target>Rechts</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.position.bottom">
+                <source>bottom</source>
+                <target>Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.position.left">
+                <source>left</source>
+                <target>Links</target>
             </trans-unit>
 
 

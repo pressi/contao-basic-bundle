@@ -186,6 +186,57 @@
 
 
 
+			<trans-unit id="tl_content.addAnimation.0">
+				<source>add animation</source>
+				<target>Animationen hinzufügen</target>
+			</trans-unit>
+
+            <trans-unit id="tl_content.animationType.0">
+                <source>animation type</source>
+                <target>Typ</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animationOffset.0">
+                <source>animation offset</source>
+                <target>Abstand von unten bis zum Start</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animationWait.0">
+                <source>animation wait</source>
+                <target>Verzögerung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animateRun.0">
+                <source>add animation</source>
+                <target>Ausführung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.position.0">
+                <source>position</source>
+                <target>Position</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.positionMargin.0">
+                <source>position margin</source>
+                <target>Position Verschiebung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.positionFixed.0">
+                <source>position fixed</source>
+                <target>Position fixiert</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.addImageBorder.0">
+                <source>add image border</source>
+                <target>Bild-Rahmen hinzufügen</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
 			<trans-unit id="tl_content.caroufredsel_legend">
@@ -203,6 +254,16 @@
 				<source>Config-Einstellungen</source>
 				<target>Element-Einstellungen</target>
 			</trans-unit>
+
+            <trans-unit id="tl_content.position_legend">
+                <source>Position-Settings</source>
+                <target>Positions-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animation_legend">
+                <source>Animation-Settings</source>
+                <target>Animation-Einstellungen</target>
+            </trans-unit>
 
 
 
