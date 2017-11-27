@@ -195,4 +195,21 @@ class ImageHelper extends \Backend
 
 		return $arrImages;
 	}
+
+
+
+    public static function getImageTag( $imageSRC, $arrSize = array() )
+    {
+        $objImage = \FilesModel::findByPk( $imageSRC );
+
+        if( $objImage )
+        {
+            $objFactory = \System::getContainer()->get('contao.image.image_factory');
+            /* @var $objFactory \Contao\CoreBundle\Image\ImageFactory */
+
+            $objFactory->create( $objImage->path, $arrSize );
+            return \Image::getHtml( $objImage->path );
+        }
+    }
+
 }

@@ -676,24 +676,32 @@ class BasicHelper extends \Frontend
 
     public static function getRandomHash($length = 6, $chars = '')
     {
-        $uid			= '';
-        $length 		= empty($length) 	? 11 : $length;
-        $length 		= $length > 64 		? 64 : $length;
+        $uid            = '';
+        $length         = empty($length)    ? 11 : $length;
+        $length         = $length > 64      ? 64 : $length;
 
-        if(!is_array($chars) || (is_array($chars) && empty($chars))) {
-            for($i=65;$i<=90;$i++) {
+        if(!is_array($chars) || (is_array($chars) && empty($chars)))
+        {
+            for($i=65;$i<=90;$i++)
+            {
                 $chars[] = chr($i);
             }
-            for($i=97;$i<=122;$i++) {
+
+            for($i=97;$i<=122;$i++)
+            {
                 $chars[] = chr($i);
             }
+
             $chars[] = '_';
         }
 
         $c = count($chars);
-        for($i=0;$i<$length;$i++) {
+
+        for($i=0;$i<$length;$i++)
+        {
             $uid .= $chars[rand(0, $c-1)];
         }
+
         return $uid;
     }
 
@@ -754,16 +762,18 @@ class BasicHelper extends \Frontend
 
         if ($objModule )
         {
-            $strClass = \Module::findClass( $objModule->type );
+            $objModule  = clone $objModule;
+            $strClass   = \Module::findClass( $objModule->type );
 
             if (class_exists($strClass))
             {
                 $objModule->typePrefix = 'ce_';
 
-                if( $objModule->type == "booknav" && !$objModule->rootPage)
+                if( ($objModule->type === "booknav" && !$objModule->rootPage) )
                 {
                     $objModule->rootPage = $objPage->rootId;
                 }
+
                 $cssID = \StringUtil::deserialize($objClass->cssID, TRUE);
 
                 if( !strlen($cssID[1]) )
@@ -776,13 +786,25 @@ class BasicHelper extends \Frontend
                 $objModule->navPagesOrder   = $objClass->navPagesOrder;
                 $objModule->navigationTpl   = $objClass->navigationTpl;
 
+                $arrPages = \StringUtil::deserialize($objClass->navPages, true);
+
+                if( count($arrPages) === 1 )
+                {
+                    $objModule->defineRoot      = TRUE;
+                    $objModule->rootPage        = $arrPages[0];
+
+                    $objModule->navPages        = serialize(array());
+                    $objModule->navPagesOrder   = serialize(array());
+                    $objModule->pages           = serialize(array());
+                }
+
                 /** @var \Module $objModule */
                 $objModule = new $strClass($objModule, $strColumn);
-                $objModule->cssID = $cssID; //array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
+                $objModule->cssID = ''; //$cssID; //array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
 
                 $strBuffer = $objModule->generate();
 
-                if( $objModule->type == "booknav" )
+                if( $objModule->type === "booknav" )
                 {
                     $strBuffer = preg_replace(array('/ (>|&gt;)<\/a>/', '/>(<|&lt;) /'), array('</a>', '>'), $strBuffer);
                     $strBuffer = preg_replace('/<a([A-Za-z0-9\s\-\',;.:="\/]{0,})>([A-Za-z0-9\-\söäüÖÄÜß]{0,})<\/a>/', '<a$1><span>$2</span></a>', $strBuffer);

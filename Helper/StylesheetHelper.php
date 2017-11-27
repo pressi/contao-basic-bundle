@@ -10,105 +10,8 @@
 namespace IIDO\BasicBundle\Helper;
 
 
-class ContentHelper
+class StylesheetHelper
 {
-
-    public static function generateImageHoverTags( $strContent, $objRow )
-    {
-        $hoverTags = '<div class="image-hover-container"><div class="image-hover-inside"></div></div>';
-
-        if( $objRow->caption || preg_match('/figcaption/', $strContent) )
-        {
-            $strContent = preg_replace('/<\/a>([\s\n]{0,})<figcaption/' , $hoverTags . '</a>$1<figcaption', $strContent);
-        }
-        else
-        {
-            $strContent = preg_replace('/<\/a>([\s\n]{0,})<\/figure>/' , $hoverTags . '</a>$1</figure>', $strContent);
-        }
-
-        return $strContent;
-    }
-
-
-
-    public static function renderText( $strText, $renderLines = false )
-    {
-        $strText = preg_replace(array('/&#40;/', '/&#41;/'), array('(', ')'), $strText);
-
-        $strText = preg_replace('/;/', '<br>', $strText);
-        $strText = preg_replace('/\|\|([^\|\|]+)\|\|/', '<span class="light">$1</span>', $strText);
-        $strText = preg_replace('/\|([^\|]+)\|/', '<strong>$1</strong>', $strText);
-
-        $strText = preg_replace('/\{\{sup\}\}/', '<sup>', $strText);
-        $strText = preg_replace('/\{\{\/sup\}\}/', '</sup>', $strText);
-
-        $strText = preg_replace('/\{\{sub\}\}/', '<sub>', $strText);
-        $strText = preg_replace('/\{\{\/sub\}\}/', '</sub>', $strText);
-
-        if( $renderLines )
-        {
-            $delimiter = '<br>';
-
-            if( !preg_match('/' . $delimiter . '/', $strText) )
-            {
-                $delimiter = '{{br}}';
-
-                if( !preg_match('/' . $delimiter . '/', $strText) )
-                {
-                    $delimiter = ';';
-                }
-            }
-
-            $arrText = explode($delimiter, $strText);
-            $strText = '<span class="text-line">' . implode('</span><br><span class="text-line">', $arrText) . '</span>';
-        }
-
-        return $strText;
-    }
-
-
-
-    public static function renderPosition( $objClass )
-    {
-        $strClass       = "";
-        $strStyles      = "";
-
-        if( $objClass->position )
-        {
-            $strClass = 'pos-abs pos-' . str_replace('_', '-', $objClass->position);
-        }
-
-        $arrPosMargin = deserialize($objClass->position_margin, TRUE);
-
-        if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
-        {
-            $unit = $arrPosMargin['unit']?:'px';
-
-            if( $arrPosMargin['top'] )
-            {
-                $strStyles .= " margin-top:" . $arrPosMargin['top'] . $unit . ";";
-            }
-
-            if( $arrPosMargin['right'] )
-            {
-                $strStyles .= " margin-right:" . $arrPosMargin['right'] . $unit . ";";
-            }
-
-            if( $arrPosMargin['bottom'] )
-            {
-                $strStyles .= " margin-bottom:" . $arrPosMargin['bottom'] . $unit . ";";
-            }
-
-            if( $arrPosMargin['left'] )
-            {
-                $strStyles .= " margin-left:" . $arrPosMargin['left'] . $unit . ";";
-            }
-        }
-
-        return array( $strClass, $strStyles);
-    }
-
-
 
     public static function renderStyleVars( $strContent )
     {
@@ -147,7 +50,7 @@ class ContentHelper
                     $strContent     = self::replaceColorVariants($varName, $varValue, $strContent, $add);
                 }
 
-                $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '#\*\/' . $add . '/', $varValue, $strContent);
+                $strContent = preg_replace('/\/\*#' . $varName . '#\*\/' . $add . '/', $varValue, $strContent);
             }
         }
 
@@ -402,8 +305,8 @@ class ContentHelper
         $varValueDark   = ColorHelper::mixColors($varValue, '#000000', 20.0);
         $varValueLight  = ColorHelper::mixColors($varValue, '#ffffff', 90.0);
 
-        $strContent     = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_darker#\*\/' . $add . '/', $varValueDark, $strContent);
-        $strContent     = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_lighter#\*\/' . $add . '/', $varValueLight, $strContent);
+        $strContent     = preg_replace('/\/\*#' . $varName . '_darker#\*\/' . $add . '/', $varValueDark, $strContent);
+        $strContent     = preg_replace('/\/\*#' . $varName . '_lighter#\*\/' . $add . '/', $varValueLight, $strContent);
 
         $rgb = ColorHelper::convertHexColor($varValue);
 
@@ -411,24 +314,24 @@ class ContentHelper
         {
             $rgba = 'rgba(' . $rgb['red'] . ',' . $rgb['green'] . ',' . $rgb['blue'] . ',';
 
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans95#\*\/' . $add . '/', $rgba . '0.95)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans90#\*\/' . $add . '/', $rgba . '0.9)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans85#\*\/' . $add . '/', $rgba . '0.85)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans80#\*\/' . $add . '/', $rgba . '0.8)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans75#\*\/' . $add . '/', $rgba . '0.75)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans70#\*\/' . $add . '/', $rgba . '0.7)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans65#\*\/' . $add . '/', $rgba . '0.65)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans60#\*\/' . $add . '/', $rgba . '0.6)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans55#\*\/' . $add . '/', $rgba . '0.55)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans50#\*\/' . $add . '/', $rgba . '0.5)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans45#\*\/' . $add . '/', $rgba . '0.45)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans40#\*\/' . $add . '/', $rgba . '0.4)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans35#\*\/' . $add . '/', $rgba . '0.35)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans30#\*\/' . $add . '/', $rgba . '0.3)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans25#\*\/' . $add . '/', $rgba . '0.25)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans20#\*\/' . $add . '/', $rgba . '0.2)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans15#\*\/' . $add . '/', $rgba . '0.15)', $strContent);
-            $strContent = preg_replace('/\/\*#' . preg_quote($varName, '/') . '_trans10#\*\/' . $add . '/', $rgba . '0.1)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans95#\*\/' . $add . '/', $rgba . '0.95)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans90#\*\/' . $add . '/', $rgba . '0.9)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans85#\*\/' . $add . '/', $rgba . '0.85)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans80#\*\/' . $add . '/', $rgba . '0.8)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans75#\*\/' . $add . '/', $rgba . '0.75)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans70#\*\/' . $add . '/', $rgba . '0.7)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans65#\*\/' . $add . '/', $rgba . '0.65)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans60#\*\/' . $add . '/', $rgba . '0.6)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans55#\*\/' . $add . '/', $rgba . '0.55)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans50#\*\/' . $add . '/', $rgba . '0.5)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans45#\*\/' . $add . '/', $rgba . '0.45)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans40#\*\/' . $add . '/', $rgba . '0.4)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans35#\*\/' . $add . '/', $rgba . '0.35)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans30#\*\/' . $add . '/', $rgba . '0.3)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans25#\*\/' . $add . '/', $rgba . '0.25)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans20#\*\/' . $add . '/', $rgba . '0.2)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans15#\*\/' . $add . '/', $rgba . '0.15)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans10#\*\/' . $add . '/', $rgba . '0.1)', $strContent);
         }
 
         return $strContent;
@@ -443,9 +346,174 @@ class ContentHelper
 
 
 
-    public function generateImageTag( $strImage, $arrImageSize = array() )
+    public static function getGlobalElementStyles( $mode, $objData )
     {
-        return ImageHelper::getImageTag( $strImage, $arrImageSize );
+        $arrStyles = array();
+
+        if( $mode === "header" || $mode === "footer" )
+        {
+            $arrStyles = array
+            (
+                'selector'      => 'header',
+            );
+
+            if( $objData->isFixed )
+            {
+                $arrPosition    = array();
+                $articleWidth   = \StringUtil::deserialize($objData->articleWidth, true);
+                $articleHeight  = \StringUtil::deserialize($objData->articleHeight, true);
+
+                $arrStyles = array
+                (
+                    'selector'      => 'header.is-fixed',
+
+                    'positioning'   => true,
+                    'position'      => 'fixed'
+                );
+
+                if( $articleWidth['value'] || $articleHeight['value'] )
+                {
+                    $arrStyles['size'] = true;
+
+                    if( $articleWidth['value'] )
+                    {
+                        $arrStyles['width'] = $objData->articleWidth;
+                    }
+
+                    if( $articleHeight['value'] )
+                    {
+                        $arrStyles['height'] = $objData->articleHeight;
+                    }
+                }
+
+                if( $objData->position === "top" )
+                {
+                    $arrPosition['top'] = '0';
+
+                    if( !$articleWidth['value'] || $articleWidth['value'] === 100 || $articleWidth['value'] === "100" )
+                    {
+                        $arrPosition['right']   = '0';
+                        $arrPosition['left']    = '0';
+                    }
+                }
+                elseif( $objData->position === "right" )
+                {
+                    $arrPosition['right'] = '0';
+
+                    if( !$articleHeight['value'] || $articleHeight['value'] === 100 || $articleHeight['value'] === "100" )
+                    {
+                        $arrPosition['top']     = '0';
+                        $arrPosition['botom']   = '0';
+                    }
+                }
+                elseif( $objData->position === "bottom" )
+                {
+                    $arrPosition['bottom'] = '0';
+
+                    if( !$articleWidth['value'] || $articleWidth['value'] === 100 || $articleWidth['value'] === "100" )
+                    {
+                        $arrPosition['right']   = '0';
+                        $arrPosition['left']    = '0';
+                    }
+                }
+                elseif( $objData->position === "left" )
+                {
+                    $arrPosition['left'] = '0';
+
+                    if( !$articleHeight['value'] || $articleHeight['value'] === 100 || $articleHeight['value'] === "100" )
+                    {
+                        $arrPosition['top']     = '0';
+                        $arrPosition['botom']   = '0';
+                    }
+                }
+
+                $arrPosition['unit'] = 'px';
+
+                $arrStyles['trbl']    = serialize($arrPosition);
+            }
+
+            $arrStyles = array_merge($arrStyles, StylesheetHelper::getBackgroundStyles($objData));
+
+            if( $objData->isFixed )
+            {
+                if( !preg_match('/z-index/', $arrStyles['own']) )
+                {
+                    $arrStyles['own']     = $arrStyles['own'] . 'z-index:900;';
+                }
+            }
+        }
+
+        return $arrStyles;
+    }
+
+
+
+    public static function getBackgroundStyles($objArticle, $onlyOwnStyles = false, $returnAsArray = true, $writeInFile = false, $selector = '')
+    {
+        $arrOwnStyles       = array();
+        $arrBackgroundSize  = deserialize($objArticle->bgSize, true);
+
+        if( is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
+        {
+            $bgSize = $arrBackgroundSize[2];
+
+            if( $arrBackgroundSize[2] == 'own' )
+            {
+                unset($arrBackgroundSize[2]);
+                $bgSize = implode(" ", $arrBackgroundSize);
+            }
+
+            $arrOwnStyles[] = '-webkit-background-size:' . $bgSize . ';-moz-background-size:' . $bgSize . ';-o-background-size:' . $bgSize . ';background-size:' . $bgSize . ';';
+        }
+
+        if( $objArticle->bgAttachment )
+        {
+            $arrOwnStyles[] = 'background-attachment:' . $objArticle->bgAttachment . ';';
+        }
+
+        if( $onlyOwnStyles )
+        {
+            return $returnAsArray ? $onlyOwnStyles : implode("", $arrOwnStyles);
+        }
+
+        $rootDir    = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+
+        $strImage   = '';
+        $objImage   = \FilesModel::findByUuid( $objArticle->bgImage );
+
+        if( $objImage && file_exists($rootDir . '/' . $objImage->path) )
+        {
+            $strImage = $objImage->path;
+        }
+
+        $arrStyles = array
+        (
+            'background'        => TRUE,
+            'bgcolor'           => $objArticle->bgColor,
+            'bgimage'           => $strImage,
+            'bgrepeat'          => $objArticle->bgRepeat,
+            'bgposition'        => $objArticle->bgPosition,
+            'gradientAngle'     => $objArticle->gradientAngle,
+            'gradientColors'    => $objArticle->gradientColors
+        );
+
+        if( count($arrOwnStyles) )
+        {
+            $arrStyles['own'] = implode("", $arrOwnStyles);
+        }
+
+        if( strlen($selector) )
+        {
+            $arrStyles['selector'] = $selector;
+        }
+
+        if( !$returnAsArray )
+        {
+            $objStyleSheets     = new \StyleSheets();
+            $arrStyles          = $objStyleSheets->compileDefinition($arrStyles, $writeInFile);
+        }
+
+        return $arrStyles;
     }
 
 }

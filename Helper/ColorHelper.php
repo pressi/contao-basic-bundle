@@ -187,14 +187,23 @@ class ColorHelper
      */
     public static function compileColor($color, $blnWriteToFile=false, $vars=array())
     {
-        if (!is_array($color))
+        if( !is_array($color) )
         {
             return ((strlen($color)) ? '#' . self::shortenHexColor($color) : 'transparent');
         }
-        elseif (!isset($color[1]) || empty($color[1]))
+        elseif( isset($color[2]) )
+        {
+            return '#' . self::shortenHexColor($color[2]);
+        }
+        elseif( !isset($color[1]) || empty($color[1]) )
         {
             if($color[0] == "")
             {
+                if( $color[2] )
+                {
+                    return '#' . $color[2];
+                }
+
                 return "transparent";
             }
 
@@ -202,6 +211,11 @@ class ColorHelper
         }
         else
         {
+            if( $color[2] && !$color[0])
+            {
+                $color[0] = $color[2];
+            }
+
             return 'rgba(' . implode(',', self::convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
         }
     }
@@ -393,5 +407,80 @@ class ColorHelper
 
         $color = sprintf("%02X%02X%02X", $redRGB, $greenRGB, $blueRGB);
         return $addHash ? '#'.$color : $color;
+    }
+
+
+
+    public static function getThemeColors()
+    {
+        $arrOptions = array();
+
+        $objThemes = \ThemeModel::findAll();
+
+        if( $objThemes )
+        {
+            while( $objThemes->next() )
+            {
+                $arrVars = \StringUtil::deserialize($objThemes->vars, true);
+
+                foreach($arrVars as $arrVar)
+                {
+                    if( preg_match('/color/', $arrVar['key']) )
+                    {
+                        $strValue = preg_replace('/color_/', '', $arrVar['key']);
+
+                        $arrOptions[ $objThemes->name ][ $arrVar['value'] ] = self::renderLangValue($strValue);
+                    }
+                }
+            }
+        }
+
+        return $arrOptions;
+    }
+
+
+
+    public static function renderLangValue( $strText )
+    {
+        switch( $strText )
+        {
+            case "orange":
+                $strText = 'Orange';
+                break;
+
+            case "yellow":
+                $strText = 'Gelb';
+                break;
+
+            case "pink":
+                $strText = 'Pink / Rosa';
+                break;
+
+            case "darkblue":
+                $strText = 'Dunkelblau';
+                break;
+
+            case "blue":
+                $strText = 'Blau';
+                break;
+
+            case "green":
+                $strText = 'Grün';
+                break;
+
+            case "red":
+                $strText = 'Rot';
+                break;
+
+            case "black":
+                $strText = 'Schwarz';
+                break;
+
+            case "purple":
+                $strText = 'Lila';
+                break;
+        }
+
+        return $strText;
     }
 }

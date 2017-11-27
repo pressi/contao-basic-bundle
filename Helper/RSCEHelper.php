@@ -98,8 +98,13 @@ class RSCEHelper extends \Frontend
             'inputType'     => 'text',
             'eval'          => array
             (
+                'maxlength'         => 16,
+                'multiple'          => true,
                 'size'              => 2,
-                'tl_class'          => ($isLong ? 'long' : 'w50') . ($newLine ? ' clr': '')
+                'colorpicker'       => true,
+                'isHexColor'        => true,
+                'decodeEntities'    => true,
+                'tl_class'          => ($isLong ? 'long' : 'w50') . ' wizard' . ($newLine ? ' clr': '')
             )
         );
     }
@@ -361,16 +366,25 @@ class RSCEHelper extends \Frontend
         return $objPicture->src;
     }
 
-
-
-
-    public static function getImageTag( $image )
+    public static function getImageTag( $image, $arrSize = array(), &$objClass = false, $returnPath = false )
     {
         $strContent = '';
 
         if( $image )
         {
-            $strContent = '<figure class="image_container"><img src="' . $image->src . '" alt="' .  $image->alt . '"' . $image->imgSize . '></figure>';
+            if( is_string($image) && $objClass )
+            {
+                $image      = $objClass->getImageObject($image, $arrSize);
+            }
+
+            if( $returnPath )
+            {
+                $strContent = $image->picture['img']['src'];
+            }
+            else
+            {
+                $strContent = '<figure class="image_container"><img src="' . $image->src?:$image->picture['img']['src'] . '" alt="' .  $image->alt?:$image->picture['alt'] . '"' . $image->imgSize . '></figure>';
+            }
         }
 
         return $strContent;
