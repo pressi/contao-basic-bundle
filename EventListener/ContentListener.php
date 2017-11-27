@@ -73,19 +73,19 @@ class ContentListener
     {
         global $objPage;
 
-        $elementClass   = $objRow->typePrefix . $objRow->type;
+        $elementClass   = $this->getElementClass( $objRow ); //$objRow->typePrefix . $objRow->type;
         $cssID          = \StringUtil::deserialize($objRow->cssID, TRUE);
         $objArticle     = \ArticleModel::findByPk( $objRow->pid );
 
-        if( $objRow->type == "module" )
-        {
-            $objModule = \ModuleModel::findByPk( $objRow->module );
-
-            if( $objModule )
-            {
-                $elementClass = 'mod_' . $objModule->type;
-            }
-        }
+//        if( $objRow->type == "module" )
+//        {
+//            $objModule = \ModuleModel::findByPk( $objRow->module );
+//
+//            if( $objModule )
+//            {
+//                $elementClass = 'mod_' . $objModule->type;
+//            }
+//        }
 
 
         if( $objRow->type == "text")
@@ -171,11 +171,11 @@ class ContentListener
 
         if( !in_array($objRow->type, $this->arrNotInsideClassElements) )
         {
-            if( $elementClass === "ce_alias" )
-            {
-                $objAliasElement    = \ContentModel::findByPk ( $objRow->cteAlias );
-                $elementClass       = 'ce_' . $objAliasElement->type;
-            }
+//            if( $elementClass === "ce_alias" )
+//            {
+//                $objAliasElement    = \ContentModel::findByPk ( $objRow->cteAlias );
+//                $elementClass       = 'ce_' . $objAliasElement->type;
+//            }
 
             $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-\{\}_:;]{0,})"([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="element-inside">', $strBuffer, -1, $count);
 
@@ -279,7 +279,7 @@ class ContentListener
             $arrClasses[] = 'pos-' . ($objRow->positionFixed ? 'fixed' : 'abs');
             $arrClasses[] = 'pos-' . str_replace('_', '-', $objRow->position);
 
-            $arrPosMargin = deserialize($objRow->position_margin, TRUE);
+            $arrPosMargin = deserialize($objRow->positionMargin, TRUE);
 
             if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
             {
@@ -393,13 +393,38 @@ class ContentListener
 
     protected function renderHeadlines( $strContent, $objRow )
     {
-        $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}]{0,})>/', '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
-        $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></span></h$1>', $strContent);
+        $arrHeadlineClasses = array();
+
+        $topHeadline    = ($objRow->addTopHeadline ? '<div class="top-headline">' . $objRow->topHeadline . '</div>' : '');
+        $subHeadline    = ($objRow->addSubHeadline ? '<div class="sub-headline">' . $objRow->subHeadline . '</div>' : '');
+
+        if( preg_match('/<h([1-6])>/', $strContent) )
+        {
+            $strContent = preg_replace('/<h([1-6])>/', '<h$1 class="headline">', $strContent);
+        }
+
+        $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}]{0,})>/', $topHeadline . '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
+        $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></span></h$1>' . $subHeadline, $strContent);
 
         if( preg_match('/<\/h([1-6]{1})>([\s\n]{0,})<h([1-6]{1})/', trim($strContent)) )
         {
             $strContent = preg_replace('/class="headline([^\-])/', 'class="headline has-subline$1', $strContent, 1);
             $strContent = BasicHelper::replaceLastMatch('/class="headline([^\-])/', 'class="headline is-subline$1', 'class="headline$1', $strContent);
+        }
+
+        if( $objRow->addTopHeadline )
+        {
+            $arrHeadlineClasses[] = 'has-top-headline';
+        }
+
+        if( $objRow->addSubHeadline )
+        {
+            $arrHeadlineClasses[] = 'has-sub-headline';
+        }
+
+        if( count($arrHeadlineClasses) )
+        {
+            $strContent = preg_replace('/<h([1-6]) class="headline/', '<h$1 class="headline ' . implode(" ", $arrHeadlineClasses), $strContent);
         }
 
         return $strContent;
@@ -502,6 +527,11 @@ class ContentListener
     {
         $strContent = preg_replace('/<a/', '<a class="no-barba"', $strContent);
 
+        if( $objRow->fullsize )
+        {
+            $strContent = Helper::generateImageHoverTags( $strContent, $objRow );
+        }
+
         return $strContent;
     }
 
@@ -538,7 +568,7 @@ class ContentListener
     {
         $elementClass   = $objRow->typePrefix . $objRow->type;
 
-        if( $objRow->type == "module" )
+        if( $objRow->type === "module" )
         {
             $objModule = \ModuleModel::findByPk( $objRow->module );
 
@@ -547,6 +577,17 @@ class ContentListener
                 $elementClass = 'mod_' . $objModule->type;
             }
         }
+
+        if( $elementClass === "ce_alias" )
+        {
+            $objAliasElement    = \ContentModel::findByPk ( $objRow->cteAlias );
+            $elementClass       = 'ce_' . $objAliasElement->type;
+        }
+        
+//        if( $elementClass === "ce_iido_navigation" )
+//        {
+//            $elementClass = 'mod_navigation';
+//        }
 
         return $elementClass;
     }

@@ -16,7 +16,7 @@ use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Framework\ScopeAwareTrait;
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
-use IIDO\BasicBundle\Helper\ContentHelper;
+use IIDO\BasicBundle\Helper\StylesheetHelper;
 use \MatthiasMullie\Minify;
 
 
@@ -77,7 +77,7 @@ class CombinerListener
         {
             if( $isInFiles || $isInBundle )
             {
-                $strContent = ContentHelper::renderStyleVars( $strContent );
+                $strContent = StylesheetHelper::renderStyleVars( $strContent );
 
                 $objMinify = new Minify\CSS();
                 $objMinify->add( $strContent );

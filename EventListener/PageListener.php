@@ -17,7 +17,7 @@ use Contao\CoreBundle\Framework\ScopeAwareTrait;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
-use IIDO\BasicBundle\Helper\ContentHelper;
+use IIDO\BasicBundle\Helper\StylesheetHelper;
 
 
 /**
@@ -26,8 +26,6 @@ use IIDO\BasicBundle\Helper\ContentHelper;
  */
 class PageListener
 {
-    use ScopeAwareTrait;
-
 
     /**
      * @var ContaoFrameworkInterface
@@ -487,13 +485,13 @@ class PageListener
                         }
 
                         $cssID      = deserialize($objArticles->cssID, TRUE);
-                        $strImage   = '';
-                        $objImage   = \FilesModel::findByUuid( $objArticles->bgImage );
-
-                        if( $objImage && file_exists($this->rootDir . '/' . $objImage->path) )
-                        {
-                            $strImage = $objImage->path;
-                        }
+//                        $strImage   = '';
+//                        $objImage   = \FilesModel::findByUuid( $objArticles->bgImage );
+//
+//                        if( $objImage && file_exists($this->rootDir . '/' . $objImage->path) )
+//                        {
+//                            $strImage = $objImage->path;
+//                        }
 
                         $addContainer = '';
 
@@ -506,17 +504,19 @@ class PageListener
                         (
                             'selector'          => '#container .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]) . $addContainer,
 
-                            'background'        => TRUE,
-                            'bgcolor'           => $objArticles->bgColor,
-                            'bgimage'           => $strImage,
-                            'bgrepeat'          => $objArticles->bgRepeat,
-                            'bgposition'        => $objArticles->bgPosition,
-                            'gradientAngle'     => $objArticles->gradientAngle,
-                            'gradientColors'    => $objArticles->gradientColors
+//                            'background'        => TRUE,
+//                            'bgcolor'           => $objArticles->bgColor,
+//                            'bgimage'           => $strImage,
+//                            'bgrepeat'          => $objArticles->bgRepeat,
+//                            'bgposition'        => $objArticles->bgPosition,
+//                            'gradientAngle'     => $objArticles->gradientAngle,
+//                            'gradientColors'    => $objArticles->gradientColors
                         );
 
-                        $bgColor        = deserialize($objArticles->bgColor, TRUE);
-                        $arrOwnStyles   = array();
+                        $arrPageStyles[ $objArticles->id ] = array_merge($arrPageStyles[ $objArticles->id ], StylesheetHelper::getBackgroundStyles($objArticles->current()));
+
+//                        $bgColor        = deserialize($objArticles->bgColor, TRUE);
+//                        $arrOwnStyles   = array();
 
 //                if( !empty($bgColor[0]) )
 //                {
@@ -529,34 +529,37 @@ class PageListener
 //                        $arrPageStyles[ $objArticles->id ]['fontcolor'] = serialize(array('fff', ''));
 //                    }
 //                }
-
-                        $arrBackgroundSize = deserialize($objArticles->bgSize, true);
-
-                        if( is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
-                        {
-                            $bgSize = $arrBackgroundSize[2];
-
-                            if( $arrBackgroundSize[2] == 'own' )
-                            {
-                                unset($arrBackgroundSize[2]);
-                                $bgSize = implode(" ", $arrBackgroundSize);
-                            }
-
-                            $arrOwnStyles[] = '-webkit-background-size:' . $bgSize . ';-moz-background-size:' . $bgSize . ';-o-background-size:' . $bgSize . ';background-size:' . $bgSize . ';';
-                        }
-
-                        if( $objArticles->bgAttachment )
-                        {
-                            $arrOwnStyles[] = 'background-attachment:' . $objArticles->bgAttachment . ';';
-                        }
-
-                        if( count($arrOwnStyles) )
-                        {
-                            $arrPageStyles[ $objArticles->id ]['own'] = implode("", $arrOwnStyles);
-                        }
                     }
                 }
             }
+        }
+
+        $objHeader = \ArticleModel::findByAlias('ge_header_' . $objRootPage->alias . '_' . $objRootPage->language);
+
+        if( $objHeader )
+        {
+            $arrHeaderStyles = StylesheetHelper::getGlobalElementStyles('header', $objHeader);
+
+            if( ($objHeader->tstamp > $createTime || $this->getArticleLastSave( $objHeader->id ) > $createTime) && count($arrHeaderStyles) )
+            {
+                $createFile     = TRUE;
+            }
+
+            $arrPageStyles[ 'header_' . $objHeader->id ] = $arrHeaderStyles;
+        }
+
+        $objFooter = \ArticleModel::findByAlias('ge_footer_' . $objRootPage->alias . '_' . $objRootPage->language);
+
+        if( $objFooter )
+        {
+            $arrFooterStyles = StylesheetHelper::getGlobalElementStyles('footer', $objFooter);
+
+            if( ($objFooter->tstamp > $createTime || $this->getArticleLastSave( $objFooter->id ) > $createTime) && count($arrFooterStyles) )
+            {
+                $createFile     = TRUE;
+            }
+
+            $arrPageStyles[ 'footer_' . $objFooter->id ] = $arrFooterStyles;
         }
 
         if( count($arrPageStyles) && $createFile )
@@ -578,7 +581,7 @@ class PageListener
             {
                 $writeToFile = FALSE;
 
-                $objFile            = new \File('assets/css/page-styles.css');
+                $objFile = new \File('assets/css/page-styles.css');
                 $objFile->write("/* Auto generated File - IIDO */\n");
 
                 foreach($arrStyles as $strStyle)
@@ -897,7 +900,7 @@ class PageListener
         {
             $strFile = $this->rootDir . '/' . $cssPathCustom  . '/page-styles.css';
 
-            $GLOBALS['TL_HEAD']['custom_page_styles'] = '<style>' . ContentHelper::renderHeadStyles( file_get_contents($strFile) ) . '</style>';
+            $GLOBALS['TL_HEAD']['custom_page_styles'] = '<style>' . StylesheetHelper::renderHeadStyles( file_get_contents($strFile) ) . '</style>';
         }
     }
 

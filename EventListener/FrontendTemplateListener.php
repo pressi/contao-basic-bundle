@@ -728,6 +728,28 @@ class FrontendTemplateListener
                 $objHeaderArticle   = \ArticleModel::findByAlias("ge_header_" . $objRootPage->alias . '_' . $strLanguage);
                 $headerClass        = \StringUtil::deserialize($objHeaderArticle->cssID, true)[1];
 
+                if( $objHeaderArticle->isFixed )
+                {
+                    $headerClass = trim($headerClass . ' is-fixed');
+
+                    if( $objHeaderArticle->position === "top" )
+                    {
+                        $headerClass = trim($headerClass . ' pos-top');
+                    }
+                    elseif( $objHeaderArticle->position === "right" )
+                    {
+                        $headerClass = trim($headerClass . ' pos-right');
+                    }
+                    elseif( $objHeaderArticle->position === "bottom" )
+                    {
+                        $headerClass = trim($headerClass . ' pos-bottom');
+                    }
+                    elseif( $objHeaderArticle->position === "left" )
+                    {
+                        $headerClass = trim($headerClass . ' pos-left');
+                    }
+                }
+
                 if( strlen($headerClass) )
                 {
                     $strBuffer = preg_replace('/<header/', '<header class="' . $headerClass . '"', $strBuffer);
