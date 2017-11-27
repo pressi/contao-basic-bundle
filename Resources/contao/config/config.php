@@ -182,4 +182,4 @@ $GLOBALS['TL_PTY']['regular_redirect'] = $ns . '\Page\RegularRedirectPage';
  * Cron jobs
  */
 
-$GLOBALS['TL_CRON']['hourly']['generateWeatherData'] = array($ns . '\Cron\WeatherDataCron', 'generateCustomizeWeatherData');
+//$GLOBALS['TL_CRON']['hourly']['generateWeatherData'] = array($ns . '\Cron\WeatherDataCron', 'generateCustomizeWeatherData');
