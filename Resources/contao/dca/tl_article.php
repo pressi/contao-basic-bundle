@@ -49,23 +49,18 @@ if( $objArticle )
 
 
 /**
- * Buttons
+ * Label
  */
 
-$GLOBALS['TL_DCA']['tl_article']['list']['operations']['edit']['button_callback']   = array('IIDO\BasicBundle\Table\ArticleTable', 'editArticle');
+$GLOBALS['TL_DCA'][ $strTable ]['list']['label']['label_callback']     = array('\IIDO\BasicBundle\Table\ArticleTable', 'addIcon');
 
 
 
 /**
- * Palettes - Selectors
+ * Buttons
  */
 
-//$GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][]           = 'fullHeight';
-//$GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][]           = 'textMiddle';
-//$GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][]           = 'fullWidth';
-//$GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][]           = 'addBackgroundVideo';
-//$GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][]           = 'submenuSRC';
-//$GLOBALS['TL_DCA']['tl_article']['palettes']['__selector__'][]           = 'addAnimation';
+$GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['edit']['button_callback']   = array('\IIDO\BasicBundle\Table\ArticleTable', 'editArticle');
 
 
 
@@ -80,34 +75,19 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('animation_legend', 'expert_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
 
-    ->addField('fullHeight', 'config_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
-//    ->addField('textMiddle', 'fullHeight', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-//    ->addField('fullWidth', 'textMiddle', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('fullWidth', 'fullHeight', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+    ->addField(array('fullHeight', 'fullWidth'), 'config_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+//-    ->addField('textMiddle', 'fullHeight', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+//-    ->addField('fullWidth', 'textMiddle', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
-    ->addField('bgColor', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
-    ->addField('bgImage', 'bgColor', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('bgPosition', 'bgImage', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('bgRepeat', 'bgPosition', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('gradientAngle', 'bgRepeat', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('gradientColors', 'gradientAngle', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('bgAttachment', 'gradientColors', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('bgSize', 'bgAttachment', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('addBackgroundOverlay', 'bgSize', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('addBackgroundVideo', 'addBackgroundOverlay', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+    ->addField(array('bgColor', 'bgImage', 'bgPosition', 'bgRepeat', 'gradientAngle', 'gradientColors', 'bgAttachment', 'bgSize', 'addBackgroundOverlay', 'addBackgroundVideo'), 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+    ->addField(array('hideInMenu', 'overviewImage', 'navLinkMode'), 'navigation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
 
-    ->addField('hideInMenu', 'navigation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
-    ->addField('overviewImage', 'hideInMenu', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('navLinkMode', 'overviewImage', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-
-    ->addField('navTitle', 'title', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('navSubTitle', 'navTitle', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+    ->addField(array('articleType', 'navTitle', 'navSubTitle'), 'title', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
     ->addField('teaserHeadline', 'teaser', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
     ->addField('teaserMultiSRC', 'teaser', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
-    ->addField('hiddenArea', 'guests', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addField('noContent', 'hiddenArea', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+    ->addField(array('hiddenArea', 'noContent'), 'guests', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
     ->addField('addAnimation', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
 
@@ -133,6 +113,27 @@ if( $objParentPage && $objParentPage->enableFullpage )
 }
 
 
+if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articleType === "footer") )
+{
+    $arrRemove = array
+    (
+        "navTitle", "navSubTitle",
+        "keywords",
+        "guests", "hiddenArea", "noContent",
+        "start", "stop"
+    );
+
+    $arrRemoveLegends = array
+    (
+        'config' => array('isFixed', 'enableSticky'), 'navigation', 'teaser', 'syndication',
+        'protected', 'animation'
+    );
+
+    \IIDO\BasicBundle\Helper\DcaHelper::removeField($arrRemove, $strTable);
+    \IIDO\BasicBundle\Helper\DcaHelper::removeLegend($arrRemoveLegends, $strTable);
+}
+
+
 
 /**
  * Subpalettes
@@ -144,7 +145,7 @@ if( $objParentPage && $objParentPage->enableFullpage )
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addBackgroundVideo", "videoSRC,posterSRC", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuSRC_news", "submenuNewsArchive", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strTable);
-
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("isFixed", "position,articleWidth,articleHeight", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_intern", "navLinkPage", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_extern", "navLinkUrl,navLinkNewWindow", $strTable);
 
@@ -154,242 +155,91 @@ if( $objParentPage && $objParentPage->enableFullpage )
  * Fields
  */
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['title']['eval']['tl_class'] = trim($GLOBALS['TL_DCA']['tl_article']['fields']['title']['eval']['tl_class'] . ' w50');
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['title']['eval']['tl_class'] = trim($GLOBALS['TL_DCA'][ $strTable ]['fields']['title']['eval']['tl_class'] . ' w50');
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("fullHeight", "checkbox_selector", $strTable, array(), "clr no-clr-after");
-\IIDO\BasicBundle\Helper\DcaHelper::addField("fullWidth", "checkbox_selector", $strTable, array(), "clr no-clr-after");
+// Title Legend
+\IIDO\BasicBundle\Helper\DcaHelper::addField("articleType", "select_selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navTitle", "text", $strTable, array('doNotCopy'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::copyField("navSubTitle", $strTable, 'navTitle');
+
+
+
+// Config Legend
+\IIDO\BasicBundle\Helper\DcaHelper::addField("fullHeight", "checkbox__selector", $strTable, array(), "clr no-clr-after");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("fullWidth", "checkbox__selector", $strTable, array(), "clr no-clr-after");
 \IIDO\BasicBundle\Helper\DcaHelper::addField("fullWidthInside", "checkbox", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("opticalHeight", "checkbox", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("textMiddle", "checkbox_selector", $strTable, array(), "clr no-clr-after");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("textMiddle", "checkbox__selector", $strTable, array(), "clr no-clr-after");
 \IIDO\BasicBundle\Helper\DcaHelper::addField("textMiddleOptical", "checkbox", $strTable);
 
 
 
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgColor'] = array
-//(
-//    'label'                 => &$GLOBALS['TL_LANG']['tl_article']['bgColor'],
-//    'inputType'             => 'text',
-//    'eval'                  => array
-//    (
-//        'maxlength'             => 6,
-//        'multiple'              => TRUE,
-//        'size'                  => 2,
-//        'colorpicker'           => TRUE,
-//        'isHexColor'            => TRUE,
-//        'decodeEntities'        => TRUE,
-//        'tl_class'              => 'w50 wizard'
-//    ),
-//    'sql'                   => "varchar(64) NOT NULL default ''"
-//);
-
+// Design Legend
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bgImage", "imagefield", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("bgColor", "color", $strTable, array(), 'no-clr-after-clr');
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage'] = array
-//(
-//    'label'                 => &$GLOBALS['TL_LANG']['tl_article']['bgImage'],
-//    'inputType'             => 'text',
-//    'eval'                  => array
-//    (
-//        'filesOnly'             => TRUE,
-//        'extensions'            => Config::get('validImageTypes'),
-//        'fieldType'             => 'radio',
-//        'tl_class'              => 'w50 wizard'
-//    ),
-//    'wizard' => array
-//    (
-//        array('iido_basic.table.all', 'filePicker')
-//    ),
-//    'sql'                   => "varchar(255) NOT NULL default ''"
-//);
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgPosition'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['bgPosition'],
-//    'inputType'               => 'select',
-//    'options'                 => array('left top', 'left center', 'left bottom', 'center top', 'center center', 'center bottom', 'right top', 'right center', 'right bottom'),
-//    'reference'               => $GLOBALS['TL_LANG']['tl_article']['reference']['bgPosition'],
-//    'eval'                    => array(, 'tl_class'=>'clr w50'),
-//    'sql'                     => "varchar(32) NOT NULL default ''"
-//);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("bgPosition", "select", $strTable, array('includeBlankOption'=>true), "clr");
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgRepeat'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['bgRepeat'],
-//    'inputType'               => 'select',
-//    'options'                 => array('repeat', 'repeat-x', 'repeat-y', 'no-repeat'),
-//    'reference'               => $GLOBALS['TL_LANG']['tl_article']['reference']['bgRepeat'],
-//    'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-//    'sql'                     => "varchar(32) NOT NULL default ''"
-//);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("bgRepeat", "select", $strTable, array('includeBlankOption'=>true));
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['gradientAngle'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['gradientAngle'],
-//    'inputType'               => 'text',
-//    'eval'                    => array('maxlength'=>32, 'tl_class'=>'w50'),
-//    'sql'                     => "varchar(32) NOT NULL default ''"
-//);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("gradientAngle", "text", $strTable, array('maxlength'=>32));
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['gradientColors'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['gradientColors'],
-//    'inputType'               => 'text',
-//    'eval'                    => array('multiple'=>true, 'size'=>4, 'decodeEntities'=>true, 'tl_class'=>'w50'),
-//    'sql'                     => "varchar(128) NOT NULL default ''"
-//);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("gradientColors", "text", $strTable, array('maxlength'=>128,'multiple'=>true,'size'=>4,'decodeEntities'=>true));
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgAttachment']              = $GLOBALS['TL_DCA']['tl_article']['fields']['bgRepeat'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgAttachment']['label']     = &$GLOBALS['TL_LANG']['tl_article']['bgAttachment'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgAttachment']['options']   = $GLOBALS['TL_LANG']['tl_article']['options']['bgAttachment'];
 \IIDO\BasicBundle\Helper\DcaHelper::addField("bgAttachment", "select", $strTable, array('includeBlankOption'=>true));
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgSize'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['bgSize'],
-//    'inputType'               => 'imageSize',
-//    'options'                 => &$GLOBALS['TL_LANG']['tl_article']['options']['bgSize'],
-//    'eval'                    => array
-//    (
-//        'rgxp'=>'natural',
-//        'includeBlankOption'=>true,
-//        'nospace'=>true,
-//        'helpwizard'=>true,
-//        'tl_class'=>'w50 bg-size'
-//    ),
-//    'sql'                     => "varchar(64) NOT NULL default ''"
-//);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("bgSize", "imagesize", $strTable);
 
-
-//$submenuSRC = $GLOBALS['TL_LANG']['tl_page']['options']['submenuSRC'];
-//unset( $submenuSRC['articles'] );
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['submenuSRC']            = $GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['submenuSRC']['options'] = $submenuSRC;
-//$GLOBALS['TL_DCA']['tl_article']['fields']['submenuSRC']['eval']['includeBlankOption'] = TRUE;
-\IIDO\BasicBundle\Helper\DcaHelper::addField("submenuSRC_page", "select_selector", $strTable, array('includeBlankOption'=>true));
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['submenuNewsArchive']    = $GLOBALS['TL_DCA']['tl_page']['fields']['submenuNewsArchive'];
-//\IIDO\BasicBundle\Helper\DcaHelper::addField("submenuNewsArchive_page", "select", $strTable, array('includeBlankOption'=>true));
-\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('submenuNewsArchive', $strTable, 'submenuNewsArchive', 'page');
+\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundVideo", $strTable, 'fullHeight');
+\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundOverlay", $strTable, 'fullHeight');
 
 
-$GLOBALS['TL_DCA']['tl_article']['fields']['videoSRC'] = array
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['videoSRC'] = array
 (
-    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['videoSRC'],
+    'label'                   => &$GLOBALS['TL_LANG'][ $strTable ]['videoSRC'],
     'exclude'                 => true,
     'inputType'               => 'fileTree',
     'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'files'=>true, 'mandatory'=>true, 'tl_class'=>'clr w50 hauto'),
     'sql'                     => "blob NULL"
 );
 
-//$GLOBALS['TL_DCA']['tl_article']['fields']['posterSRC']             = $GLOBALS['TL_DCA']['tl_page']['fields']['overviewImage'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['posterSRC']['label']    = &$GLOBALS['TL_LANG']['tl_article']['posterSRC'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['posterSRC']['eval']['tl_class'] = 'w50 hauto';
 \IIDO\BasicBundle\Helper\DcaHelper::addField("posterSRC", "imagefield", $strTable);
 
 
-//$GLOBALS['TL_DCA']['tl_article']['fields']['navTitle'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_article']['navTitle'],
-//    'exclude'                 => true,
-//    'inputType'               => 'text',
-//    'eval'                    => array
-//    (
-//        'maxlength'=>255,
-//        'decodeEntities'=>true,
-//        'tl_class'=>'w50',
-//
-//    ),
-//    'sql'                     => "varchar(255) NOT NULL default ''"
-//);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("navTitle", "text", $strTable, array('doNotCopy'=>true));
 
-//$GLOBALS['TL_DCA']['tl_article']['fields']['navSubTitle']                   = $GLOBALS['TL_DCA']['tl_article']['fields']['navTitle'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['navSubTitle']['label']          = &$GLOBALS['TL_LANG']['tl_article']['navSubTitle'];
-\IIDO\BasicBundle\Helper\DcaHelper::copyField("navSubTitle", $strTable, 'navTitle');
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['hideInMenu']                    = $GLOBALS['TL_DCA']['tl_article']['fields']['fullHeight'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['hideInMenu']['label']           = &$GLOBALS['TL_LANG']['tl_article']['hideInMenu'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['hideInMenu']['eval']['submitOnChange'] = FALSE;
+// Navigation Legend
 \IIDO\BasicBundle\Helper\DcaHelper::addField("hideInMenu", "checkbox", $strTable, array(), "clr no-clr-after");
+\IIDO\BasicBundle\Helper\DcaHelper::copyField("navSubTitle", $strTable, 'navTitle');
+\IIDO\BasicBundle\Helper\DcaHelper::addField("submenuSRC__page", "select__selector", $strTable, array('includeBlankOption'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('submenuNewsArchive', $strTable, 'submenuNewsArchive', 'page');
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkMode", "select_selector", $strTable, array('includeBlankOption'=>true), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addField("overviewImage", "imagefield", $strTable);
+
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("enableSticky", "checkbox", $strTable);
+// Expert Legend
+\IIDO\BasicBundle\Helper\DcaHelper::addField("hiddenArea", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("noContent", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("toNextArrow", "checkbox", $strTable);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkMode", "select__selector", $strTable, array('includeBlankOption'=>true), 'clr');
 \IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkPage", "page", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkUrl", "url", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("navLinkNewWindow", "checkbox", $strTable);
 
-
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundVideo']            = $GLOBALS['TL_DCA']['tl_article']['fields']['fullHeight'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundVideo']['label']   = &$GLOBALS['TL_LANG']['tl_article']['addBackgroundVideo'];
-\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundVideo", $strTable, 'fullHeight');
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundOverlay']          = $GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundVideo'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundOverlay']['label'] = &$GLOBALS['TL_LANG']['tl_article']['addBackgroundOverlay'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundOverlay']['eval']['submitOnChange'] = FALSE;
-\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundOverlay", $strTable, 'hideInMenu');
-
-
-
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']                 = $GLOBALS['TL_DCA']['tl_content']['fields']['singleSRC'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['label']        = &$GLOBALS['TL_LANG']['tl_page']['overviewImage'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['eval']['mandatory']   = FALSE;
-//$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['eval']['tl_class']    = 'w50 hauto';
-//$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['load_callback']       = array();
-//$GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage']['save_callback']       = array();
-\IIDO\BasicBundle\Helper\DcaHelper::addField("overviewImage", "imagefield", $strTable);
-
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage']                       = $GLOBALS['TL_DCA']['tl_article']['fields']['overviewImage'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['bgImage']['label']              = &$GLOBALS['TL_LANG']['tl_article']['bgImage'];
-\IIDO\BasicBundle\Helper\DcaHelper::addField("bgImage", "imagefield", $strTable);
-
-
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['teaserHeadline']                = $GLOBALS['TL_DCA']['tl_content']['fields']['headline'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['teaserHeadline']['label']       = &$GLOBALS['TL_LANG']['tl_article']['teaserHeadline'];
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('teaserHeadline', $strTable, 'headline', 'content');
-
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['teaserMultiSRC']                = $GLOBALS['TL_DCA']['tl_content']['fields']['multiSRC'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['teaserMultiSRC']['label']       = &$GLOBALS['TL_LANG']['tl_article']['teaserMultiSRC'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['teaserMultiSRC']['eval']['mandatory']   = FALSE;
-//$GLOBALS['TL_DCA']['tl_article']['fields']['teaserMultiSRC']['eval']['isGallery']   = TRUE;
-//$GLOBALS['TL_DCA']['tl_article']['fields']['teaserMultiSRC']['eval']['extensions']  = Config::get('validImageTypes');
 \IIDO\BasicBundle\Helper\DcaHelper::addField('teaserMultiSRC', "multisrc", $strTable);
-
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['orderSRC']                      = $GLOBALS['TL_DCA']['tl_content']['fields']['orderSRC'];
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('orderSRC', $strTable, 'orderSRC', 'content');
 
 
-//$GLOBALS['TL_DCA']['tl_article']['fields']['hiddenArea']                    = $GLOBALS['TL_DCA']['tl_article']['fields']['addBackgroundOverlay'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['hiddenArea']['label']           = &$GLOBALS['TL_LANG']['tl_article']['hiddenArea'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['hiddenArea']['eval']['tl_class'] = 'w50 m12';
-\IIDO\BasicBundle\Helper\DcaHelper::addField("hiddenArea", "checkbox", $strTable);
 
-//$GLOBALS['TL_DCA']['tl_article']['fields']['noContent']                    = $GLOBALS['TL_DCA']['tl_article']['fields']['hiddenArea'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['noContent']['label']           = &$GLOBALS['TL_LANG']['tl_article']['noContent'];
-\IIDO\BasicBundle\Helper\DcaHelper::addField("noContent", "checkbox", $strTable);
-
-//$GLOBALS['TL_DCA']['tl_article']['fields']['toNextArrow']                  = $GLOBALS['TL_DCA']['tl_article']['fields']['hiddenArea'];
-//$GLOBALS['TL_DCA']['tl_article']['fields']['toNextArrow']['label']         = &$GLOBALS['TL_LANG']['tl_article']['toNextArrow'];
-\IIDO\BasicBundle\Helper\DcaHelper::addField("toNextArrow", "checkbox", $strTable);
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("enableSticky", "checkbox", $strTable);
+// Animation Legend
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation__content", "checkbox__selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType__content", "select__short", $strTable, array('includeBlankOption'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset__content", "text", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait__content", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun__content", "select", $strTable);
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation_content", "checkbox_selector", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType_content", "select_short", $strTable, array('includeBlankOption'=>true));
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset_content", "text", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait_content", "checkbox", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun_content", "select", $strTable);
 
-//echo "<pre>"; print_r( $GLOBALS['TL_DCA']['tl_article'] ); exit;
+// TYPE: header, Config Legend
+\IIDO\BasicBundle\Helper\DcaHelper::addField("isFixed", "checkbox__selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("enableSticky", "checkbox", $strTable, array(), "clr w50");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("position", "select", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("articleWidth", "unit", $strTable, array(), "clr");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("articleHeight", "unit", $strTable);

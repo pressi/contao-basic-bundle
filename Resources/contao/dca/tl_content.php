@@ -31,7 +31,7 @@ $strTable       = \ContentModel::getTable();
 
 if( $act == "edit" && is_numeric($id) && $id > 0 )
 {
-    $objContent = $db->prepare("SELECT * FROM tl_content WHERE id=?")->limit(1)->execute( $id );
+    $objContent = $db->prepare("SELECT * FROM " . $strTable . " WHERE id=?")->limit(1)->execute( $id );
 
     if( $objContent && $objContent->numRows > 0 )
     {
@@ -132,8 +132,9 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
     if( !is_array($strFields) )
     {
 //        $headlineFields = 'addTopHeadline,headline,headlineFloating,addHeadlineBorder,addHeadlineLink,addSubHeadline;';
-//        $strFields      = str_replace( 'headline;', $headlineFields, $strFields );
-//
+        $headlineFields = 'addTopHeadline,headline;';
+        $strFields      = str_replace( 'headline;', $headlineFields, $strFields );
+
 //        if( !preg_match('/^box/', $strPalette) )
 //        {
 //            $strFields = preg_replace( '/\{' . $prefix . '_legend([a-z:]{0,})\},([a-zA-Z0-9_\-,]{0,});/', '{' . $prefix . '_legend$1},$2;{box_legend},elementIsBox;', $strFields );
@@ -155,7 +156,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
         }
     }
 
-    $strFields = preg_replace('/{expert_legend/', '{position_legend},position,position_margin,positionFixed;{expert_legend', $strFields);
+    $strFields = preg_replace('/{expert_legend/', '{position_legend},position,positionMargin,positionFixed;{expert_legend', $strFields);
 
     $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = $strFields;
 }
@@ -197,7 +198,7 @@ $GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_icon']      = 'butt
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addSnow", "snowDepth,snowUnit,snowSubline", $strTable);
-//$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addAnimation']         = "animationType,animateRun,animationWait,animationOffset";
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addTopHeadline", "topHeadline", $strTable);
 
 
 
@@ -351,7 +352,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['floating']['eval']['submitOnChange']
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'] = array
 (
-	'label'					=> &$GLOBALS['TL_LANG']['tl_content']['iidoCustomize']['addImageBorder'],
+	'label'					=> &$GLOBALS['TL_LANG']['tl_content']['addImageBorder'],
 	'exclude'				=> TRUE,
 	'inputType'				=> 'checkbox',
 	'eval'					=> array
@@ -657,19 +658,20 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']	= $GLOBALS['TL_DCA']['t
 //	),
 //	'sql'						=> "char(1) NOT NULL default ''"
 //);
-//
-//
-//
-//// Headline
-//
+
+
+
+// HEADLINE
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline']				= $GLOBALS['TL_DCA']['tl_content']['fields']['headline'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline']['label']		= &$GLOBALS['TL_LANG']['tl_content']['subHeadline'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline']['eval']['tl_class'] = 'w50 clr';
-//
+
+//\IIDO\BasicBundle\Helper\DcaHelper::addField('topHeadline', 'headline', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('topHeadline', 'text', $strTable);
 //$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadline']				= $GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadline']['label']		= &$GLOBALS['TL_LANG']['tl_content']['topHeadline'];
-//
-//
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField('addTopHeadline', 'checkbox_selector', $strTable, array(), 'clr sub-box');
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadline'] = array
 //(
 //	'label'				=> &$GLOBALS['TL_LANG']['tl_content']['addTopHeadline'],
@@ -694,14 +696,14 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']	= $GLOBALS['TL_DCA']['t
 //	'reference'               => &$GLOBALS['TL_LANG']['tl_content']['options']['headlineFloating'],
 //	'sql'                     => "varchar(32) NOT NULL default 'header_left'"
 //);
-//
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadlineFloating']			= $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadlineFloating']['label']	= &$GLOBALS['TL_LANG']['tl_content']['subHeadlineFloating'];
-//
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadlineFloating']			= $GLOBALS['TL_DCA']['tl_content']['fields']['subHeadlineFloating'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadlineFloating']['label']	= &$GLOBALS['TL_LANG']['tl_content']['topHeadlineFloating'];
-//
-//
+
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addHeadlineBorder'] = array
 //(
 //	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['addHeadlineBorder'],
@@ -711,15 +713,15 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']	= $GLOBALS['TL_DCA']['t
 //	'eval'                    => array('tl_class'=>'w50 o50', 'multiple'=>true),
 //	'sql'                     => "varchar(255) NOT NULL default ''"
 //);
-//
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addSubHeadlineBorder']			= $GLOBALS['TL_DCA']['tl_content']['fields']['addHeadlineBorder'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addSubHeadlineBorder']['label']	= &$GLOBALS['TL_LANG']['tl_content']['addSubHeadlineBorder'];
-//
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadlineBorder']			= $GLOBALS['TL_DCA']['tl_content']['fields']['addSubHeadlineBorder'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadlineBorder']['label']	= &$GLOBALS['TL_LANG']['tl_content']['addTopHeadlineBorder'];
-//
-//
-//
+
+
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addHeadlineLink'] = array
 //(
 //	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['addHeadlineLink'],
@@ -732,7 +734,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']	= $GLOBALS['TL_DCA']['t
 //	),
 //	'sql'                     => "char(1) NOT NULL default ''"
 //);
-//
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['headlineLink'] = array
 //(
 //	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['headlineLink'],
@@ -1067,42 +1069,45 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonArrow'] = array
 //);
 //,
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['position'] = array
-(
-    'label'         => array( 'Position', '' ),
-    'inputType'     => 'select',
-    'options'       => $GLOBALS['TL_LANG']['RSCE']['positions'],
-    'eval'          => array
-    (
-        'includeBlankOption'    => true,
-        'tl_class'              => 'clr w50'
-    ),
-    'sql'           => "varchar(64) NOT NULL default ''"
-);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('position', 'select', $strTable, array('includeBlankOption' => true), 'clr', false, '', array('options' => $GLOBALS['TL_LANG']['RSCE']['positions']));
+//$GLOBALS['TL_DCA']['tl_content']['fields']['position'] = array
+//(
+//    'label'         => array( 'Position', '' ),
+//    'inputType'     => 'select',
+//    'options'       => $GLOBALS['TL_LANG']['RSCE']['positions'],
+//    'eval'          => array
+//    (
+//        'includeBlankOption'    => true,
+//        'tl_class'              => 'clr w50'
+//    ),
+//    'sql'           => "varchar(64) NOT NULL default ''"
+//);
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['position_margin'] = array
-(
-    'label'         => array( 'Position Verschiebung', '' ),
-    'inputType'     => 'trbl',
-    'options'       => $GLOBALS['TL_CSS_UNITS'],
-    'eval'          => array
-    (
-        'tl_class'      => 'w50'
-    ),
-    'sql'           => "varchar(255) NOT NULL default ''"
-);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('positionMargin', 'trbl_units', $strTable);
+//$GLOBALS['TL_DCA']['tl_content']['fields']['position_margin'] = array
+//(
+//    'label'         => array( 'Position Verschiebung', '' ),
+//    'inputType'     => 'trbl',
+//    'options'       => $GLOBALS['TL_CSS_UNITS'],
+//    'eval'          => array
+//    (
+//        'tl_class'      => 'w50'
+//    ),
+//    'sql'           => "varchar(255) NOT NULL default ''"
+//);
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['positionFixed'] = array
-(
-    'label'         => &$GLOBALS['TL_LANG']['tl_content']['positionFixed'],
-    'exclude'       => TRUE,
-    'inputType'     => 'checkbox',
-    'eval'          => array
-    (
-        'tl_class'          => 'clr w50'
-    ),
-    'sql'           => "char(1) NOT NULL default ''"
-);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('positionFixed', 'checkbox', $strTable, array(), 'clr');
+//$GLOBALS['TL_DCA']['tl_content']['fields']['positionFixed'] = array
+//(
+//    'label'         => &$GLOBALS['TL_LANG']['tl_content']['positionFixed'],
+//    'exclude'       => TRUE,
+//    'inputType'     => 'checkbox',
+//    'eval'          => array
+//    (
+//        'tl_class'          => 'clr w50'
+//    ),
+//    'sql'           => "char(1) NOT NULL default ''"
+//);
 
 
 
@@ -1124,49 +1129,29 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navPagesOrder'] = array
 );
 
 
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable("navigationTpl", $strTable, "navigationTpl", "tl_module");
+//$GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']                 = $GLOBALS['TL_DCA']['tl_module']['fields']['navigationTpl'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']['label']        = &$GLOBALS['TL_LANG']['tl_content']['navigationTpl'];
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']                 = $GLOBALS['TL_DCA']['tl_module']['fields']['navigationTpl'];
-$GLOBALS['TL_DCA']['tl_content']['fields']['navigationTpl']['label']        = &$GLOBALS['TL_LANG']['tl_content']['navigationTpl'];
 
+
+// ANIMATION
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation", "checkbox__selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType", "select__short", $strTable, array('includeBlankOption'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset", "text", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun", "select", $strTable);
+
+
+
+// WEATHER DATA
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addIcon", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addSnow", "checkbox__selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("addTemperature", "checkbox", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowDepth", "text", $strTable, array('rgxp'=>'digit'));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowUnit", "text", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowSubline", "text", $strTable);
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']                 = $GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl'];
 $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['label']        = &$GLOBALS['TL_LANG']['tl_content']['snowUrl'];
 $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim($GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] . ' clr');
-
-//-- ANIMATION
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation", "checkbox_selector", $strTable);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['addAnimation']              = $GLOBALS['TL_DCA']['tl_content']['fields']['elementIsBox'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['addAnimation']['label']     = &$GLOBALS['TL_LANG']['tl_content']['addAnimation'];
-
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationType", "select_short", $strTable, array('includeBlankOption'=>true));
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']             = $GLOBALS['TL_DCA']['tl_content']['fields']['boxWidth'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['label']    = &$GLOBALS['TL_LANG']['tl_content']['animationType'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['options']  = $GLOBALS['TL_LANG']['tl_content']['options_animationType'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationType']['eval']['includeBlankOption'] = TRUE;
-
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset", "text", $strTable);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationOffset']           = $GLOBALS['TL_DCA']['tl_content']['fields']['boxLinkText'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationOffset']['label']  = &$GLOBALS['TL_LANG']['tl_content']['animationOffset'];
-
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait", "checkbox", $strTable);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationWait']             = $GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animationWait']['label']    = &$GLOBALS['TL_LANG']['tl_content']['animationWait'];
-
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun", "select", $strTable);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']                = $GLOBALS['TL_DCA']['tl_content']['fields']['animationType'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['label']       = &$GLOBALS['TL_LANG']['tl_content']['animateRun'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['options']     = $GLOBALS['TL_LANG']['tl_content']['options']['animateRun'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['animateRun']['eval']['tl_class'] = 'w50';
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addIcon", "checkbox", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addSnow", "checkbox_selector", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("addTemperature", "checkbox", $strTable);
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowDepth", "text", $strTable, array('rgxp'=>'digit'));
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowUnit", "text", $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowSubline", "text", $strTable);

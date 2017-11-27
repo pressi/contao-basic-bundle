@@ -219,7 +219,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($G
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuPageCombination'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuPageCombination']['eval']['submitOnChange'] = TRUE;
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuPageCombination', 'checkbox_selector', $strTable, array('submitOnChange'=>TRUE));
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuPageCombination', 'checkbox__selector', $strTable, array('submitOnChange'=>TRUE));
 
 
 
@@ -240,7 +240,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($G
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['label']      = &$GLOBALS['TL_LANG']['tl_page']['subPagesHasRequestLink'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['tl_class']       = 'clr w50 m12';
 //$GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink']['eval']['submitOnChange'] = TRUE;
-\IIDO\BasicBundle\Helper\DcaHelper::addField('subPagesHasRequestLink', 'checkbox_selector', $strTable, array('submitOnChange'=>TRUE), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addField('subPagesHasRequestLink', 'checkbox__selector', $strTable, array('submitOnChange'=>TRUE), 'clr');
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['requestLinkPage']                      = $GLOBALS['TL_DCA']['tl_page']['fields']['jumpTo'];
 $GLOBALS['TL_DCA']['tl_page']['fields']['requestLinkPage']['label']             = &$GLOBALS['TL_LANG']['tl_page']['requestLinkPage'];
@@ -338,7 +338,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['requestLinkPage']['label']             
 //$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']                = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['label']       = &$GLOBALS['TL_LANG']['tl_page']['overviewText'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['overviewText']['eval']['mandatory']    = FALSE;
-\IIDO\BasicBundle\Helper\DcaHelper::addField('overviewText', 'textarea_rte', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('overviewText', 'textarea__rte', $strTable);
 
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['pageColor']                    = array
@@ -377,7 +377,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['redirectTimeout'] = array
 
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']               = $GLOBALS['TL_DCA']['tl_page']['fields']['subPagesHasRequestLink'];
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuNoPages']['label']      = &$GLOBALS['TL_LANG']['tl_page']['submenuNoPages'];
-\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNoPages', 'checkbox_selector', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNoPages', 'checkbox__selector', $strTable);
 
 //$GLOBALS['TL_DCA']['tl_page']['fields']['submenuSRC'] = array
 //(
