@@ -1,1 +1,7 @@
+<? $this->extend("block_searchable") ?>
+
+<? $this->block('content'); ?>
+
 <?= $this->content ?>
+
+<? $this->endblock(); ?>
