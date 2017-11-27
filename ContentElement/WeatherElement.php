@@ -23,7 +23,7 @@ class WeatherElement extends \ContentElement
 
     /**
      * Template
-     * 
+     *
      * @var string
      */
     protected $strTemplate = 'ce_iido_weather';
