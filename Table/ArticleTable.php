@@ -52,4 +52,33 @@ class ArticleTable extends \Backend
 
         return $isAllowed;
     }
+
+
+
+    /**
+     * Add an image to each page in the tree
+     *
+     * @param array  $row
+     * @param string $label
+     *
+     * @return string
+     */
+    public function addIcon($row, $label)
+    {
+        $strArticleTable    = new \tl_article();
+        $strLabel           = $strArticleTable->addIcon( $row, $label );
+
+        if( $row['inColumn'] === "main" && $row['articleType'] !== "content" )
+        {
+            $strColumn      = $GLOBALS['TL_LANG']['COLS'][ $row['inColumn'] ];
+            $strNewColumn   = $GLOBALS['TL_LANG']['COLS'][ $row['articleType'] ];
+
+            if( strlen($strNewColumn) )
+            {
+                $strLabel   = str_replace('[' . $strColumn . ']', '[' .$strNewColumn . ']', $strLabel);
+            }
+        }
+
+        return $strLabel;
+    }
 }
