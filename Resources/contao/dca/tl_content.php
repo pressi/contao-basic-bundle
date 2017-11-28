@@ -671,7 +671,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']	= $GLOBALS['TL_DCA']['t
 //$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadline']				= $GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadline']['label']		= &$GLOBALS['TL_LANG']['tl_content']['topHeadline'];
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField('addTopHeadline', 'checkbox_selector', $strTable, array(), 'clr sub-box');
+\IIDO\BasicBundle\Helper\DcaHelper::addField('addTopHeadline', 'checkbox__selector', $strTable, array(), 'clr sub-box');
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadline'] = array
 //(
 //	'label'				=> &$GLOBALS['TL_LANG']['tl_content']['addTopHeadline'],
@@ -1083,7 +1083,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonArrow'] = array
 //    'sql'           => "varchar(64) NOT NULL default ''"
 //);
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField('positionMargin', 'trbl_units', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('positionMargin', 'trbl__units', $strTable);
 //$GLOBALS['TL_DCA']['tl_content']['fields']['position_margin'] = array
 //(
 //    'label'         => array( 'Position Verschiebung', '' ),
