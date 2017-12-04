@@ -191,10 +191,6 @@ class ColorHelper
         {
             return ((strlen($color)) ? '#' . self::shortenHexColor($color) : 'transparent');
         }
-        elseif( isset($color[2]) )
-        {
-            return '#' . self::shortenHexColor($color[2]);
-        }
         elseif( !isset($color[1]) || empty($color[1]) )
         {
             if($color[0] == "")
