@@ -14,7 +14,7 @@
     z-index: 9999999;
 }
 
-html.enable-pageloader #wrapper {
+html.enable-pageloader body:not(.edge):not(.ie) #wrapper {
     opacity: 0;
     visibility: hidden;
 
@@ -24,7 +24,7 @@ html.enable-pageloader #wrapper {
     -o-transition      : opacity 350ms, visibility 350ms;
     transition         : opacity 350ms, visibility 350ms;
 }
-html.enable-pageloader body.page-loaded #wrapper {
+html.enable-pageloader body.page-loaded:not(.edge):not(.ie) #wrapper {
     opacity: 1;
     visibility: visible;
 }
