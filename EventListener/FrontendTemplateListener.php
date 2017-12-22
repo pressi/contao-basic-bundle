@@ -956,10 +956,10 @@ class FrontendTemplateListener
         if( count($matches[1]) > 0)
         {
             $newTitle   = trim( str_replace("-", "", $matches[1][0]) );
-            $strContent = preg_replace('/<title>' . preg_quote($matches[1][0] . $rootTitle, "/") .'<\/title>/', '<title>' . $newTitle . ' :: ' . $rootTitle . '</title>', $strContent);
+            $strContent = preg_replace('/<title>' . preg_quote($matches[1][0] . $rootTitle, "/") .'<\/title>/', '<title>' . $newTitle . ' - ' . $rootTitle . '</title>', $strContent);
         }
 
-        $strContent = str_replace(":: ::", "::", $strContent);
+//        $strContent = str_replace(":: ::", "::", $strContent);
 
         return $strContent;
     }

@@ -73,8 +73,19 @@ class ContentListener
     {
         global $objPage;
 
-        $elementClass   = $this->getElementClass( $objRow ); //$objRow->typePrefix . $objRow->type;
         $cssID          = \StringUtil::deserialize($objRow->cssID, TRUE);
+        $isMobile       = \Environment::get("agent")->mobile;
+
+        if( $isMobile && ($objRow->hideOnMobile || preg_match('/hide-on-mobile/', $cssID[1])) )
+        {
+            return '';
+        }
+        elseif( !$isMobile && ($objRow->showOnMobile || preg_match('/show-on-mobile/', $cssID[1])) )
+        {
+            return '';
+        }
+
+        $elementClass   = $this->getElementClass( $objRow ); //$objRow->typePrefix . $objRow->type;
         $objArticle     = \ArticleModel::findByPk( $objRow->pid );
 
 //        if( $objRow->type == "module" )
@@ -351,6 +362,10 @@ class ContentListener
             $strBuffer = preg_replace('/<h([1-6])>/', '<h$1 class="headline">', $strBuffer);
         }
 
+        $strBuffer = $this->renderHeadlines($strBuffer, $objRow);
+        $strBuffer = $this->renderBox($strBuffer, $objRow, $objElement);
+        $strBuffer = $this->renderImages( $strBuffer, $objRow );
+
         if( $objRow->addAnimation || $objArticle->addAnimation )
         {
             $arrClasses[] = 'animate-box';
@@ -371,7 +386,6 @@ class ContentListener
             }
         }
 
-
         if( count($arrClasses) )
         {
             $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrClasses );
@@ -381,10 +395,6 @@ class ContentListener
         {
             $strBuffer = $this->addAttributesToContentElement( $strBuffer, $objRow, $arrAttributes );
         }
-
-        $strBuffer = $this->renderHeadlines($strBuffer, $objRow);
-        $strBuffer = $this->renderBox($strBuffer, $objRow, $objElement);
-        $strBuffer = $this->renderImages( $strBuffer, $objRow );
 
         return $strBuffer;
     }
@@ -398,9 +408,27 @@ class ContentListener
         $topHeadline    = ($objRow->addTopHeadline ? '<div class="top-headline">' . $objRow->topHeadline . '</div>' : '');
         $subHeadline    = ($objRow->addSubHeadline ? '<div class="sub-headline">' . $objRow->subHeadline . '</div>' : '');
 
-        if( preg_match('/<h([1-6])>/', $strContent) )
+        $arrHeadline    = deserialize($objRow->headline, TRUE);
+
+        $unit           = $arrHeadline['unit'];
+        $headline       = $arrHeadline['value'];
+        $strHeadline    = preg_replace(array('/;/'), array('<br>'), $headline);
+
+        if( $objRow->type === "headline" )
         {
-            $strContent = preg_replace('/<h([1-6])>/', '<h$1 class="headline">', $strContent);
+            $strContent = preg_replace('/<' . $unit . '([A-Za-z0-9\s\-_="\{\}]{0,})>([\s]{0,})' . preg_quote($headline, '/') . '<\/' . $unit . '>/', '<' . $unit . '$1>' . $strHeadline . '</' . $unit . '>', $strContent);
+        }
+        else
+        {
+            if( preg_match('/<h([1-6])>/', $strContent) )
+            {
+                $strContent = preg_replace('/<h' . $unit . '>' . preg_quote($headline, '/') . '<\/h' . $unit . '>/', '<h' . $unit . '>' . $strHeadline . '</h' . $unit . '>', $strContent);
+                $strContent = preg_replace('/<h([1-6])>/', '<h$1 class="headline">', $strContent);
+            }
+            else
+            {
+                $strContent = preg_replace('/<h' . $unit . ' class="headline">' . preg_quote($headline, '/') . '<\/h' . $unit . '>/', '<h' . $unit . ' class="headline">' . $strHeadline . '</h' . $unit . '>', $strContent);
+            }
         }
 
         $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}]{0,})>/', $topHeadline . '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
@@ -422,9 +450,21 @@ class ContentListener
             $arrHeadlineClasses[] = 'has-sub-headline';
         }
 
+        if( $objRow->headlineFloating )
+        {
+            $arrHeadlineClasses[] = 'text-' . preg_replace('/header_/', '', $objRow->headlineFloating);
+        }
+
         if( count($arrHeadlineClasses) )
         {
-            $strContent = preg_replace('/<h([1-6]) class="headline/', '<h$1 class="headline ' . implode(" ", $arrHeadlineClasses), $strContent);
+            $replaceClass = 'headline';
+
+            if( $objRow->type === "headline" )
+            {
+                $replaceClass = 'ce_headline';
+            }
+
+            $strContent = preg_replace('/<h([1-6]) class="' . $replaceClass . '/', '<h$1 class="' . $replaceClass . ' ' . implode(" ", $arrHeadlineClasses), $strContent);
         }
 
         return $strContent;

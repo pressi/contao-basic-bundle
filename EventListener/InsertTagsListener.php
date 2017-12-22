@@ -192,6 +192,32 @@ class InsertTagsListener
                                 break;
                         }
                         break;
+
+                    case "event":
+                        $adapter    = $this->framework->getAdapter(\CalendarEventsModel::class);
+                        $idOrAlias  = \Input::get("auto_item");
+                        $eventKey   = $arrSplit[2];
+//echo "<pre>";
+//print_r( $eventKey );
+//echo "<br>";
+                        if( !$idOrAlias )
+                        {
+                            $idOrAlias = \Input::get("events");
+                        }
+//print_r( $idOrAlias );
+//                        exit;
+                        if (null !== ($objEvent = $adapter->findByIdOrAlias($idOrAlias)))
+                        {
+                            $return = $objEvent->$eventKey;
+
+                            if( $eventKey === "date" )
+                            {
+//                                echo "<pre>"; print_r( $objEvent ); exit;
+                                $return = date(\Config::get("dateFormat"), $objEvent->startDate);
+                            }
+                        }
+
+                        break;
                 }
                 break;
         }

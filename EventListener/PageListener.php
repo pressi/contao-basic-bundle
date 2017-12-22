@@ -175,6 +175,11 @@ class PageListener
             $GLOBALS['TL_JAVASCRIPT']['iido_project']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Project.js|static';
         }
 
+        $GLOBALS['TL_JAVASCRIPT']['scrollmagic'] = $this->bundlePathPublic . '/javascript/ScrollMagic.min.js|static';
+        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.gsap.min.js|static';
+        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_debug'] = $this->bundlePathPublic . '/javascript/scrollmagic/debug.addIndicators.min.js|static';
+//        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.velocity.min.js|static';
+
         if( $objRootPage->enablePageFadeEffect )
         {
             $arrBodyClasses[] = 'page-fade-animation';

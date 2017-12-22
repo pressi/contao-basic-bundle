@@ -117,9 +117,11 @@ class SystemListener
     protected function initBackend()
     {
         $rootDir            = dirname(System::getContainer()->getParameter('kernel.root_dir'));
+        $imageFormat        = 'svg';
 
-        $backendThemePath   = $rootDir . '/system/themes/' . \Backend::getTheme() . '/images/';
-        $backendImagePath   = $rootDir . $this->bundlePathPublic . '/images/backend/';
+//        $backendThemePath   = $rootDir . '/system/themes/' . \Backend::getTheme() . '/images/';
+        $backendThemePath   = $rootDir . '/vendor/contao/core-bundle/src/Resources/contao/themes/' . \Backend::getTheme() . '/icons/';
+        $backendImagePath   = $rootDir . '/' . $this->bundlePathPublic . '/images/backend/';
 
         if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/css/backend/backend.css') )
         {
@@ -156,12 +158,12 @@ class SystemListener
 
 //        $GLOBALS['TL_JAVASCRIPT'][] = 'system/modules/ziido_customize/assets/javascript/backend/IIDO.Backend.RowEntryWizard.js|static';
 
-//        if( !file_exists($backendThemePath . 'header_center.gif') )
-//        {
-//            copy($backendImagePath . 'header_center.gif',   $backendThemePath . 'header_center.gif');
-//            copy($backendImagePath . 'header_left.gif',     $backendThemePath . 'header_left.gif');
-//            copy($backendImagePath . 'header_right.gif',    $backendThemePath . 'header_right.gif');
-//        }
+        if( !file_exists($backendThemePath . 'header_center.' . $imageFormat) && file_exists($backendImagePath . 'header_center.' . $imageFormat) )
+        {
+            copy($backendImagePath . 'header_center.' . $imageFormat,   $backendThemePath . 'header_center.' . $imageFormat);
+            copy($backendImagePath . 'header_left.' . $imageFormat,     $backendThemePath . 'header_left.' . $imageFormat);
+            copy($backendImagePath . 'header_right.' . $imageFormat,    $backendThemePath . 'header_right.' . $imageFormat);
+        }
 
 //        if( !file_exists($rootDir . '/templates/be_unavailable.html5') )
 //        {
