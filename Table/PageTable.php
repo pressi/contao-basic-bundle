@@ -114,6 +114,7 @@ class PageTable extends \Backend
 
 
 
+    //TODO: change function!! error with fullpage script!!
     public function renameArticle($varValue, \DataContainer $dc)
     {
         $db = \Database::getInstance();
