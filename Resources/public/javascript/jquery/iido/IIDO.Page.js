@@ -1647,7 +1647,7 @@ IIDO.Page = IIDO.Page || {};
 
             var listContainers = $mobileNav.find('li.submenu'), button, listItem;
 
-            $mobileNav.find("ul.level_1 > li > a,ul.level_2 > li > a").click( function() { IIDO.Page.closeMobileNavigation(); } );
+            $mobileNav.find("ul.level_1 > li > a,ul.level_2 > li > a").click( function() { if(!this.classList.contains("no-content")) { IIDO.Page.closeMobileNavigation(); } } );
 
             if( listContainers.length )
             {
