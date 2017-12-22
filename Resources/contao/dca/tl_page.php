@@ -178,7 +178,7 @@ foreach($GLOBALS['TL_DCA']['tl_page']['fields']['alias']['save_callback'] as $ca
 $GLOBALS['TL_DCA']['tl_page']['fields']['title']['eval']['alwaysSave']  = TRUE;
 $GLOBALS['TL_DCA']['tl_page']['fields']['title']['eval']['allowHtml']   = TRUE;
 $GLOBALS['TL_DCA']['tl_page']['fields']['title']['eval']['tl_class']    = trim($GLOBALS['TL_DCA']['tl_page']['fields']['title']['eval']['tl_class'] . ' w50');
-$GLOBALS['TL_DCA']['tl_page']['fields']['title']['save_callback'][]     = array('IIDO\BasicBundle\Table\PageTable', 'renameArticle');
+//$GLOBALS['TL_DCA']['tl_page']['fields']['title']['save_callback'][]     = array('IIDO\BasicBundle\Table\PageTable', 'renameArticle'); //TODO: change function!! error with fullpage script!!
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class']    = trim($GLOBALS['TL_DCA']['tl_page']['fields']['hide']['eval']['tl_class'] . ' clr');
 

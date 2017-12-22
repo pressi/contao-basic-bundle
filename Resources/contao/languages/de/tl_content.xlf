@@ -214,17 +214,17 @@
 
 
             <trans-unit id="tl_content.position.0">
-                <source>position</source>
-                <target>Position</target>
+                <source>Position/Ausrichtung (absolute)</source>
+                <target>Position/Ausrichtung (Absolut)</target>
             </trans-unit>
 
             <trans-unit id="tl_content.positionMargin.0">
-                <source>position margin</source>
-                <target>Position Verschiebung</target>
+                <source>Positions Verschiebung</source>
+                <target>Positions Verschiebung</target>
             </trans-unit>
 
             <trans-unit id="tl_content.positionFixed.0">
-                <source>position fixed</source>
+                <source>Position fixed</source>
                 <target>Position fixiert</target>
             </trans-unit>
 
@@ -536,14 +536,14 @@
 				<source>left</source>
 				<target>Linksbündig</target>
 			</trans-unit>
-			<trans-unit id="tl_content.options.headlineFloating.header_right">
-				<source>right</source>
-				<target>Rechtsbündig</target>
-			</trans-unit>
 			<trans-unit id="tl_content.options.headlineFloating.header_center">
 				<source>center</source>
 				<target>Zentriert</target>
 			</trans-unit>
+            <trans-unit id="tl_content.options.headlineFloating.header_right">
+                <source>right</source>
+                <target>Rechtsbündig</target>
+            </trans-unit>
 
 
 			<trans-unit id="tl_content.options.addHeadlineBorder.top">
@@ -992,6 +992,26 @@
 				<source>down and up</source>
 				<target>nach unten und nach oben (immer)</target>
 			</trans-unit>
+
+
+
+
+            <trans-unit id="tl_content.options.dividerStyle.solid">
+                <source>solid</source>
+                <target>Normale Linie</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.dividerStyle.dotted">
+                <source>dotted</source>
+                <target>Punktierte Linie</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.dividerStyle.dashed">
+                <source>dashed</source>
+                <target>Gestrichelte Linie</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.dividerStyle.double">
+                <source>dashed</source>
+                <target>Doppelte Linie</target>
+            </trans-unit>
 
 
 

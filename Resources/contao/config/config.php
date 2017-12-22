@@ -10,7 +10,7 @@
  *
  ******************************************************************/
 
-$assetsPath     = 'bundles/iidobasic/';
+//$assetsPath     = 'bundles/iidobasic/';
 
 //if( file_exists(TL_ROOT . '/web/' . $assetsPath . 'css/backend/backend.css') && TL_MODE == "BE" )
 //{
