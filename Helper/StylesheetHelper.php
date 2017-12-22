@@ -9,6 +9,9 @@
 
 namespace IIDO\BasicBundle\Helper;
 
+use IIDO\BasicBundle\Helper\BasicHelper;
+use IIDO\BasicBundle\Helper\ColorHelper;
+
 
 class StylesheetHelper
 {

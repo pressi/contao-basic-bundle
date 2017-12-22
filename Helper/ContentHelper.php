@@ -78,7 +78,7 @@ class ContentHelper
             $strClass = 'pos-abs pos-' . str_replace('_', '-', $objClass->position);
         }
 
-        $arrPosMargin = deserialize($objClass->position_margin, TRUE);
+        $arrPosMargin = deserialize($objClass->positionMargin, TRUE);
 
         if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
         {

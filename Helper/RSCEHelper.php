@@ -98,37 +98,9 @@ class RSCEHelper extends \Frontend
             'inputType'     => 'text',
             'eval'          => array
             (
-                'maxlength'         => 255,
-                'multiple'          => true,
                 'size'              => 2,
                 'tl_class'          => ($isLong ? 'long' : 'w50') . ($newLine ? ' clr': '')
             )
-        );
-    }
-
-
-
-    public static function getColorFieldConfig( $label, $newLine = false )
-    {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
-        return array
-        (
-            'label'         => $label,
-            'inputType'     => 'text',
-            'eval'          => array
-            (
-                'maxlength'         => 64,
-                'multiple'          => true,
-                'size'              => 2,
-                'colorpicker'       => true,
-                'isHexColor'        => true,
-                'decodeEntities'    => true,
-                'tl_class'          => 'w50 wizard' . ($newLine ? ' clr': '')
-            ),
         );
     }
 
@@ -382,12 +354,15 @@ class RSCEHelper extends \Frontend
     }
 
 
+
     public static function getPictureSRC( &$objClass, $image, $arrSize = array() )
     {
         $objPicture = self::getPicture($objClass, $image, $arrSize);
 
         return $objPicture->src;
     }
+
+
 
     public static function getImageTag( $image, $arrSize = array(), &$objClass = false, $returnPath = false )
     {
@@ -406,7 +381,7 @@ class RSCEHelper extends \Frontend
             }
             else
             {
-                $strContent = '<figure class="image_container"><img src="' . $image->src?:$image->picture['img']['src'] . '" alt="' .  $image->alt?:$image->picture['alt'] . '"' . $image->imgSize . '></figure>';
+                $strContent = '<figure class="image_container"><img src="' . trim($image->src?:$image->picture['img']['src']) . '" alt="' .  trim($image->alt?:$image->picture['alt']) . '"' . $image->imgSize . '></figure>';
             }
         }
 

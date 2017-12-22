@@ -198,7 +198,7 @@ class ImageHelper extends \Backend
 
 
 
-    public static function getImageTag( $imageSRC, $arrSize = array() )
+    public static function getImageTag( $imageSRC, $arrSize = array(), $addDefaultAttr = false )
     {
         $objImage = \FilesModel::findByPk( $imageSRC );
 
@@ -208,7 +208,16 @@ class ImageHelper extends \Backend
             /* @var $objFactory \Contao\CoreBundle\Image\ImageFactory */
 
             $objFactory->create( $objImage->path, $arrSize );
-            return \Image::getHtml( $objImage->path );
+
+            $arrMeta    = \Frontend::getMetaData($objImage->meta, $GLOBALS['TL_LANGUAGE']);
+            $attributes = '';
+
+            if( $addDefaultAttr )
+            {
+                $attributes = 'data-default="' . $objImage->path . '"';
+            }
+
+            return \Image::getHtml( $objImage->path, $arrMeta['alt'], $attributes );
         }
     }
 

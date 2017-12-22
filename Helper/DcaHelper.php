@@ -118,13 +118,14 @@ class DcaHelper extends \Frontend
             case "link":
                 self::addUrlField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
                 break;
+
             case "trbl":
             case "position":
-                $shortOptions = FALSE;
+                $typeAdd = FALSE;$shortOptions = FALSE;
 
                 if( $arrFieldType[1] === "unit" || $arrFieldType[1] === "units" )
                 {
-                    $shortOptions = TRUE;
+                    $typeAdd = TRUE;
                 }
 
                 self::addPositionField($fieldName, $strTable, $eval, $classes, $replaceClasses, $shortOptions, $typeAdd, $langTable, $defaultConfig);
@@ -228,7 +229,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function copyFieldFromTable($fieldName, $strTable, $fromFieldName, $fromFieldTable)
+    public static function copyFieldFromTable($fieldName, $strTable, $fromFieldName, $fromFieldTable, $overrideLang = false, $strClass = '')
     {
         if( !preg_match('/^tl_/', $fromFieldTable) )
         {
@@ -239,6 +240,16 @@ class DcaHelper extends \Frontend
         \Controller::loadDataContainer( $fromFieldTable );
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = $GLOBALS['TL_DCA'][ $fromFieldTable ]['fields'][ $fromFieldName ];
+
+        if( $overrideLang )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label'] = &$GLOBALS['TL_LANG'][ $strTable ][ $fieldName ];
+        }
+
+        if( $strClass )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['tl_class'] = $strClass;
+        }
     }
 
 
