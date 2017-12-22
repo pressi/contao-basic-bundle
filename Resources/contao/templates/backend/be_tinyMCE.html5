@@ -35,13 +35,16 @@ setTimeout(function()
     },
     file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
       link_class_list: [
-          {title: '-', value: ''},
+          {title: '--', value: ''},
           {title: 'Button', value: 'btn'},
           {title: 'Seite in Lightbox öffnen', value: 'open-page-in-lightbox'},
           {title: 'Scroll zum Element', value: 'scroll-to-element'},
           {title: 'Bild, Datei oder Video in Lightbox öffnen', value: 'open-file-in-lightbox'},
           {title: 'Galerie in Lightbox öffnen', value: 'open-gallery-in-lightbox'},
-          {title: 'Zur nächsten Seite (nur bei FullPage)', value: 'scroll-to-next-page'}
+          {title: 'Zur nächsten Seite (nur bei FullPage)', value: 'scroll-to-next-page'},
+          {title: 'Link Icon: Mail', value: 'ico icon-email'},
+          {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
+          {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
       ],
     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace tabfocus table visualblocks',
     browser_spellcheck: true,
