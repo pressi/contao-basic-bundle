@@ -4,7 +4,7 @@
 
       $item['href'] = '#' . $item['alias'];
 
-  if( ($item['noContent'] || preg_match('/no-content/', $item['class'])) && $item['navLinkMode'] === "" )
+  if( ($item['noContent'] || preg_match('/no-content/', $item['class'])) && ($item['navLinkMode'] === "" || strlen($item['navLinkMode']) === 0) )
   {
       $item['href'] = 'javascript:void(0);';
 
