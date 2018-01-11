@@ -47,7 +47,7 @@ services:
         class: IIDO\BasicBundle\Table\AllTables
 
 
-    iido_website.twig_extension:
+    iido_basic.twig_extension:
         class: IIDO\BasicBundle\Twig\AppExtension
         public: false
         tags:

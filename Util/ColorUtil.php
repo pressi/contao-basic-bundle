@@ -18,10 +18,10 @@
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
  * @since       1.0
  */
+
 namespace IIDO\BasicBundle\Util;
 
-
-if ( ! class_exists( 'ColorUtil' ) )
+if ( !class_exists( 'ColorUtil' ) )
 {
 
     /**

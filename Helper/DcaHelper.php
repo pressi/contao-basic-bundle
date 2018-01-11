@@ -1,20 +1,21 @@
 <?php
-/******************************************************************
- *
- * (c) 2015 Stephan Preßl <development@prestep.at>
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
- ******************************************************************/
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\Helper;
 
 
+use IIDO\BasicBundle\Table\AllTables;
+
+
 /**
- * Class Helper
+ * Class DCA Helper
+ *
  * @package IIDO\BasicBundle
  */
 class DcaHelper extends \Frontend
@@ -61,6 +62,10 @@ class DcaHelper extends \Frontend
             case "textfield":
                 self::addTextField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
 //            self::addTextField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable, $defaultConfig);
+                break;
+
+            case "alias":
+                self::addAliasField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
                 break;
 
             case "color":
@@ -772,6 +777,43 @@ class DcaHelper extends \Frontend
             'inputType'             => 'text',
             'eval'                  => $defaultEval,
             'sql'                   => "varchar(" . $defaultEval['maxlength']?:255 . ") NOT NULL default ''"
+        );
+    }
+
+
+
+    public static function addAliasField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
+    {
+        if( strlen($langTable) )
+        {
+            \Controller::loadLanguageFile( $langTable );
+        }
+
+        $defaultEval = array
+        (
+            'rgxp'          => 'alias',
+            'doNotCopy'     => true,
+            'maxlength'     => 128,
+            'tl_class'      => ($replaceClasses ? $classes : 'w50 clr' . (strlen($classes) ? ' ' . $classes : ''))
+        );
+
+        if( count($eval) )
+        {
+            $defaultEval = array_merge($defaultEval, $eval);
+        }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
+        (
+            'label'                   => &$GLOBALS['TL_LANG']['tl_article']['alias'],
+            'exclude'                 => true,
+            'inputType'               => 'text',
+            'search'                  => true,
+            'eval'                    => $defaultEval,
+            'save_callback'           => array
+            (
+                array(AllTables::class, 'generateAlias')
+            ),
+            'sql'                     => "varchar(" . $defaultEval['maxlength']?:128 . ") COLLATE utf8mb4_bin NOT NULL default ''"
         );
     }
 

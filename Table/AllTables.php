@@ -1,13 +1,10 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 namespace IIDO\BasicBundle\Table;
@@ -198,5 +195,67 @@ class AllTables
     public function rewFilePicker(\DataContainer $dc)
     {
         return ' <a href="contao/file.php?do='.\Input::get('do').'&amp;table='.$dc->table.'&amp;field='.preg_replace('/_row[0-9]*_/i', '__', $dc->field).'&amp;value='.$dc->value.'" title="'.specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['filepicker'])).'" onclick="Backend.getScrollOffset();Backend.openModalSelector({\'width\':765,\'title\':\''.specialchars($GLOBALS['TL_LANG']['MOD']['files'][0]).'\',\'url\':this.href,\'id\':\''.$dc->field.'\',\'tag\':\'ctrl_'.$dc->field . ((\Input::get('act') == 'editAll') ? '_' . $dc->id : '').'\',\'self\':this});return false">' . \Image::getHtml('pickfile.gif', $GLOBALS['TL_LANG']['MSC']['filepicker'], 'style="vertical-align:top;cursor:pointer"') . '</a>';
+    }
+
+
+
+    /**
+     * Auto-generate an article alias if it has not been set yet
+     *
+     * @param mixed         $varValue
+     * @param \DataContainer $dc
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    public function generateAlias($varValue, \DataContainer $dc)
+    {
+        echo "<pre>"; print_r( $dc ); exit;
+        $prefix     = 'article-';
+        $strTable   = '';
+
+        $autoAlias = false;
+
+        // Generate an alias if there is none
+        if ($varValue == '')
+        {
+            $autoAlias = true;
+            $slugOptions = array();
+
+            // Read the slug options from the associated page
+            if (($objPage = \PageModel::findWithDetails($dc->activeRecord->pid)) !== null)
+            {
+                $slugOptions['locale'] = $objPage->language;
+
+                if ($objPage->validAliasCharacters)
+                {
+                    $slugOptions['validChars'] = $objPage->validAliasCharacters;
+                }
+            }
+
+            $varValue = \System::getContainer()->get('contao.slug.generator')->generate(\StringUtil::stripInsertTags($dc->activeRecord->title), $slugOptions);
+        }
+
+        // Add a prefix to reserved names (see #6066)
+        if ($strTable === "tl_article" && \in_array($varValue, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer')))
+        {
+            $varValue = $prefix . $varValue;
+        }
+
+        $objAlias = \Database::getInstance()->prepare("SELECT id FROM " . $strTable . " WHERE id=? OR alias=?")->execute($dc->id, $varValue);
+
+        // Check whether the page alias exists
+        if ($objAlias->numRows > 1)
+        {
+            if (!$autoAlias)
+            {
+                throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
+            }
+
+            $varValue .= '-' . $dc->id;
+        }
+
+        return $varValue;
     }
 }
