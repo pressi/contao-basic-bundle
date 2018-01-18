@@ -1,7 +1,17 @@
 <?php
-
+/*******************************************************************
+ *
+ * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * All rights reserved
+ *
+ * Modification, distribution or any other action on or with
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\Controller;
+
 
 //use Contao\Encryption;
 use Contao\Environment;
@@ -18,10 +28,12 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
+
 /**
  * Handles the iido process.
  *
- * @author Stephan Preßl <https://github.com/pressi>
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  *
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
  */
@@ -52,7 +64,8 @@ class ConnectionController implements ContainerAwareInterface
             $this->container->get('contao.framework')->initialize();
         }
 
-        $connectTool = $this->container->get('contao.connect_tool');
+        $connectTool = $this->container->get('contao.iido.connect_tool');
+        /* @var $connectTool \IIDO\BasicBundle\ConnectTool */
 
         if( $connectTool->connectionLost() )
         {
@@ -64,7 +77,7 @@ class ConnectionController implements ContainerAwareInterface
             return $this->render('locked.html.twig');
         }
 
-        if( !$this->container->get('contao.connect_tool_user')->isAuthenticated() )
+        if( !$this->container->get('contao.iido.connect_tool_user')->isAuthenticated() )
         {
             return $this->login( $connectTool );
         }
@@ -107,8 +120,8 @@ class ConnectionController implements ContainerAwareInterface
         }
 
         $connectTool->resetLoginCount();
-        $this->container->get('contao.connect_tool_user')->setAuthenticated(true);
-        $this->container->get('contao.connect_tool_user')->setPassword( $request->request->get('password') );
+        $this->container->get('contao.iido.connect_tool_user')->setAuthenticated(true);
+        $this->container->get('contao.iido.connect_tool_user')->setPassword( $request->request->get('password') );
 
         return $this->getRedirectResponse();
     }
