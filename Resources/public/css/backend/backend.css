@@ -360,4 +360,13 @@ body.popup #main .tl_formbody_submit {
 
     width: calc(50% - 16px);
     height: 5px;
+}span.grey,
+ span.gray {
+     color: #999;
+     padding-left: 3px;
+ }
+
+.tl_checkbox_wizard .sortable span.gray,
+.tl_checkbox_wizard .sortable span.grey {
+    display: inline;
 }
