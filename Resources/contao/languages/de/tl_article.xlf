@@ -18,7 +18,10 @@
                 <target>Navigations Titel</target>
             </trans-unit>
 
-
+            <trans-unit id="tl_article.navSubTitle.0">
+                <source>navigation title</source>
+                <target>Navigations Untertitel</target>
+            </trans-unit>
 
             <trans-unit id="tl_article.isFixed.0">
                 <source>is fixed</source>
