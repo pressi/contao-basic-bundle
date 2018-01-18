@@ -24,6 +24,7 @@ class AppExtension extends \Twig_Extension
     }
 
 
+
     public function getFunctions()
     {
         return array
@@ -45,10 +46,14 @@ class AppExtension extends \Twig_Extension
         return $price;
     }
 
+
+
     public function replaceNewLineFilter( $text )
     {
         return \Controller::replaceInsertTags( str_replace(array('{{br}}','\n','$lt;br&gt;'), array('<br>','<br>','<br>'), $text) );
     }
+
+
 
     public function checkIfMasterStylesheetExists( $text )
     {
@@ -70,11 +75,12 @@ class AppExtension extends \Twig_Extension
 
 
 
-
     public function getWebsiteTitleFunction()
     {
         return $GLOBALS['TL_CONFIG']['websiteTitle'];
     }
+
+
 
     public function getSocialmediaFunction()
     {
@@ -94,10 +100,13 @@ class AppExtension extends \Twig_Extension
         return \Environment::get('agent')->class;
     }
 
+
+
     public function getLanguageFunctions()
     {
         return $GLOBALS['TL_LANGUAGE'];
     }
+
 
 
     public function getName()
