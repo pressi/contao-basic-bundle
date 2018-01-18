@@ -138,17 +138,23 @@ class MetaWizardWidget extends \MetaWizard
                         );
 
                         $strInputName   = $this->strId . '[' . $lang . '][' . $field . ']';
+//                        $strInputName   = $field . '_' . $count;
                         $varValue       = $meta[ $field ];
                         $arrValue       = \StringUtil::deserialize($varValue, true);
                         $strFieldName   = $field . '_' . $count;
+//                        $strFieldName   = $this->strId . '[' . $lang . '][' . $field . ']';
+
 
                         $strClass   = $GLOBALS['BE_FFL']['text'];
-                        $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strFieldName, 'tl_files', $this));
+                        $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strInputName, 'tl_files', $this));
 
-                        $objWidget->id = $field . '_' . $count;
+                        $objWidget->id = $strFieldName; //$field . '_' . $count;
 
                         $strField   = $objWidget->generate();
                         $wizard     = '';
+
+                        $strField   = preg_replace('/<select([A-Za-z0-9\[\]\s\-="]{0,})id="ctrl_' . $this->strId . '\[' . $lang . '\]\[' . $field . '\]_([0-9]{1})"/', '<select$1id="ctrl_' . $strFieldName . '_$2"', $strField);
+
 
                         if( $arrData['eval']['colorpicker'] )
                         {
@@ -284,8 +290,7 @@ class MetaWizardWidget extends \MetaWizard
 //                            $strSelectField .= '</select>';
 //                        }
 
-//                        $strField = $strField . $wizard . $strSelectField;
-                        $strField = $strField . $wizard;
+                        $strField = $strField . $wizard . $strSelectField;
                     }
                     else
                     {
@@ -400,5 +405,68 @@ class MetaWizardWidget extends \MetaWizard
         }
 
         return parent::validator( $varInput );
+    }
+
+
+
+    protected function getThemeColors()
+    {
+        $arrOptions = array();
+
+        $objThemes = \ThemeModel::findAll();
+
+        if( $objThemes )
+        {
+            while( $objThemes->next() )
+            {
+                $arrVars = \StringUtil::deserialize($objThemes->vars, true);
+
+                foreach($arrVars as $arrVar)
+                {
+                    if( preg_match('/color/', $arrVar['key']) )
+                    {
+                        $strValue = preg_replace('/color_/', '', $arrVar['key']);
+
+                        $arrOptions[ $objThemes->name ][ $arrVar['value'] ] = $this->renderLangValue($strValue);
+                    }
+                }
+            }
+        }
+
+        return $arrOptions;
+    }
+
+
+
+    protected function renderLangValue( $strText )
+    {
+        switch( $strText )
+        {
+            case "yellow":
+                $strText = 'Gelb';
+                break;
+
+            case "pink":
+                $strText = 'Pink / Rosa';
+                break;
+
+            case "darkblue":
+                $strText = 'Dunkelblau';
+                break;
+
+            case "blue":
+                $strText = 'Blau';
+                break;
+
+            case "green":
+                $strText = 'Grün';
+                break;
+
+            case "red":
+                $strText = 'Rot';
+                break;
+        }
+
+        return $strText;
     }
 }
