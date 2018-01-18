@@ -204,11 +204,6 @@ class ImageHelper extends \Backend
 
         if( $objImage )
         {
-            $objFactory = \System::getContainer()->get('contao.image.image_factory');
-            /* @var $objFactory \Contao\CoreBundle\Image\ImageFactory */
-
-            $objFactory->create( $objImage->path, $arrSize );
-
             $arrMeta    = \Frontend::getMetaData($objImage->meta, $GLOBALS['TL_LANGUAGE']);
             $attributes = '';
 
@@ -217,8 +212,34 @@ class ImageHelper extends \Backend
                 $attributes = 'data-default="' . $objImage->path . '"';
             }
 
-            return \Image::getHtml( $objImage->path, $arrMeta['alt'], $attributes );
+            return \Image::getHtml( self::getImagePath( $imageSRC, $arrSize ), $arrMeta['alt'], $attributes );
         }
+
+        return false;
+    }
+
+
+
+    public static function getImagePath( $imageSRC, $arrSize = array() )
+    {
+        $objImage = \FilesModel::findByPk( $imageSRC );
+
+        if( $objImage )
+        {
+            if( count($arrSize) )
+            {
+                $objFactory = \System::getContainer()->get('contao.image.image_factory');
+                /* @var $objFactory \Contao\CoreBundle\Image\ImageFactory */
+
+                $src = $objFactory->create( $objImage->path, $arrSize )->getUrl( TL_ROOT );
+
+                return $src;
+            }
+
+            return $objImage->path;
+        }
+
+        return false;
     }
 
 }

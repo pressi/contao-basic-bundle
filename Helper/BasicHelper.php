@@ -846,4 +846,11 @@ class BasicHelper extends \Frontend
 
         return '';
     }
+
+
+
+    public static function getRootDir()
+    {
+        return dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+    }
 }

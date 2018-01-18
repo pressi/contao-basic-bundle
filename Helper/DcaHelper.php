@@ -322,7 +322,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function addTextField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
+    public static function addTextField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '', $defaultConfig = array())
     {
         if( strlen($langTable) )
         {
@@ -349,6 +349,14 @@ class DcaHelper extends \Frontend
             'eval'                  => $defaultEval,
             'sql'                   => "varchar(" . $defaultEval['maxlength']?:255 . ") NOT NULL default ''"
         );
+
+        if( count( $defaultConfig) )
+        {
+            foreach( $defaultConfig as $configKey => $configValue )
+            {
+                $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ][ $configKey ] = $configValue;
+            }
+        }
     }
 
 
@@ -861,7 +869,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function addPublishedFieldsToTable( $strTable, $toPalette = '', $replaceLegend = '', $replacePosition = 'after' )
+    public static function addPublishedFieldsToTable( $strTable, $toPalette = '', $replaceLegend = '', $replacePosition = 'after', $addToList = false )
     {
         \Controller::loadLanguageFile( $strTable );
 
@@ -909,10 +917,38 @@ class DcaHelper extends \Frontend
             'sql'                     => "varchar(10) NOT NULL default ''"
         );
 
-        unset($GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['pid']);
-        $GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['pid,start,stop,published'] = 'index';
+        $strKeys = 'start,stop,published';
+
+        if( isset($GLOBALS['TL_DCA'][ $strTable ]['fields']['pid']) )
+        {
+            unset($GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['pid']);
+            $strKeys = 'pid,' .$strKeys;
+        }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys'][ $strKeys ] = 'index';
 
         self::renderTableLegend( $strTable, $strLegend, $toPalette, $replaceLegend, $replacePosition);
+
+        if( $addToList )
+        {
+            $intIndex = (count($GLOBALS['TL_DCA'][ $strTable ]['list']['operations']) - 1);
+
+            if( isset($GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['feature']) )
+            {
+                $intIndex = ($intIndex - 1);
+            }
+
+            array_insert($GLOBALS['TL_DCA'][ $strTable ]['list']['operations'], $intIndex, array
+            (
+                'toggle' => array
+                (
+                    'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['toggle'],
+                    'icon'                => 'visible.svg',
+                    'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+                    'button_callback'     => array(BundleConfig::getTableClass( $strTable ), 'toggleIcon')
+                )
+            ));
+        }
     }
 
 
