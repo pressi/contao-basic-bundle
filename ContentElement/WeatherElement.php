@@ -1,22 +1,27 @@
 <?php
-
-/**
- * Contao Open Source CMS
+/*******************************************************************
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * All rights reserved
  *
- * @license LGPL-3.0+
- */
+ * Modification, distribution or any other action on or with
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\ContentElement;
+
+
 use IIDO\BasicBundle\Cron\WeatherDataCron;
 use IIDO\BasicBundle\Helper\ImageHelper;
 
 
 /**
- * Front end content element "text".
+ * Front end content element "weather".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  */
 class WeatherElement extends \ContentElement
 {
@@ -37,7 +42,7 @@ class WeatherElement extends \ContentElement
     {
         global $objPage;
 
-        $rootDir = $rootDir            = dirname(\System::getContainer()->getParameter('kernel.root_dir'));;
+        $rootDir = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
 
         if( !file_exists($rootDir . '/system/tmp/weather-data.txt') )
         {
@@ -50,6 +55,7 @@ class WeatherElement extends \ContentElement
             $arrFileData    = json_decode( file_get_contents( $rootDir . '/system/tmp/weather-data.txt' ) );
             $objData        = $arrFileData->current_observation;
 
+            // TODO: make icons changeable // own icons // icons from weather page
 //            $this->Template->imageSRC       = 'http://icons.wxug.com/i/c/i/' . $objData->icon . '.gif';
             $this->Template->imageSRC       = 'files/skischule-russbach/Uploads/Icons/Wetter/' . $objData->icon . '.png';
             $this->Template->iconName       = $objData->weather;

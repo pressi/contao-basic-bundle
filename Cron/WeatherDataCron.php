@@ -20,7 +20,7 @@ class WeatherDataCron
     protected $weatherKey   = '9d1d71aa8a832b9f';
 
 
-
+    // TODO: get data from data-weather.json config file // make city and key changable
     public function generateCustomizeWeatherData()
     {
         $weatherData    = file_get_contents($this->weatherUrl . $this->weatherKey . '/conditions/lang:DL/q/' . $this->weatherCity . '.json');
