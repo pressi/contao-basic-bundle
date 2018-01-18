@@ -10,7 +10,7 @@
  *
  ******************************************************************/
 
-//$assetsPath     = 'bundles/iidobasic/';
+$assetsPath     = 'bundles/iidobasic/';
 
 //if( file_exists(TL_ROOT . '/web/' . $assetsPath . 'css/backend/backend.css') && TL_MODE == "BE" )
 //{
@@ -20,6 +20,8 @@
 list( $namespace, $subNamespace, $subName, $prefix, $tablePrefix, $listenerName ) = \IIDO\BasicBundle\Config\BundleConfig::getBundleConfigArray();
 
 $ns = $namespace . '\\' . $subNamespace;
+
+
 
 /**
  * Backend modules
@@ -117,29 +119,29 @@ $GLOBALS['TL_FFL']['radioTable']        = $ns . '\FormField\RadioButtonTable';
  * Hooks
  */
 
-$GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerName . '.listener.system', 'initializeCustomizeSystem');
+$GLOBALS['TL_HOOKS']['initializeSystem'][]                  = array($listenerName . '.system', 'initializeCustomizeSystem');
 
-$GLOBALS['TL_HOOKS']['getPageStatusIcon'][]                 = array($listenerName . '.listener.page', 'getCustomizePageStatusIcon');
-$GLOBALS['TL_HOOKS']['generatePage'][]                      = array($listenerName . '.listener.page', 'generateCustomizePage');
-$GLOBALS['TL_HOOKS']['modifyFrontendPage'][]                = array($listenerName . '.listener.page', 'modifyCustomizeFrontendPage');
+$GLOBALS['TL_HOOKS']['getPageStatusIcon'][]                 = array($listenerName . '.page', 'getCustomizePageStatusIcon');
+$GLOBALS['TL_HOOKS']['generatePage'][]                      = array($listenerName . '.page', 'generateCustomizePage');
+$GLOBALS['TL_HOOKS']['modifyFrontendPage'][]                = array($listenerName . '.page', 'modifyCustomizeFrontendPage');
 
-$GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerName . '.listener.content', 'getCustomizeContentElement');
+$GLOBALS['TL_HOOKS']['getContentElement'][]                 = array($listenerName . '.content', 'getCustomizeContentElement');
 
-$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.listener.frontend_template', 'outputCustomizeFrontendTemplate');
-$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.listener.frontend_template', 'parseCustomizeFrontendTemplate');
+$GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerName . '.frontend_template', 'outputCustomizeFrontendTemplate');
+$GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.frontend_template', 'parseCustomizeFrontendTemplate');
 
-$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.listener.backend_template', 'outputCustomizeBackendTemplate');
+$GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.backend_template', 'outputCustomizeBackendTemplate');
 
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.listener.insert_tags', 'replaceCustomizeInsertTags');
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags');
 
-$GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.listener.ajax', 'parseAjaxRequest');
-//$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.listener.ajax', 'parseAjaxRequest');
+$GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.ajax', 'parseAjaxRequest');
+//$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.ajax', 'parseAjaxRequest');
 
-$GLOBALS['TL_HOOKS']['getCombinedFile'][]                   = array($listenerName . '.listener.combiner', 'getCustomizeCombinedFile');
+$GLOBALS['TL_HOOKS']['getCombinedFile'][]                   = array($listenerName . '.combiner', 'getCustomizeCombinedFile');
 
-//$GLOBALS['TL_HOOKS']['getForm'][]                           = array($listenerName . '.listener.form', 'getCustomizeForm');
-$GLOBALS['TL_HOOKS']['loadFormField'][]                     = array($listenerName . '.listener.form', 'loadCustomizeFormField');
-$GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerName . '.listener.form', 'parseCustomizeWidget');
+//$GLOBALS['TL_HOOKS']['getForm'][]                           = array($listenerName . '.form', 'getCustomizeForm');
+$GLOBALS['TL_HOOKS']['loadFormField'][]                     = array($listenerName . '.form', 'loadCustomizeFormField');
+$GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerName . '.form', 'parseCustomizeWidget');
 
 
 
