@@ -48,7 +48,8 @@
 
           if( $objArticle )
           {
-              $item['target'] = $item['target'] . ' data-article="' . $objArticle->alias . '"';
+              $item['target']   = $item['target'] . ' data-article="' . $objArticle->alias . '"';
+              $item['href']     = '#' . $objArticle->alias;
           }
       }
 
