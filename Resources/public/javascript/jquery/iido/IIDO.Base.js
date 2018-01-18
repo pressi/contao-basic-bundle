@@ -62,6 +62,21 @@ IIDO.Base = IIDO.Base || {};
     base.toggleElementClass = function(element, className)
     {
         return ((element.hasClass(className)) ? element.removeClass(className) : element.addClass(className));
-    }
+    };
+
+
+
+    base.getSiblings = function( elem )
+    {
+        var siblings = [];
+        var sibling = elem.parentNode.firstChild;
+
+        for (; sibling; sibling = sibling.nextSibling)
+        {
+            if (sibling.nodeType !== 1 || sibling === elem) continue;
+            siblings.push(sibling);
+        }
+        return siblings;
+    };
 
 })(window, jQuery, IIDO.Base);
