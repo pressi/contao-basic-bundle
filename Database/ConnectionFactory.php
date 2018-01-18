@@ -21,6 +21,9 @@ use Doctrine\DBAL\DriverManager;
  */
 class ConnectionFactory
 {
+    //TODO: IN USE??
+
+
     /**
      * Returns the database connection object.
      *
