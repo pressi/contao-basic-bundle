@@ -452,24 +452,36 @@ class ColorHelper
                 $strText = 'Pink / Rosa';
                 break;
 
-            case "darkblue":
-                $strText = 'Dunkelblau';
-                break;
-
             case "blue":
                 $strText = 'Blau';
+                break;
+
+            case "darkblue":
+                $strText = 'Dunkelblau';
                 break;
 
             case "green":
                 $strText = 'Grün';
                 break;
 
+            case "darkgreen":
+                $strText = 'Dunkelgrün';
+                break;
+
             case "red":
                 $strText = 'Rot';
                 break;
 
+            case "darkred":
+                $strText = 'Dunkelrot';
+                break;
+
             case "black":
                 $strText = 'Schwarz';
+                break;
+
+            case "white":
+                $strText = 'Weiss';
                 break;
 
             case "purple":

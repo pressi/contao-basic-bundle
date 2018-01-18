@@ -22,240 +22,155 @@ class BasicHelper extends \Frontend
 
     /**
      * Compile a color value and return a hex or rgba color
+     *
      * @param mixed
      * @param boolean
      * @param array
+     *
      * @return string
+     * @deprecated Use ColorHelper::compileColor instead
      */
     public static function compileColor($color, $blnWriteToFile=false, $vars=array())
     {
-        if (!is_array($color))
-        {
-            return ((strlen($color)) ? '#' . self::shortenHexColor($color) : 'transparent');
-        }
-        elseif (!isset($color[1]) || empty($color[1]))
-        {
-            if($color[0] == "")
-            {
-                return "transparent";
-            }
+        return ColorHelper::compileColor($color, $blnWriteToFile, $vars);
+    }
 
-            return '#' . self::shortenHexColor($color[0]);
+
+    public static function isSerializedValue( $strValue, $strict = true )
+    {
+        $data = $strValue;
+
+        // if it isn't a string, it isn't serialized
+        if ( ! is_string( $data ) )
+        {
+            return false;
+        }
+
+        $data = trim( $data );
+
+        if ( 'N;' == $data )
+        {
+            return true;
+        }
+
+        $length = strlen( $data );
+
+        if ( $length < 4 )
+        {
+            return false;
+        }
+
+        if ( ':' !== $data[1] )
+        {
+            return false;
+        }
+
+        if ( $strict )
+        {
+            $lastc = $data[ $length - 1 ];
+
+            if ( ';' !== $lastc && '}' !== $lastc )
+            {
+                return false;
+            }
         }
         else
         {
-            return 'rgba(' . implode(',', self::convertHexColor($color[0], $blnWriteToFile, $vars)) . ','. ($color[1] / 100) .')';
-        }
-    }
+            $semicolon	= strpos( $data, ';' );
+            $brace		= strpos( $data, '}' );
 
-
-    /**
-     * Try to shorten a hex color
-     * @param string
-     * @return string
-     */
-    public static function shortenHexColor($color)
-    {
-        if ($color[0] == $color[1] && $color[2] == $color[3] && $color[4] == $color[5])
-        {
-            return $color[0] . $color[2] . $color[4];
-        }
-
-        return $color;
-    }
-
-
-    /**
-     * Convert hex colors to rgb
-     * @param string
-     * @param boolean
-     * @param array
-     * @return array
-     * @see http://de3.php.net/manual/de/function.hexdec.php#99478
-     */
-    public static function convertHexColor($color, $blnWriteToFile=false, $vars=array())
-    {
-        // Support global variables
-        if (strncmp($color, '$', 1) === 0)
-        {
-            if (!$blnWriteToFile)
+            // Either ; or } must exist.
+            if ( false === $semicolon && false === $brace )
             {
-                return array($color);
+                return false;
+            }
+
+            // But neither must be in the first X characters.
+            if ( false !== $semicolon && $semicolon < 3 )
+            {
+                return false;
+            }
+
+            if ( false !== $brace && $brace < 4 )
+            {
+                return false;
+            }
+        }
+
+        $token = $data[0];
+
+        switch ( $token )
+        {
+            case 's' :
+                if ( $strict )
+                {
+                    if ( '"' !== $data[ $length - 2 ] )
+                    {
+                        return false;
+                    }
+                }
+                elseif ( false === strpos( $data, '"' ) )
+                {
+                    return false;
+                }
+            // or else fall through
+
+
+            case 'a' :
+            case 'O' :
+
+                return (bool) preg_match( "/^{$token}:[0-9]+:/s", $data );
+
+
+            case 'b' :
+            case 'i' :
+            case 'd' :
+
+                $end = $strict ? '$' : '';
+                return (bool) preg_match( "/^{$token}:[0-9.E-]+;$end/", $data );
+        }
+
+        return false;
+    }
+
+
+
+    public static function getHomepageUrl()
+    {
+        $strLanguage = $GLOBALS['TL_LANGUAGE'];
+
+        $objRootPage = \PageModel::findOneBy(array('type', 'language'), array('root', $strLanguage));
+
+        if( $objRootPage )
+        {
+            $objHomePage = \PageModel::findFirstPublishedRegularByPid( $objRootPage->id );
+
+            if( $objHomePage )
+            {
+                return $objHomePage->getFrontendUrl();
             }
             else
             {
-                $color = str_replace(array_keys($vars), array_values($vars), $color);
+                $homepageUrl = array
+                (
+                    'de'		=> 'startseite.html',
+                    'en'		=> 'home.html'
+                );
+
+                return $homepageUrl[ $strLanguage ];
             }
         }
 
-        $rgb = array();
-
-        // Try to convert using bitwise operation
-        if (strlen($color) == 6)
-        {
-            $dec = hexdec($color);
-            $rgb['red'] 	= 0xFF & ($dec >> 0x10);
-            $rgb['green'] 	= 0xFF & ($dec >> 0x8);
-            $rgb['blue'] 	= 0xFF & $dec;
-        }
-
-        // Shorthand notation
-        elseif (strlen($color) == 3)
-        {
-            $rgb['red'] 	= hexdec(str_repeat(substr($color, 0, 1), 2));
-            $rgb['green'] 	= hexdec(str_repeat(substr($color, 1, 1), 2));
-            $rgb['blue'] 	= hexdec(str_repeat(substr($color, 2, 1), 2));
-        }
-
-        return $rgb;
+        return false;
     }
 
-    public static function compileRGBtoHex($color)
-    {
-        $hex	= "";
-        $red 	= $color[0];
-        $green 	= $color[1];
-        $blue 	= $color[2];
-
-        $hex	.= str_pad(dechex($red), 2, "0", STR_PAD_LEFT);
-        $hex	.= str_pad(dechex($green), 2, "0", STR_PAD_LEFT);
-        $hex	.= str_pad(dechex($blue), 2, "0", STR_PAD_LEFT);
-
-        return self::compileColor($hex);
-    }
-
-	public static function isSerializedValue( $strValue, $strict = true )
-	{
-		$data = $strValue;
-
-		// if it isn't a string, it isn't serialized
-		if ( ! is_string( $data ) )
-		{
-			return false;
-		}
-
-		$data = trim( $data );
-
-		if ( 'N;' == $data )
-		{
-			return true;
-		}
-
-		$length = strlen( $data );
-
-		if ( $length < 4 )
-		{
-			return false;
-		}
-
-		if ( ':' !== $data[1] )
-		{
-			return false;
-		}
-
-		if ( $strict )
-		{
-			$lastc = $data[ $length - 1 ];
-
-			if ( ';' !== $lastc && '}' !== $lastc )
-			{
-				return false;
-			}
-		}
-		else
-		{
-			$semicolon	= strpos( $data, ';' );
-			$brace		= strpos( $data, '}' );
-
-			// Either ; or } must exist.
-			if ( false === $semicolon && false === $brace )
-			{
-				return false;
-			}
-
-			// But neither must be in the first X characters.
-			if ( false !== $semicolon && $semicolon < 3 )
-			{
-				return false;
-			}
-
-			if ( false !== $brace && $brace < 4 )
-			{
-				return false;
-			}
-		}
-
-		$token = $data[0];
-
-		switch ( $token )
-		{
-			case 's' :
-				if ( $strict )
-				{
-					if ( '"' !== $data[ $length - 2 ] )
-					{
-						return false;
-					}
-				}
-				elseif ( false === strpos( $data, '"' ) )
-				{
-					return false;
-				}
-				// or else fall through
-
-
-			case 'a' :
-			case 'O' :
-
-				return (bool) preg_match( "/^{$token}:[0-9]+:/s", $data );
-
-
-			case 'b' :
-			case 'i' :
-			case 'd' :
-
-				$end = $strict ? '$' : '';
-				return (bool) preg_match( "/^{$token}:[0-9.E-]+;$end/", $data );
-		}
-
-		return false;
-	}
-
-
-
-	public static function getHomepageUrl()
-	{
-		$strLanguage = $GLOBALS['TL_LANGUAGE'];
-
-		$objRootPage = \PageModel::findOneBy(array('type', 'language'), array('root', $strLanguage));
-
-		if( $objRootPage )
-		{
-			$objHomePage = \PageModel::findFirstPublishedRegularByPid( $objRootPage->id );
-
-			if( $objHomePage )
-			{
-				return $objHomePage->getFrontendUrl();
-			}
-			else
-			{
-				$homepageUrl = array
-				(
-					'de'		=> 'startseite.html',
-					'en'		=> 'home.html'
-				);
-
-				return $homepageUrl[ $strLanguage ];
-			}
-		}
-
-		return false;
-	}
 
 
     /**
      * Get a page layout and return it as database result object
+     *
      * @param \Model
+     *
      * @return \Model|boolean
      */
     public static function getPageLayout($objPage)
@@ -265,8 +180,7 @@ class BasicHelper extends \Frontend
             return false;
         }
 
-        $object 	= new self();
-        $blnMobile	= ($objPage->mobileLayout && \Environment::get('agent')->mobile);
+        $blnMobile  = ($objPage->mobileLayout && \Environment::get('agent')->mobile);
 
         // Override the autodetected value
         if (\Input::cookie('TL_VIEW') == 'mobile' && $objPage->mobileLayout)
@@ -287,8 +201,8 @@ class BasicHelper extends \Frontend
             $objLayout = false;
             if($objPage->pid > 0)
             {
-                $objParentPage 	= $object->getParentPage( $objPage->pid );
-                $objLayout 		= $object->getPageLayout($objParentPage);
+                $objParentPage  = self::getParentPage( $objPage->pid );
+                $objLayout      = self::getPageLayout($objParentPage);
             }
         }
 
@@ -480,13 +394,13 @@ class BasicHelper extends \Frontend
 
     public static function checkIfFileIsVideo($file)
     {
-        $isVideo	= false;
-        $parts 		= explode(".", $file);
-        $type		= array_pop($parts);
+        $isVideo    = false;
+        $parts      = explode(".", $file);
+        $type       = array_pop($parts);
 
         if( !in_array($type, explode(",", \Config::get('validImageTypes'))) )
         {
-            if($type == "mp4")
+            if($type === "mp4")
             {
                 $isVideo = true;
             }
@@ -499,8 +413,8 @@ class BasicHelper extends \Frontend
 
     public static function setStyles($strContent, $styles, $styleTag = true)
     {
-        $styles			= '<style type="text/css">' . $styles . '</style>';
-        $strContent		= str_replace('</head>', $styles . "\n" . '</head>', $strContent);
+        $styles     = '<style type="text/css">' . $styles . '</style>';
+        $strContent = str_replace('</head>', $styles . "\n" . '</head>', $strContent);
 
         return $strContent;
     }
@@ -509,9 +423,9 @@ class BasicHelper extends \Frontend
 
     public static function getFullpageNavigationUrl( $arrItem )
     {
-        $objSubpages	= \PageModel::findByPk( $arrItem['id'] );
-        $language		= null;
-        $strAlias		= preg_replace('/\/home/', '', $arrItem['alias']);
+        $objSubpages    = \PageModel::findByPk( $arrItem['id'] );
+        $language       = null;
+        $strAlias       = preg_replace('/\/home/', '', $arrItem['alias']);
 
         // Get href
         switch ($objSubpages->type)
@@ -546,7 +460,7 @@ class BasicHelper extends \Frontend
                         $strForceLang = $objNext->language;
                     }
 
-                    $href = self::generateFrontendUrl($objNext->row(), '/' . $strAlias, $strForceLang);
+                    $href = $objNext->getFrontendUrl('/' . $strAlias, $strForceLang);
 
                     // Add the domain if it differs from the current one (see #3765)
                     if ($objNext->domain != '' && $objNext->domain != \Environment::get('host'))
@@ -558,7 +472,7 @@ class BasicHelper extends \Frontend
             // DO NOT ADD A break; STATEMENT
 
             default:
-                $href = self::generateFrontendUrl($objSubpages->row(), null, $language);
+                $href = $objSubpages->getFrontendUrl(null, $language);
 
                 // Add the domain if it differs from the current one (see #3765)
                 if ($objSubpages->domain != '' && $objSubpages->domain != \Environment::get('host'))
@@ -575,11 +489,11 @@ class BasicHelper extends \Frontend
 
     public static function replaceOtherDefaultScripts()
     {
+        //TODO: is in use??!
+
         global $objPage;
 
-        $config		= \Config::getInstance();
-        $objLayout 	= self::getPageLayout($objPage);
-
+        $objLayout  = self::getPageLayout($objPage);
 
         if( is_array($GLOBALS['TL_JAVASCRIPT']) )
         {
@@ -623,20 +537,59 @@ class BasicHelper extends \Frontend
     {
         if( is_array($GLOBALS['TL_JAVASCRIPT']) )
         {
-            $GLOBALS['TL_JAVASCRIPT'] 	= array_unique($GLOBALS['TL_JAVASCRIPT']);
-            $GLOBALS['TL_JAVASCRIPT'] 	= array_values($GLOBALS['TL_JAVASCRIPT']);
+            $GLOBALS['TL_JAVASCRIPT'] = array_unique($GLOBALS['TL_JAVASCRIPT']);
+            $GLOBALS['TL_JAVASCRIPT'] = array_values($GLOBALS['TL_JAVASCRIPT']);
+
+            $arrScripts = array();
+            foreach($GLOBALS['TL_JAVASCRIPT'] as $key => $scriptSRC)
+            {
+                if( in_array($scriptSRC, $arrScripts) )
+                {
+                    unset( $GLOBALS['TL_JAVASCRIPT'][ $key ] );
+                }
+                else
+                {
+                    $arrScripts[] = $scriptSRC;
+                }
+            }
         }
 
         if( is_array($GLOBALS['TL_CSS']) )
         {
-            $GLOBALS['TL_CSS']			= array_unique($GLOBALS['TL_CSS']);
-            $GLOBALS['TL_CSS']			= array_values($GLOBALS['TL_CSS']);
+            $GLOBALS['TL_CSS'] = array_unique($GLOBALS['TL_CSS']);
+            $GLOBALS['TL_CSS'] = array_values($GLOBALS['TL_CSS']);
+
+            $arrStyles = array();
+            foreach($GLOBALS['TL_CSS'] as $key => $styleSRC)
+            {
+                if( in_array($styleSRC, $arrStyles) )
+                {
+                    unset( $GLOBALS['TL_CSS'][ $key ] );
+                }
+                else
+                {
+                    $arrStyles[] = $styleSRC;
+                }
+            }
         }
 
         if( is_array($GLOBALS['TL_USER_CSS']) )
         {
-            $GLOBALS['TL_USER_CSS']		= array_unique($GLOBALS['TL_USER_CSS']);
-            $GLOBALS['TL_USER_CSS']		= array_values($GLOBALS['TL_USER_CSS']);
+            $GLOBALS['TL_USER_CSS'] = array_unique($GLOBALS['TL_USER_CSS']);
+            $GLOBALS['TL_USER_CSS'] = array_values($GLOBALS['TL_USER_CSS']);
+
+            $arrUserStyles = array();
+            foreach($GLOBALS['TL_USER_CSS'] as $key => $userStyleSRC)
+            {
+                if( in_array($userStyleSRC, $arrUserStyles) )
+                {
+                    unset( $GLOBALS['TL_USER_CSS'][ $key ] );
+                }
+                else
+                {
+                    $arrUserStyles[] = $userStyleSRC;
+                }
+            }
         }
     }
 
@@ -653,7 +606,7 @@ class BasicHelper extends \Frontend
             {
                 $strStyles .= $key . ':' . $value . ';';
 
-                if($key == 'background-size' && !array_key_exists('-webkit-background-size', $style))
+                if($key === 'background-size' && !array_key_exists('-webkit-background-size', $style))
                 {
                     $strStyles .= '-webkit-' . $key . ':' . $value . ';';
                     $strStyles .= '-moz-' . $key . ':' . $value . ';';

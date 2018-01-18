@@ -98,9 +98,37 @@ class RSCEHelper extends \Frontend
             'inputType'     => 'text',
             'eval'          => array
             (
+                'maxlength'         => 255,
+                'multiple'          => true,
                 'size'              => 2,
                 'tl_class'          => ($isLong ? 'long' : 'w50') . ($newLine ? ' clr': '')
             )
+        );
+    }
+
+
+
+    public static function getColorFieldConfig( $label, $newLine = false )
+    {
+        if( !is_array($label) )
+        {
+            $label = array($label, '');
+        }
+
+        return array
+        (
+            'label'         => $label,
+            'inputType'     => 'text',
+            'eval'          => array
+            (
+                'maxlength'         => 64,
+                'multiple'          => true,
+                'size'              => 2,
+                'colorpicker'       => true,
+                'isHexColor'        => true,
+                'decodeEntities'    => true,
+                'tl_class'          => 'w50 wizard' . ($newLine ? ' clr': '')
+            ),
         );
     }
 
