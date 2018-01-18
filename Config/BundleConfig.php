@@ -253,4 +253,43 @@ class BundleConfig
             return 'vendor/' . self::getBundleGroup() . '/' . self::getBundleName();
         }
     }
+
+
+
+    public static function getTableName( $fileName )
+    {
+        $arrParts       = explode("/", $fileName);
+        $arrFileParts   = explode(".", array_pop( $arrParts ));
+
+        array_pop( $arrFileParts );
+
+        $fileName       = implode(".", $arrFileParts);
+
+        return $fileName;
+    }
+
+
+
+    public static function getTableClass( $strTable )
+    {
+        $tableClass     = preg_replace(array('/^Iido/', '/Model$/'), '', \Model::getClassFromTable( $strTable ));
+        $arrClass       = preg_split('/(?=[A-Z])/', lcfirst($tableClass));
+        $newTableClass  = 'IIDO';
+
+        foreach( $arrClass as $i => $class)
+        {
+            $newTableClass .= '\\' . ucfirst($class);
+
+            if( $i === 0 )
+            {
+                $newTableClass .= 'Bundle\\Table';
+            }
+            elseif( $i === (count($arrClass) - 1) )
+            {
+                $newTableClass .= 'Table';
+            }
+        }
+
+        return $newTableClass;
+    }
 }
