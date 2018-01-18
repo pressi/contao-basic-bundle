@@ -27,12 +27,15 @@ class BundleConfig
     /**
      * Get all Bundle Data in one array
      *
+     * @param bool $includeListener
+     *
      * @return array
      */
-    public static function getBundleConfigArray() // TODO: custom order?
+    public static function getBundleConfigArray( $includeListener = true ) // TODO: custom order?
     {
-        return array(self::getNamespace(), self::getSubNamespace(), self::getSubName(), self::getPrefix(), self::getTablePrefix(), self::getListenerName());
+        return array(self::getNamespace(), self::getSubNamespace(), self::getSubName(), self::getPrefix(), self::getTablePrefix(), self::getListenerName( $includeListener ));
     }
+
 
 
     /**
@@ -86,7 +89,8 @@ class BundleConfig
 
                 case "listener":
                 case "listenername":
-                    $return = self::getListenerName();
+                    $funcVar    = (($funcVar === null) ? false : $funcVar);
+                    $return     = self::getListenerName( $funcVar );
                     break;
 
                 case "bundle":
@@ -120,6 +124,7 @@ class BundleConfig
         }
 
     }
+
 
 
     /**
@@ -197,11 +202,13 @@ class BundleConfig
     /**
      * Get Bundle Listener Name
      *
+     * @param bool $includeListener
+     *
      * @return string
      */
-    public static function getListenerName()
+    public static function getListenerName( $includeListener = false)
     {
-        return self::getPrefix() . '_' . self::getSubName();
+        return self::getPrefix() . '_' . self::getSubName() . ($includeListener ? '.listener' : '');
     }
 
 
@@ -227,6 +234,8 @@ class BundleConfig
     {
         return static::$bundleGroup;
     }
+
+
 
     /**
      * Get Bundle Path
