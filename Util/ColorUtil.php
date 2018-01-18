@@ -21,7 +21,8 @@
 
 namespace IIDO\BasicBundle\Util;
 
-if ( !class_exists( 'ColorUtil' ) )
+
+if ( ! class_exists( 'ColorUtil' ) )
 {
 
     /**
