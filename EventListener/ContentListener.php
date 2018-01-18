@@ -355,7 +355,6 @@ class ContentListener extends DefaultListener
             }
         }
 
-
         if( count($arrClasses) )
         {
             $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrClasses );
@@ -375,13 +374,15 @@ class ContentListener extends DefaultListener
     {
         $arrHeadlineClasses = array();
 
-        $topHeadline    = ($objRow->addTopHeadline ? '<div class="top-headline">' . $objRow->topHeadline . '</div>' : '');
-        $subHeadline    = ($objRow->addSubHeadline ? '<div class="sub-headline">' . $objRow->subHeadline . '</div>' : '');
-
         $arrHeadline    = deserialize($objRow->headline, TRUE);
-
         $unit           = $arrHeadline['unit'];
         $headline       = $arrHeadline['value'];
+
+        $strTopClass    = ' unit-' . $unit;
+
+        $topHeadline    = ($objRow->addTopHeadline ? '<div class="top-headline' . $strTopClass . '">' . $objRow->topHeadline . '</div>' : '');
+        $subHeadline    = ($objRow->addSubHeadline ? '<div class="sub-headline">' . $objRow->subHeadline . '</div>' : '');
+
         $strHeadline    = preg_replace(array('/;/'), array('<br>'), $headline);
 
         if( $objRow->type === "headline" )

@@ -156,6 +156,7 @@ class PageListener extends DefaultListener
             $GLOBALS['TL_JAVASCRIPT']['iido_content']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
             $GLOBALS['TL_JAVASCRIPT']['iido_filter']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Filter.js|static';
             $GLOBALS['TL_JAVASCRIPT']['iido_project']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Project.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['iido_form']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Form.js|static';
         }
 
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic'] = $this->bundlePathPublic . '/javascript/ScrollMagic.min.js|static';
