@@ -19,7 +19,6 @@ namespace IIDO\BasicBundle\Table;
 class AllTables
 {
 
-
     /**
      * Strip all not allowed tags
      *
