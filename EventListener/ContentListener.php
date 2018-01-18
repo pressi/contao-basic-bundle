@@ -12,34 +12,19 @@
 
 namespace IIDO\BasicBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 
-use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
-
-
-//use IIDO\WebsiteBundle\Table\Page;
 
 
 /**
  * IIDO System Listener
  *
- * @author Stephan Preßl <https://github.com/pressi>
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  */
-class ContentListener
+class ContentListener extends DefaultListener
 {
-
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-
-    protected $bundlePathPublic;
-    protected $bundlePath;
-
-    protected $resourcePath     = '/app/Resources';
 
     protected $arrNotInsideClassElements = array
     (
@@ -47,22 +32,6 @@ class ContentListener
         'slick-content-start',
 //        'slick-slide-separator'
     );
-
-
-
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(ContaoFrameworkInterface $framework)
-    {
-        $this->framework        = $framework;
-
-        $this->bundlePathPublic = BundleConfig::getBundlePath(true);
-        $this->bundlePath       = BundleConfig::getBundlePath();
-
-    }
 
 
 
@@ -385,6 +354,7 @@ class ContentListener
                 $arrAttributes['data-wait'] = 1;
             }
         }
+
 
         if( count($arrClasses) )
         {

@@ -12,10 +12,7 @@
 
 namespace IIDO\BasicBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
-use IIDO\BasicBundle\Config\BundleConfig;
-use IIDO\BasicBundle\Helper\BasicHelper;
+
 use IIDO\BasicBundle\Helper\StylesheetHelper;
 use \MatthiasMullie\Minify;
 
@@ -25,39 +22,8 @@ use \MatthiasMullie\Minify;
  *
  * @author Stephan Preßl <https://github.com/pressi>
  */
-class CombinerListener
+class CombinerListener extends DefaultListener
 {
-    use ScopeAwareTrait;
-
-
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-
-    protected $bundlePathPublic;
-    protected $bundlePath;
-
-    protected $resourcePath     = '/app/Resources';
-
-
-
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(ContaoFrameworkInterface $framework)
-    {
-        $this->framework = $framework;
-
-        $this->bundlePathPublic = BundleConfig::getBundlePath(true);
-        $this->bundlePath       = BundleConfig::getBundlePath();
-
-    }
-
-
 
     /**
      * get a combined file
@@ -99,6 +65,5 @@ class CombinerListener
 
         return $strContent;
     }
-
 
 }

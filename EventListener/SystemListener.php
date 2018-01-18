@@ -12,73 +12,26 @@
 
 namespace IIDO\BasicBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
+
 use Contao\System;
 use Contao\Config;
-
-use Contao\Environment;
-use Contao\PageModel;
-use Contao\LayoutModel;
-use Contao\Model\Collection;
-use Contao\NewsFeedModel;
-use Contao\StringUtil;
-use Contao\Template;
-use Contao\Frontend;
-use IIDO\BasicBundle\Connection\MasterConnection;
-use IIDO\BasicBundle\Config\BundleConfig;
-
-
-//use IIDO\WebsiteBundle\Table\Page;
 
 
 /**
  * IIDO System Listener
  *
- * @author Stephan Preßl <https://github.com/pressi>
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  */
-class SystemListener
+class SystemListener extends DefaultListener
 {
-    use ScopeAwareTrait;
-
-
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-
-    protected $bundlePathPublic;
-    protected $bundlePath;
-
-    protected $resourcePath     = '/app/Resources';
-
-
-
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(ContaoFrameworkInterface $framework)
-    {
-        $this->framework = $framework;
-
-        $this->bundlePathPublic = BundleConfig::getBundlePath(true);
-        $this->bundlePath       = BundleConfig::getBundlePath();
-
-    }
-
-
 
     /**
      * initialize the customize system
      */
     public function initializeCustomizeSystem()
     {
-
-//        $route = "FE";
-        $container  = System::getContainer();
+        $container = System::getContainer();
 
         if( $container )
         {
@@ -101,6 +54,11 @@ class SystemListener
 
 
 
+    /**
+     * initialize system
+     *
+     * TODO: no more in use??!
+     */
     protected function initSystem()
     {
         if( !Config::get("iido_initSystem") )
@@ -174,6 +132,7 @@ class SystemListener
 
         $this->generateErrorFiles( $arrErrorFiles );
     }
+
 
 
     protected function generateErrorFiles( $arrFiles )

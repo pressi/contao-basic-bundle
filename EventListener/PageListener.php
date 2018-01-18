@@ -12,53 +12,31 @@
 
 namespace IIDO\BasicBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\CoreBundle\Framework\ScopeAwareTrait;
 
-use IIDO\BasicBundle\Config\BundleConfig;
-use IIDO\BasicBundle\Helper\BasicHelper as Helper;
 use IIDO\BasicBundle\Helper\StylesheetHelper;
+use IIDO\BasicBundle\Helper\BasicHelper as Helper;
 
 
 /**
  * Class Page Hook
- * @package IIDO\Customize\Hook
+ *
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  */
-class PageListener
+class PageListener extends DefaultListener
 {
 
     /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-
-    protected $bundlePathPublic;
-    protected $bundlePath;
-
-    private $rootDir;
-
-
-
-    /**
-     * Constructor.
+     * Get customize page status icon
      *
-     * @param ContaoFrameworkInterface $framework
+     * @param $objCurrentPage
+     * @param $strImage
+     *
+     * @return string
      */
-    public function __construct(ContaoFrameworkInterface $framework)
-    {
-        $this->framework = $framework;
-
-        $this->bundlePathPublic = BundleConfig::getBundlePath(true );
-        $this->bundlePath       = BundleConfig::getBundlePath();
-
-        $this->rootDir          = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
-
-    }
-
     public function getCustomizePageStatusIcon( $objCurrentPage, $strImage )
     {
-        if( $objCurrentPage->type == "regular_redirect" )
+        if( $objCurrentPage->type === "regular_redirect" )
         {
             $strImage = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/images/pages/' . $strImage;
         }
@@ -67,19 +45,25 @@ class PageListener
     }
 
 
-
+    /**
+     * generate customize page
+     *
+     * @param \PageModel   $objPage
+     * @param \LayoutModel $objLayout
+     * @param \PageRegular $objPageRegular
+     */
     public function generateCustomizePage( \PageModel $objPage, \LayoutModel $objLayout, \PageRegular $objPageRegular )
     {
-        $arrBodyClasses     = array();
-
         Helper::replaceOtherDefaultScripts();
         Helper::checkForUniqueScripts();
 
-        $objRootPage        = \PageModel::findByPk( $objPage->rootId );
+        $arrBodyClasses     = array();
         $strStyles          = '';
-        $objArticle         = \ArticleModel::findPublishedByPidAndColumn($objPage->id, "main");
-        $objTheme           = \ThemeModel::findByPk( $objLayout->pid );
-        $bundles            = array_keys(\System::getContainer()->getParameter('kernel.bundles'));
+
+        $objRootPage        = \PageModel::findByPk( $objPage->rootId );
+//        $objArticle         = \ArticleModel::findPublishedByPidAndColumn($objPage->id, "main");
+//        $objTheme           = \ThemeModel::findByPk( $objLayout->pid );
+        $bundles            = $this->bundles;
 
         $config             = \Config::getInstance();
         $jsPrefix           = 'mootools';
@@ -106,7 +90,6 @@ class PageListener
 //            $GLOBALS['TL_CSS']['jquery_ui']        = $this->bundlePathPublic . '/css/frontend/jquery-ui.css||static';
 //        }
         $GLOBALS['TL_JAVASCRIPT']['jquery_ui']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.1.12.1.min.js|static';
-
 //        $GLOBALS['TL_JAVASCRIPT']['easing']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easing.min.js|static';
 
         if( $objPage->enableFullpage && $jsPrefix == "jquery" )
@@ -614,189 +597,11 @@ class PageListener
             $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
         }
 
-
-
-
-//
-////echo "<pre>";
-//// print_r( $objFile->exists() );
-//        if( !$objFile->exists() )
-//        {
-//            $objFile->write('.');
-//            $objFile->close();
-////echo "<br> NO FILE";
-//            $createTime     = $objFile->ctime;
-//            $createFile     = FALSE;
-//        }
-//        else
-//        {
-//            $createTime     = $objFile->mtime;
-//        }
-////echo "<br>"; print_r( $createTime ); echo "<br>"; print_r( $createFile );
-//        if( $objAllPages )
-//        {
-//            while( $objAllPages->next() )
-//            {
-//                $objArticles = \ArticleModel::findPublishedByPidAndColumn( $objAllPages->id, "main");
-//
-//                if( $objArticles )
-//                {
-//                    while( $objArticles->next() )
-//                    {
-////                        echo "<br>Ar: ";
-////                        print_r( $objArticles->tstamp );
-////                        echo "<br>Time: ";
-////                        print_r( $createTime );
-////                        echo " ==> ";
-////                        print_r( $objArticles->tstamp > $createTime );
-////                        echo " ==> ";
-////                        print_r( $this->getArticleLastSave( $objArticles->id ) > $createTime );
-////                        echo "<br>AS: ";
-////                        print_r( $this->getArticleLastSave( $objArticles->id ) );
-//
-//                        if( $objArticles->tstamp > $createTime || $this->getArticleLastSave( $objArticles->id ) > $createTime )
-//                        {
-////                            echo "<br> YES CREATE IT";
-//                            $createFile     = TRUE;
-//                        }
-//
-//                        if( $objArticles->fullWidth )
-//                        {
-//                            if( !preg_match('/content-width/', $objAllPages->cssClass) && !in_array('content-width', $arrBodyClasses))
-//                            {
-//                                $arrBodyClasses[] = 'content-width';
-//                            }
-//                        }
-//
-//                        $cssID      = deserialize($objArticles->cssID, TRUE);
-//                        $strImage   = '';
-//                        $objImage   = \FilesModel::findByUuid( $objArticles->bgImage );
-//
-//                        if( $objImage && file_exists($this->rootDir . '/' . $objImage->path) )
-//                        {
-//                            $strImage = $objImage->path;
-//                        }
-//
-//                        $arrPageStyles[ $objArticles->id ] = array
-//                        (
-//                            'selector'          => '#main .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]),
-//
-//                            'background'        => TRUE,
-//                            'bgcolor'           => $objArticles->bgColor,
-//                            'bgimage'           => $strImage,
-//                            'bgrepeat'          => $objArticles->bgRepeat,
-//                            'bgposition'        => $objArticles->bgPosition,
-//                            'gradientAngle'     => $objArticles->gradientAngle,
-//                            'gradientColors'    => $objArticles->gradientColors
-//                        );
-//
-//                        $bgColor        = deserialize($objArticles->bgColor, TRUE);
-//                        $arrOwnStyles   = array();
-//
-////                if( !empty($bgColor[0]) )
-////                {
-////                    $rgb = ColorHelper::HTMLToRGB( $bgColor[0] );
-////                    $hsl = ColorHelper::RGBToHSL( $rgb );
-////
-////                    if( $hsl->lightness < 200 )
-////                    {
-////                        $arrPageStyles[ $objArticles->id ]['font']      = TRUE;
-////                        $arrPageStyles[ $objArticles->id ]['fontcolor'] = serialize(array('fff', ''));
-////                    }
-////                }
-//
-//                        $arrBackgroundSize = deserialize($objArticles->bgSize, true);
-//
-//                        if( is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
-//                        {
-//                            $bgSize = $arrBackgroundSize[2];
-//
-//                            if( $arrBackgroundSize[2] == 'own' )
-//                            {
-//                                unset($arrBackgroundSize[2]);
-//                                $bgSize = implode(" ", $arrBackgroundSize);
-//                            }
-//
-//                            $arrOwnStyles[] = '-webkit-background-size:' . $bgSize . ';-moz-background-size:' . $bgSize . ';-o-background-size:' . $bgSize . ';background-size:' . $bgSize . ';';
-//                        }
-//
-//                        if( $objArticles->bgAttachment )
-//                        {
-//                            $arrOwnStyles[] = 'background-attachment:' . $objArticles->bgAttachment . ';';
-//                        }
-//
-//                        if( count($arrOwnStyles) )
-//                        {
-//                            $arrPageStyles[ $objArticles->id ]['own'] = implode("", $arrOwnStyles);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-////        echo "<pre>";
-////echo "<br>"; print_r( $arrPageStyles ); exit;
-//        if( count($arrPageStyles) )
-//        {
-//            if( $createFile )
-//            {
-////                echo "<br>CREATE FILE";
-////                exit;
-//                if( $objFile->exists() )
-//                {
-//                    $objFile->delete();
-//                }
-//
-//                $objStyleSheets     = new \StyleSheets();
-//                $arrStyles          = array();
-//
-//                foreach($arrPageStyles as $arrPageStyle)
-//                {
-//                    $arrStyles[] = $objStyleSheets->compileDefinition($arrPageStyle, true);
-//                }
-//
-//                if( count($arrStyles) )
-//                {
-//                    $objFile            = new \File('assets/css/page-styles.css');
-//
-//                    foreach($arrStyles as $strStyle)
-//                    {
-//                        $strOnlyStyles = preg_replace('/#main .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
-//
-//                        if( strlen(trim($strOnlyStyles)) )
-//                        {
-//                            $objFile->append($strStyle, '');
-//                        }
-//                    }
-//
-//                    $objFile->close();
-//                }
-//            }
-//            else
-//            {
-//                if( $objFile->exists() )
-//                {
-//                    $objFile->delete();
-//                }
-//            }
-//        }
-//        else
-//        {
-//            if( $objFile->exists() )
-//            {
-//                $objFile->delete();
-//            }
-//        }
-////echo "<br>"; print_r( file_exists($this->rootDir . '/assets/css/page-styles.css') ); exit;
-//        if( file_exists($this->rootDir . '/assets/css/page-styles.css') )
-//        {
-//            $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
-//        }
-
         if( file_exists($this->rootDir . '/files/' . $objRootPage->alias . '/css/theme.css') )
         {
             $GLOBALS['TL_CSS']['custom_theme'] = 'files/' . $objRootPage->alias . '/css/theme.css||static';
         }
-//exit;
+
         return $arrBodyClasses;
     }
 
@@ -924,6 +729,7 @@ class PageListener
     }
 
 
+
     protected function getRootAlias()
     {
         global $objPage;
@@ -932,7 +738,7 @@ class PageListener
 
         if( $strLang != "de" )
         {
-            $objRooPage = \PageModel::findOneBy("language", "de");//TODO: verbdinung zwischen root pages herstellen!!
+            $objRooPage = \PageModel::findOneBy("language", "de");//TODO: verbindung zwischen root pages herstellen!!
             $rootAlias  =  $objRooPage->alias;
         }
         else

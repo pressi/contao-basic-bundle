@@ -12,6 +12,7 @@
 
 namespace IIDO\BasicBundle\EventListener;
 
+
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Config;
 
@@ -26,36 +27,19 @@ use Contao\Frontend;
 use IIDO\WebsiteBundle\Helper\SocialmediaHelper;
 use IIDO\WebsiteBundle\Helper\WebsiteHelper;
 
+
 /**
  * DESCRIPTION
  *
  * @author Stephan Preßl <https://github.com/pressi>
  */
-class InsertTagsListener
+class InsertTagsListener extends DefaultListener
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-
-
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(ContaoFrameworkInterface $framework)
-    {
-        $this->framework = $framework;
-    }
-
-
 
     /**
      * Replace IIDO Insert Tags
      *
-     * @param array $strTag
+     * @param string $strTag
      * @param $blnCache
      * @param $strCache
      * @param $flags
