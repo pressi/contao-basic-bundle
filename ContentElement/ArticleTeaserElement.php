@@ -1,22 +1,26 @@
 <?php
-
-/**
- * Contao Open Source CMS
+/*******************************************************************
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * All rights reserved
  *
- * @license LGPL-3.0+
- */
+ * Modification, distribution or any other action on or with
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\ContentElement;
+
 
 use IIDO\BasicBundle\Helper\ImageHelper;
 
 
 /**
- * Front end content element "text".
+ * Front end content element "article teaser".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  */
 class ArticleTeaserElement extends \ContentElement
 {
@@ -26,6 +30,7 @@ class ArticleTeaserElement extends \ContentElement
      * @var string
      */
     protected $strTemplate = 'ce_iido_articleTeaser';
+
 
 
     /**
@@ -61,7 +66,6 @@ class ArticleTeaserElement extends \ContentElement
                 $arrArticles[] = $objArticle;
             }
         }
-
 
         $this->Template->articles = $arrArticles;
     }

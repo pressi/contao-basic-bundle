@@ -1,21 +1,26 @@
 <?php
-
-/**
- * Contao Open Source CMS
+/*******************************************************************
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * All rights reserved
  *
- * @license LGPL-3.0+
- */
+ * Modification, distribution or any other action on or with
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\ContentElement;
+
+
 use IIDO\BasicBundle\Helper\ImageHelper;
 
 
 /**
- * Front end content element "text".
+ * Front end content element "product/project detail".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  */
 class DetailElement extends \ContentElement
 {
@@ -27,6 +32,7 @@ class DetailElement extends \ContentElement
     protected $strTemplate = 'ce_iido_details';
 
 
+
     /**
      * Generate the content element
      */
@@ -36,6 +42,7 @@ class DetailElement extends \ContentElement
 
         $foundOne       = false;
         $getItem        = \Input::get("auto_item");
+        $elementType    = $this->elementType ?: 'project';
 
         if( strlen($getItem) )
         {
@@ -45,7 +52,7 @@ class DetailElement extends \ContentElement
             {
                 while( $objArticles->next() )
                 {
-                    $objElements = \ContentModel::findBy(array('pid=?', 'invisible=?', 'type=?'), array($objArticles->id, '', 'rsce_project'));
+                    $objElements = \ContentModel::findBy(array('pid=?', 'invisible=?', 'type=?'), array($objArticles->id, '', 'rsce_' . $elementType));
 
                     if( $objElements )
                     {

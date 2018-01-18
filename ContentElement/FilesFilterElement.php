@@ -1,23 +1,27 @@
 <?php
-
-/**
- * Contao Open Source CMS
+/*******************************************************************
  *
- * Copyright (c) 2005-2017 Leo Feyer
+ * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * All rights reserved
  *
- * @license LGPL-3.0+
- */
+ * Modification, distribution or any other action on or with
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\ContentElement;
+
 
 use IIDO\BasicBundle\Helper\FilterHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
 
 
 /**
- * Front end content element "text".
+ * Front end content element "files filter".
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @package IIDO\BasicBundle
+ * @author Stephan Preßl <development@prestep.at>
  */
 class FilesFilterElement extends \ContentElement
 {
@@ -26,7 +30,8 @@ class FilesFilterElement extends \ContentElement
      * Template
      * @var string
      */
-    protected $strTemplate = 'ce_filesFilter';
+    protected $strTemplate = 'ce_iido_filesFilter';
+
 
 
     /**
