@@ -53,7 +53,7 @@ class AllTables
      *
      * @return string
      */
-    public function pagePicker($dc)
+    public function pagePicker($dc, $objWidget)
     {
         $id         = 0;
         $table      = "";
