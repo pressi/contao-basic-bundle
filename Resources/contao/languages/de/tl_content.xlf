@@ -260,7 +260,7 @@
                 <target>Positions-Einstellungen</target>
             </trans-unit>
 
-            <trans-unit id="tl_content.animation_legend">
+            <trans-unit id="tl_content.animate_legend">
                 <source>Animation-Settings</source>
                 <target>Animation-Einstellungen</target>
             </trans-unit>
