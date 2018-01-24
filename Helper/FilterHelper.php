@@ -13,6 +13,9 @@
 namespace IIDO\BasicBundle\Helper;
 
 
+use Contao\Model\Collection;
+
+
 /**
  * Class Helper
  * @package IIDO\BasicBundle
@@ -38,14 +41,66 @@ class FilterHelper extends \Frontend
         return trim($filterName);
     }
 
+    public static function getProjectFilters( $pid, $itemsInNextArticle = false )
+    {
+        return self::getElementFilters( $pid, 'rsce_project', $itemsInNextArticle);
+    }
 
 
-    public static function getProjectFilters( $pid )
+
+    public static function getElementFilters( $pid, $type = 'rsce_project', $itemsInNextArticle = false )
     {
         $subfilters     = array();
         $mainfilters    = array();
 
-        $objElements    = \ContentModel::findBy(array('pid=?', 'type=?'), array($pid, 'rsce_project'));
+        $objElements    = false;
+
+        if( !$itemsInNextArticle )
+        {
+            $objElements    = \ContentModel::findBy(array('pid=?', 'type=?'), array($pid, $type));
+        }
+        else
+        {
+            global $objPage;
+
+            $arrElements    = array();
+            $objArticles    = \ArticleModel::findPublishedByPidAndColumn( $objPage->id, 'main' );
+
+            if( $objArticles )
+            {
+                $loadArticle = false;
+
+                while( $objArticles->next() )
+                {
+                    if( $objArticles->id === $pid )
+                    {
+                        $loadArticle = true;
+                        continue;
+                    }
+
+                    if( $loadArticle )
+                    {
+                        $objArticleElements = \ContentModel::findBy(array('pid=?', 'type=?'), array($objArticles->id, $type));
+
+                        if( $objArticleElements )
+                        {
+                            while( $objArticleElements->next() )
+                            {
+                                if( !$objArticleElements->invisible )
+                                {
+                                    $arrElements[] = $objArticleElements->current();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if( count($arrElements) )
+            {
+                $objElements = new Collection( $arrElements, \ContentModel::getTable() );
+            }
+        }
 
         if( $objElements )
         {

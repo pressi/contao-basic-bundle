@@ -20,16 +20,18 @@ namespace IIDO\BasicBundle\Helper;
 class RSCEHelper extends \Frontend
 {
 
+    /**
+     * Get Imagefield Config
+     *
+     * @param string|array $label
+     *
+     * @return array
+     */
     public static function getImageFieldConfig( $label )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'fileTree',
             'eval'          => array
             (
@@ -42,16 +44,19 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get Textareafield Config
+     *
+     * @param string|array $label
+     * @param bool         $rte
+     *
+     * @return array
+     */
     public static function getTextareaConfig( $label, $rte = true)
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'textarea',
             'eval'          => array
             (
@@ -65,36 +70,51 @@ class RSCEHelper extends \Frontend
 
 
 
-    public static function getTextFieldConfig( $label, $newLine = false, $isLong = false )
+    /**
+     * Get Textfield Config
+     *
+     * @param string|array $label
+     * @param bool         $newLine
+     * @param bool         $isLong
+     * @param array        $eval
+     *
+     * @return array
+     */
+    public static function getTextFieldConfig( $label, $newLine = false, $isLong = false, array $eval = array() )
     {
-        if( !is_array($label) )
+        $defaultEval = array
+        (
+            'tl_class'      => ($isLong ? 'long' : 'w50') . ($newLine ? ' clr': '')
+        );
+
+        if( count($eval) )
         {
-            $label = array($label, '');
+            $defaultEval = array_merge($defaultEval, $eval);
         }
 
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'text',
-            'eval'          => array
-            (
-                'tl_class'          => ($isLong ? 'long' : 'w50') . ($newLine ? ' clr': '')
-            )
+            'eval'          => $defaultEval
         );
     }
 
 
 
+    /**
+     * Get Double Textfield Config
+     * @param string|array $label
+     * @param bool         $newLine
+     * @param bool         $isLong
+     *
+     * @return array
+     */
     public static function getDoubleTextFieldConfig( $label, $newLine = false, $isLong = false )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'text',
             'eval'          => array
             (
@@ -108,16 +128,19 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get Colorfield Config
+     *
+     * @param string|array $label
+     * @param bool         $newLine
+     *
+     * @return array
+     */
     public static function getColorFieldConfig( $label, $newLine = false )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'text',
             'eval'          => array
             (
@@ -134,19 +157,23 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get Selectfield Config
+     *
+     * @param string|array $label
+     * @param array        $arrOptions
+     * @param bool         $includeBlank
+     *
+     * @return array
+     */
     public static function getSelectFieldConfig( $label, $arrOptions, $includeBlank = false )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'     => $label,
-            'inputType' => 'select',
-            'options'   => $arrOptions,
-            'eval'      => array
+            'label'         => self::renderLabel( $label ),
+            'inputType'     => 'select',
+            'options'       => $arrOptions,
+            'eval'          => array
             (
                 'includeBlankOption'    => $includeBlank,
                 'tl_class'              => 'w50'
@@ -156,20 +183,25 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get Checkboxfield Config
+     *
+     * @param string|array $label
+     * @param array        $arrOptions
+     * @param bool         $submitOnChange
+     * @param bool         $clear
+     *
+     * @return array
+     */
     public static function getCheckboxFieldConfig( $label, $arrOptions = array(), $submitOnChange = false, $clear = false )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         $arrConfig = array
         (
-            'label'     => $label,
-            'inputType' => 'checkbox',
-            'eval'      => array
+            'label'         => self::renderLabel( $label ),
+            'inputType'     => 'checkbox',
+            'eval'          => array
             (
-                'tl_class'              => ($clear ?  'clr ' : '') . 'w50'
+                'tl_class'          => ($clear ?  'clr ' : '') . 'w50'
             )
         );
 
@@ -193,16 +225,18 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get Linkfield Config
+     *
+     * @param string|array $label
+     *
+     * @return array
+     */
     public static function getLinkFieldConfig( $label )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'text',
             'eval'          => array
             (
@@ -217,7 +251,13 @@ class RSCEHelper extends \Frontend
 
 
 
-
+    /**
+     * Get NewsPicker Field Config
+     *
+     * @param string|array $label
+     *
+     * @return array
+     */
     public static function getNewsPickerFieldConfig( $label )
     {
         $arrNewsOptions     = array();
@@ -257,7 +297,7 @@ class RSCEHelper extends \Frontend
 
         $arrConfig = array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'select',
             'options'       => $arrNewsOptions,
             'eval'          => array
@@ -269,11 +309,11 @@ class RSCEHelper extends \Frontend
 
         if( count($arrNewsOptions) === 0 )
         {
-            $arrConfig['eval']['blankOptionLabel']    = 'Keine News vorhanden!';
+            $arrConfig['eval']['blankOptionLabel'] = 'Keine News vorhanden!';
         }
         else
         {
-            $arrConfig['eval']['blankOptionLabel']    = 'News wählen';
+            $arrConfig['eval']['blankOptionLabel'] = 'News wählen';
         }
 
         return $arrConfig;
@@ -281,16 +321,18 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get ImageSize Field Config
+     *
+     * @param string|array $label
+     *
+     * @return array
+     */
     public static function getImageSizeFieldConfig( $label )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'imageSize',
             'reference'     => &$GLOBALS['TL_LANG']['MSC'],
             'eval'          => array
@@ -310,16 +352,18 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get ImageAlign Field Config
+     *
+     * @param string|array $label
+     *
+     * @return array
+     */
     public static function getImageAlignFieldConfig( $label )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'default'       => 'above',
             'inputType'     => 'radioTable',
             'options'       => array('above', 'left', 'right', 'below'),
@@ -334,16 +378,18 @@ class RSCEHelper extends \Frontend
 
 
 
+    /**
+     * Get PagePicker Field Config
+     *
+     * @param string|array $label
+     *
+     * @return array
+     */
     public static function getPagePickerFieldConfig( $label )
     {
-        if( !is_array($label) )
-        {
-            $label = array($label, '');
-        }
-
         return array
         (
-            'label'         => $label,
+            'label'         => self::renderLabel( $label ),
             'inputType'     => 'pageTree',
             'foreignKey'    => 'tl_page.title',
             'eval'          => array
@@ -359,23 +405,91 @@ class RSCEHelper extends \Frontend
     }
 
 
-
-    public static function getGroupConfig( $label )
+    /**
+     * Get Input Unit Field Config
+     *
+     * @param string|array $label
+     * @param array        $arrUnits
+     * @param bool         $newLine
+     * @param array        $eval
+     *
+     * @return array
+     */
+    public static function getUnitFieldConfig( $label, array $arrUnits = array(), $newLine = false, array $eval = array() )
     {
-        if( !is_array($label) )
+        if( !count($arrUnits) )
         {
-            $label = array($label, '');
+            $arrUnits = $GLOBALS['TL_CSS_UNITS'];
+        }
+
+        $defaultEval = array
+        (
+            'maxlength'     => 200,
+            'tl_class'      => ($newLine ?  'clr ' : '') . 'w50'
+        );
+
+        if( count($eval) )
+        {
+            $defaultEval = array_merge($defaultEval, $eval);
         }
 
         return array
         (
-            'label'     => $label,
-            'inputType' => 'group',
+            'label'         => self::renderLabel( $label ),
+            'inputType'     => 'inputUnit',
+            'options'       => $arrUnits,
+            'eval'          => $defaultEval
         );
     }
 
 
 
+    /**
+     * Render Field Label
+     *
+     * @param string $strLabel
+     *
+     * @return array
+     */
+    protected static function renderLabel( $strLabel )
+    {
+        if( !is_array($strLabel) )
+        {
+            $strLabel = array($strLabel, '');
+        }
+
+        return $strLabel;
+    }
+
+
+
+    /**
+     * Get Group (Legend) Field Config
+     *
+     * @param string|array $label
+     *
+     * @return array
+     */
+    public static function getGroupConfig( $label )
+    {
+        return array
+        (
+            'label'         => self::renderLabel( $label ),
+            'inputType'     => 'group',
+        );
+    }
+
+
+    
+    /**
+     * Get Picture
+     *
+     * @param object $objClass
+     * @param        $image
+     * @param array  $arrSize
+     *
+     * @return mixed
+     */
     public static function getPicture( &$objClass, $image, $arrSize = array() )
     {
         return $objClass->getImageObject($image, $arrSize);

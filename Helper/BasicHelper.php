@@ -11,6 +11,7 @@
  ******************************************************************/
 
 namespace IIDO\BasicBundle\Helper;
+use IIDO\BasicBundle\Config\BundleConfig;
 
 
 /**
@@ -852,5 +853,19 @@ class BasicHelper extends \Frontend
     public static function getRootDir()
     {
         return dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+    }
+
+
+
+    public static function getLanguage()
+    {
+        return \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
+    }
+
+
+
+    public static function getContaoVersion()
+    {
+        return BundleConfig::getContaoVersion();
     }
 }

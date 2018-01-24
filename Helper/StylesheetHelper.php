@@ -102,128 +102,131 @@ class StylesheetHelper
 
         $objPages = \PageModel::findPublishedByPid( $objPage->rootId );
 
-        while( $objPages->next() )
+        if( $objPages )
         {
-            $pageColor = ColorHelper::getCurrentPageColor( $objPages );
-
-            if( $pageColor != "transparent" )
+            while( $objPages->next() )
             {
-                $arrVariables[] = array
-                (
-                    'key'   => 'page_color_' . $objPages->alias,
-                    'value' => $pageColor
-                );
+                $pageColor = ColorHelper::getCurrentPageColor( $objPages );
 
-                $rgb = ColorHelper::convertHexColor($pageColor);
-
-                if( count($rgb) )
+                if( $pageColor != "transparent" )
                 {
-                    $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
+                    $arrVariables[] = array
+                    (
+                        'key'   => 'page_color_' . $objPages->alias,
+                        'value' => $pageColor
+                    );
 
-                    for($i = 5; $i <= 100; $i+=5)
+                    $rgb = ColorHelper::convertHexColor($pageColor);
+
+                    if( count($rgb) )
                     {
-                        $trans = $i;
+                        $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
 
-                        if( strlen($i) === 1 )
+                        for($i = 5; $i <= 100; $i+=5)
                         {
-                            $trans = '0' . $trans;
-                        }
+                            $trans = $i;
 
-                        $arrVariables[] = array
-                        (
-                            'key'   => 'page_color_' . $objPages->alias . '_trans' . $trans,
-                            'value' => $rgba . $i . ')',
-                        );
+                            if( strlen($i) === 1 )
+                            {
+                                $trans = '0' . $trans;
+                            }
+
+                            $arrVariables[] = array
+                            (
+                                'key'   => 'page_color_' . $objPages->alias . '_trans' . $trans,
+                                'value' => $rgba . $i . ')',
+                            );
+                        }
                     }
                 }
-            }
 
-            $objSubPages = \PageModel::findPublishedByPid( $objPages->id );
+                $objSubPages = \PageModel::findPublishedByPid( $objPages->id );
 
-            if( $objSubPages && $objSubPages->count() )
-            {
-                while( $objSubPages->next() )
+                if( $objSubPages && $objSubPages->count() )
                 {
-                    $pageColor = ColorHelper::getCurrentPageColor( $objSubPages->current() );
-
-                    if( $pageColor != "transparent" )
+                    while( $objSubPages->next() )
                     {
-                        $arrVariables[] = array
-                        (
-                            'key'   => 'page_color_' . $objSubPages->alias,
-                            'value' => $pageColor
-                        );
+                        $pageColor = ColorHelper::getCurrentPageColor( $objSubPages->current() );
 
-                        $rgb = ColorHelper::convertHexColor($pageColor);
-
-                        if( count($rgb) )
+                        if( $pageColor != "transparent" )
                         {
-                            $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
+                            $arrVariables[] = array
+                            (
+                                'key'   => 'page_color_' . $objSubPages->alias,
+                                'value' => $pageColor
+                            );
 
-                            for($i = 5; $i <= 100; $i+=5)
+                            $rgb = ColorHelper::convertHexColor($pageColor);
+
+                            if( count($rgb) )
                             {
-                                $trans = $i;
+                                $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
 
-                                if( strlen($i) === 1 )
+                                for($i = 5; $i <= 100; $i+=5)
                                 {
-                                    $trans = '0' . $trans;
-                                }
+                                    $trans = $i;
 
-                                $arrVariables[] = array
-                                (
-                                    'key'   => 'page_color_' . $objSubPages->alias . '_trans' . $trans,
-                                    'value' => $rgba . $i . ')',
-                                );
+                                    if( strlen($i) === 1 )
+                                    {
+                                        $trans = '0' . $trans;
+                                    }
+
+                                    $arrVariables[] = array
+                                    (
+                                        'key'   => 'page_color_' . $objSubPages->alias . '_trans' . $trans,
+                                        'value' => $rgba . $i . ')',
+                                    );
+                                }
                             }
                         }
-                    }
 
-                    $objSubSubPages = \PageModel::findPublishedByPid( $objSubPages->id );
+                        $objSubSubPages = \PageModel::findPublishedByPid( $objSubPages->id );
 
-                    if( $objSubSubPages && $objSubSubPages->count() )
-                    {
-                        while( $objSubSubPages->next() )
+                        if( $objSubSubPages && $objSubSubPages->count() )
                         {
-                            $pageColor = ColorHelper::getCurrentPageColor( $objSubSubPages->current() );
-
-                            if( $pageColor != "transparent" )
+                            while( $objSubSubPages->next() )
                             {
-                                $arrVariables[] = array
-                                (
-                                    'key'   => 'page_color_' . $objSubSubPages->alias,
-                                    'value' => $pageColor
-                                );
+                                $pageColor = ColorHelper::getCurrentPageColor( $objSubSubPages->current() );
 
-                                $rgb = ColorHelper::convertHexColor($pageColor);
-
-                                if( count($rgb) )
+                                if( $pageColor != "transparent" )
                                 {
-                                    $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
+                                    $arrVariables[] = array
+                                    (
+                                        'key'   => 'page_color_' . $objSubSubPages->alias,
+                                        'value' => $pageColor
+                                    );
 
-                                    for($i = 5; $i <= 100; $i+=5)
+                                    $rgb = ColorHelper::convertHexColor($pageColor);
+
+                                    if( count($rgb) )
                                     {
-                                        $trans = $i;
+                                        $rgba = 'rgba(' . $rgb[ 'red' ] . ',' . $rgb[ 'green' ] . ',' . $rgb[ 'blue' ] . ',';
 
-                                        if( strlen($i) === 1 )
+                                        for($i = 5; $i <= 100; $i+=5)
                                         {
-                                            $trans = '0' . $trans;
-                                        }
+                                            $trans = $i;
 
-                                        $arrVariables[] = array
-                                        (
-                                            'key'   => 'page_color_' . $objSubSubPages->alias . '_trans' . $trans,
-                                            'value' => $rgba . $i . ')',
-                                        );
+                                            if( strlen($i) === 1 )
+                                            {
+                                                $trans = '0' . $trans;
+                                            }
+
+                                            $arrVariables[] = array
+                                            (
+                                                'key'   => 'page_color_' . $objSubSubPages->alias . '_trans' . $trans,
+                                                'value' => $rgba . $i . ')',
+                                            );
+                                        }
                                     }
                                 }
+
                             }
-
                         }
+
                     }
-
                 }
-            }
 
+            }
         }
 
         return $arrVariables;

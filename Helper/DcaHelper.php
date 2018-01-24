@@ -347,7 +347,7 @@ class DcaHelper extends \Frontend
             'exclude'               => TRUE,
             'inputType'             => 'text',
             'eval'                  => $defaultEval,
-            'sql'                   => "varchar(" . $defaultEval['maxlength']?:255 . ") NOT NULL default ''"
+            'sql'                   => "varchar(" . ($defaultEval['maxlength']?:255) . ") NOT NULL default ''"
         );
 
         if( count( $defaultConfig) )
@@ -389,7 +389,7 @@ class DcaHelper extends \Frontend
             'label'                 => &$GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ],
             'inputType'             => 'text',
             'eval'                  => $defaultEval,
-            'sql'                   => "varchar(" . $defaultEval['maxlength']?:64 . ") NOT NULL default ''"
+            'sql'                   => "varchar(" . ($defaultEval['maxlength']?:64) . ") NOT NULL default ''"
         );
     }
 
@@ -468,7 +468,7 @@ class DcaHelper extends \Frontend
             'tl_class'          => ($replaceClasses ? $classes : 'w50' . (strlen($classes) ? ' ' . $classes : ''))
         );
 
-        if( count($eval) )
+        if( is_array($eval) && count($eval) )
         {
             $defaultEval = array_merge($defaultEval, $eval);
         }
@@ -494,7 +494,7 @@ class DcaHelper extends \Frontend
             'inputType'             => 'select',
             'options'               => $arrOptions,
             'eval'                  => $defaultEval,
-            'sql'                   => "varchar(" . $defaultEval['maxlength']?:32  . ") NOT NULL default ''"
+            'sql'                   => "varchar(" . ($defaultEval['maxlength']?:32)  . ") NOT NULL default ''"
         );
 
         if( strlen($defaultValue) )
@@ -784,7 +784,7 @@ class DcaHelper extends \Frontend
             'exclude'               => true,
             'inputType'             => 'text',
             'eval'                  => $defaultEval,
-            'sql'                   => "varchar(" . $defaultEval['maxlength']?:255 . ") NOT NULL default ''"
+            'sql'                   => "varchar(" . ($defaultEval['maxlength']?:255) . ") NOT NULL default ''"
         );
     }
 
@@ -821,7 +821,7 @@ class DcaHelper extends \Frontend
             (
                 array(AllTables::class, 'generateAlias')
             ),
-            'sql'                     => "varchar(" . $defaultEval['maxlength']?:128 . ") COLLATE utf8mb4_bin NOT NULL default ''"
+            'sql'                     => "varchar(" . ($defaultEval['maxlength']?:128) . ") COLLATE utf8mb4_bin NOT NULL default ''"
         );
     }
 
