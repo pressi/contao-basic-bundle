@@ -16,7 +16,7 @@
  */
 
 $GLOBALS['TL_DCA']['tl_news_archive']['palettes']['default'] = str_replace(',title', ',title,newsTyps', $GLOBALS['TL_DCA']['tl_news_archive']['palettes']['default']);
-$GLOBALS['TL_DCA']['tl_news_archive']['palettes']['default'] = str_replace('jumpTo;', 'jumpTo;{expert_legend},manualSorting,hideContentElements;', $GLOBALS['TL_DCA']['tl_news_archive']['palettes']['default']);
+$GLOBALS['TL_DCA']['tl_news_archive']['palettes']['default'] = str_replace(',jumpTo;', ',jumpTo;{expert_legend},manualSorting,hideContentElements;', $GLOBALS['TL_DCA']['tl_news_archive']['palettes']['default']);
 
 
 

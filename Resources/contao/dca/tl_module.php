@@ -1,14 +1,16 @@
 <?php
 /*******************************************************************
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
  *******************************************************************/
 
-\Controller::loadDataContainer("tl_article");
-\Controller::loadLanguageFile("tl_article");
+//Controller::loadDataContainer("tl_article");
+//Controller::loadLanguageFile("tl_article");
+
+$strTable = \IIDO\BasicBundle\Config\BundleConfig::getFileTable(__FILE__);
 
 
 
@@ -24,9 +26,26 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['iido_inheritArticle'] = '{title_leg
  * Fields
  */
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['master_ID'] = array
+$GLOBALS['TL_DCA'][ $strTable ]['fields']['master_ID'] = array
 (
     'sql'                       => "int(10) unsigned NOT NULL"
 );
 
-$GLOBALS['TL_DCA']['tl_module']['fields']['inheritColumn'] = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn'];
+//$GLOBALS['TL_DCA']['tl_module']['fields']['inheritColumn'] = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn'];
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('inheritColumn', $strTable, 'inColumn', 'article');
+
+if( !is_array($GLOBALS['TL_DCA'][ $strTable ]['fields']['inheritColumn']) || (is_array($GLOBALS['TL_DCA'][ $strTable ]['fields']['inheritColumn']) && count($GLOBALS['TL_DCA'][ $strTable ]['fields']['inheritColumn'])) )
+{
+    $GLOBALS['TL_DCA'][ $strTable ]['fields']['inheritColumn'] = array
+    (
+        'label'                   => &$GLOBALS['TL_LANG']['tl_article']['inColumn'],
+        'exclude'                 => true,
+        'filter'                  => true,
+        'default'                 => 'main',
+        'inputType'               => 'select',
+        'options_callback'        => array('tl_article', 'getActiveLayoutSections'),
+        'eval'                    => array('tl_class'=>'w50'),
+        'reference'               => &$GLOBALS['TL_LANG']['COLS'],
+        'sql'                     => "varchar(32) NOT NULL default ''"
+    );
+}

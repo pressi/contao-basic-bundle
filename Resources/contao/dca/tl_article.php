@@ -159,7 +159,7 @@ $GLOBALS['TL_DCA'][ $strTable ]['fields']['title']['eval']['tl_class'] = trim($G
 
 
 // Title Legend
-\IIDO\BasicBundle\Helper\DcaHelper::addField("articleType", "select__selector", $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField("articleType", $strTable, array(), '', false, '', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("navTitle", "text", $strTable, array('doNotCopy'=>true));
 \IIDO\BasicBundle\Helper\DcaHelper::copyField("navSubTitle", $strTable, 'navTitle');
 
