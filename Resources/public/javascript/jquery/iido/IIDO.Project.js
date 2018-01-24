@@ -20,7 +20,45 @@ IIDO.Project = IIDO.Project || {};
 
         if( openType === "images" )
         {
-            $.fancybox.open( IIDO.Project.getProjectImages(arrImagesOrUrlOrId) );
+            var options = {
+                buttons : ['close'],
+
+                infobar : true,
+                arrows : true,
+
+                btnTpl: {
+                    arrowLeft   : '<div class="arrow arrow-style1 arrow-left big fancybox-button--arrow_left" data-fancybox-prev>' +
+                    '<div class="arrow-inside-container"></div></div>',
+                    arrowRight  : '<div class="arrow arrow-style1 arrow-right big fancybox-button--arrow_right" data-fancybox-next>' +
+                    '<div class="arrow-inside-container"></div></div>'
+                },
+
+                afterLoad : function()
+                {
+                    var headerLogo = $("header .logo").clone(),
+                        clonedLogo = $(".cloned-logo");
+
+                    if( !clonedLogo.length )
+                    {
+                        headerLogo.addClass("cloned-logo");
+
+                        $( document.body ).append( headerLogo );
+                    }
+                },
+
+                afterClose : function()
+                {
+                    var clonedLogo = $(".cloned-logo");
+
+                    if( clonedLogo.length )
+                    {
+                        clonedLogo.remove();
+                    }
+                }
+            },
+            arrImages = IIDO.Project.getProjectImages(arrImagesOrUrlOrId);
+
+            $.fancybox.open( arrImages, options );
         }
         else if( openType === "details" )
         {

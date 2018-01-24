@@ -59,7 +59,7 @@ IIDO.Content = IIDO.Content || {};
 
             if ($(document.body).hasClass('ios') || $(document.body).hasClass('android') )
             {
-                item.removeClass('animate-box');
+                $(item).removeClass('animate-box');
                 return true;
             }
             else

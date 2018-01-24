@@ -15,11 +15,16 @@ IIDO.Filter = IIDO.Filter || {};
     filter.init = function()
     {
         var filterList          = $(".ce_rsce_project_filter"),
-            filterContainer     = $(".project-container-inside");
+            filterContainer     = filterList.parent(".article-inside"); //$(".project-container-inside");
 
         if( !filterList.length )
         {
             filterList = $('.filter-list');
+        }
+
+        if( filterList.length && filterList.hasClass("load-items-form-next-article") )
+        {
+            filterContainer = filterContainer.parent(".mod_article").next(".mod_article").find(".article-inside");
         }
 
         if( filterList.length && filterContainer )
