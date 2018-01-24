@@ -138,6 +138,42 @@
                         </fieldset>
                     </div>
 
+                    <div class="widget">
+                        <fieldset id="master_rsce_templates" class="tl_checkbox_container tl_checkbox_wizard">
+                            <legend>{{ 'config_widget_rsceTemplates'|trans }}</legend>
+
+                            <input type="hidden" name="master_templates" value="">
+
+                            {% if( templates is defined and templates|length > 0 ) %}
+                                <span class="fixed">
+                                    <input type="checkbox" id="check_all_master_rsce_templates" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,'master_templates')"> <label for="check_all_master_rsce_templates" style="color:#a6a6a6"><em>{{ 'select_all'|trans }}n</em></label></span>
+
+                                <div class="no-sortable">
+
+                                    {% for templateFile, templateName in templates %}
+                                        <span><input type="checkbox" name="master_templates[]" id="opt_master_templates_{{ loop.index }}" class="tl_checkbox" value="{{ templateFile }}" onfocus="Backend.getScrollOffset()"> <label for="opt_master_templates_{{ loop.index }}">{{ templateName|masterTemplateExists|raw }}</label></span>
+                                    {% endfor %}
+
+                                </div>
+
+                            {% else %}
+                                <span style="color:#a6a6a6">Keine Master-Templates vorhanden.</span>
+                            {% endif %}
+
+                        </fieldset>
+                    </div>
+
+                    <div class="widget">
+                        <label for="customerFolder">{{ 'config_widget_customerFolder'|trans }}</label>
+                        <select name="customerFolder" id="customerFolder" class="tl_select" required>
+                            {% if( customerFolder|length > 1 ) %}<option value="">---</option>{% endif %}
+                            {% for folderName in customerFolder %}
+                                <option value="{{ folderName }}">{{ folderName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
                     <!-- LAYOUTS > add to theme > multiple? -->
 
                     <!-- MODULE > add to theme > multiple? -->

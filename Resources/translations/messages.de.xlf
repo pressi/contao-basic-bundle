@@ -359,6 +359,11 @@
                 <source>config_widget_masterStylesheets</source>
                 <target>Master Stylesheets</target>
             </trans-unit>
+
+            <trans-unit id="73">
+                <source>config_widget_customerFolder</source>
+                <target>Template Ordner (für die RSCE Templates)</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
