@@ -1,12 +1,13 @@
 services:
-    contao.iido.connect_tool:
+    contao.connect_tool:
         class: IIDO\BasicBundle\ConnectTool
         arguments:
             - "@database_connection"
             - "%kernel.root_dir%"
+            - "%kernel.logs_dir%"
 
 
-    contao.iido.connect_tool_user:
+    contao.connect_tool_user:
         class: IIDO\BasicBundle\ConnectToolUser
         arguments:
             - "@session"
