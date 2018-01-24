@@ -1,13 +1,11 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
  *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 namespace IIDO\BasicBundle\Controller;
@@ -15,9 +13,11 @@ namespace IIDO\BasicBundle\Controller;
 
 //use Contao\Encryption;
 use Contao\Environment;
+use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\ConnectTool;
 //use Doctrine\DBAL\DBALException;
 //use Patchwork\Utf8;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -64,7 +64,7 @@ class ConnectionController implements ContainerAwareInterface
             $this->container->get('contao.framework')->initialize();
         }
 
-        $connectTool = $this->container->get('contao.iido.connect_tool');
+        $connectTool = $this->container->get('contao.connect_tool');
         /* @var $connectTool \IIDO\BasicBundle\ConnectTool */
 
         if( $connectTool->connectionLost() )
@@ -77,7 +77,7 @@ class ConnectionController implements ContainerAwareInterface
             return $this->render('locked.html.twig');
         }
 
-        if( !$this->container->get('contao.iido.connect_tool_user')->isAuthenticated() )
+        if( !$this->container->get('contao.connect_tool_user')->isAuthenticated() )
         {
             return $this->login( $connectTool );
         }
@@ -120,8 +120,8 @@ class ConnectionController implements ContainerAwareInterface
         }
 
         $connectTool->resetLoginCount();
-        $this->container->get('contao.iido.connect_tool_user')->setAuthenticated(true);
-        $this->container->get('contao.iido.connect_tool_user')->setPassword( $request->request->get('password') );
+        $this->container->get('contao.connect_tool_user')->setAuthenticated(true);
+        $this->container->get('contao.connect_tool_user')->setPassword( $request->request->get('password') );
 
         return $this->getRedirectResponse();
     }
@@ -217,15 +217,30 @@ class ConnectionController implements ContainerAwareInterface
      */
     private function getRequestToken()
     {
-        if (!$this->container->hasParameter('contao.csrf_token_name'))
-        {
-            return '';
-        }
+        $version = BundleConfig::getContaoVersion();
 
-        return $this->container
-            ->get('security.csrf.token_manager')
-            ->getToken($this->getContainerParameter('contao.csrf_token_name'))
-            ->getValue();
+        if( version_compare($version, '4.5.0', '>=') )
+        {
+            $tokenName = $this->getContainerParameter('contao.csrf_token_name');
+
+            if (null === $tokenName) {
+                return '';
+            }
+
+            return $this->container->get('contao.csrf.token_manager')->getToken($tokenName)->getValue();
+        }
+        else
+        {
+            if (!$this->container->hasParameter('contao.csrf_token_name'))
+            {
+                return '';
+            }
+
+            return $this->container
+                ->get('security.csrf.token_manager')
+                ->getToken($this->getContainerParameter('contao.csrf_token_name'))
+                ->getValue();
+        }
     }
 
 
@@ -262,6 +277,7 @@ class ConnectionController implements ContainerAwareInterface
         $this->context['templates']         = (array) $arrData->rsce_templates;
 
         $this->context['masterStylesheets'] = $this->renderObjectToArray( $arrData->stylesheets );
+        $this->context['customerFolder']    = $this->getTemplateFolders();
 
         if( !$connectTool->getConfig("clientID") )
         {
@@ -433,6 +449,9 @@ class ConnectionController implements ContainerAwareInterface
     {
         $arrFiles       = array();
         $arrStylesheets = $request->get("master_stylessheets");
+        $arrTemplates   = $request->get("master_templates");
+
+        $customerFolder = $request->get("customerFolder");
 
         if( $arrStylesheets )
         {
@@ -442,7 +461,16 @@ class ConnectionController implements ContainerAwareInterface
             }
         }
 
-        $connectTool->getFilesFromMaster( $arrFiles );
+        if( $arrTemplates )
+        {
+            foreach($arrTemplates as $strTemplate)
+            {
+                $arrFiles[] = 'templates/' . $customerFolder . '/' . $strTemplate;
+                $arrFiles[] = 'templates/' . $customerFolder . '/' . preg_replace('/.html5$/', '_config.php', $strTemplate);
+            }
+        }
+
+        $connectTool->getFilesFromMaster( $arrFiles, $customerFolder );
 
         return $this->getRedirectResponse();
     }
@@ -472,6 +500,13 @@ class ConnectionController implements ContainerAwareInterface
         }
 
         return $array;
+    }
+
+
+
+    protected function getTemplateFolders()
+    {
+        return scan( BasicHelper::getRootDir() .  '/templates' );
     }
 
 }

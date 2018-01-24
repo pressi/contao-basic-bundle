@@ -50,6 +50,12 @@ class ConnectTool
     /**
      * @var string
      */
+    private $logDir;
+
+
+    /**
+     * @var string
+     */
     private $configFile      = 'Resources/config/master-connection.json';
 
 
@@ -86,13 +92,15 @@ class ConnectTool
      *
      * @param Connection $connection
      * @param string     $rootDir
+     * @param string     $logDir
      */
-    public function __construct(Connection $connection, $rootDir)
+    public function __construct(Connection $connection, string $rootDir, string $logDir)
     {
         $this->bundlePath   = BundleConfig::getBundlePath();
 
         $this->connection   = $connection;
         $this->rootDir      = $rootDir;
+        $this->logDir       = $logDir;
 
         $this->container    = System::getContainer();
 
@@ -1060,6 +1068,8 @@ class ConnectTool
                         $this->createFolder( $strFolder );
                     }
                 }
+
+                ftp_pasv($conn_id, TRUE);
 
                 ftp_get( $conn_id, $this->rootDir . '/../' . $strFile, $strMasterFile, FTP_BINARY);
             }
