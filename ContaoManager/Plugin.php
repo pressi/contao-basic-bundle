@@ -10,6 +10,8 @@
 namespace IIDO\BasicBundle\ContaoManager;
 
 
+use Contao\CalendarBundle\ContaoCalendarBundle;
+use Contao\NewsBundle\ContaoNewsBundle;
 use IIDO\BasicBundle\IIDOBasicBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 
@@ -37,7 +39,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
     {
         return [
             BundleConfig::create(IIDOBasicBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class]),
+                ->setLoadAfter([ContaoCoreBundle::class, ContaoNewsBundle::class, ContaoCalendarBundle::class]),
         ];
     }
 
