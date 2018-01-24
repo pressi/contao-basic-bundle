@@ -10,6 +10,9 @@
 namespace IIDO\BasicBundle\Twig;
 
 
+use IIDO\BasicBundle\Helper\BasicHelper;
+
+
 class AppExtension extends \Twig_Extension
 {
 
@@ -19,7 +22,8 @@ class AppExtension extends \Twig_Extension
         (
             new \Twig_SimpleFilter('price', array($this, 'priceFilter')),
             new \Twig_SimpleFilter('replaceNL', array($this, 'replaceNewLineFilter')),
-            new \Twig_SimpleFilter('masterStylesheetExists', array($this, 'checkIfMasterStylesheetExists'))
+            new \Twig_SimpleFilter('masterStylesheetExists', array($this, 'checkIfMasterStylesheetExists')),
+            new \Twig_SimpleFilter('masterTemplateExists', array($this, 'checkIfMasterTemplateExists'))
         );
     }
 
@@ -73,6 +77,39 @@ class AppExtension extends \Twig_Extension
         return $text;
     }
 
+    public function checkIfMasterTemplateExists( $text )
+    {
+        $file       = preg_replace(array('/\s\(([A-Za-z0-9\s\-]{1,})\)/'), array(''), $text);
+        $fileName   = trim( strtolower( preg_replace(array('/ \/ /'), array('/'), $file) ) );
+
+        $rootDir        = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+        $arrTemplates   = $this->getTemplateFolders();
+        $websiteDir     = 'global';
+
+        if( count($arrTemplates) === 1 )
+        {
+            $websiteDir = $arrTemplates[0];
+
+            if( file_exists($rootDir . '/templates/' . $websiteDir . '/' . $fileName) )
+            {
+                $text = '<span class"file-exists" style="text-decoration:line-through">' . $text . '</span>';
+            }
+        }
+        elseif( count( $arrTemplates ) > 1 )
+        {
+            $text = $text . ' <span class="exists-folder">' . implode(",", $arrTemplates) . '</span>';
+        }
+
+        return $text;
+    }
+
+
+
+    protected function getTemplateFolders()
+    {
+        return scan( BasicHelper::getRootDir() .  '/templates' );
+    }
+
 
 
     public function getWebsiteTitleFunction()
@@ -104,7 +141,7 @@ class AppExtension extends \Twig_Extension
 
     public function getLanguageFunctions()
     {
-        return $GLOBALS['TL_LANGUAGE'];
+        return BasicHelper::getLanguage();
     }
 
 
