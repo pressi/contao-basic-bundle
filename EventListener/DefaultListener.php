@@ -31,7 +31,7 @@ class DefaultListener
      *
      * @var ContaoFrameworkInterface
      */
-    private $framework;
+    protected $framework;
 
 
     /**

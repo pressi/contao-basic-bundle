@@ -682,21 +682,49 @@ class ContentListener extends DefaultListener
 
         if( $objElements )
         {
+            $checkElement   = false;
+            $isBox          = false;
+
             while( $objElements->next() )
             {
-                $cssID = \StringUtil::deserialize( $objElements->cssID );
-
-                if( preg_match('/box/', $cssID[1]) || $objRow->type === "rsce_box" )
+                if( $objElements->id === $objRow->id )
                 {
-                    $lastElement = $objElements->current();
+                    $checkElement = true;
+                    continue;
                 }
+                else
+                {
+                    if( $checkElement )
+                    {
+                        $cssID = \StringUtil::deserialize( $objElements->cssID );
+
+                        if( preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box" )
+                        {
+                            $isBox = true;
+                            break;
+                        }
+                    }
+                }
+
+
+//                $cssID = \StringUtil::deserialize( $objElements->cssID );
+
+//                if( preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box" )
+//                {
+//                    $lastElement = $objElements->current();
+//                }
+            }
+
+            if( !$isBox )
+            {
+                return TRUE;
             }
         }
 
-        if( $lastElement && $lastElement->id === $objRow->id )
-        {
-            return TRUE;
-        }
+//        if( $lastElement && $lastElement->id === $objRow->id )
+//        {
+//            return TRUE;
+//        }
 
         return FALSE;
     }

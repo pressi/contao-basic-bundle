@@ -687,7 +687,7 @@ class PageListener extends DefaultListener
         {
             if( file_exists($this->rootDir . '/' . $cssPathStd . $strFile) )
             {
-                $GLOBALS['TL_CSS'][ 'std_' . $strFile ] =  $cssPathStd . $strFile . '||static';
+                $GLOBALS['TL_USER_CSS'][ 'std_' . $strFile ] =  $cssPathStd . $strFile . '||static';
             }
         }
 
@@ -695,7 +695,7 @@ class PageListener extends DefaultListener
         {
             if( file_exists($this->rootDir . '/' . $cssPathMaster  . $strFile) )
             {
-                $GLOBALS['TL_CSS'][ 'master_' . $strFile ] =  $cssPathMaster . $strFile . '||static';
+                $GLOBALS['TL_USER_CSS'][ 'master_' . $strFile ] =  $cssPathMaster . $strFile . '||static';
             }
         }
 
@@ -703,7 +703,7 @@ class PageListener extends DefaultListener
         {
             if( file_exists($this->rootDir . '/' . $cssPathCustom  . $strFile) )
             {
-                $GLOBALS['TL_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
+                $GLOBALS['TL_USER_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
             }
         }
 

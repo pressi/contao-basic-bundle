@@ -1,7 +1,7 @@
 <?php
 /******************************************************************
  *
- * (c) 2016 Stephan Preßl <development@prestep.at>
+ * (c) 2018 Stephan Preßl <development@prestep.at>
  * All rights reserved
  *
  * Modification, distribution or any other action on or with
