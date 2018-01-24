@@ -112,8 +112,8 @@ class BundleConfig
                 case "publicbundlepath":
                 case "bundlePathPublic":
                 case "publicBundlePath":
-                    $funcVar    = (($funcVar === null) ? false : $funcVar);
-                    $return     = self::getBundlePath( true, $funcVar );
+                    $funcVar = (($funcVar === NULL) ? FALSE : $funcVar);
+                    $return  = self::getBundlePath(TRUE, $funcVar);
                     break;
 
                 default:
@@ -242,16 +242,23 @@ class BundleConfig
      *
      * @return string
      */
-    public static function getBundlePath( $public = false, $includeWebFolder = true )
+    public static function getBundlePath($public = FALSE, $includeWebFolder = TRUE)
     {
         if( $public )
         {
-            return ($includeWebFolder ? 'web/' : '') .'bundles/' . self::getPrefix() . self::getSubName();
+            return ($includeWebFolder ? 'web/' : '') . 'bundles/' . self::getPrefix() . self::getSubName();
         }
         else
         {
             return 'vendor/' . self::getBundleGroup() . '/' . self::getBundleName();
         }
+    }
+
+
+
+    public static function getFileTable($fileName)
+    {
+        return self::getTableName( $fileName);
     }
 
 
@@ -291,5 +298,13 @@ class BundleConfig
         }
 
         return $newTableClass;
+    }
+
+
+
+    public static function getContaoVersion()
+    {
+        $packages = \System::getContainer()->getParameter('kernel.packages');
+        return $packages['contao/core-bundle'];
     }
 }
