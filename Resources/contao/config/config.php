@@ -1,14 +1,11 @@
 <?php
-/******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
- ******************************************************************/
+ *******************************************************************/
 
 $assetsPath     = 'bundles/iidobasic/';
 
@@ -26,6 +23,11 @@ $ns = $namespace . '\\' . $subNamespace;
 /**
  * Backend modules
  */
+
+//$GLOBALS['BE_MOD']['design'][ $prefix . 'StyleSelector' ] = array
+//(
+//    'tables' => array( $tablePrefix . 'style_selector')
+//);
 
 //array_insert($GLOBALS['BE_MOD'], 3, array
 //(
@@ -104,6 +106,7 @@ $GLOBALS['BE_FFL']['iidoTag']           = $ns . '\Widget\TagsFieldWidget';
  */
 
 $GLOBALS['TL_FFL']['radioTable']        = $ns . '\FormField\RadioButtonTable';
+$GLOBALS['TL_FFL']['databaseSelect']    = $ns . '\FormField\DatabaseSelect';
 
 
 
@@ -146,7 +149,7 @@ $GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerNam
 
 
 /**
- * Inherit group permissions
+ * Group permissions
  */
 
 //$GLOBALS['TL_PERMISSIONS'][] = 'placeholders';
