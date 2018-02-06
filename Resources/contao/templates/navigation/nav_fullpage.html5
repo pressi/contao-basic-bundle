@@ -3,6 +3,7 @@
   <?php foreach ($this->items as $item):
 
       $item['href'] = '#' . $item['alias'];
+      $objLinkPage = false;
 
   if( ($item['noContent'] || preg_match('/no-content/', $item['class'])) && ($item['navLinkMode'] === "" || strlen($item['navLinkMode']) === 0) )
   {
@@ -50,6 +51,42 @@
           {
               $item['target']   = $item['target'] . ' data-article="' . $objArticle->alias . '"';
               $item['href']     = '#' . $objArticle->alias;
+          }
+      }
+
+      $strUrl = \Environment::get("request");
+
+      if( preg_match('/\?/', $strUrl) )
+      {
+          $arrUrl   = explode("?", $strUrl);
+          $strUrl   = $arrUrl[0];
+      }
+
+      if( $strUrl === $item['href'] )
+      {
+          $item['isActive'] = TRUE;
+      }
+      else
+      {
+          $subPageId = \Frontend::getPageIdFromUrl();
+
+          if( $subPageId )
+          {
+              $objSubPage = \PageModel::findByPk( $subPageId );
+
+              if( $objSubPage && $objLinkPage && $objSubPage->pid === $objLinkPage->id )
+              {
+//                  $item['isTrail'] = TRUE;
+                  $item['class'] = trim($item['class'] . ' trail');
+              }
+          }
+          else
+          {
+              if( $objPage && $objLinkPage && $objPage->pid === $objLinkPage->id )
+              {
+//                  $item['isTrail'] = TRUE;
+                  $item['class'] = trim($item['class'] . ' trail');
+              }
           }
       }
 
