@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use IIDO\BasicBundle\DependencyInjection\IIDOBasicExtension;
 
+
 /**
  * Configures the Contao IIDO Basic Bundle.
  *
@@ -22,7 +23,8 @@ class IIDOBasicBundle extends Bundle
 
     /**
      * Register extension
-     * @return \IIDO\BasicBundle\DependencyInjection\IIDOBasicExtension
+     *
+     * @return IIDOBasicExtension
      */
     public function getContainerExtension()
     {
