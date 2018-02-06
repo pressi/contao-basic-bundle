@@ -10,7 +10,7 @@
 namespace IIDO\BasicBundle\Helper;
 
 
-use IIDO\ShopBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Table\AllTables;
 
 
