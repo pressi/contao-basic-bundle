@@ -8,6 +8,16 @@
                 <target>Kopfzeile (Spalten Überschriften)</target>
             </trans-unit>
 
+            <trans-unit id="tl_form_field.optionsBlankLabel.0">
+                <source>blank label</source>
+                <target>Erste Option - Label</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.optionsFrom.0">
+                <source>options from</source>
+                <target>Optionen laden von</target>
+            </trans-unit>
+
 
 
             <trans-unit id="tl_form_field.tableOptions.rowTitle">
@@ -30,6 +40,17 @@
 
 
 
+            <trans-unit id="tl_form_field.options.optionsFrom.news">
+                <source>News</source>
+                <target>Nachrichten</target>
+            </trans-unit>
+            <trans-unit id="tl_form_field.options.optionsFrom.events">
+                <source>Events</source>
+                <target>Events</target>
+            </trans-unit>
+
+
+
             <trans-unit id="FFL.radioTable.0">
                 <source>Radio button table</source>
                 <target>Radio-Button-Tabelle</target>
@@ -37,6 +58,16 @@
             <trans-unit id="FFL.radioTable.1">
                 <source>A table of multiple options from which one can be selected.</source>
                 <target>Eine Tabelle mehrerer Optionen, von denen eine ausgewählt werden kann.</target>
+            </trans-unit>
+
+
+            <trans-unit id="FFL.databaseSelect.0">
+                <source>database select menu</source>
+                <target>Datenbank-Select-Menü</target>
+            </trans-unit>
+            <trans-unit id="FFL.databaseSelect.1">
+                <source>A single- or multi-line drop-down menu with data from database.</source>
+                <target>Ein ein- oder mehrzeiliges Drop-Down-Menü mit Daten aus der Datenbank.</target>
             </trans-unit>
 
         </body>
