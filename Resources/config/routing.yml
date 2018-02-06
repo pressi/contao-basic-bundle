@@ -1,3 +1,7 @@
 contao_iido:
     resource: "@IIDOBasicBundle/Controller"
     type: annotation
+
+iido_client:
+    resource: "@IIDOBasicBundle/Controller"
+    type: annotation
