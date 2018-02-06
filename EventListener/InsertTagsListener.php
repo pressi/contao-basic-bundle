@@ -1,14 +1,11 @@
 <?php
-/******************************************************************
- *
- * (c) 2018 Stephan Preßl <development@prestep.at>
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
- ******************************************************************/
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\EventListener;
 
@@ -180,7 +177,7 @@ class InsertTagsListener extends DefaultListener
                     case "event":
                         $adapter    = $this->framework->getAdapter(\CalendarEventsModel::class);
                         $idOrAlias  = \Input::get("auto_item");
-                        $eventKey   = $arrSplit[2];
+                        $eventKey   = strtolower( $arrSplit[2] );
 //echo "<pre>";
 //print_r( $eventKey );
 //echo "<br>";
@@ -198,6 +195,18 @@ class InsertTagsListener extends DefaultListener
                             {
 //                                echo "<pre>"; print_r( $objEvent ); exit;
                                 $return = date(\Config::get("dateFormat"), $objEvent->startDate);
+                            }
+                            elseif( $eventKey === "dateto" )
+                            {
+                                if( $objEvent->endDate )
+                                {
+                                    $return = date(\Config::get("dateFormat"), $objEvent->endDate);
+
+                                    if( strlen($return) )
+                                    {
+                                        $return = '<span class="date date-to">- ' . $return . '</span>';
+                                    }
+                                }
                             }
                         }
 
