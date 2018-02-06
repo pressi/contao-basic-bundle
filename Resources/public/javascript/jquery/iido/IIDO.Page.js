@@ -1,6 +1,6 @@
 /**********************************************************/
 /*                                                        */
-/*  (c) 2017 IIDO                <development@iido.at>    */
+/*  (c) 2018 IIDO                <development@iido.at>    */
 /*                                                        */
 /*  author: Stephan Preßl        <development@iido.at>    */
 /*                                                        */
@@ -42,7 +42,8 @@ IIDO.Page = IIDO.Page || {};
             this.initScroll();
         }
 
-        $(window).resize( function() {
+        $(window).resize( function()
+        {
             IIDO.Page.initMobile();
         });
 
@@ -64,6 +65,23 @@ IIDO.Page = IIDO.Page || {};
                 }
             }
         });
+
+        var imageArrows = $(".scroll-to-image-end");
+
+        if( imageArrows.length )
+        {
+            for(var i=0; i<imageArrows.length; i++)
+            {
+                var imageArrow  = imageArrows[ i ];
+
+                imageArrow.addEventListener("click", function(e)
+                {
+                    var ankorID = this.getAttribute("data-id");
+
+                    IIDO.Page.scrollTo(e, 'image_arrow_ankor_' + ankorID, 0);
+                })
+            }
+        }
     };
 
 
