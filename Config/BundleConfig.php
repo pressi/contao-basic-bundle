@@ -9,6 +9,7 @@
 
 namespace IIDO\BasicBundle\Config;
 
+
 /**
  * Class BundleConfig
  *
@@ -22,6 +23,7 @@ class BundleConfig
 
     static $bundleName          = "contao-basic-bundle";
     static $bundleGroup         = "2do";
+
 
 
     /**
@@ -281,15 +283,19 @@ class BundleConfig
     {
         $tableClass     = preg_replace(array('/^Iido/', '/Model$/'), '', \Model::getClassFromTable( $strTable ));
         $arrClass       = preg_split('/(?=[A-Z])/', lcfirst($tableClass));
-        $newTableClass  = 'IIDO';
+        $iidoTable      = ((preg_match('/^tl_iido/', $strTable)) ? TRUE : FALSE);
+        $newTableClass  = (($iidoTable) ? 'IIDO\\' : '');
 
         foreach( $arrClass as $i => $class)
         {
-            $newTableClass .= '\\' . ucfirst($class);
+            $newTableClass .= ucfirst($class);
 
             if( $i === 0 )
             {
-                $newTableClass .= 'Bundle\\Table';
+                if( $iidoTable )
+                {
+                    $newTableClass .= 'Bundle\\Table\\';
+                }
             }
             elseif( $i === (count($arrClass) - 1) )
             {
