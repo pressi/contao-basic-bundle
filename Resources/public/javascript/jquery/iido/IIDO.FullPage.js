@@ -1,6 +1,6 @@
 /**********************************************************/
 /*                                                        */
-/*  (c) 2017 IIDO                <development@iido.at>    */
+/*  (c) 2018 IIDO                <development@iido.at>    */
 /*                                                        */
 /*  author: Stephan Preßl        <development@iido.at>    */
 /*                                                        */

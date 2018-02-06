@@ -1,12 +1,21 @@
 <?php
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * All rights reserved
+ * Modification, distribution or any other action on or with
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *******************************************************************/
+
 namespace IIDO\BasicBundle\Table;
 
+
 use \Contao\CoreBundle\Exception\AccessDeniedException;
+
 
 /**
  * Description
  *
- * @copyright (c) 2017 by IIDO
  * @author ZOMEDIA <dialog@zomedia.at>
  */
 class NewsTable

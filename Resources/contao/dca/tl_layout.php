@@ -1,14 +1,11 @@
 <?php
-/******************************************************************
- *
- * (c) 2014 Stephan Preßl <mail@stephanpressl.at>
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
- * this file is permitted unless explicitly granted by DesProSeo
- * www.desproseo.at <development@desproseo.at>
- *
- ******************************************************************/
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *******************************************************************/
 
 $config         = \Config::getInstance();
 $db             = \Database::getInstance();
