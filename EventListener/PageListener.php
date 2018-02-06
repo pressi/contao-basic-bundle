@@ -1,14 +1,11 @@
 <?php
-/******************************************************************
- *
- * (c) 2015 Stephan Preßl <development@prestep.at>
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
- ******************************************************************/
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\EventListener;
 
@@ -27,8 +24,8 @@ class PageListener extends DefaultListener
 {
 
     /**
-     * Get customize page status icon
-     *
+     * Get Page Status Icon > Regular Redirect
+     * 
      * @param $objCurrentPage
      * @param $strImage
      *
@@ -46,7 +43,7 @@ class PageListener extends DefaultListener
 
 
     /**
-     * generate customize page
+     * generate customize page //TODO: LADEZEITEN OPTIMIEREN!! SCRIPTE NUR DANN LADEN WENN SIE BENÖTIGT WERDEN!!
      *
      * @param \PageModel   $objPage
      * @param \LayoutModel $objLayout
@@ -135,6 +132,15 @@ class PageListener extends DefaultListener
 
         if( $jsPrefix == "jquery" )
         {
+            // TODO: smoothscroll
+
+            // TODO: waypoints => nur bei animationen laden!! inview & sticky nur wenn benötitgt!!
+            // TODO: isotope => nur wenn benötigt, filter usw.
+            // TODO: number & count_to nur wenn nötig!
+
+            // TODO: iido script nur wenn nötig!!
+
+
 //            $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.scrollTo.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['smoothscroll']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.smooth-scroll.min.js|static';
@@ -159,6 +165,7 @@ class PageListener extends DefaultListener
             $GLOBALS['TL_JAVASCRIPT']['iido_form']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Form.js|static';
         }
 
+        // TODO: script nur laden wenn nötig
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic'] = $this->bundlePathPublic . '/javascript/ScrollMagic.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.gsap.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic_debug'] = $this->bundlePathPublic . '/javascript/scrollmagic/debug.addIndicators.min.js|static';
@@ -196,14 +203,16 @@ class PageListener extends DefaultListener
 
         if( $objRootPage->enableCookie || $objPage->enableCookie )
         {
-            if($jquery)
-            {
-                $GLOBALS['TL_JAVASCRIPT']['cookie'] = $this->bundlePathPublic . '/javascript/jquery/jquery.cookie.min.js|static';
-            }
-            elseif($mootools)
-            {
-                // TODO: add cookie script for mootools!!
-            }
+            $GLOBALS['TL_JAVASCRIPT']['cookie'] = $this->bundlePathPublic . '/javascript/cookie.min.js|static';
+
+//            if($jquery)
+//            {
+//                $GLOBALS['TL_JAVASCRIPT']['cookie'] = $this->bundlePathPublic . '/javascript/cookie.min.js|static';
+//            }
+//            elseif($mootools)
+//            {
+//                // TODO: add cookie script for mootools!!
+//            }
         }
 
 
