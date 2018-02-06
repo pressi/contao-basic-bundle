@@ -1,14 +1,14 @@
 <?php
-
-/**
- * Contao Open Source CMS
- *
- * Copyright (c) 2005-2017 Leo Feyer
- *
- * @license LGPL-3.0+
- */
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * All rights reserved
+ * Modification, distribution or any other action on or with
+ * this file is permitted unless explicitly granted by IIDO
+ * www.iido.at <development@iido.at>
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\Widget;
+
 
 use IIDO\BasicBundle\Helper\ColorHelper;
 
@@ -23,7 +23,7 @@ use IIDO\BasicBundle\Helper\ColorHelper;
  * @property boolean $hideInput
  * @property integer $size
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ * @author Stephan Preßl <development@prestep.at>
  */
 class TextFieldWidget extends \TextField
 {
@@ -39,11 +39,30 @@ class TextFieldWidget extends \TextField
 
         if( $this->colorpicker )
         {
+            if( !preg_match('/<img/', $strField) )
+            {
+                $strColorKey = $this->multiple ? $this->strField . '_0' : $this->strField;
+
+                $strField .= ' ' . \Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
+  <script>
+    window.addEvent("domready", function() {
+      var cl = $("ctrl_' . $strColorKey . '").value.hexToRgb(true) || [255, 0, 0];
+      new MooRainbow("moo_' . $this->strField . '", {
+        id: "ctrl_' . $strColorKey . '",
+        startColor: cl,
+        imgPath: "assets/colorpicker/images/",
+        onComplete: function(color) {
+          $("ctrl_' . $strColorKey . '").value = color.hex.replace("#", "");
+        }});
+    });
+  </script>';
+            }
+
             $arrValue       = \StringUtil::deserialize($this->value, true);
             $bgColor        = ColorHelper::compileColor( $this->value );
             $colorPreview   = '<div class="color-preview" id="colorPreview_' . $this->strField . '" style="background:' . $bgColor . '"></div>';
 
-            $strField       =  $colorPreview . preg_replace('/class="tl_text_field"/', 'class="tl_text_field color-picker"', $strField);
+            $strField       =  $colorPreview . preg_replace('/class="tl_text_field/', 'class="tl_text_field color-picker', $strField);
             $strField       = preg_replace('/\$\("ctrl_' . $this->strField . '_0"\).value = color.hex.replace\("#", ""\);/', '$("ctrl_' . $this->strField . '_0").value = color.hex.replace("#", "");var strColor = color.hex, strField = $("ctrl_' . $this->strField . '_1"); if(strField.value){strColor=\'rgba(\' + color.rgb[0] + \',\' + color.rgb[1] + \',\' + color.rgb[2] + \',\' + (strField.value/100) + \')\'}$("colorPreview_' . $this->strField . '").setStyle("background", strColor);', $strField);
 
             $strFunction    = ' var fn = function( el, mode )
@@ -154,7 +173,7 @@ class TextFieldWidget extends \TextField
                         {
                             $selected = '';
 
-                            if( $arrValue[2] === preg_replace(array('/&#35;/', '/#/'), '', $strKey) )
+                            if( preg_replace(array('/&#35;/', '/#/'), '', $arrValue[2]) === preg_replace(array('/&#35;/', '/#/'), '', $strKey) )
                             {
                                 $selected = ' selected';
                             }
@@ -168,7 +187,7 @@ class TextFieldWidget extends \TextField
                     {
                         $selected = '';
 
-                        if( $arrValue[2] === preg_replace(array('/&#35;/', '/#/'), '', $key) )
+                        if( preg_replace(array('/&#35;/', '/#/'), '', $arrValue[2]) === preg_replace(array('/&#35;/', '/#/'), '', $key) )
                         {
                             $selected = ' selected';
                         }
@@ -179,8 +198,25 @@ class TextFieldWidget extends \TextField
 
                 $strSelectField .= '</select>';
             }
-            
-            $strField = preg_replace('/<img([A-Za-zöäüÖÄÜ0-9\s\-=".:,;_\/]{0,})>/', $strSelectField . '<img$1>', $strField);
+
+
+//            if( !preg_match('/<img/', $strField) )
+//            {
+//                // Support single fields as well (see #5240)
+//                $strKey = $this->multiple ? $this->strField . '_0' : $this->strField;
+//
+//                $wizard = ' ' . \Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $this->strField . '" style="cursor:pointer"');
+//
+//                $strField = $strField . $wizard;
+//            }
+
+            $strField = preg_replace('/<img([A-Za-zöäüÖÄÜ0-9\s\-=".:,;\[\]_\/]{0,})>/', $strSelectField . '<img$1>', $strField);
+
+            if( $this->isMetaField )
+            {
+                $strNewName = $this->metaPrefix . '[' . $this->metaLang . '][' . $this->metaField . ']';
+                $strField   = preg_replace('/name="' . $this->strField . '\[\]"/', 'name="' . $strNewName . '"', $strField);
+            }
         }
 
         return $strField;

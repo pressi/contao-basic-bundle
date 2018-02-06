@@ -1,13 +1,10 @@
 <?php
 /*******************************************************************
- *
- * (c) 2017 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
  *******************************************************************/
 
 namespace IIDO\BasicBundle\Widget;
@@ -119,7 +116,7 @@ class MetaWizardWidget extends \MetaWizard
 
                         $strField = $objWidget->parse();
                     }
-                    elseif( $attributes == "color")
+                    elseif( $attributes === "color" )
                     {
                         $arrData = array
                         (
@@ -137,114 +134,129 @@ class MetaWizardWidget extends \MetaWizard
                             )
                         );
 
-                        $strInputName   = $this->strId . '[' . $lang . '][' . $field . ']';
-//                        $strInputName   = $field . '_' . $count;
+//                        $strInputName   = $this->strId . '[' . $lang . '][' . $field . ']';
+                        $strInputName   = $field . '_' . $count;
                         $varValue       = $meta[ $field ];
                         $arrValue       = \StringUtil::deserialize($varValue, true);
                         $strFieldName   = $field . '_' . $count;
 //                        $strFieldName   = $this->strId . '[' . $lang . '][' . $field . ']';
 
-
+//echo "<pre>"; print_r( $meta ); exit;
                         $strClass   = $GLOBALS['BE_FFL']['text'];
+
                         $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strInputName, 'tl_files', $this));
 
-                        $objWidget->id = $strFieldName; //$field . '_' . $count;
+                        $objWidget->id              = $field . '_' . $count;
+
+                        $objWidget->colorpicker     = TRUE;
+                        $objWidget->multiple        = TRUE;
+                        $objWidget->isHexColor      = TRUE;
+                        $objWidget->decodeEntities  = TRUE;
+                        $objWidget->maxlength       = 64;
+                        $objWidget->size            = 2;
+//                        $objWidget->class           = 'w50 wizard';
+
+                        $objWidget->isMetaField     = TRUE;
+                        $objWidget->metaPrefix      = $this->strId;
+                        $objWidget->metaLang        = $lang;
+                        $objWidget->metaField       = $field;
 
                         $strField   = $objWidget->generate();
+                        
                         $wizard     = '';
 
-                        $strField   = preg_replace('/<select([A-Za-z0-9\[\]\s\-="]{0,})id="ctrl_' . $this->strId . '\[' . $lang . '\]\[' . $field . '\]_([0-9]{1})"/', '<select$1id="ctrl_' . $strFieldName . '_$2"', $strField);
+//                        $strField   = preg_replace('/<select([A-Za-z0-9\[\]\s\-="]{0,})id="ctrl_' . $this->strId . '\[' . $lang . '\]\[' . $field . '\]_([0-9]{1})"/', '<select$1id="ctrl_' . $strFieldName . '_$2"', $strField);
 
 
-                        if( $arrData['eval']['colorpicker'] )
-                        {
-                            // Support single fields as well (see #5240)
-                            $strKey     = $arrData['eval']['multiple'] ? $strFieldName . '_0' : $strFieldName;
-                            $strKey2    = $arrData['eval']['multiple'] ? $strFieldName . '_1' : $strFieldName;
-
-                            $wizard .= ' ' . \Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $strFieldName . '" style="cursor:pointer"') . '
-  <script>
-    window.addEvent("domready", function() {
-      var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
-      new MooRainbow("moo_' . $strFieldName . '", {
-        id: "ctrl_' . $strKey . '",
-        startColor: cl,
-        imgPath: "assets/colorpicker/images/",
-        onComplete: function(color) {
-          $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
-          
-          var strColor = color.hex, 
-              strField = $("ctrl_' . $strKey2 . '");
-          
-          if(strField.value)
-          {
-              strColor= \'rgba(\' + color.rgb[0] + \',\' + color.rgb[1] + \',\' + color.rgb[2] + \',\' + (strField.value/100) + \')\';
-          }
-          
-          $("colorPreview_' . $strFieldName . '").setStyle("background", strColor);
-        }
-      });
-    });
-    var fn = function( el, mode )
-            {
-                var strField, strColor, varValue = el.value;
-                
-                if( mode === "color" )
-                {
-                    strField = $("ctrl_' . $strKey2 . '");
-                    varValue = strField.value.toInt();
-                    
-                    strColor = el.value;
-                    
-                    if( strColor.length < 3 || (strColor.length > 3 && strColor.length < 6) )
-                    {
-                        strColor = false;
-                    }
-                }
-                else
-                {
-                    strField = $("ctrl_' . $strKey . '");
-                    strColor = strField.value;
-                    
-                    varValue = varValue.toInt();                
-                }
-                     
-                if(varValue > 0 && strColor) 
-                {
-                    var arrColor = strColor.hexToRgb(true);
-                    
-                    if( varValue > 100 )
-                    {
-                        varValue = 100;
-                    }
-                   
-                    strColor = \'rgba(\' + arrColor[0] + \',\' + arrColor[1] + \',\' + arrColor[2] + \',\' + (varValue/100) + \')\';
-                }
-                else
-                {
-                    if( strColor )
-                    { 
-                        strColor = \'#\' + strColor;
-                    }
-                    else
-                    {
-                        strColor = \'transparent\';
-                    }
-                }
-                
-                $("colorPreview_' . $strFieldName . '").setStyle("background", strColor);
-            };
-            
-            $("ctrl_' . $strKey2 . '").addEvents({
-    "change": function() { fn(this, "trans"); },
-    "keyup": function() { fn(this, "trans"); }
-});
-            $("ctrl_' . $strKey . '").addEvents({
-    "change": function() { fn(this, "color"); },
-    "keyup": function() { fn(this, "color"); }
-});
-  </script>';
-                        }
+//                        if( $arrData['eval']['colorpicker'] )
+//                        {
+//                            // Support single fields as well (see #5240)
+//                            $strKey     = $arrData['eval']['multiple'] ? $strFieldName . '_0' : $strFieldName;
+//                            $strKey2    = $arrData['eval']['multiple'] ? $strFieldName . '_1' : $strFieldName;
+//
+//                            $wizard .= ' ' . \Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="'.\StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']).'" id="moo_' . $strFieldName . '" style="cursor:pointer"') . '
+//  <script>
+//    window.addEvent("domready", function() {
+//      var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
+//      new MooRainbow("moo_' . $strFieldName . '", {
+//        id: "ctrl_' . $strKey . '",
+//        startColor: cl,
+//        imgPath: "assets/colorpicker/images/",
+//        onComplete: function(color) {
+//          $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
+//
+//          var strColor = color.hex,
+//              strField = $("ctrl_' . $strKey2 . '");
+//
+//          if(strField.value)
+//          {
+//              strColor= \'rgba(\' + color.rgb[0] + \',\' + color.rgb[1] + \',\' + color.rgb[2] + \',\' + (strField.value/100) + \')\';
+//          }
+//
+//          $("colorPreview_' . $strFieldName . '").setStyle("background", strColor);
+//        }
+//      });
+//    });
+//    var fn = function( el, mode )
+//            {
+//                var strField, strColor, varValue = el.value;
+//
+//                if( mode === "color" )
+//                {
+//                    strField = $("ctrl_' . $strKey2 . '");
+//                    varValue = strField.value.toInt();
+//
+//                    strColor = el.value;
+//
+//                    if( strColor.length < 3 || (strColor.length > 3 && strColor.length < 6) )
+//                    {
+//                        strColor = false;
+//                    }
+//                }
+//                else
+//                {
+//                    strField = $("ctrl_' . $strKey . '");
+//                    strColor = strField.value;
+//
+//                    varValue = varValue.toInt();
+//                }
+//
+//                if(varValue > 0 && strColor)
+//                {
+//                    var arrColor = strColor.hexToRgb(true);
+//
+//                    if( varValue > 100 )
+//                    {
+//                        varValue = 100;
+//                    }
+//
+//                    strColor = \'rgba(\' + arrColor[0] + \',\' + arrColor[1] + \',\' + arrColor[2] + \',\' + (varValue/100) + \')\';
+//                }
+//                else
+//                {
+//                    if( strColor )
+//                    {
+//                        strColor = \'#\' + strColor;
+//                    }
+//                    else
+//                    {
+//                        strColor = \'transparent\';
+//                    }
+//                }
+//
+//                $("colorPreview_' . $strFieldName . '").setStyle("background", strColor);
+//            };
+//
+//            $("ctrl_' . $strKey2 . '").addEvents({
+//    "change": function() { fn(this, "trans"); },
+//    "keyup": function() { fn(this, "trans"); }
+//});
+//            $("ctrl_' . $strKey . '").addEvents({
+//    "change": function() { fn(this, "color"); },
+//    "keyup": function() { fn(this, "color"); }
+//});
+//  </script>';
+//                        }
 
                         $strSelectField     = '';
 //                        $arrSelectOptions   = $this->getThemeColors();
