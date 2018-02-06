@@ -10,6 +10,7 @@
 namespace IIDO\BasicBundle\Helper;
 
 
+use IIDO\ShopBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Table\AllTables;
 
 
@@ -168,14 +169,17 @@ class DcaHelper extends \Frontend
             }
         }
 
-        if( $addDefaultBefore )
+        if( $strTable === "tl_content" )
         {
-            $strFields = static::$paletteStart . $strFields;
-        }
+            if( $addDefaultBefore )
+            {
+                $strFields = static::$paletteStart . $strFields;
+            }
 
-        if( $addDefaultAfter )
-        {
-            $strFields = $strFields . static::$paletteEnd;
+            if( $addDefaultAfter )
+            {
+                $strFields = $strFields . static::$paletteEnd;
+            }
         }
 
         $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ] = $strFields;
@@ -689,10 +693,14 @@ class DcaHelper extends \Frontend
 
     public static function addImagesField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        \Controller::loadDataContainer( 'tl_content' );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
         }
+
+        $orderFieldName = preg_replace('/SRC/', 'OrderSRC', $fieldName);
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]                = $GLOBALS['TL_DCA']['tl_content']['fields']['multiSRC'];
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']       = &$GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ];
@@ -701,11 +709,16 @@ class DcaHelper extends \Frontend
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['isGallery']    = TRUE;
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['extensions']   = \Config::get('validImageTypes');
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['tl_class']     = ($replaceClasses ? $classes : 'clr w50 hauto' . (strlen($classes) ? ' ' . $classes : ''));
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['orderField']   = $orderFieldName;
+
+        unset( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['load_callback'] );
 
         if( count($eval) )
         {
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'] = array_merge($GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'], $eval);
         }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $orderFieldName ] = $GLOBALS['TL_DCA']['tl_content']['fields']['orderSRC'];
     }
 
 
@@ -724,6 +737,8 @@ class DcaHelper extends \Frontend
             $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ] = str_replace(',' . $strField, '', $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ]);
         }
     }
+
+
 
     public static function addPageField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
@@ -979,6 +994,16 @@ class DcaHelper extends \Frontend
 
 
 
+    /**
+     * Render Legend Fields
+     *
+     * @param string $strFields
+     * @param string $strLegend
+     * @param bool   $replaceLegend
+     * @param string $replacePosition
+     *
+     * @return null|string
+     */
     public static function renderLegendFields( $strFields, $strLegend, $replaceLegend = false, $replacePosition = 'after' )
     {
         if( $replaceLegend )
@@ -1003,12 +1028,18 @@ class DcaHelper extends \Frontend
         }
 
         return $strFields;
-    }/**
- * @param string|array  $strLegend
- * @param string        $strTable
- * @param string        $strPalette
- * @param string|array  $arrNewFields
- */
+    }
+
+
+
+    /**
+     * Remove Legend
+     *
+     * @param string|array $strLegend
+     * @param string       $strTable
+     * @param string       $strPalette
+     * @param string|array $arrNewFields
+     */
     public static function removeLegend($strLegend, $strTable, $strPalette = 'default', $arrNewFields = '')
     {
         if( is_array($strLegend) )

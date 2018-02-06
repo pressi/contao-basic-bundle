@@ -1,14 +1,11 @@
 <?php
-/******************************************************************
- *
- * (c) 2015 Stephan Preßl <development@prestep.at>
+/*******************************************************************
+ * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
- *
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
- *
- ******************************************************************/
+ *******************************************************************/
 
 namespace IIDO\BasicBundle\Helper;
 use IIDO\BasicBundle\Config\BundleConfig;
@@ -212,9 +209,31 @@ class BasicHelper extends \Frontend
 
 
 
-    public static function getParentPage($id)
+    public static function getCurrentPageLayout()
     {
-        return \PageModel::findByPk($id);
+        global $objPage;
+
+        return self::getPageLayout( $objPage );
+    }
+
+
+
+    /**
+     * @param $id
+     *
+     * @return \Contao\PageModel|null|static
+     * @deprecated USE getPage instead!!
+     */
+    public static function getParentPage( $id )
+    {
+        return self::getPage( $id );
+    }
+
+
+
+    public static function getPage( $id )
+    {
+        return \PageModel::findByPk( $id );
     }
 
 

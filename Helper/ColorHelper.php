@@ -1,6 +1,6 @@
 <?php
 /***************************************************************************
- * (c) 2017 Stephan Preßl, www.stephanpressl.at <mail@stephanpressl.at>
+ * (c) 2018 Stephan Preßl, www.stephanpressl.at <mail@stephanpressl.at>
  * All rights reserved
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by Stephan Preßl
@@ -197,7 +197,14 @@ class ColorHelper
             {
                 if( $color[2] )
                 {
-                    return '#' . $color[2];
+                    $strColor = $color[2];
+
+                    if( !preg_match('/^#/', $strColor) )
+                    {
+                        $strColor = '#' . $strColor;
+                    }
+
+                    return $strColor;
                 }
 
                 return "transparent";
