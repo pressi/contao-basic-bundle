@@ -2,7 +2,7 @@
 $edit       = \Input::get("act");
 $objElement = false;
 
-$strTable   = \IIDO\ShopBundle\Config\BundleConfig::getFileTable( __FILE__ );
+$strTable   = \IIDO\BasicBundle\Config\BundleConfig::getFileTable( __FILE__ );
 
 if( $edit === "edit" )
 {
