@@ -9,6 +9,7 @@
 
 namespace IIDO\BasicBundle;
 
+
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
@@ -21,6 +22,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 use IIDO\BasicBundle\Config\BundleConfig;
 
+
 /**
  * Provides connection related methods.
  *
@@ -32,7 +34,6 @@ class ConnectTool
      * @var Connection
      */
     private $connection;
-
 
 
     /**
@@ -71,12 +72,10 @@ class ConnectTool
     private $User;
 
 
-
     /**
      * @var \UserModel
      */
     private $backendUser            = null;
-
 
 
     /**
@@ -86,9 +85,8 @@ class ConnectTool
 
 
 
-
     /**
-     * Constructor.
+     * constructor
      *
      * @param Connection $connection
      * @param string     $rootDir
@@ -145,6 +143,13 @@ class ConnectTool
 
 
 
+    /**
+     * check iido password action
+     *
+     * @param $strPassword
+     *
+     * @return array|bool|mixed
+     */
     public function checkPassword( $strPassword )
     {
         return $this->getActionData('checkPassword', array('pwd'=>$strPassword), false, true);
@@ -152,6 +157,11 @@ class ConnectTool
 
 
 
+    /**
+     * test connection action
+     *
+     * @return array|bool|mixed
+     */
     public function testConnection()
     {
         return $this->getActionData("testConnection", array(), true);
@@ -159,6 +169,11 @@ class ConnectTool
 
 
 
+    /**
+     * check if connection lost
+     *
+     * @return array|bool|mixed
+     */
     public function connectionLost()
     {
         $arrData = $this->testConnection();

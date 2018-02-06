@@ -9,7 +9,9 @@
 
 namespace IIDO\BasicBundle;
 
+
 use Symfony\Component\HttpFoundation\Session\Session;
+
 
 /**
  * Handles the user authentication.
@@ -22,6 +24,7 @@ class ConnectToolUser
      * @var Session
      */
     private $session;
+
 
     /**
      * @var int
