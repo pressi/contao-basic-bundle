@@ -28,7 +28,20 @@
                 <target>Untertitel Position</target>
             </trans-unit>
 
+            <trans-unit id="tl_page.enablePageFaceEffect.0">
+                <source>enable page fade effect</source>
+                <target>Seiten-Übergangseffeckt aktivieren</target>
+            </trans-unit>
 
+            <trans-unit id="tl_page.enableCookie.0">
+                <source>enable cookie</source>
+                <target>Cookie Javascript einbinden</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.enableLazyLoad.0">
+                <source>enable lazy load</source>
+                <target>LazyLoad Javascript einbinden</target>
+            </trans-unit>
 
             <trans-unit id="tl_page.hideTitle.0">
                 <source>hide title</source>
@@ -87,6 +100,11 @@
             <trans-unit id="tl_page.overviewImage.0">
                 <source>overview image</source>
                 <target>Übersicht-Bild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.overviewText.0">
+                <source>overview text</source>
+                <target>Übersicht-Text</target>
             </trans-unit>
 
 
@@ -154,6 +172,28 @@
 
 
 
+            <trans-unit id="tl_page.pageColor.0">
+                <source>page color</source>
+                <target>Seitenfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.removeLeft.0">
+                <source>remove left column</source>
+                <target>Linke Spalte entfernen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.removeRight.0">
+                <source>remove right column</source>
+                <target>Rechte Spalte entfernen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.addPageLoader.0">
+                <source>add page loader</source>
+                <target>Seitenlade-Overlay aktivieren</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_page.overview_legend">
@@ -169,6 +209,11 @@
             <trans-unit id="tl_page.navigation_legend">
                 <source>navigation-settings</source>
                 <target>Navigation-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.additional_legend">
+                <source>additional-settings</source>
+                <target>zusatz-Einstellungen</target>
             </trans-unit>
 
 
