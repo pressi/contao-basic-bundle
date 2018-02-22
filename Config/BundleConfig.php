@@ -281,7 +281,7 @@ class BundleConfig
 
     public static function getTableClass( $strTable )
     {
-        $tableClass     = preg_replace(array('/^Iido/', '/Model$/'), '', \Model::getClassFromTable( $strTable ));
+        $tableClass     = preg_replace(array('/^Iido/', '/Model$/'), '', array_pop(explode("\\", \Model::getClassFromTable( $strTable ))));
         $arrClass       = preg_split('/(?=[A-Z])/', lcfirst($tableClass));
         $iidoTable      = ((preg_match('/^tl_iido/', $strTable)) ? TRUE : FALSE);
         $newTableClass  = (($iidoTable) ? 'IIDO\\' : '');

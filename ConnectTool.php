@@ -842,7 +842,7 @@ class ConnectTool
     public function replaceVars( $varValue )
     {
         $request = $this->container->get('request_stack')->getCurrentRequest();
-//echo "<pre>"; print_r( $this->container->get('') ); exit;
+
         if( is_array($varValue) )
         {
             $varValue = serialize($varValue);
