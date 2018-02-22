@@ -35,7 +35,7 @@ class DatabaseSelect extends \FormSelectMenu
         {
             $arrOptions[] = array
             (
-                'value'     => $this->optionsBlankLabel,
+                'value'     => '',
                 'label'     => $this->optionsBlankLabel,
                 'type'      => 'option',
                 'selected'  => false
@@ -71,6 +71,22 @@ class DatabaseSelect extends \FormSelectMenu
         }
 
         return $arrOptions;
+    }
+
+
+
+    /**
+     * Check whether an input is one of the given options
+     *
+     * @param mixed $varInput The input string or array
+     *
+     * @return boolean True if the selected option exists
+     */
+    protected function isValidOption($varInput)
+    {
+        $this->arrOptions = $this->getOptions();
+
+        return parent::isValidOption( $varInput );
     }
 
 
@@ -186,16 +202,17 @@ class DatabaseSelect extends \FormSelectMenu
 
                         $eventKey = $strDate . ' ' . $strTitle;
 
-                        if( preg_match('/load-on-post/', $this->class) )
+                        $eventIdOrAlias     = \Input::get("event"); //(\Config::get("useAutoItem") ? \Input::get("auto_item") : (\Input::get("events")?:\Input::get("event")));
+
+                        if( preg_match('/load-on-post/', $this->class) && $eventIdOrAlias )
                         {
-                            $eventIdOrAlias     = \Input::get("event"); //(\Config::get("useAutoItem") ? \Input::get("auto_item") : (\Input::get("events")?:\Input::get("event")));
                             $objEvent           = \CalendarEventsModel::findByIdOrAlias( $eventIdOrAlias );
 
                             if( $objEvent && $objEvent->id === $arrEvent['id'] )
                             {
                                 $arrOptions[] = array
                                 (
-                                    'value'     => $eventKey . ' (' . $arrEvent['id'] . ')',
+                                    'value'     => \StringUtil::decodeEntities($eventKey) . ' (' . $arrEvent['id'] . ')',
                                     'label'     => $eventKey,
                                     'type'      => 'option',
                                     'selected'  => false
@@ -206,7 +223,7 @@ class DatabaseSelect extends \FormSelectMenu
                         {
                             $arrOptions[] = array
                             (
-                                'value'     => $eventKey . ' (' . $arrEvent['id'] . ')',
+                                'value'     => \StringUtil::decodeEntities($eventKey) . ' (' . $arrEvent['id'] . ')',
                                 'label'     => $eventKey,
                                 'type'      => 'option',
                                 'selected'  => false
