@@ -50,8 +50,11 @@ span.subtitle.after {
 }
 
 .color-select {
-    width: 27% !important;
+    width: 33% !important;
     margin-left: 1%;
+}
+.meta-widget .color-select {
+    width: 27% !important;
 }
 
 .o50 {
