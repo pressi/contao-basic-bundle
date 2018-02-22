@@ -1,0 +1,3 @@
+</div>
+</div>
+<?php if( $this->hasSeparator): ?></div><? endif ?>

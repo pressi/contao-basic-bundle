@@ -1,0 +1,7 @@
+<div class="<?= $this->class ?> html-<?php if( $this->hasSeparator): ?>column has-separator<? else: ?>wrapper<? endif ?><?= $this->addClasses ?>"<?= $this->cssID ?>>
+    <?php if( $this->hasSeparator): ?>
+        <div class="html-column-container">
+            <div class="html-column-inside">
+    <? else: ?>
+        <div class="html-wrapper-inisde">
+    <? endif ?>

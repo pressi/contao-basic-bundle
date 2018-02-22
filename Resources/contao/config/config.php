@@ -79,6 +79,12 @@ $GLOBALS['TL_CTE']['module']['iido_weather']                = $ns . '\ContentEle
 //$GLOBALS['TL_CTE']['module']['iido_navigation']          = $ns . '\FrontendModule\NavigationModule';
 
 
+$GLOBALS['TL_CTE']['module']['iido_wrapperStart']           = $ns . '\ContentElement\WrapperStartElement';
+$GLOBALS['TL_CTE']['module']['iido_wrapperStop']            = $ns . '\ContentElement\WrapperStopElement';
+$GLOBALS['TL_CTE']['module']['iido_wrapperSeparator']       = $ns . '\ContentElement\WrapperSeparatorElement';
+
+
+
 
 /**
  * Front end modules
@@ -188,3 +194,20 @@ $GLOBALS['TL_PTY']['regular_redirect'] = $ns . '\Page\RegularRedirectPage';
  */
 
 //$GLOBALS['TL_CRON']['hourly']['generateWeatherData'] = array($ns . '\Cron\WeatherDataCron', 'generateCustomizeWeatherData');
+
+
+
+/**
+ * Wrapper elements
+ */
+
+// START
+$GLOBALS['TL_WRAPPERS']['start'][]      = 'iido_wrapperStart';
+
+
+// STOP
+$GLOBALS['TL_WRAPPERS']['stop'][]       = 'iido_wrapperStop';
+
+
+// SEPARATOR
+$GLOBALS['TL_WRAPPERS']['separator'][]  = 'iido_wrapperSeparator';
