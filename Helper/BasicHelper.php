@@ -887,4 +887,18 @@ class BasicHelper extends \Frontend
     {
         return BundleConfig::getContaoVersion();
     }
+
+
+
+    public static function getCustomerFolder()
+    {
+        global $objPage;
+
+        $objRootPage = \PageModel::findByPk( $objPage->rootId );
+
+        if( $objRootPage )
+        {
+            return $objRootPage->alias;
+        }
+    }
 }

@@ -445,7 +445,9 @@ class ColorHelper
 
     public static function renderLangValue( $strText )
     {
-        switch( $strText )
+        $arrText = explode("_", $strText);
+
+        switch( $arrText[0] )
         {
             case "orange":
                 $strText = 'Orange';
@@ -494,6 +496,14 @@ class ColorHelper
             case "purple":
                 $strText = 'Lila';
                 break;
+
+            case "brown":
+                $strText = 'Braun';
+        }
+
+        if( $arrText[1] )
+        {
+            $strText .= ' (' . ucfirst($arrText[1]) . ')';
         }
 
         return $strText;
