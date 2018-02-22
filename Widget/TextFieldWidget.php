@@ -37,7 +37,7 @@ class TextFieldWidget extends \TextField
     {
         $strField = parent::generate();
 
-        if( $this->colorpicker )
+        if( $this->colorpicker && !preg_match('/fillColor/', $this->strField) )
         {
             if( !preg_match('/<img/', $strField) )
             {
@@ -158,10 +158,19 @@ class TextFieldWidget extends \TextField
             $strSelectField     = '';
             $arrSelectOptions   = ColorHelper::getThemeColors();
 
+            if( !count($arrSelectOptions) )
+            {
+                $arrSelectOptions = array('-');
+            }
+
             if( count($arrSelectOptions) )
             {
                 $strSelectField = '<select name="' . $this->strField . '[]" id="ctrl_' . $this->strField . '_2" class="tl_select color-select">';
-                $strSelectField .= '<option value="">-</option>';
+
+                if( $arrSelectOptions[0] !== "-" )
+                {
+                    $strSelectField .= '<option value="">-</option>';
+                }
 
                 foreach($arrSelectOptions as $key => $value)
                 {
@@ -211,6 +220,8 @@ class TextFieldWidget extends \TextField
 //            }
 
             $strField = preg_replace('/<img([A-Za-zöäüÖÄÜ0-9\s\-=".:,;\[\]_\/]{0,})>/', $strSelectField . '<img$1>', $strField);
+            $strField = preg_replace('/maxlength="64"/', 'maxlength="6"', $strField, 1);
+            $strField = preg_replace('/maxlength="64"/', 'maxlength="3"', $strField, 1);
 
             if( $this->isMetaField )
             {
