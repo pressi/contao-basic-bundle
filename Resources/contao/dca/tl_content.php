@@ -89,7 +89,9 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
  * Palettes
  */
 
-$defaultPaletteStart    = '{type_legend},type,headline;';
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStart', '', $strTable);
+
+$defaultPaletteStart    = '{type_legend},type,headline,subHeadline;';
 $defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
 
 
@@ -129,7 +131,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
     if( !is_array($strFields) )
     {
 //        $headlineFields = 'addTopHeadline,headline,headlineFloating,addHeadlineBorder,addHeadlineLink,addSubHeadline;';
-        $headlineFields = 'addTopHeadline,headline,headlineFloating;';
+        $headlineFields = 'addTopHeadline,headline,headlineFloating,subHeadline;';
         $strFields      = str_replace( 'headline;', $headlineFields, $strFields );
 
 //        if( !preg_match('/^box/', $strPalette) )
@@ -664,14 +666,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'] = array
 
 
 // HEADLINE
-//$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline']				= $GLOBALS['TL_DCA']['tl_content']['fields']['headline'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline']['label']		= &$GLOBALS['TL_LANG']['tl_content']['subHeadline'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline']['eval']['tl_class'] = 'w50 clr';
-
-//\IIDO\BasicBundle\Helper\DcaHelper::addField('topHeadline', 'headline', $strTable);
 \IIDO\BasicBundle\Helper\DcaHelper::addField('topHeadline', 'text', $strTable);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadline']				= $GLOBALS['TL_DCA']['tl_content']['fields']['subHeadline'];
-//$GLOBALS['TL_DCA']['tl_content']['fields']['topHeadline']['label']		= &$GLOBALS['TL_LANG']['tl_content']['topHeadline'];
+\IIDO\BasicBundle\Helper\DcaHelper::addField('subHeadline', 'text', $strTable, array(), 'clr');
+
 
 \IIDO\BasicBundle\Helper\DcaHelper::addField('addTopHeadline', 'checkbox__selector', $strTable, array(), 'clr sub-box');
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadline'] = array
