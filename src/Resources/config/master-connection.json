@@ -1,0 +1,28 @@
+{
+    "domain"        : "http://www.iido.at/",
+    "bundle"        : "contao-master-bundle",
+    "useApi"        : false,
+
+    "connection"    :
+    {
+        "path"          : "Resources/public/connection/",
+        "publicPath"    : "bundles/iidomaster/connection/",
+        "file"          : "connect.php"
+    },
+
+    "api"           :
+    {
+        "path"          : "iido/master"
+    },
+
+    "vars"          :
+    {
+        "request"       :
+        {
+            "host"          : "##env__host##",
+            "name"          : "##config__websiteTitle##",
+            "version"       : "##cms__version##",
+            "clientID"      : "##config__clientID##"
+        }
+    }
+}
