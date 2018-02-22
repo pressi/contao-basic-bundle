@@ -601,6 +601,22 @@ class FrontendTemplateListener
             }
         }
 
+//        elseif( $strTemplate === "picture_default" )
+//        {
+//            echo "<pre>"; print_r( $strContent ); exit;
+//        }
+
+        elseif( $strTemplate === "gallery_default" )
+        {
+//            preg_match_all('/<figure([A-Za-z0-9\s\-,;.:_\/\(\)\{\}="]{0,})>(.*?)<\/figure>/si', $strContent, $arrImageMatches);
+
+//            echo "<pre>";
+//            print_r( $arrImageMatches );
+//            echo "<br>";
+//            print_r( $strContent );
+//            exit;
+        }
+//        echo "<pre>"; print_r( $strTemplate ); echo "</pre>";
         return $strContent;
     }
 
@@ -716,6 +732,63 @@ class FrontendTemplateListener
             {
                 $strBuffer = preg_replace('/<footer([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/footer>/', '', $strBuffer);
             }
+            else
+            {
+                $objFooterArticle   = \ArticleModel::findByAlias("ge_footer_" . $objRootPage->alias);
+                $footerClass        = \StringUtil::deserialize($objFooterArticle->cssID, true)[1];
+                $arrFooterAttribute = array();
+
+                if( $objFooterArticle->isFixed )
+                {
+                    $footerClass = trim($footerClass . ' is-fixed');
+
+                    if( $objFooterArticle->position === "top" )
+                    {
+                        $footerClass = trim($footerClass . ' pos-top');
+                    }
+                    elseif( $objFooterArticle->position === "right" )
+                    {
+                        $footerClass = trim($footerClass . ' pos-right');
+                    }
+                    elseif( $objFooterArticle->position === "bottom" )
+                    {
+                        $footerClass = trim($footerClass . ' pos-bottom');
+                    }
+                    elseif( $objFooterArticle->position === "left" )
+                    {
+                        $footerClass = trim($footerClass . ' pos-left');
+                    }
+
+                    $arrFooterWidth = \StringUtil::deserialize($objFooterArticle->articleWidth, TRUE);
+
+                    if( $arrFooterWidth['value'] )
+                    {
+                        $arrFooterAttribute['style'] = trim($arrFooterAttribute['style'] . ' width:' . $arrFooterWidth['value'] . ($arrFooterWidth['unit'] . ';' ? : 'px;'));
+                    }
+
+                    $arrFooterHeight = \StringUtil::deserialize($objFooterArticle->articleHeight, TRUE);
+
+                    if( $arrFooterHeight['value'] )
+                    {
+                        $arrFooterAttribute['style'] = trim($arrFooterAttribute['style'] . ' height:' . $arrFooterHeight['value'] . ($arrFooterHeight['unit'] . ';' ? : 'px;'));
+                    }
+                }
+
+                if( strlen($footerClass) )
+                {
+                    $strAttributes = '';
+
+                    if( count($arrFooterAttribute) )
+                    {
+                        foreach($arrFooterAttribute as $key => $value)
+                        {
+                            $strAttributes .= ' ' . $key . '="' . $value . '"';
+                        }
+                    }
+
+                    $strBuffer = preg_replace('/<footer/', '<footer class="' . $footerClass . '"' . $strAttributes, $strBuffer);
+                }
+            }
 
             if( $objPage->removeHeader )
             {
@@ -723,8 +796,9 @@ class FrontendTemplateListener
             }
             else
             {
-                $objHeaderArticle   = \ArticleModel::findByAlias("ge_header_" . $objRootPage->alias . '_' . $strLanguage);
+                $objHeaderArticle   = \ArticleModel::findByAlias("ge_header_" . $objRootPage->alias);
                 $headerClass        = \StringUtil::deserialize($objHeaderArticle->cssID, true)[1];
+                $arrHeaderAttribute = array();
 
                 if( $objHeaderArticle->isFixed )
                 {
@@ -746,11 +820,35 @@ class FrontendTemplateListener
                     {
                         $headerClass = trim($headerClass . ' pos-left');
                     }
+
+                    $arrHeaderWidth = \StringUtil::deserialize($objHeaderArticle->articleWidth, TRUE);
+
+                    if( $arrHeaderWidth['value'] )
+                    {
+                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' width:' . $arrHeaderWidth['value'] . ($arrHeaderWidth['unit'] . ';' ? : 'px;'));
+                    }
+
+                    $arrHeaderHeight = \StringUtil::deserialize($objHeaderArticle->articleHeight, TRUE);
+
+                    if( $arrHeaderHeight['value'] )
+                    {
+                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' height:' . $arrHeaderHeight['value'] . ($arrHeaderHeight['unit'] . ';' ? : 'px;'));
+                    }
                 }
 
                 if( strlen($headerClass) )
                 {
-                    $strBuffer = preg_replace('/<header/', '<header class="' . $headerClass . '"', $strBuffer);
+                    $strAttributes = '';
+
+                    if( count($arrHeaderAttribute) )
+                    {
+                        foreach($arrHeaderAttribute as $key => $value)
+                        {
+                            $strAttributes .= ' ' . $key . '="' . $value . '"';
+                        }
+                    }
+
+                    $strBuffer = preg_replace('/<header/', '<header class="' . $headerClass . '"' . $strAttributes, $strBuffer);
                 }
             }
 
@@ -761,7 +859,14 @@ class FrontendTemplateListener
 
             if( preg_match('/<footer/', $strBuffer) && $this->hasBodyClass("homepage", $strBuffer) )
             {
-                $strBuffer = preg_replace('/<footer/', '<footer class="home"', $strBuffer);
+                if( preg_match('/<footer([A-Za-z0-9\s\-=",;.:_\(\)\{\}]{0,})class/', $strBuffer) )
+                {
+                    $strBuffer = preg_replace('/<footer([A-Za-z0-9\s\-=",;.:_\(\)\{\}]{0,})class="/', '<footer$1class="home ', $strBuffer);
+                }
+                else
+                {
+                    $strBuffer = preg_replace('/<footer/', '<footer class="home"', $strBuffer);
+                }
             }
 
             if( preg_match('/nav-sub/', $strBuffer) && !preg_match('/(ce_backlink|mod_newsearder)/', $strBuffer ))

@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
+use IIDO\BasicBundle\Helper\ImageHelper;
 
 
 /**
@@ -28,6 +29,10 @@ class ContentListener extends DefaultListener
         'sliderStart',
         'slick-content-start',
 //        'slick-slide-separator'
+
+        'iido_wrapperStart',
+        'iido_wrapperStop',
+        'iido_wrapperSeparator'
     );
 
 
@@ -53,6 +58,8 @@ class ContentListener extends DefaultListener
 
         $elementClass   = $this->getElementClass( $objRow ); //$objRow->typePrefix . $objRow->type;
         $objArticle     = \ArticleModel::findByPk( $objRow->pid );
+
+        $arrElementClasses = array();
 
 //        if( $objRow->type == "module" )
 //        {
@@ -118,9 +125,27 @@ class ContentListener extends DefaultListener
                 }
             }
 
-            if( preg_match('/first-p-big/', $cssID[1]) )
+            if( preg_match('/first-p-big/', $cssID[1]) && preg_match('/add-first-p-big-divider/', $cssID[1]))
             {
                 $strBuffer = preg_replace('/<p>(.*)<\/p>/', '<p><span class="big">$1</span><span class="divider"></span></p>', $strBuffer, 1);
+            }
+            else
+            {
+                preg_match_all('/<p>(.*)<\/p>/', $strBuffer, $arrLineMatches);
+
+                if( is_array($arrLineMatches[0]) && count($arrLineMatches[0]) )
+                {
+                    foreach($arrLineMatches[0] as $key => $strLine)
+                    {
+                        if( $key === 0 && preg_match('/<strong/', $strLine) )
+                        {
+                            $strNewLine = preg_replace('/<p/', '<p class="strong-line"', $strLine);
+                            $strBuffer  = preg_replace('/' . preg_quote($strLine, '/') . '/', $strNewLine, $strBuffer);
+
+                            $arrElementClasses[] = 'first-p-big';
+                        }
+                    }
+                }
             }
 
 //            $strBuffer = Helper::renderText($strBuffer);
@@ -132,6 +157,30 @@ class ContentListener extends DefaultListener
             {
                 $strBuffer = Helper::generateImageHoverTags( $strBuffer, $objRow );
             }
+
+            $arrImages = ImageHelper::getMultipleImages($objRow->multiSRC, $objRow->orderSRC);
+
+            preg_match_all('/<figure([A-Za-z0-9\s\-,;.:_\/\(\)\{\}="]{0,})>(.*?)<\/figure>/si', $strBuffer, $arrImageMatches);
+
+            foreach( $arrImageMatches[0] as $key => $strImageFigure)
+            {
+                $arrImage       = $arrImages[ $key ];
+                $strImageClass  = ($arrImage['meta']['cssClass'] ? ' ' : '') . $arrImage['meta']['cssClass'];
+
+                $newImageFigure = preg_replace('/class="image_container/', 'class="image_container' . $strImageClass, $strImageFigure);
+
+                $strBuffer      = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strBuffer);
+            }
+
+//            echo "<pre>";
+//            print_r( $strBuffer );
+//            echo "<br>";
+//            print_r( $arrImageMatches );
+//            echo "<br>";
+//            print_r( $arrImages );
+//            echo "<br>";
+//            print_r( $objRow );
+//            exit;
         }
 
 
@@ -246,15 +295,15 @@ class ContentListener extends DefaultListener
         }
 
 
-        $arrClasses     = array();
+//        $arrClasses     = array();
         $arrAttributes  = array();
 
         if( $objRow->position )
         {
             $strStyles = '';
 
-            $arrClasses[] = 'pos-' . ($objRow->positionFixed ? 'fixed' : 'abs');
-            $arrClasses[] = 'pos-' . str_replace('_', '-', $objRow->position);
+            $arrElementClasses[] = 'pos-' . ($objRow->positionFixed ? 'fixed' : 'abs');
+            $arrElementClasses[] = 'pos-' . str_replace('_', '-', $objRow->position);
 
             $arrPosMargin = deserialize($objRow->positionMargin, TRUE);
 
@@ -334,7 +383,7 @@ class ContentListener extends DefaultListener
 
         if( $objRow->addAnimation || $objArticle->addAnimation )
         {
-            $arrClasses[] = 'animate-box';
+            $arrElementClasses[] = 'animate-box';
 
             $arrAttributes['data-animate']          = $objRow->animationType    ?:$objArticle->animationType;
             $arrAttributes['data-animate-offset']   = $objRow->animationOffset  ?:$objArticle->animationOffset;
@@ -346,15 +395,15 @@ class ContentListener extends DefaultListener
 
             if( $objRow->animationWait || $objArticle->animationWait )
             {
-                $arrClasses[] = 'animate-wait';
+                $arrElementClasses[] = 'animate-wait';
 
                 $arrAttributes['data-wait'] = 1;
             }
         }
 
-        if( count($arrClasses) )
+        if( count($arrElementClasses) )
         {
-            $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrClasses );
+            $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrElementClasses );
         }
 
         if( count($arrAttributes) )
@@ -369,16 +418,48 @@ class ContentListener extends DefaultListener
 
     protected function renderHeadlines( $strContent, $objRow )
     {
-        $arrHeadlineClasses = array();
+        $arrHeadlineClasses     = array();
+        $arrTopHeadlineClasses  = array();
+        $arrSubHeadlineClasses  = array();
 
         $arrHeadline    = deserialize($objRow->headline, TRUE);
         $unit           = $arrHeadline['unit'];
         $headline       = $arrHeadline['value'];
 
-        $strTopClass    = ' unit-' . $unit;
+        $strTopClass    = $strSubClass = ' unit-' . $unit;
 
-        $topHeadline    = ($objRow->addTopHeadline ? '<div class="top-headline' . $strTopClass . '">' . $objRow->topHeadline . '</div>' : '');
-        $subHeadline    = ($objRow->addSubHeadline ? '<div class="sub-headline">' . $objRow->subHeadline . '</div>' : '');
+
+        if( $objRow->addTopHeadline )
+        {
+            $arrHeadlineClasses[] = 'has-top-headline';
+        }
+
+        if( $objRow->subHeadline )
+        {
+            $arrHeadlineClasses[] = 'has-sub-headline';
+        }
+
+        if( $objRow->headlineFloating )
+        {
+            $floating = preg_replace('/header_/', '', $objRow->headlineFloating);
+
+            $arrHeadlineClasses[]       = 'text-' . $floating;
+            $arrTopHeadlineClasses[]    = 'text-' . $floating;
+            $arrSubHeadlineClasses[]    = 'text-' . $floating;
+        }
+
+        if( count($arrTopHeadlineClasses) )
+        {
+            $strTopClass = $strTopClass . " " . implode(" ", $arrTopHeadlineClasses);
+        }
+
+        if( count($arrSubHeadlineClasses) )
+        {
+            $strSubClass = $strSubClass . " " . implode(" ", $arrSubHeadlineClasses);
+        }
+
+        $topHeadline    = ($objRow->addTopHeadline  ? '<div class="top-headline' . $strTopClass . '">' . $objRow->topHeadline . '</div>' : '');
+        $subHeadline    = ($objRow->subHeadline     ? '<div class="sub-headline' . $strSubClass . '">' . $objRow->subHeadline . '</div>' : '');
 
         $strHeadline    = preg_replace(array('/;/'), array('<br>'), $headline);
 
@@ -406,21 +487,6 @@ class ContentListener extends DefaultListener
         {
             $strContent = preg_replace('/class="headline([^\-])/', 'class="headline has-subline$1', $strContent, 1);
             $strContent = BasicHelper::replaceLastMatch('/class="headline([^\-])/', 'class="headline is-subline$1', 'class="headline$1', $strContent);
-        }
-
-        if( $objRow->addTopHeadline )
-        {
-            $arrHeadlineClasses[] = 'has-top-headline';
-        }
-
-        if( $objRow->addSubHeadline )
-        {
-            $arrHeadlineClasses[] = 'has-sub-headline';
-        }
-
-        if( $objRow->headlineFloating )
-        {
-            $arrHeadlineClasses[] = 'text-' . preg_replace('/header_/', '', $objRow->headlineFloating);
         }
 
         if( count($arrHeadlineClasses) )

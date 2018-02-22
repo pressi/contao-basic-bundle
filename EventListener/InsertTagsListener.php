@@ -21,8 +21,8 @@ use Contao\NewsFeedModel;
 use Contao\StringUtil;
 use Contao\Template;
 use Contao\Frontend;
-use IIDO\WebsiteBundle\Helper\SocialmediaHelper;
-use IIDO\WebsiteBundle\Helper\WebsiteHelper;
+//use IIDO\WebsiteBundle\Helper\SocialmediaHelper;
+//use IIDO\WebsiteBundle\Helper\WebsiteHelper;
 
 
 /**
