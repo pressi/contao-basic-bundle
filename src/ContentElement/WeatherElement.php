@@ -10,7 +10,9 @@
 namespace IIDO\BasicBundle\ContentElement;
 
 
+use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Cron\WeatherDataCron;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
 
 
@@ -39,24 +41,38 @@ class WeatherElement extends \ContentElement
     {
         global $objPage;
 
-        $rootDir = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+        $rootDir    = BasicHelper::getRootDir();
+        $arrData    = BasicHelper::getWeatherData();
 
-        if( !file_exists($rootDir . '/system/tmp/weather-data.txt') )
+        $tmpFile    = str_replace('##ROOT##', $rootDir, $arrData['tmpFile']);
+
+        if( !file_exists( $tmpFile ) )
         {
             $objWeatherCron = new WeatherDataCron();
             $objWeatherCron->generateCustomizeWeatherData();
         }
 
-        if( file_exists($rootDir . '/system/tmp/weather-data.txt') )
+        if( file_exists( $tmpFile ) )
         {
-            $arrFileData    = json_decode( file_get_contents( $rootDir . '/system/tmp/weather-data.txt' ) );
-            $objData        = $arrFileData->current_observation;
+            $imgSRC             = $arrData['icons']['url'];
 
-            // TODO: make icons changeable // own icons // icons from weather page
-//            $this->Template->imageSRC       = 'http://icons.wxug.com/i/c/i/' . $objData->icon . '.gif';
-            $this->Template->imageSRC       = 'files/skischule-russbach/Uploads/Icons/Wetter/' . $objData->icon . '.png';
+            $arrFileData        = json_decode( file_get_contents( $tmpFile ) );
+            $objData            = $arrFileData->current_observation;
+
+            $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
+            $iconSet            = \Config::get( $tableFieldPrefix . 'weatherIconsSet' );
+
+            if( $iconSet === "own" )
+            {
+                $imgSRC = str_replace(array('##IMG##', '##IMG_PATH##'), $objData->icon , \Config::get( $tableFieldPrefix . 'weatherIconsUrl' ));
+            }
+            else
+            {
+                $imgSRC = $imgSRC . $iconSet . $objData->icon . '.' . $arrData['icons']['format'];
+            }
+
+            $this->Template->imageSRC       = $imgSRC;
             $this->Template->iconName       = $objData->weather;
-
             $this->Template->temperature    = $objData->temp_c;
         }
     }

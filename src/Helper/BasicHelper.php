@@ -17,6 +17,14 @@ use IIDO\BasicBundle\Config\BundleConfig;
  */
 class BasicHelper extends \Frontend
 {
+    /**
+     * Weather Data config, json file
+     *
+     * @var string
+     */
+    protected static $weatherConfigFile    = '/src/Resources/config/data-weather.json';
+
+
 
     /**
      * Compile a color value and return a hex or rgba color
@@ -151,8 +159,8 @@ class BasicHelper extends \Frontend
             {
                 $homepageUrl = array
                 (
-                    'de'		=> 'startseite.html',
-                    'en'		=> 'home.html'
+                    'de'    => 'startseite.html',
+                    'en'    => 'home.html'
                 );
 
                 return $homepageUrl[ $strLanguage ];
@@ -900,5 +908,17 @@ class BasicHelper extends \Frontend
         {
             return $objRootPage->alias;
         }
+
+        return '';
+    }
+
+
+
+    public static function getWeatherData()
+    {
+        $rootDir    = self::getRootDir();
+        $bundlePath = BundleConfig::getBundlePath();
+
+        return json_decode( file_get_contents($rootDir . '/' . $bundlePath . self::$weatherConfigFile), TRUE );
     }
 }

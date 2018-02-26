@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="de">
+        <body>
+
+<!-- ### IIDO MAINTENANCE ################################################################################################### -->
+
+            <trans-unit id="tl_maintenance.iido.open_connectTool">
+                <source>Master Connect-Tool</source>
+                <target>Master Verbindungs-Tool</target>
+            </trans-unit>
+
+            <trans-unit id="tl_maintenance.iido.maintenanceHeadline">
+                <source>IIDO Maintenance</source>
+                <target>IIDO Systemwartung</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

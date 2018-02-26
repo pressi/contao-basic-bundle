@@ -1,0 +1,17 @@
+<div id="tl_maintenance_iido" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
+
+    <h2 class="sub_headline"><?= $this->headline ?></h2>
+
+    <? if($this->isActive): ?>
+
+        <div>TODO: ACTIVE</div>
+
+    <? else: ?>
+
+        <div class="tl_submit_container">
+            <a href="/contao/iido" class="tl_submit"><?= $this->label_openLink ?></a>
+        </div>
+
+    <? endif ?>
+
+</div>

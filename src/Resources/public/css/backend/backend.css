@@ -373,3 +373,7 @@ body.popup #main .tl_formbody_submit {
 .tl_checkbox_wizard .sortable span.grey {
     display: inline;
 }
+
+#sub_iidoBasic_weatherIconsSet {
+    clear: none;
+}

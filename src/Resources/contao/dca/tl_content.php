@@ -90,6 +90,7 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
  */
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStart', '', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintFields_legend},imprintText;', $strFileName);
 
 $defaultPaletteStart    = '{type_legend},type,headline,subHeadline;';
 $defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
@@ -1126,3 +1127,19 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 // MOBILE
 \IIDO\BasicBundle\Helper\DcaHelper::addField("showOnMobile", "checkbox", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("hideOnMobile", "checkbox", $strFileName);
+
+
+
+// IMPRINT
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyName', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('imprintText', $strFileName, array('multiple'=>true,'sorting'=>true), '', false, false, '', array('inputType'=>'checkboxWizard'));
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintStreet', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintSubline', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintPostal', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCity', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintPhone', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintFax', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintEmail', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintWeb', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('addImprintContactLabel', $strFileName);

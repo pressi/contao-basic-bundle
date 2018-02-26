@@ -9,6 +9,10 @@
 
 namespace IIDO\BasicBundle\Cron;
 
+use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\BasicHelper;
+
+
 class WeatherDataCron
 {
 
@@ -17,14 +21,23 @@ class WeatherDataCron
     protected $weatherKey   = '9d1d71aa8a832b9f';
 
 
-    // TODO: get data from data-weather.json config file // make city and key changable
+
     public function generateCustomizeWeatherData()
     {
-        $weatherData    = file_get_contents($this->weatherUrl . $this->weatherKey . '/conditions/lang:DL/q/' . $this->weatherCity . '.json');
-//        $objWeather     = json_decode($weatherData);
+        $arrData            = BasicHelper::getWeatherData();
+        $tableFieldPrefix   = BundleConfig::getTablePrefix();
 
+        $lang               = (\Config::get($tableFieldPrefix . 'weatherLanguage')?:'DL');
+        $weatherUrl         = (\Config::get($tableFieldPrefix . 'weatherUrl')?:$this->weatherUrl);
+        $weatherKey         = (\Config::get($tableFieldPrefix . 'weatherKey')?:$this->weatherKey);
+        $weatherCity        = (\Config::get($tableFieldPrefix . 'weatherCity')?:$this->weatherCity);
 
-        \File::putContent('system/tmp/weather-data.txt', $weatherData);
+        $arrRepData         = array($weatherUrl, $weatherKey, $lang, $weatherCity);
+        $weatherDataUrl     = str_replace(array('##API_URL##', '##API_KEY##', '##API_LANG##', '##API_QUERY##'), $arrRepData, $arrData['fullApiUrl']);
+
+        $weatherData        = file_get_contents($weatherDataUrl);
+
+        \File::putContent(str_replace('##ROOT##/', '', $arrData['tmpFile']), $weatherData);
     }
 
 

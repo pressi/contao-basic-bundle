@@ -107,7 +107,9 @@
             "k": "Icon Set #11"
         },
 
-        "format": ["gif"],
+        "url": "http://icons.wxug.com/i/c/",
+
+        "format": "gif",
         
         "night_prefix": "nt_",
         
