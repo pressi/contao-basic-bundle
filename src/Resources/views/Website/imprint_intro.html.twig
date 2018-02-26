@@ -1,7 +1,39 @@
 {{ '{{iflng::de}}' }}
 <h1>{{ content.headline|default("Impressum") }}</h1>
 <p>Informationspflicht laut §5 E-Commerce Gesetz, §14 Unternehmensgesetzbuch, §63 Gewerbeordnung und Offenlegungspflicht laut §25 Mediengesetz</p>
-<p><strong>{{ content.companyName }}</strong></p>
+<p>
+    <strong>{{ content.companyName }}</strong><br>
+    {% if content.subline %}{{ content.subline }}<br>{%  endif %}
+    {% if content.street %}{{ content.street }}<br>{%  endif %}
+    {% if content.postal and content.city %}{{ content.postal }} {{ content.city }}{%  endif %}
+</p>
+
+<p>
+    {% if content.phone %}
+        {% if addContactLabel %}
+            <span class="contact-label">Tel.:</span>
+        {%  endif %}
+        {{ content.phone }}<br>
+    {%  endif %}
+    {% if content.fax %}
+        {% if addContactLabel %}
+            <span class="contact-label">Fax:</span>
+        {%  endif %}
+        {{ content.fax }}<br>
+    {%  endif %}
+    {% if content.email %}
+        {% if addContactLabel %}
+            <span class="contact-label">Email:</span>
+        {%  endif %}
+        {{ content.email }}<br>
+    {%  endif %}
+    {% if content.website %}
+        {% if addContactLabel %}
+            <span class="contact-label">Web:</span>
+        {%  endif %}
+        {{ content.website }}
+    {%  endif %}
+</p>
 {{ '{{iflng::en}}' }}
 <h1>Imprint</h1>
 <p>EN TEXT</p>

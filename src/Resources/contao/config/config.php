@@ -29,6 +29,15 @@ $ns = $namespace . '\\' . $subNamespace;
 //    'tables' => array( $tablePrefix . 'style_selector')
 //);
 
+array_insert($GLOBALS['BE_MOD']['system'], 2, array
+(
+    $prefix . 'WebsiteConfig' => array
+    (
+        'tables'    => array($tablePrefix . 'website_config')
+    )
+));
+
+
 //array_insert($GLOBALS['BE_MOD'], 3, array
 //(
 //
@@ -76,13 +85,13 @@ $GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $ns . '\ContentEle
 $GLOBALS['TL_CTE']['module']['iido_detail']                 = $ns . '\ContentElement\DetailElement';
 $GLOBALS['TL_CTE']['module']['iido_articleTeaser']          = $ns . '\ContentElement\ArticleTeaserElement';
 $GLOBALS['TL_CTE']['module']['iido_weather']                = $ns . '\ContentElement\WeatherElement';
+$GLOBALS['TL_CTE']['module']['iido_imprint']                = $ns . '\ContentElement\ImprintElement';
 //$GLOBALS['TL_CTE']['module']['iido_navigation']          = $ns . '\FrontendModule\NavigationModule';
 
 
 $GLOBALS['TL_CTE']['module']['iido_wrapperStart']           = $ns . '\ContentElement\WrapperStartElement';
 $GLOBALS['TL_CTE']['module']['iido_wrapperStop']            = $ns . '\ContentElement\WrapperStopElement';
 $GLOBALS['TL_CTE']['module']['iido_wrapperSeparator']       = $ns . '\ContentElement\WrapperSeparatorElement';
-
 
 
 
@@ -120,7 +129,7 @@ $GLOBALS['TL_FFL']['databaseSelect']    = $ns . '\FormField\DatabaseSelect';
  * Maintenance
  */
 
-//$GLOBALS['TL_MAINTENANCE'][] = $ns . '\Maintenance\InitContao';
+$GLOBALS['TL_MAINTENANCE'][]    = $ns . '\Maintenance\WebsiteConfigMaintenance';
 
 
 
@@ -193,10 +202,10 @@ $GLOBALS['TL_PTY']['regular_redirect'] = $ns . '\Page\RegularRedirectPage';
  * Cron jobs
  */
 
-//if( \IIDO\BasicBundle\Helper\CronHelper::isActive("weather") )
-//{
-//    $GLOBALS['TL_CRON']['hourly']['generateWeatherData'] = array($ns . '\Cron\WeatherDataCron', 'generateCustomizeWeatherData');
-//}
+if( \IIDO\BasicBundle\Helper\CronHelper::isActive("weather") )
+{
+    $GLOBALS['TL_CRON']['hourly']['generateWeatherData'] = array($ns . '\Cron\WeatherDataCron', 'generateCustomizeWeatherData');
+}
 
 
 

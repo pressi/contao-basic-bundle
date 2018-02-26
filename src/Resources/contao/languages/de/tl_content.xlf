@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-	<file datatype="php" original="system/modules/ziido_customize/languages/en/tl_content.php" source-language="en">
+	<file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en" target-language="de">
 		<body>
 
 			<trans-unit id="tl_content.headlineImagePosition.0">
@@ -237,6 +237,18 @@
 
 
 
+            <trans-unit id="tl_content.imprintText.0">
+                <source>Imprint-Texts</source>
+                <target>Impressums-Texte</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintCompanyName.0">
+                <source>company name</source>
+                <target>Firmenname / Website Inhaber</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
 			<trans-unit id="tl_content.caroufredsel_legend">
@@ -263,6 +275,16 @@
             <trans-unit id="tl_content.animate_legend">
                 <source>Animation-Settings</source>
                 <target>Animation-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprint_legend">
+                <source>Imprint-Settings</source>
+                <target>Impressums-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintFields_legend">
+                <source>Imprint texts-Settings</source>
+                <target>Impressums-Texte-Einstellungen</target>
             </trans-unit>
 
 
@@ -1031,6 +1053,61 @@
 			</trans-unit>
 
 
-		</body>
-	</file>
+
+<!-- ### IMPRINT ############################################################################################################ -->
+
+            <trans-unit id="tl_content.options.imprintText.disclaimer">
+                <source>Disclaimer</source>
+                <target><![CDATA[<span class="gray">[Disclaimer]</span> Haftungsausschuss]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.disclaimer_content">
+                <source>Disclaimer Content</source>
+                <target><![CDATA[<span class="gray">[Disclaimer]</span> Haftung für Inhalte dieser Webseite]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.disclaimer_copyright">
+                <source>Copyright</source>
+                <target><![CDATA[<span class="gray">[Disclaimer]</span> Urheberrecht]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.disclaimer_links">
+                <source>Disclaimer Links</source>
+                <target><![CDATA[<span class="gray">[Disclaimer]</span> Haftung für Links auf Webseiten Dritter]]></target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options.imprintText.dispute">
+                <source>Dispute</source>
+                <target><![CDATA[<span class="gray">[Dispute]</span> Online-Streitbeilegung]]></target>
+            </trans-unit>
+            <!--<trans-unit id="tl_content.options.imprintText.intro">-->
+                <!--<source>Dispute</source>-->
+                <!--<target>Online-Streitbeilegung</target>-->
+            <!--</trans-unit>-->
+
+            <trans-unit id="tl_content.options.imprintText.privacy-policy">
+                <source>Privacy policy</source>
+                <target><![CDATA[ <span class="gray">[Privacy Policy]</span> Datenschutzerklärung]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.privacy-policy_cookies">
+                <source>Cookies</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Cookies]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.privacy-policy_forms-comments">
+                <source>Forms and comments</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Formulardaten und Kommentare]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.privacy-policy_google-analytics">
+                <source>Google Analytics</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Analytics]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.privacy-policy_google-maps">
+                <source>Google Maps</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Maps]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.imprintText.privacy-policy_personal-data">
+                <source>Personal Data</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Persönliche Daten]]></target>
+            </trans-unit>
+
+
+        </body>
+    </file>
 </xliff>
