@@ -22,6 +22,7 @@ use Symfony\Component\Routing\RouteCollection;
  *
  *
  * @author
+ * @deprecated NOT IN USE??
  */
 class AjaxKernel extends \AppKernel
 {

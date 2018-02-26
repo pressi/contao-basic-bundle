@@ -16,6 +16,7 @@ namespace IIDO\BasicBundle\ClassLoader;
  * Autoloads the Contao library classes.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated NOT IN USE??
  */
 class LibraryLoader
 {

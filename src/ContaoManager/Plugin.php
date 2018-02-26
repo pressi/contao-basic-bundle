@@ -27,7 +27,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 /**
  * Plugin for the Contao Manager.
  *
- * @package IIDO\BasicBundle
  * @author Stephan Preßl <development@prestep.at>
  */
 class Plugin implements BundlePluginInterface, RoutingPluginInterface

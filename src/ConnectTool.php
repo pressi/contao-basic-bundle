@@ -57,7 +57,7 @@ class ConnectTool
     /**
      * @var string
      */
-    private $configFile      = 'Resources/config/master-connection.json';
+    private $configFile      = 'src/Resources/config/master-connection.json';
 
 
     /**
@@ -507,6 +507,16 @@ class ConnectTool
     {
         $configData = $this->getConfigData();
         return $configData->domain . $configData->connection->publicPath . $configData->connection->file . '?pwd=' . $this->getPassword() . $this->getConnectionUrlVars( $configData );
+
+        //if api is enabled
+        //"/iido/master/{action}/"
+
+        /* {action}
+         *
+         * checkPassword
+         * testConnection
+         *
+         */
     }
 
 
@@ -667,7 +677,8 @@ class ConnectTool
                 {
                     if( !preg_match('/^[a-f0-9]{32}$/', $valueVarValue) )
                     {
-                        $valueVarValue = Encryption::hash( $valueVarValue );
+//                        $valueVarValue = Encryption::hash( $valueVarValue );
+                        $valueVarValue = password_hash($valueVarValue, PASSWORD_DEFAULT);
                     }
                 }
 
@@ -691,7 +702,8 @@ class ConnectTool
 //                        if( !preg_match('/^[a-f0-9]{32}$/', $value) )
                         if( !Encryption::test( $value) )
                         {
-                            $value = Encryption::hash( $value );
+//                            $value = Encryption::hash( $value );
+                            $value = password_hash($value, PASSWORD_DEFAULT);
                         }
                     }
 
@@ -767,7 +779,8 @@ class ConnectTool
                         {
                             if( !Encryption::test( $value) )
                             {
-                                $value = Encryption::hash( $value );
+//                                $value = Encryption::hash( $value );
+                                $value = password_hash($value, PASSWORD_DEFAULT);
                             }
                         }
 

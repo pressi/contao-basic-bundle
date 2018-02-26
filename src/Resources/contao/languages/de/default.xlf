@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <xliff version="1.1">
-    <file datatype="php" original="system/modules/ziido_customize/languages/en/default.php" source-language="en">
+    <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="de">
         <body>
 
 <!-- ### CONTENT ELEMENTS ################################################################################################### -->
@@ -137,7 +137,6 @@
                 <source>right bottom</source>
                 <target>Rechts Unten</target>
             </trans-unit>
-
 
 
             <trans-unit id="OPT.aw_it_text_align.left">

@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Handles the iido client.
  *
- * @package IIDO\BasicBundle
  * @author Stephan Preßl <development@prestep.at>
  *
  * @Route("/iido", defaults={"_scope" = "frontend", "_token_check" = true})
@@ -37,6 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ClientController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
+
 
     /**
      * @var array

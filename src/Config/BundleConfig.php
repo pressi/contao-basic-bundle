@@ -11,9 +11,8 @@ namespace IIDO\BasicBundle\Config;
 
 
 /**
- * Class BundleConfig
+ * Bundle Config Class
  *
- * @package IIDO\BasicBundle
  * @author Stephan Preßl <development@prestep.at>
  */
 class BundleConfig
@@ -32,10 +31,11 @@ class BundleConfig
      * @param bool $includeListener
      *
      * @return array
+     * @TODO custom return oder?!
      */
-    public static function getBundleConfigArray( $includeListener = true ) // TODO: custom order?
+    public static function getBundleConfigArray( $includeListener = true )
     {
-        return array(self::getNamespace(), self::getSubNamespace(), self::getSubName(), self::getPrefix(), self::getTablePrefix(), self::getListenerName( $includeListener ));
+        return array(self::getNamespace(), self::getSubNamespace(), self::getSubName(), self::getPrefix(), self::getTablePrefix( true ), self::getListenerName( $includeListener ));
     }
 
 
@@ -180,11 +180,13 @@ class BundleConfig
     /**
      * Get Bundle Table Prefix
      *
+     * @param boolean $includeSubname
+     *
      * @return string
      */
-    public static function getTablePrefix()
+    public static function getTablePrefix( $includeSubname = true )
     {
-        return 'tl_' . self::getPrefix() . '_' . self::getSubName() . '_';
+        return 'tl_' . self::getPrefix() . '_' . ( $includeSubname ? self::getSubName() . '_' : '');
     }
 
 
@@ -242,6 +244,9 @@ class BundleConfig
     /**
      * Get Bundle Path
      *
+     * @param boolean $public
+     * @param boolean $includeWebFolder
+     *
      * @return string
      */
     public static function getBundlePath($public = FALSE, $includeWebFolder = TRUE)
@@ -258,13 +263,27 @@ class BundleConfig
 
 
 
-    public static function getFileTable($fileName)
+    /**
+     * Get Table name from File name
+     *
+     * @param string $fileName
+     *
+     * @return string
+     */
+    public static function getFileTable( $fileName )
     {
         return self::getTableName( $fileName);
     }
 
 
 
+    /**
+     * Get Table name form File name
+     *
+     * @param string $fileName
+     *
+     * @return string
+     */
     public static function getTableName( $fileName )
     {
         $arrParts       = explode("/", $fileName);
@@ -279,6 +298,13 @@ class BundleConfig
 
 
 
+    /**
+     * Get Table Class form Table name
+     *
+     * @param string $strTable
+     *
+     * @return string
+     */
     public static function getTableClass( $strTable )
     {
         $tableClass     = preg_replace(array('/^Iido/', '/Model$/'), '', array_pop(explode("\\", \Model::getClassFromTable( $strTable ))));
@@ -308,6 +334,11 @@ class BundleConfig
 
 
 
+    /**
+     * Get Contao Version
+     *
+     * @return string
+     */
     public static function getContaoVersion()
     {
         $packages = \System::getContainer()->getParameter('kernel.packages');
