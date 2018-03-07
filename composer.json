@@ -20,7 +20,8 @@
         "contao/core-bundle"        : "~4",
         "contao/news-bundle"        : "~4",
         "contao/calendar-bundle"    : "~4",
-        "madeyourday/contao-rocksolid-custom-elements": "~2"
+        "madeyourday/contao-rocksolid-custom-elements": "~2",
+        "codefog/contao-cookiebar": "~1"
     },
     "require-dev":
     {
