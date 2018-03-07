@@ -1,9 +1,16 @@
 <?php
 // Add the fancybox style sheet
-$publicBundlePath = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true );
+//$tableFieldPrefix   = \IIDO\BasicBundle\Config\BundleConfig::getTableFieldPrefix();
+//$publicBundlePath   = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true );
 
-$GLOBALS['TL_CSS']['fancybox']        = $publicBundlePath . '/css/jquery.fancybox.min.css||static';
-$GLOBALS['TL_JAVASCRIPT']['fancybox'] = $publicBundlePath . '/javascript/jquery/jquery.fancybox.min.js|static';
+//$fancyboxVersion    = \Config::get( $tableFieldPrefix . 'scriptsFancybox');
+
+//$GLOBALS['TL_CSS']['fancybox']        = $publicBundlePath . '/css/fancybox/' . $fancyboxVersion . '/jquery.fancybox.min.css||static';
+//$GLOBALS['TL_JAVASCRIPT']['fancybox'] = $publicBundlePath . '/javascript/jquery/fancybox/' . $fancyboxVersion . '/jquery.fancybox.min.js|static';
+
+\IIDO\BasicBundle\Helper\ScriptHelper::addScript( "fancybox", true);
+
+
 
 $titleCounter   = FALSE;
 $hideTitle      = FALSE;
