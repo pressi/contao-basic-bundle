@@ -8,6 +8,8 @@
  *******************************************************************/
 
 namespace IIDO\BasicBundle\Helper;
+
+
 use IIDO\BasicBundle\Config\BundleConfig;
 
 
@@ -181,7 +183,7 @@ class BasicHelper extends \Frontend
      */
     public static function getPageLayout($objPage)
     {
-        if($objPage == NULL)
+        if($objPage === NULL)
         {
             return false;
         }
@@ -189,26 +191,27 @@ class BasicHelper extends \Frontend
         $blnMobile  = ($objPage->mobileLayout && \Environment::get('agent')->mobile);
 
         // Override the autodetected value
-        if (\Input::cookie('TL_VIEW') == 'mobile' && $objPage->mobileLayout)
+        if( \Input::cookie('TL_VIEW') === 'mobile' && $objPage->mobileLayout )
         {
             $blnMobile = true;
         }
-        elseif (\Input::cookie('TL_VIEW') == 'desktop')
+        elseif( \Input::cookie('TL_VIEW') === 'desktop' )
         {
             $blnMobile = false;
         }
 
-        $intId 		= $blnMobile ? $objPage->mobileLayout : $objPage->layout;
-        $objLayout 	= \LayoutModel::findByPk($intId);
+        $intId      = $blnMobile ? $objPage->mobileLayout : $objPage->layout;
+        $objLayout  = \LayoutModel::findByPk( $intId );
 
         // Die if there is no layout
         if ($objLayout === null)
         {
             $objLayout = false;
+
             if($objPage->pid > 0)
             {
-                $objParentPage  = self::getParentPage( $objPage->pid );
-                $objLayout      = self::getPageLayout($objParentPage);
+                $objParentPage  = self::getPage( $objPage->pid );
+                $objLayout      = self::getPageLayout( $objParentPage );
             }
         }
 
@@ -877,9 +880,9 @@ class BasicHelper extends \Frontend
 
 
 
-    public static function getRootDir()
+    public static function getRootDir( $includeSlash = false )
     {
-        return dirname(\System::getContainer()->getParameter('kernel.root_dir'));
+        return dirname(\System::getContainer()->getParameter('kernel.root_dir')) . ($includeSlash ? '/' : '');
     }
 
 

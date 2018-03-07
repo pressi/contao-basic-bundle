@@ -385,7 +385,7 @@ class DcaHelper extends \Frontend
         {
             $arrOptions = $GLOBALS['TL_LANG'][ $langTable?:$strTable ]['options'][ $fieldName ];
 
-            if( !count($arrOptions) )
+            if( !is_array($arrOptions) || is_array($arrOptions) && !count($arrOptions) )
             {
                 $arrOptions = $GLOBALS['TL_LANG'][ $langTable?:$strTable ]['options_' . $fieldName ];
             }
