@@ -10,9 +10,24 @@
 namespace IIDO\BasicBundle\Helper;
 
 
-//TODO: StylesheetHelper && StylesHelper zusammenführen??
+//TODO: StylesheetHelper && StylesHelper zusammenführen?? Stylesheet helper nur für das händling von css dateien (wie script helper)
+use IIDO\BasicBundle\Config\BundleConfig;
+
+
 class StylesheetHelper
 {
+    protected static $stylesheetPath        = '/src/Resources/public/css/';
+
+
+    protected static $stylesheetPathPublic  = '/css/';
+
+
+    protected static $stylesheetModeCombine = '||static';
+
+
+
+
+
 
     public static function renderStyleVars( $strContent )
     {
@@ -518,6 +533,72 @@ class StylesheetHelper
         }
 
         return $arrStyles;
+    }
+
+
+
+
+
+
+
+
+
+
+    public static function addStylesheet( $stylesheetName )
+    {
+        if( !is_array($stylesheetName) )
+        {
+            $stylesheetName = array( $stylesheetName );
+        }
+
+        foreach($stylesheetName as $fileKey => $fileName)
+        {
+            if( is_numeric($fileKey) )
+            {
+                $fileKey = $fileName;
+            }
+
+            $filePath       = self::getStylesheetSource( $fileName, true );
+            $filePathIntern = self::getStylesheetSource( $fileName );
+
+            if( file_exists(BasicHelper::getRootDir( true ) . $filePathIntern) )
+            {
+                $GLOBALS['TL_CSS'][ $fileKey ] = $filePath . self::getStylesheetMode();
+            }
+        }
+    }
+
+
+
+    public static function getStylesheetSource( $scriptName, $public = false )
+    {
+        $strPath        = BundleConfig::getBundlePath() . self::$stylesheetPath;
+        $folderVersion  = ScriptHelper::getScriptVersion( $scriptName );
+
+        $arrFiles = scan( BasicHelper::getRootDir( true ) . $strPath . '/' . $scriptName . '/' . $folderVersion );
+        $fileName = '';
+
+        foreach($arrFiles as $strFile)
+        {
+            if( preg_match('/.min.css$/', $strFile) )
+            {
+                $fileName = $strFile;
+                break;
+            }
+        }
+
+        return BundleConfig::getBundlePath( $public ) . ($public ? self::$stylesheetPathPublic : self::$stylesheetPath) . '/' . $scriptName . '/' . $folderVersion . '/' . $fileName;
+    }
+
+
+
+    public static function getStylesheetMode()
+    {
+        global $objPage;
+
+        $objLayout = BasicHelper::getPageLayout( $objPage );
+
+        return ($objLayout->combineScripts ? self::$stylesheetModeCombine : '');
     }
 
 }

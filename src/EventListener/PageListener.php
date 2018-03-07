@@ -10,6 +10,8 @@
 namespace IIDO\BasicBundle\EventListener;
 
 
+use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\StylesheetHelper;
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
 
@@ -42,6 +44,7 @@ class PageListener extends DefaultListener
     }
 
 
+
     /**
      * generate customize page //TODO: LADEZEITEN OPTIMIEREN!! SCRIPTE NUR DANN LADEN WENN SIE BENÖTIGT WERDEN!!
      *
@@ -69,6 +72,8 @@ class PageListener extends DefaultListener
 
         $jquery             = ($objLayout->addJQuery)   ? TRUE : FALSE;
         $mootools           = ($objLayout->addMooTools) ? TRUE : FALSE;
+        $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
+
 
 //        $externalJavascript = deserialize( $objLayout->externalJavascript, TRUE );
         $externalJavascript = deserialize( $objLayout->orderExternalJavascript, TRUE );
@@ -91,9 +96,15 @@ class PageListener extends DefaultListener
 
         if( $objPage->enableFullpage && $jsPrefix == "jquery" )
         {
+            // TODO: fullpage versioning / easings / scrolloverflow
+
+            $fullpageVersion        = \Config::get( $tableFieldPrefix . 'scriptsFullpage');
+            $scrolloverflowVersion  = \Config::get( $tableFieldPrefix . 'scriptsScrolloverflow');
+
+
             $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['scrolloverflow']     = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/scrolloverflow.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.fullpage.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['scrolloverflow']     = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/scrolloverflow/' . $scrolloverflowVersion . '/scrolloverflow.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/fullpage/' . $fullpageVersion . '/jquery.fullpage.min.js|static';
 
             $GLOBALS['TL_JAVASCRIPT']['iido_fullpage']      = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.FullPage.js|static';
         }
@@ -103,9 +114,13 @@ class PageListener extends DefaultListener
             $GLOBALS['TL_CSS']['footer'] = $this->bundlePathPublic . '/css/footer.css||static';
         }
 
+
+        // TODO: import js wenn es gebraucht wird!! wann werden diese bibliotheken benötigt??
         $GLOBALS['TL_JAVASCRIPT']['j_gsap']                 = $this->bundlePathPublic . '/javascript/greensock/jquery.gsap.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['tweenlite']              = $this->bundlePathPublic . '/javascript/greensock/TweenMax.min.js|static';
 
+
+        //TODO: das brauchen wir nur bei barba js!! damit es auf jeder seite vorhanden ist!! bzw. methode finden um es nachzuladen wenn nötig??!
         if( in_array('RockSolidSliderBundle', $bundles) && $objRootPage->enablePageFadeEffect )
         {
             $assetsDir = 'web/bundles/rocksolidslider';
@@ -123,7 +138,7 @@ class PageListener extends DefaultListener
         if( $objPage->addPageLoader )
         {
             $GLOBALS['TL_CSS']['fakeloader']                = $this->bundlePathPublic . '/css/fakeloader.css||static';
-            $GLOBALS['TL_JAVASCRIPT']['fakeloader']         = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/fakeLoader.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['fakeloader']         = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/fakeloader.min.js|static';
         }
 
 //        $GLOBALS['TL_JAVASCRIPT']['hdpi_canvas']         = $this->bundlePathPublic . '/javascript/hidpi-canvas.min.js|static';
@@ -145,18 +160,53 @@ class PageListener extends DefaultListener
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.scrollTo.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['smoothscroll']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.smooth-scroll.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['stellar']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.stellar.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['waypoints']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.waypoints.min.js|static';
-//            $GLOBALS['TL_JAVASCRIPT']['iido_wp_infinite']   = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/infinite.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['wp_inview']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/inview.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['wp_sticky']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/sticky.min.js|static';
+
+
+            $isActiveWaypoints = ScriptHelper::hasPageAnimation();
+
+            if( $isActiveWaypoints )
+            {
+                $waypointsVersion = \Config::get( $tableFieldPrefix . 'scriptsWaypoints');
+
+//                $GLOBALS['TL_JAVASCRIPT']['waypoints']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/' . $waypointsVersion . '/jquery.waypoints.min.js|static';
+                ScriptHelper::addScript('waypoints');
+                ScriptHelper::addSourceScript('waypoints', array('wp_inview' => 'inview', 'wp_sticky'=>'sticky'));
+
+
+//            $GLOBALS['TL_JAVASCRIPT']['wp_infinite']   = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/infinite.min.js|static';
+//                $GLOBALS['TL_JAVASCRIPT']['wp_inview']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/' . $waypointsVersion . '/src/inview.min.js|static';
+//                $GLOBALS['TL_JAVASCRIPT']['wp_sticky']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/' . $waypointsVersion . '/src/sticky.min.js|static';
+            }
+
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.sticky-kit.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['isotope']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope.pkgd.min.js|static';
+
+            $isActiveIsotope = ScriptHelper::hasPageIsotope();
+
+            if( $isActiveIsotope )
+            {
+                $isotopeVersion = \Config::get( $tableFieldPrefix . 'scriptsIsotope');
+
+                $GLOBALS['TL_JAVASCRIPT']['isotope']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/' . $isotopeVersion . '/isotope.pkgd.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT']['iso_fit-columns']    = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/fit-columns.js|static';
+            }
+
+
+            // TODO: check if we need hc sticky js?!
             $GLOBALS['TL_JAVASCRIPT']['hc_sticky']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.hc-sticky.min.js|static';
+
+            // TODO: if we need the number js?!
             $GLOBALS['TL_JAVASCRIPT']['number']             = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.number.min.js|static';
+
+            // TODO: if count to element is active!
             $GLOBALS['TL_JAVASCRIPT']['count_to']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/count-to.min.js|static';
 
+
             $GLOBALS['TL_JAVASCRIPT']['iido_base']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Base.js|static';
+
+
+
+
+//TODO: edit iido script and check if we need !?!
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Functions.js|static';
             $GLOBALS['TL_JAVASCRIPT']['iido_page']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Page.js|static';
             $GLOBALS['TL_JAVASCRIPT']['iido_content']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Content.js|static';
@@ -165,7 +215,7 @@ class PageListener extends DefaultListener
             $GLOBALS['TL_JAVASCRIPT']['iido_form']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.Form.js|static';
         }
 
-        // TODO: script nur laden wenn nötig
+        // TODO: script nur laden wenn nötig && version!!
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic'] = $this->bundlePathPublic . '/javascript/ScrollMagic.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.gsap.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic_debug'] = $this->bundlePathPublic . '/javascript/scrollmagic/debug.addIndicators.min.js|static';
@@ -173,6 +223,7 @@ class PageListener extends DefaultListener
 
         if( $objRootPage->enablePageFadeEffect )
         {
+            //TODO: barab version!!
             $arrBodyClasses[] = 'page-fade-animation';
             $GLOBALS['TL_JAVASCRIPT']['barba']              = $this->bundlePathPublic . '/javascript/barba.min.js|static';
         }
@@ -203,21 +254,14 @@ class PageListener extends DefaultListener
 
         if( $objRootPage->enableCookie || $objPage->enableCookie )
         {
+            //TODO: cooke version!!
             $GLOBALS['TL_JAVASCRIPT']['cookie'] = $this->bundlePathPublic . '/javascript/cookie.min.js|static';
-
-//            if($jquery)
-//            {
-//                $GLOBALS['TL_JAVASCRIPT']['cookie'] = $this->bundlePathPublic . '/javascript/cookie.min.js|static';
-//            }
-//            elseif($mootools)
-//            {
-//                // TODO: add cookie script for mootools!!
-//            }
         }
 
 
         if( $objRootPage->enableLazyLoad || $objPage->enableLazyLoad )
         {
+            //TODO: lazyload script!!
             if($jquery)
             {
                 $GLOBALS['TL_JAVASCRIPT']['lazyload'] = $this->bundlePathPublic . '/javascript/jquery/jquery.lazyload.min.js|static';
