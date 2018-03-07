@@ -70,4 +70,44 @@ class WebsiteConfigTable
 
         return $arrOptions;
     }
+
+
+
+    public function getScriptVersion( $dc )
+    {
+        $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
+        $folderPath         = BasicHelper::getRootDir() . '/' . BundleConfig::getBundlePath() . '/src/Resources/public/javascript/';
+
+        $arrOptions     = array();
+        $fieldName      = lcfirst( preg_replace('/^' . $tableFieldPrefix . 'script/', '', $dc->field) );
+        $subFolder      = 'lib';
+
+        if( !is_dir( $folderPath . 'lib/' . $fieldName ) )
+        {
+            $folderPath = $folderPath . 'jquery/';
+
+            $subFolder = 'jquery';
+        }
+        else
+        {
+            $folderPath = $folderPath . 'lib/';
+        }
+
+        if( is_dir( $folderPath . $fieldName ) )
+        {
+            $arrVersions = scan( $folderPath . $fieldName );
+
+            foreach( $arrVersions as $intVersion )
+            {
+                $arrVersion = explode(".", $intVersion);
+
+                if( is_numeric( $arrVersion[0] ) )
+                {
+                    $arrOptions[ $intVersion ] = $intVersion . ($subFolder ? ' (' . $subFolder . ')' : '');
+                }
+            }
+        }
+
+        return $arrOptions;
+    }
 }
