@@ -5,14 +5,21 @@
 
 <!-- ### IIDO MAINTENANCE ################################################################################################### -->
 
-            <trans-unit id="tl_maintenance.iido.open_connectTool">
+            <trans-unit id="tl_maintenance.iido.maintenanceHeadline">
+                <source>IIDO Maintenance</source>
+                <target>IIDO Systemwartung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_maintenance.iido.label.openConnectTool">
                 <source>Master Connect-Tool</source>
                 <target>Master Verbindungs-Tool</target>
             </trans-unit>
 
-            <trans-unit id="tl_maintenance.iido.maintenanceHeadline">
-                <source>IIDO Maintenance</source>
-                <target>IIDO Systemwartung</target>
+            <trans-unit id="tl_maintenance.iido.label.openImprintTool">
+                <source>Imprint / Privacy Policy Tool</source>
+                <target>Impressums / Datenschutz-Tool</target>
             </trans-unit>
 
 

@@ -1072,16 +1072,10 @@
                 <source>Disclaimer Links</source>
                 <target><![CDATA[<span class="gray">[Disclaimer]</span> Haftung für Links auf Webseiten Dritter]]></target>
             </trans-unit>
-
             <trans-unit id="tl_content.options.imprintText.dispute">
                 <source>Dispute</source>
                 <target><![CDATA[<span class="gray">[Dispute]</span> Online-Streitbeilegung]]></target>
             </trans-unit>
-            <!--<trans-unit id="tl_content.options.imprintText.intro">-->
-                <!--<source>Dispute</source>-->
-                <!--<target>Online-Streitbeilegung</target>-->
-            <!--</trans-unit>-->
-
             <trans-unit id="tl_content.options.imprintText.privacy-policy">
                 <source>Privacy policy</source>
                 <target><![CDATA[ <span class="gray">[Privacy Policy]</span> Datenschutzerklärung]]></target>
@@ -1106,6 +1100,11 @@
                 <source>Personal Data</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Persönliche Daten]]></target>
             </trans-unit>
+
+			<trans-unit id="tl_content.options.imprint.intro">
+			<source>intro</source>
+			<target>Impressums-Einleitung</target>
+			</trans-unit>
 
 
         </body>
