@@ -1118,6 +1118,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navPagesOrder'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addField("snowUnit", "text", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("snowSubline", "text", $strFileName);
 
+//\IIDO\BasicBundle\Helper\DcaHelper::copyField("snowUrl", $strFileName, 'imageUrl');
 $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']                 = $GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl'];
 $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['label']        = &$GLOBALS['TL_LANG']['tl_content']['snowUrl'];
 $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim($GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] . ' clr');

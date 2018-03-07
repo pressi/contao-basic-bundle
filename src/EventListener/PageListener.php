@@ -497,10 +497,10 @@ class PageListener extends DefaultListener
             $createTime = $objFile->mtime;
         }
 
-        if( $objAllPages )
-        {
-            while( $objAllPages->next() )
-            {
+//        if( $objAllPages )
+//        {
+//            while( $objAllPages->next() )
+//            {
                 $objArticles = \ArticleModel::findAll();
 //                $objArticles = \ArticleModel::findPublishedByPidAndColumn( $objAllPages->id, "main");
 
@@ -509,6 +509,11 @@ class PageListener extends DefaultListener
                     while( $objArticles->next() )
                     {
                         if( !$objArticles->published )
+                        {
+                            continue;
+                        }
+
+                        if( $objArticles->articleType === "header" || $objArticles->articleType === "footer" || $objArticles->articleType === "ge" )
                         {
                             continue;
                         }
@@ -573,10 +578,10 @@ class PageListener extends DefaultListener
 //                }
                     }
                 }
-            }
-        }
+//            }
+//        }
 
-        $objHeader = \ArticleModel::findByAlias('ge_header_' . $objRootPage->alias . '_' . $objRootPage->language);
+        $objHeader = \ArticleModel::findByAlias('ge_header_' . $objRootPage->alias);
 
         if( $objHeader )
         {
@@ -590,7 +595,7 @@ class PageListener extends DefaultListener
             $arrPageStyles[ 'header_' . $objHeader->id ] = $arrHeaderStyles;
         }
 
-        $objFooter = \ArticleModel::findByAlias('ge_footer_' . $objRootPage->alias . '_' . $objRootPage->language);
+        $objFooter = \ArticleModel::findByAlias('ge_footer_' . $objRootPage->alias);
 
         if( $objFooter )
         {

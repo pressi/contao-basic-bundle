@@ -373,7 +373,7 @@ class StylesheetHelper
         {
             $arrStyles = array
             (
-                'selector'      => 'header',
+                'selector'      => $mode,
             );
 
             if( $objData->isFixed )
@@ -384,7 +384,7 @@ class StylesheetHelper
 
                 $arrStyles = array
                 (
-                    'selector'      => 'header.is-fixed',
+                    'selector'      => $mode . '.is-fixed',
 
                     'positioning'   => true,
                     'position'      => 'fixed'
