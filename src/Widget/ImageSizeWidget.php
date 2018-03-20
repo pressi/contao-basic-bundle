@@ -42,15 +42,12 @@ class ImageSizeWidget extends \ImageSize
 
         $imageSizes = \System::getContainer()->get('contao.image.image_sizes');
         $this->arrAvailableOptions = $this->User->isAdmin ? $imageSizes->getAllOptions() : $imageSizes->getOptionsForUser($this->User);
-//echo "<pre>";
-//print_r($this->arrAvailableOptions);
-//exit;
+
         if( preg_match('/bg-size/', $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $strField ]['eval']['tl_class']) || preg_match('/mapSize|dlh_googlemap_size/', $strField) )
         {
             $this->arrAvailableOptions = $this->renderAvailableOptions( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $strField ]['options'] );
         }
-//print_r( $this->arrAvailableOptions );
-//        exit;
+
         if( !$this->isValidOption($varInput[2]) )
         {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalid'], $varInput[2]));
