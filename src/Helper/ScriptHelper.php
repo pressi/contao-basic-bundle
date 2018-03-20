@@ -127,6 +127,13 @@ class ScriptHelper
 
 
 
+    public static function addInternScript( $scriptName )
+    {
+        $GLOBALS['TL_JAVASCRIPT']['iido_' . $scriptName ] = BundleConfig::getBundlePath( true ) . self::$scriptPathPublic . self::getActiveJavascriptLibrary() . '/iido/IIDO.' . ucfirst( $scriptName ) . '.js' . self::getScriptMode();
+    }
+
+
+
     public static function addSourceScript( $scriptName, $sourceScriptName )
     {
         if( !is_array($sourceScriptName) )
@@ -170,7 +177,7 @@ class ScriptHelper
 
         foreach($arrFiles as $strFile)
         {
-            if( preg_match('/.min.js$/', $strFile) )
+            if( preg_match('/.min.js$/', $strFile) && preg_match('/' . $scriptName . '/', $strFile) )
             {
                 $fileName = $strFile;
                 break;

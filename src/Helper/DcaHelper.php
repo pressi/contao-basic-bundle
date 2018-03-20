@@ -342,6 +342,7 @@ class DcaHelper extends \Frontend
     public static function addCheckboxField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $isSelector = false, $langTable = '', $defaultConfig = array())
     {
         $sql = "char(1) NOT NULL default ''";
+        $langTable = self::renderLangTable( $langTable );
 
         if( strlen($langTable) )
         {
@@ -406,6 +407,8 @@ class DcaHelper extends \Frontend
 
     public static function addTextField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '', $defaultConfig = array())
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -445,6 +448,8 @@ class DcaHelper extends \Frontend
 
     public static function addColorField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -479,6 +484,8 @@ class DcaHelper extends \Frontend
 
     protected static function addHeadlineField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $useSearch = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -510,8 +517,10 @@ class DcaHelper extends \Frontend
 
 
 
-    protected static function addUnitField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
+    public static function addUnitField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         $defaultEval = array
         (
             'includeBlankOption'    => TRUE,
@@ -539,6 +548,8 @@ class DcaHelper extends \Frontend
 
     public static function addSelectField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $defaultValue = '', $shortOptions = FALSE, $isSelector = FALSE, $langTable = '', $defaultConfig = array())
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -608,6 +619,8 @@ class DcaHelper extends \Frontend
 
     public static function addImageField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         \Controller::loadDataContainer("tl_content");
 
         if( strlen($langTable) )
@@ -642,6 +655,8 @@ class DcaHelper extends \Frontend
 
     public static function addTextareaField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $useRTE = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         \Controller::loadDataContainer("tl_content");
 
         if( strlen($langTable) )
@@ -692,6 +707,8 @@ class DcaHelper extends \Frontend
 
     public static function addImageSizeField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $shortOptions = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -699,7 +716,7 @@ class DcaHelper extends \Frontend
 
         $defaultEval = array
         (
-            'rgxp'                  => 'natural',
+            'rgxp'                  => ($fieldName === "bgSize" ? 'extnd' : 'natural'),
             'includeBlankOption'    => true,
             'nospace'               => true,
             'helpwizard'            => true,
@@ -732,6 +749,8 @@ class DcaHelper extends \Frontend
 
     protected static function addPositionField($fieldName, $strTable, $eval, $classes, $replaceClasses, $shortOptions, $useUnits, $langTable, $defaultConfig)
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -782,6 +801,8 @@ class DcaHelper extends \Frontend
 
     public static function addImagesField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         \Controller::loadDataContainer( 'tl_content' );
 
         if( strlen($langTable) )
@@ -831,6 +852,8 @@ class DcaHelper extends \Frontend
 
     public static function addPageField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -863,6 +886,8 @@ class DcaHelper extends \Frontend
 
     public static function addUrlField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -896,6 +921,8 @@ class DcaHelper extends \Frontend
 
     public static function addAliasField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $langTable = self::renderLangTable( $langTable );
+
         if( strlen($langTable) )
         {
             \Controller::loadLanguageFile( $langTable );
@@ -1180,5 +1207,20 @@ class DcaHelper extends \Frontend
         $fieldName = preg_replace('/^iido([A-Za-z0-9]{0,})_/', '', $fieldName);
 
         return $GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ];
+    }
+
+
+
+    protected static function renderLangTable( $langTable )
+    {
+        if( strlen($langTable) )
+        {
+            if( !preg_match('/^tl_/', $langTable) )
+            {
+                $langTable = 'tl_' . $langTable;
+            }
+        }
+
+        return $langTable;
     }
 }

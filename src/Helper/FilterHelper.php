@@ -33,7 +33,7 @@ class FilterHelper extends \Frontend
 
     public static function renderFilterName( $filterName )
     {
-        $filterName = strtolower( preg_replace(array('/ß/', '/ü/', '/ö/', '/ä/', '/ &amp; /', '/ & /', '/&#40;/', '/&#41;/', '/\(/', '/\)/', '/, /', '/\s/', '/Ä/', '/Ü/', '/Ö/', '/ /'), array('ss', 'ue', 'oe', 'ae', '_and_', '_and_', '', '', '', '', ',', '_', 'Ae', 'Ue', 'Oe', '_'), trim($filterName)) );
+        $filterName = strtolower( preg_replace(array('/ß/', '/ü/', '/ö/', '/ä/', '/ &amp; /', '/ & /', '/&#40;/', '/&#41;/', '/\(/', '/\)/', '/, /', '/\s/', '/Ä/', '/Ü/', '/Ö/', '/ /', '/\./'), array('ss', 'ue', 'oe', 'ae', '_and_', '_and_', '', '', '', '', ',', '_', 'Ae', 'Ue', 'Oe', '_', ''), trim($filterName)) );
 
         return trim($filterName);
     }
@@ -41,6 +41,11 @@ class FilterHelper extends \Frontend
     public static function getProjectFilters( $pid, $itemsInNextArticle = false )
     {
         return self::getElementFilters( $pid, 'rsce_project', $itemsInNextArticle);
+    }
+
+    public static function getTypeFilters( $pid, $itemType, $itemsInNextArticle = false )
+    {
+        return self::getElementFilters( $pid, $itemType, $itemsInNextArticle);
     }
 
 
