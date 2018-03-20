@@ -703,7 +703,7 @@ class ContentListener extends DefaultListener
                     $strClass       = 'fbc';
                     $strBoxClass    = '';
 
-                    if( preg_match('/box-col/', $cssID[1]))
+                    if( preg_match('/box-col/', $cssID[1]) || preg_match('/column/', $cssID[1]))
                     {
                         $strClass = 'columns';
                     }
@@ -717,7 +717,7 @@ class ContentListener extends DefaultListener
                     $strBuffer = '<div class="box-container clr-after' . $strBoxClass . '"><div class="box-cont-inside"><div class="box-cont-wrapper ' . $strClass . '">' . $strBuffer;
                 }
 
-                if( preg_match('/box-col/', $cssID[1]))
+                if( preg_match('/box-col/', $cssID[1]) ||  preg_match('/column/', $cssID[1]))
                 {
                     $strBuffer = $this->addClassToContentElement($strBuffer, $objRow, array('column'));
                 }

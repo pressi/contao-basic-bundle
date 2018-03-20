@@ -11,6 +11,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 
 use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\PageHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\StylesheetHelper;
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
@@ -61,22 +62,14 @@ class PageListener extends DefaultListener
         $strStyles          = '';
 
         $objRootPage        = \PageModel::findByPk( $objPage->rootId );
-//        $objArticle         = \ArticleModel::findPublishedByPidAndColumn($objPage->id, "main");
-//        $objTheme           = \ThemeModel::findByPk( $objLayout->pid );
         $bundles            = $this->bundles;
 
-        $config             = \Config::getInstance();
         $jsPrefix           = 'mootools';
-
         $ua                 = \Environment::get( "agent" );
 
         $jquery             = ($objLayout->addJQuery)   ? TRUE : FALSE;
         $mootools           = ($objLayout->addMooTools) ? TRUE : FALSE;
         $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
-
-
-//        $externalJavascript = deserialize( $objLayout->externalJavascript, TRUE );
-        $externalJavascript = deserialize( $objLayout->orderExternalJavascript, TRUE );
 
         if( $jquery )
         {
@@ -98,15 +91,11 @@ class PageListener extends DefaultListener
         {
             // TODO: fullpage versioning / easings / scrolloverflow
 
-            $fullpageVersion        = \Config::get( $tableFieldPrefix . 'scriptsFullpage');
-            $scrolloverflowVersion  = \Config::get( $tableFieldPrefix . 'scriptsScrolloverflow');
-
-
             $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['scrolloverflow']     = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/scrolloverflow/' . $scrolloverflowVersion . '/scrolloverflow.min.js|static';
-            $GLOBALS['TL_JAVASCRIPT']['fullpage']           = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/fullpage/' . $fullpageVersion . '/jquery.fullpage.min.js|static';
+            ScriptHelper::addScript("scrolloverflow");
+            ScriptHelper::addScript("fullpage");
 
-            $GLOBALS['TL_JAVASCRIPT']['iido_fullpage']      = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/iido/IIDO.FullPage.js|static';
+            ScriptHelper::addInternScript("fullpage");
         }
 
         if( $footerMode )
@@ -135,10 +124,10 @@ class PageListener extends DefaultListener
             }
         }
 
-        if( $objPage->addPageLoader )
+        if( !$objPage->removePageLoader && ($objPage->addPageLoader || PageHelper::checkIfParentPagesHasPageLoader( $objPage )) )
         {
             $GLOBALS['TL_CSS']['fakeloader']                = $this->bundlePathPublic . '/css/fakeloader.css||static';
-            $GLOBALS['TL_JAVASCRIPT']['fakeloader']         = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/fakeloader.min.js|static';
+            $GLOBALS['TL_JAVASCRIPT']['fakeloader']         = $this->bundlePathPublic . '/javascript/fakeloader.min.js|static';
         }
 
 //        $GLOBALS['TL_JAVASCRIPT']['hdpi_canvas']         = $this->bundlePathPublic . '/javascript/hidpi-canvas.min.js|static';
@@ -218,7 +207,7 @@ class PageListener extends DefaultListener
         // TODO: script nur laden wenn nötig && version!!
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic'] = $this->bundlePathPublic . '/javascript/ScrollMagic.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.gsap.min.js|static';
-        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_debug'] = $this->bundlePathPublic . '/javascript/scrollmagic/debug.addIndicators.min.js|static';
+//        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_debug'] = $this->bundlePathPublic . '/javascript/scrollmagic/debug.addIndicators.min.js|static';
 //        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.velocity.min.js|static';
 
         if( $objRootPage->enablePageFadeEffect )
@@ -361,18 +350,18 @@ class PageListener extends DefaultListener
 
         $arrBodyClasses = $this->createDefaultStylesheet( $arrBodyClasses );
 
-        if ( is_array( $externalJavascript ) && count( $externalJavascript ) > 0 )
-        {
-            foreach ( $externalJavascript as $jsFile )
-            {
-                $objFile = \FilesModel::findByPk( $jsFile );
-
-                if( file_exists($this->rootDir . '/' . $objFile->path ) && strlen($objFile->path) )
-                {
-                    $GLOBALS[ 'TL_JAVASCRIPT' ][ ] = $objFile->path . '|static';
-                }
-            }
-        }
+//        if ( is_array( $externalJavascript ) && count( $externalJavascript ) > 0 )
+//        {
+//            foreach ( $externalJavascript as $jsFile )
+//            {
+//                $objFile = \FilesModel::findByPk( $jsFile );
+//
+//                if( file_exists($this->rootDir . '/' . $objFile->path ) && strlen($objFile->path) )
+//                {
+//                    $GLOBALS[ 'TL_JAVASCRIPT' ][ ] = $objFile->path . '|static';
+//                }
+//            }
+//        }
 
         $this->addDefaultScripts();
 
@@ -466,7 +455,8 @@ class PageListener extends DefaultListener
 //            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-_,;.:\{\}\(\)="\'<>%\/]{0,})>/',  '<body$1>' . $menuOpen . $menuMobile, $strBuffer);
             $strBuffer = preg_replace('/<\/body>/',  $menuOpen . $menuMobile . '</body>', $strBuffer);
 
-            if( $objPage->addPageLoader )
+//            if( $objPage->addPageLoader )
+            if( !$objPage->removePageLoader && ($objPage->addPageLoader || PageHelper::checkIfParentPagesHasPageLoader( $objPage )) )
             {
                 $loaderTag      = '<div id="fakeLoader"></div>';
                 $loaderScript   = '<script type="text/javascript">$("#fakeLoader").fakeLoader({timeToHide:1600,zIndex:"9999",spinner:"spinner1",bgColor:"#484848"})</script>';

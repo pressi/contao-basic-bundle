@@ -11,15 +11,6 @@ namespace IIDO\BasicBundle\EventListener;
 
 
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
-use Contao\Environment;
-use Contao\PageModel;
-use Contao\LayoutModel;
-use Contao\Model\Collection;
-use Contao\NewsFeedModel;
-use Contao\StringUtil;
-use Contao\Template;
-use Contao\Frontend;
 use IIDO\BasicBundle\Helper\ColorHelper;
 
 
@@ -27,27 +18,8 @@ use IIDO\BasicBundle\Helper\ColorHelper;
  * Class Frontend Template Hook
  * @package IIDO\Customize\Hook
  */
-class FrontendTemplateListener
+class FrontendTemplateListener extends DefaultListener
 {
-
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-
-
-    /**
-     * Constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     */
-    public function __construct(ContaoFrameworkInterface $framework)
-    {
-        $this->framework = $framework;
-    }
-
-
 
     /**
      * Edit the Frontend Template
@@ -63,8 +35,8 @@ class FrontendTemplateListener
 
         if( $strTemplate === "mod_article" )
         {
-//            $sectionHeaderID		= 3; // TODO: verwaltbar machen!!!
-//            $sectionFooterID		= 4;
+//            $sectionHeaderID      = 3; // TODO: verwaltbar machen!!!
+//            $sectionFooterID      = 4;
 
             $objArticle             = NULL;
             $articleClass           = array();
@@ -231,16 +203,9 @@ class FrontendTemplateListener
 
                         $bgSize = deserialize($objArticle->bgSize, TRUE);
 
-                        if( $bgSize[2] == "cover" )
+                        if( $bgSize[2] === "cover" )
                         {
-//                            if( $objArticle->enableParallax )
-//                            {
-//                                $arrArticleClasses[] = 'bg-size-125';
-//                            }
-//                            else
-//                            {
-                                $arrArticleClasses[] = 'bg-cover';
-//                            }
+                            $arrArticleClasses[] = 'bg-cover';
                         }
 
                         $objImage = \FilesModel::findByPk( $objArticle->bgImage );
@@ -256,19 +221,22 @@ class FrontendTemplateListener
                             }
                         }
 
-//                        if( $objArticle->enableParallax )
-//                        {
-////                            if( $objArticle->backgroundPosition == "center_top" && $objArticle->backgroundMode == "cover" )
-////                            {
-////                                if( in_array("first", $objArticle->classes) )
-////                                {
-////                                    $arrAttributes[] = 'data-stellar-vertical-offset="-125"';
-////                                }
-////                            }
-//
-//                            $articlePattern = '/<div([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})class="mod_article([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})>/';
-//                            $strContent     = preg_replace($articlePattern, '<div$1class="mod_article parallax-bg$2"$3 data-stellar-offset-parent="true" data-stellar-background-ratio="0.2">', $strContent);
-//                        }
+                        if( $objArticle->enableBackgroundParallax )
+                        {
+                            $arrArticleClasses[] = 'bg-parallax';
+                            $arrArticleClasses[] = 'bg-fixed';
+
+//                            if( $objArticle->backgroundPosition == "center_top" && $objArticle->backgroundMode == "cover" )
+//                            {
+//                                if( in_array("first", $objArticle->classes) )
+//                                {
+//                                    $arrAttributes[] = 'data-stellar-vertical-offset="-125"';
+//                                }
+//                            }
+
+                            $articlePattern = '/<div([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})class="mod_article([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-_=;",:\\.\(\)\'#\/%]{0,})>/';
+                            $strContent     = preg_replace($articlePattern, '<div$1class="mod_article $2"$3 data-stellar-offset-parent="true" data-stellar-background-ratio="0.5">', $strContent);
+                        }
 
                         if( preg_match('/bg-in-container/', $cssID[1]) )
                         {
@@ -468,7 +436,28 @@ class FrontendTemplateListener
                 {
                     if( $objArticle->toNextArrow )
                     {
-                        $divTableEnd = '<div class="pos-abs pos-center-bottom arrow arrow-down arrow-style3 scroll-to-next-page"><div class="arrow-inside-container"><div class="arrow-inside"></div></div></div>' . $divTableEnd;
+                        //TODO: make size changeable
+
+                        $arrowStyle = $objArticle->toNextArrowStyle;
+                        $arrowTitle = '';
+                        $arrowType  = 'page';
+
+                        if( $objArticle->toNextArrowAddTitle )
+                        {
+                            $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticle->pid, 'main', $objArticle->sorting));
+
+                            $arrowTitle = $objNextArticle->title;
+                        }
+
+                        if( $this->isFullPageEnabled( $objPage ) )
+                        {
+                            if( $objPage->fullpageDirection === "horizontal" )
+                            {
+                                $arrowType = 'section';
+                            }
+                        }
+
+                        $divTableEnd = '<div class="pos-abs pos-center-bottom arrow arrow-down arrow-' . $arrowStyle . ' big scroll-to-next-' . $arrowType . '"><div class="arrow-inside-container"><div class="arrow-inside">' . $arrowTitle . '</div></div></div>' . $divTableEnd;
                     }
 
                     if( preg_match('/add-footer/', $cssID[1]) )
@@ -606,8 +595,8 @@ class FrontendTemplateListener
 //            echo "<pre>"; print_r( $strContent ); exit;
 //        }
 
-        elseif( $strTemplate === "gallery_default" )
-        {
+//        elseif( $strTemplate === "gallery_default" )
+//        {
 //            preg_match_all('/<figure([A-Za-z0-9\s\-,;.:_\/\(\)\{\}="]{0,})>(.*?)<\/figure>/si', $strContent, $arrImageMatches);
 
 //            echo "<pre>";
@@ -615,7 +604,7 @@ class FrontendTemplateListener
 //            echo "<br>";
 //            print_r( $strContent );
 //            exit;
-        }
+//        }
 //        echo "<pre>"; print_r( $strTemplate ); echo "</pre>";
         return $strContent;
     }
@@ -652,7 +641,7 @@ class FrontendTemplateListener
             {
                 if( $objPage->fullpageDirection == "horizontal" )
                 {
-                    $strBuffer = preg_replace('/<div id="main">([A-Za-z0-9\s\n]{0,})<div class="inside">/', '<div id="main">$1<div class="inside section">', $strBuffer);
+                    $strBuffer = preg_replace('/<main([A-Za-z0-9\s\-="\(\):;\{\}\/%.]{0,})id="main"([A-Za-z0-9\s\-="\(\):;\{\}\/%.]{0,})>([A-Za-z0-9\s\n]{0,})<div class="inside">/', '<main$1id="main"$2>$3<div class="inside section">', $strBuffer);
                 }
 
                 $strBuffer = preg_replace('/<html/', '<html class="enable-fullpage"', $strBuffer);

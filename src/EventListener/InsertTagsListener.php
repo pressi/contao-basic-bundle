@@ -61,6 +61,19 @@ class InsertTagsListener extends DefaultListener
 
                 switch( $arrSplit[1] )
                 {
+                    case "insert_article":
+                        $strInsertAlias     = \Controller::replaceInsertTags( $arrSplit[2] );
+                        $objInsertArticle   = \ArticleModel::findByAlias( $strInsertAlias );
+
+                        if( $objInsertArticle )
+                        {
+                            $return = \Controller::replaceInsertTags( '{{insert_article::' . $arrSplit[2] . '}}' );
+                            $return = '<div class="' . $arrSplit[3] . '"><div class="' . $arrSplit[3] . '-inside">' . $return . '</div></div>';
+                        }
+                        break;
+
+
+
 //                    case "website":
 //
 //                        switch( $arrSplit[2] )
