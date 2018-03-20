@@ -34,7 +34,7 @@ class WebsiteConfigMaintenance extends \Backend implements \executable
     public function run()
     {
         $objUser        = \BackendUser::getInstance();
-        $strUsername    = $objUser->getUsername();
+        $strUsername    = $objUser->username;
 
         if( $strUsername !== "zomedia" && $strUsername !== "develop" && $strUsername !== "stephan" )
         {
