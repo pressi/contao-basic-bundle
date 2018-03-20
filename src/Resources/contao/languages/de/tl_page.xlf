@@ -192,6 +192,11 @@
                 <target>Seitenlade-Overlay aktivieren</target>
             </trans-unit>
 
+            <trans-unit id="tl_page.enablePageFadeEffect.0">
+                <source>add page fade effeckt</source>
+                <target>Seitenlade-Übergangs-Effeckt (barba.js)</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
@@ -213,7 +218,7 @@
 
             <trans-unit id="tl_page.additional_legend">
                 <source>additional-settings</source>
-                <target>zusatz-Einstellungen</target>
+                <target>Zusatz-Einstellungen</target>
             </trans-unit>
 
 

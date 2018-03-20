@@ -245,6 +245,21 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_article.toNextArrow.0">
+                <source>add to next area arrow</source>
+                <target>Pfeil/Button zum nächsten Artikel hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.toNextArrowStyle.0">
+                <source>next area arrow style</source>
+                <target>Pfeil/Button Style</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.toNextArrowAddTitle.0">
+                <source>add title to next area arrow</source>
+                <target>Füge den Titel des nächsten Artikel zum Pfeil/Button</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
@@ -274,6 +289,16 @@
                 <target>Navigation-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.dimensions_legend">
+                <source>dimensions-settings</source>
+                <target>Breite/Höhe-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.divider_legend">
+                <source>divider-settings</source>
+                <target>Trenner-Einstellungen</target>
+            </trans-unit>
+
 
 
 <!-- ### OPTIONS ############################################################################################################ -->
@@ -293,6 +318,10 @@
             <trans-unit id="tl_article.options.bgSize.cover">
                 <source>cover</source>
                 <target>Vollflächig (abgeschnitten)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgSize.contain">
+                <source>cover</source>
+                <target>Vollflächig (passend)</target>
             </trans-unit>
             <trans-unit id="tl_article.options.bgSize.own">
                 <source>own</source>
@@ -363,9 +392,21 @@
                 <source>Content</source>
                 <target>Inhalt</target>
             </trans-unit>
+            <trans-unit id="tl_article.options.articleType.canvasTop">
+                <source>top canvas</source>
+                <target>Top Bereich oben (oberhalb der Seite, versteckt)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.headerTopBar">
+                <source>Header</source>
+                <target>Kopfzeile: Top Bar</target>
+            </trans-unit>
             <trans-unit id="tl_article.options.articleType.header">
                 <source>Header</source>
                 <target>Kopfzeile</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.pitLane">
+                <source>Pit lane</source>
+                <target>Boxengasse</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.footer">
                 <source>Footer</source>
@@ -404,6 +445,68 @@
             <trans-unit id="tl_article.options.navLinkMode.extern">
                 <source>extern</source>
                 <target>Externe-Verlinkung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.toNextArrowStyle.style1">
+                <source>style 1</source>
+                <target>Pfeil: Style1 (Normaler Pfeil, rund)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowStyle.style2">
+                <source>style 2</source>
+                <target>Pfeil: Style2 (Normaler Pfeil, eckig)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowStyle.style3">
+                <source>style 3</source>
+                <target>Pfeil: Style3 (Normaler Pfeil, in einem Kreis)</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.dividerStyle.style1">
+                <source>style1</source>
+                <target>Pfeil unten (nach unten, vollflächig)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style2">
+                <source>style2</source>
+                <target>Bogen unten (Bogen nach oben)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style3">
+                <source>style3</source>
+                <target>Bogen unten (Bogen nach unten)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style4">
+                <source>style4</source>
+                <target>Pfeil unten (nach unten)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style5">
+                <source>style5</source>
+                <target>Pfeil unten (nach unten, flacher)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style6">
+                <source>style6</source>
+                <target>Bögen nach unten (kachelnd horizontal)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style7">
+                <source>style7</source>
+                <target>Wolken unten (Bögen nach oben)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style8">
+                <source>style8</source>
+                <target>Schräge Linie (von links nach rechts)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style9">
+                <source>style9</source>
+                <target>Schräge Linie (von links nach rechts, flacher)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style10">
+                <source>style10</source>
+                <target>Schräge Linie (von rechts nach links)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.dividerStyle.style11">
+                <source>style11</source>
+                <target>Schräge Linie (von rechts nach links, flacher)</target>
             </trans-unit>
 
 
