@@ -310,7 +310,7 @@ class BundleConfig
         $tableClass     = preg_replace(array('/^Iido/', '/Model$/'), '', array_pop(explode("\\", \Model::getClassFromTable( $strTable ))));
         $arrClass       = preg_split('/(?=[A-Z])/', lcfirst($tableClass));
         $iidoTable      = ((preg_match('/^tl_iido/', $strTable)) ? TRUE : FALSE);
-        $newTableClass  = (($iidoTable) ? 'IIDO\\' : '');
+        $newTableClass  = (($iidoTable) ? 'IIDO\\' : 'IIDO\\' . self::getSubNamespace() . '\\Table\\');
 
         foreach( $arrClass as $i => $class)
         {
@@ -323,7 +323,8 @@ class BundleConfig
                     $newTableClass .= 'Bundle\\Table\\';
                 }
             }
-            elseif( $i === (count($arrClass) - 1) )
+
+            if( $i === (count($arrClass) - 1) )
             {
                 $newTableClass .= 'Table';
             }
