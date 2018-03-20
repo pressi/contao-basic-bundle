@@ -1,8 +1,24 @@
-<? global $objPage ?>
+<?
+global $objPage;
+
+$objElement = \ContentModel::findByPk( $this->pid );
+$elCssID    = \StringUtil::deserialize($objElement->cssID, true);
+
+$direction  = "horizontal";
+$hrefFront  = '';
+
+if( $direction === "horizontal" )
+{
+    $objFirstArticle = \ArticleModel::findPublishedByPidAndColumn($objPage->id, 'main', array('limit'=>1));
+    $objFirstArticle = $objFirstArticle->first();
+
+    $hrefFront = $objFirstArticle->alias . '/';
+}
+?>
 <ul class="<?= $this->level ?>">
   <?php foreach ($this->items as $item):
 
-      $item['href'] = '#' . $item['alias'];
+      $item['href'] = '#' . $hrefFront . $item['alias'];
       $objLinkPage = false;
 
   if( ($item['noContent'] || preg_match('/no-content/', $item['class'])) && ($item['navLinkMode'] === "" || strlen($item['navLinkMode']) === 0) )
@@ -90,11 +106,19 @@
           }
       }
 
+      $itemImage = '';
+
+      if( preg_match('/add-page-icon/', $elCssID[1]) )
+      {
+          $imageTag     = \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $item['overviewImage']);
+          $itemImage    = '<div class="item-image">' . $imageTag . '</div>';
+      }
+
       ?>
     <?php if ($item['isActive']): ?>
       <li class="<?= $item['class'] ?>"><strong class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="name"><?= $item['link'] ?></strong><?= $item['subitems'] ?></li>
     <?php else: ?>
-      <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?>><a href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></a><?= $item['subitems'] ?></li>
+      <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?>><a href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><?= $itemImage ?><span itemprop="name"><?= $item['link'] ?></span></a><?= $item['subitems'] ?></li>
     <?php endif; ?>
   <?php endforeach; ?>
 </ul>
