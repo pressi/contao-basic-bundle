@@ -19,26 +19,32 @@ $act            = Input::get("act");
 $table          = Input::get("table");
 $id             = (int) Input::get("id");
 $theme          = Backend::getTheme();
-$strFileName    = \NewsModel::getTable();
 
-$enableCarouFredSel		= false; //in_array("dk_caroufredsel", \ModuleLoader::getActive());
+//$strFileName    = \NewsModel::getTable();
+$strFileName    = \IIDO\BasicBundle\Config\BundleConfig::getTableName( __FILE__ );
+$strFileClass   = \IIDO\BasicBundle\Config\BundleConfig::getTableClass( $strFileName );
+
+$enableCarouFredSel     = false; //in_array("dk_caroufredsel", \ModuleLoader::getActive());
 
 if( count( $db->listTables() ) > 0 )
 {
 	if( $id )
 	{
-		if( $act && $act == "edit")
+		if( $act && $act === "edit")
 		{
-			$objNews = \NewsModel::findByPk($id);
+//			$objNews = \NewsModel::findByPk($id);
+			$objNews = $db->prepare("SELECT * FROM " . $strFileName . " WHERE id=?")->limt(1)->execute( $id );
 
 			if($objNews)
 			{
-				$objArchive = \NewsArchiveModel::findByPk( $objNews->pid );
+//				$objArchive = \NewsArchiveModel::findByPk( $objNews->pid );
+				$objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limt(1)->execute( $objNews->pid );
 			}
 		}
 		else
 		{
-			$objArchive = \NewsArchiveModel::findByPk( $id );
+//            $objArchive = \NewsArchiveModel::findByPk( $id );
+            $objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limt(1)->execute( $id );
 		}
 	}
 }
@@ -59,10 +65,10 @@ if( isset($GLOBALS['TL_DCA'][ $strFileName ]['config']['onload_callback']) && is
 {
     foreach($GLOBALS['TL_DCA'][ $strFileName ]['config']['onload_callback'] as $i => $callback)
     {
-        if($callback[1] == "checkPermission")
+        if($callback[1] === "checkPermission")
         {
             unset($GLOBALS['TL_DCA'][ $strFileName ]['config']['onload_callback'][ $i ]);
-            $GLOBALS['TL_DCA'][ $strFileName ]['config']['onload_callback'][ $i ] = array('IIDO\BasicBundle\Table\NewsTable', 'checkPermission');
+            $GLOBALS['TL_DCA'][ $strFileName ]['config']['onload_callback'][ $i ] = array($strFileClass, 'checkPermission');
         }
     }
 }
@@ -129,7 +135,8 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['sorting'] = array
 	'sql'						=> "int(10) unsigned NOT NULL default '0'"
 );
 
-$GLOBALS['TL_DCA'][ $strFileName ]['fields']['text'] = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
+//$GLOBALS['TL_DCA'][ $strFileName ]['fields']['text'] = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField( 'text', $strFileName, array(), '', false, true);
 
 
 

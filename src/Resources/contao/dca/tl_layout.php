@@ -33,7 +33,7 @@ if( $act == "edit" )
  */
 
 $GLOBALS['TL_DCA']['tl_layout']['palettes']['default']                  = str_replace(',combineScripts', ',combineScripts,loadDomainCSS;', $GLOBALS['TL_DCA']['tl_layout']['palettes']['default']);
-$GLOBALS['TL_DCA']['tl_layout']['palettes']['default']                  = str_replace(',analytics', ',analytics,externalJavascript', $GLOBALS['TL_DCA']['tl_layout']['palettes']['default']);
+//$GLOBALS['TL_DCA']['tl_layout']['palettes']['default']                  = str_replace(',analytics', ',analytics,externalJavascript', $GLOBALS['TL_DCA']['tl_layout']['palettes']['default']);
 
 
 if($objLayout != null && !$objLayout->footerAtBottom)
@@ -145,28 +145,28 @@ $GLOBALS['TL_DCA']['tl_layout']['fields']['addPageWrapperOuterPageWrapper'] = ar
 );
 
 
-$GLOBALS['TL_DCA']['tl_layout']['fields']['externalJavascript'] = array
-(
-	'label'						=> &$GLOBALS['TL_LANG']['tl_layout']['externalJavascript'],
-	'exlude'					=> true,
-	'inputType'					=> 'fileTree',
-	'eval'						=> array
-	(
-		'multiple'					=> true,
-		'orderField'				=> 'orderExternalJavascript',
-		'fieldType'					=> 'checkbox',
-		'filesOnly'					=> true,
-		'extensions'				=> 'js'
-	),
-	'sql'						=> "blob NULL"
-);
-
-$GLOBALS['TL_DCA']['tl_layout']['fields']['orderExternalJavascript'] = array
-(
-	'label'						=> &$GLOBALS['TL_LANG']['tl_layout']['orderExternalJavascript'],
-	'sql'						=> "blob NULL"
-);
-
+//$GLOBALS['TL_DCA']['tl_layout']['fields']['externalJavascript'] = array
+//(
+//	'label'						=> &$GLOBALS['TL_LANG']['tl_layout']['externalJavascript'],
+//	'exlude'					=> true,
+//	'inputType'					=> 'fileTree',
+//	'eval'						=> array
+//	(
+//		'multiple'					=> true,
+//		'orderField'				=> 'orderExternalJavascript',
+//		'fieldType'					=> 'checkbox',
+//		'filesOnly'					=> true,
+//		'extensions'				=> 'js'
+//	),
+//	'sql'						=> "blob NULL"
+//);
+//
+//$GLOBALS['TL_DCA']['tl_layout']['fields']['orderExternalJavascript'] = array
+//(
+//	'label'						=> &$GLOBALS['TL_LANG']['tl_layout']['orderExternalJavascript'],
+//	'sql'						=> "blob NULL"
+//);
+//
 $GLOBALS['TL_DCA']['tl_layout']['fields']['loadDomainCSS'] = array
 (
 	'label'						=> &$GLOBALS['TL_LANG']['tl_layout']['loadDomainCSS'],
