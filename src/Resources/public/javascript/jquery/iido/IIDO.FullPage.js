@@ -10,8 +10,17 @@ IIDO.FullPage = IIDO.FullPage || {};
 
 (function (window, $, fullpage) {
 
-    var $viewFuncs = [], $leaveFuncs = [],
-        $viewAllFuncs = [], $leaveAllFuncs = [];
+    var $afterRenderFuncs = [],
+        $viewFuncs = [], $leaveFuncs = [],
+        $viewAllFuncs = [], $leaveAllFuncs = [],
+        $leaveSlideFuncs = [], $leaveSlideAllFuncs = [];
+
+
+    fullpage.addAfterRender = function(func)
+    {
+        $afterRenderFuncs.push( func );
+    };
+
 
 
     fullpage.addToLoadView = function(index, func)
@@ -58,7 +67,29 @@ IIDO.FullPage = IIDO.FullPage || {};
 
 
 
-    fullpage.runLoadSection = function(index, anchorLink)
+    fullpage.addToLeaveSlideView = function(index, func)
+    {
+        if (index in $leaveSlideFuncs)
+        {
+            $leaveSlideFuncs[ index ].push( func );
+        }
+        else
+        {
+            $leaveSlideFuncs[ index ] = [];
+            $leaveSlideFuncs[ index ].push( func );
+        }
+    };
+
+
+
+    fullpage.addLeaveSlideToAllViews = function(func)
+    {
+        $leaveSlideAllFuncs.push( func );
+    };
+
+
+
+    fullpage.runLoadSection = function(anchorLink, index)
     {
         if( index in $viewFuncs)
         {
@@ -71,11 +102,11 @@ IIDO.FullPage = IIDO.FullPage || {};
 
 
 
-    fullpage.runLoadSectionAll = function(anchorLink)
+    fullpage.runLoadSectionAll = function(anchorLink, index)
     {
         for(var i=0; i < $viewAllFuncs.length; i++)
         {
-            $viewAllFuncs[ i ](anchorLink);
+            $viewAllFuncs[ i ](index, anchorLink);
         }
     };
 
@@ -101,5 +132,35 @@ IIDO.FullPage = IIDO.FullPage || {};
             $leaveAllFuncs[ i ](index, nextIndex, direction);
         }
     };
+
+
+
+    fullpage.runLeaveSlide = function(index, slideIndex, nextSlideIndex, direction, anchorLink)
+    {
+        for(var i=0; i < $leaveSlideFuncs.length; i++)
+        {
+            $leaveSlideFuncs[ i ](index, slideIndex, nextSlideIndex, direction, anchorLink)
+        }
+    };
+
+
+
+    fullpage.runLeaveSlideAll = function(index, slideIndex, nextSlideIndex, direction, anchorLink)
+    {
+        for(var i=0; i < $leaveSlideAllFuncs.length; i++)
+        {
+            $leaveSlideAllFuncs[ i ](index, slideIndex, nextSlideIndex, direction, anchorLink)
+        }
+    };
+
+
+
+    fullpage.runAfterRender = function(anchorLink, index)
+    {
+        for(var i=0; i < $afterRenderFuncs.length; i++)
+        {
+            $afterRenderFuncs[ i ](index, anchorLink);
+        }
+    }
 
 })(window, jQuery, IIDO.FullPage); var huhu;

@@ -88,14 +88,43 @@ IIDO.Project = IIDO.Project || {};
                 projectTitle.classList.add("title");
                 projectTitle.innerHTML = objProjectData.title;
 
-                projectImageCounter.classList.add("image-counter");
-                projectImageCounter.innerHTML = '<span id="imageCount">1</span>/' + objImages.length;
 
-                projectImages.classList.add("images");
-                projectImages.append( IIDO.Project.renderImageGallery( arrImagesOrUrlOrId ) );
+                var imageGallery = IIDO.Project.renderImageGallery( arrImagesOrUrlOrId );
+
+                if( imageGallery )
+                {
+                    projectImageCounter.classList.add("image-counter");
+                    projectImageCounter.innerHTML = '<span id="imageCount">1</span>/' + objImages.length;
+
+                    projectImages.classList.add("images");
+                    projectImages.append( imageGallery );
+                }
+                else
+                {
+                    var projectImagesInside     = document.createElement("div"),
+                        projectImagesWrapper    = document.createElement("div");
+
+                    projectImages.classList.add("image-gallery-container");
+
+                    projectImagesInside.classList.add("image-gallery-inside");
+                    projectImagesWrapper.classList.add("image-gallery-wrapper");
+
+                    projectImagesInside.append( projectImagesWrapper );
+                    projectImages.append( projectImagesInside );
+                }
 
                 projectText.classList.add("text");
-                projectText.innerHTML = objProjectData.text;
+
+                var projectTextInside   = document.createElement("div"),
+                    projectTextWrapper  = document.createElement("div");
+
+                projectTextInside.classList.add("text-inside");
+                projectTextWrapper.classList.add("text-wrapper");
+
+                projectTextWrapper.innerHTML = objProjectData.text;
+
+                projectTextInside.append( projectTextWrapper );
+                projectText.append( projectTextInside );
 
                 projectClose.classList.add("close");
                 projectClose.innerHTML = 'zurück';
@@ -110,12 +139,27 @@ IIDO.Project = IIDO.Project || {};
                 });
 
                 projectDetailContainer.appendChild( projectTitle );
-                projectDetailContainer.appendChild( projectImageCounter );
-                projectDetailContainer.appendChild( projectImages );
+
+                if( imageGallery )
+                {
+                    projectDetailContainer.appendChild( projectImageCounter );
+                    projectDetailContainer.appendChild( projectImages );
+                }
+                else
+                {
+                    projectDetailContainer.appendChild( projectImages );
+                }
+
                 projectDetailContainer.appendChild( projectText );
                 projectDetailContainer.appendChild( projectClose );
 
-                document.body.appendChild( projectDetailContainer );
+                // document.body.appendChild( projectDetailContainer );
+                var cont = document.getElementById("projectItem_" + arrImagesOrUrlOrId);
+
+                if( cont )
+                {
+                    cont.parentNode.appendChild( projectDetailContainer );
+                }
 
                 document.documentElement.classList.add("locked");
 
@@ -186,8 +230,14 @@ IIDO.Project = IIDO.Project || {};
 
     project.renderImageGallery = function( projectID )
     {
-        var objImages       = IIDO.Project.getProjectImages( projectID ),
-            imageCont       = document.createElement("div"),
+        var objImages       = IIDO.Project.getProjectImages( projectID );
+
+        if( objImages.length === 0 || objImages.length === undefined || objImages.length === "undefined" || objImages.length === null)
+        {
+            return false;
+        }
+        
+        var imageCont       = document.createElement("div"),
             imageTagCont    = document.createElement("div"),
 
             imageContWrapper    = document.createElement("div"),

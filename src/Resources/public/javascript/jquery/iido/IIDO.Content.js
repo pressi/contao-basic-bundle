@@ -10,6 +10,9 @@ IIDO.Content = IIDO.Content || {};
 
 (function (window, $, content)
 {
+    var $scrollContainer;
+
+
     content.init = function()
     {
         this.initStyleGuide();
@@ -153,6 +156,43 @@ IIDO.Content = IIDO.Content || {};
             });
 
         }
+    };
+
+
+
+    content.scrollContainer = function( direction, container )
+    {
+        if( container === "undefined" || container === undefined || container === null)
+        {
+            container = $scrollContainer;
+        }
+
+        if( container !== "undefined" && container !== undefined && container !== null)
+        {
+            var scrollTopNum        = 0,
+                contHeight          = container.children[0].clientHeight,
+                mainHeight          = container.clientHeight;
+
+            if( direction === "up" )
+            {
+                scrollTopNum = (mainHeight - contHeight);
+            }
+
+            var animationTime = ((2200 / contHeight) * (mainHeight - contHeight));
+
+            $(container).animate({
+                scrollTop: scrollTopNum
+            }, animationTime);
+
+            $scrollContainer = container;
+        }
+    };
+
+
+
+    content.stopScrollContainer = function()
+    {
+        $($scrollContainer).stop();
     };
 
 })(window, jQuery, IIDO.Content);

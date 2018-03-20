@@ -37,7 +37,7 @@ IIDO.Filter = IIDO.Filter || {};
                     layoutMode: 'masonry',
                     percentPosition: true,
                     masonry: {
-                        columnWidth: (filterContainer.width() / 4)
+                        columnWidth: (filterContainer.width() / 6)
                     }
                 });
 
@@ -148,6 +148,21 @@ IIDO.Filter = IIDO.Filter || {};
         //         }
         //     });
         // });
+
+        if( filterList.length && filterList.hasClass("open-on-click") )
+        {
+            filterList.find(".filter .label").click( function()
+            {
+                if( $(this).parent().hasClass("open") )
+                {
+                    $(this).parent().removeClass("open");
+                }
+                else
+                {
+                    $(this).parent().addClass("open");
+                }
+            });
+        }
     };
 
 

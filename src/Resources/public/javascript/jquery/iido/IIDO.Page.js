@@ -474,27 +474,27 @@ IIDO.Page = IIDO.Page || {};
 
                     /*Scrolling*/
                     css3                                : true,
-                    scrollingSpeed                      : 1000,
+                    scrollingSpeed                      : 800,
                     /*scrollDelay                         : 600,*/
                     //autoScrolling                       : true,
                     //fitToSection                        : true,
                     //fitToSectionDelay                   : 600,
                     //scrollBar                           : false,
-                    //easing                              : 'easeInQuart',
-                    //easingcss3                          : 'ease',
+                    // easing                              : 'linear', //'easeInQuart',
+                    // easingcss3                          : 'linear', //'ease',
                     //loopBottom                          : false,
                     //loopTop                             : false,
-                    //loopHorizontal                      : false,
+                    loopHorizontal                      : false,
                     //continuousVertical: false,
-                    //continuousHorizontal: false,
-                    //scrollHorizontally: false,
+                    continuousHorizontal                : false,
+                    scrollHorizontally                  : false, // extension
                     //interlockedSlides: false,
                     //dragAndMove: false,
                     //offsetSections: false,
                     //resetSliders: false,
                     //fadingEffect: false,
                     /*/ normalScrollElements: '#element1, .element2',*/
-                    scrollOverflow: true,
+                    scrollOverflow: false,
                     //scrollOverflowReset: false,
                     scrollOverflowOptions:
                     {
@@ -541,7 +541,7 @@ IIDO.Page = IIDO.Page || {};
                     afterLoad: function(anchorLink, index)
                     {
                         IIDO.FullPage.runLoadSection(index, anchorLink);
-                        IIDO.FullPage.runLoadSectionAll(anchorLink);
+                        IIDO.FullPage.runLoadSectionAll(index, anchorLink);
 
                         var articleTag = document.querySelector('.mod_article[data-alias="' + anchorLink + '"]');
 
@@ -575,6 +575,12 @@ IIDO.Page = IIDO.Page || {};
                                 }
                             }
                         }
+                    },
+
+                    onSlideLeave: function(anchorLink, index, slideIndex, direction, nextSlideIndex)
+                    {
+                        IIDO.FullPage.runLeaveSlide(index, slideIndex, nextSlideIndex, direction, anchorLink);
+                        IIDO.FullPage.runLeaveSlideAll(index, slideIndex, nextSlideIndex, direction, anchorLink);
                     }
                 }
             );
@@ -583,7 +589,7 @@ IIDO.Page = IIDO.Page || {};
 
             if( !logoLink )
             {
-                logoLink = document.querySelector("header .logo");
+                logoLink = document.querySelector("header .logo img");
             }
 
             if( logoLink )
@@ -591,9 +597,10 @@ IIDO.Page = IIDO.Page || {};
                 logoLink.addEventListener("click", function(e) { e.preventDefault(); IIDO.Page.goToSection(1);  });
             }
 
-            var nextLinks = document.querySelectorAll(".scroll-to-next-page"),
-                pageLinks = document.querySelectorAll(".scroll-to-section-page"),
-                goToSection = document.querySelectorAll("a.go-to-section");
+            var nextLinks           = document.querySelectorAll(".scroll-to-next-page"),
+                nextSectionLinks    = document.querySelectorAll(".scroll-to-next-section"),
+                pageLinks           = document.querySelectorAll(".scroll-to-section-page"),
+                goToSection         = document.querySelectorAll("a.go-to-section");
 
             if( nextLinks.length )
             {
@@ -608,6 +615,21 @@ IIDO.Page = IIDO.Page || {};
                         $.fn.fullpage.moveSectionDown();
 
                         return false;
+                    });
+                }
+            }
+
+            if( nextSectionLinks.length )
+            {
+                for( var ni=0; ni<nextSectionLinks.length; ni++)
+                {
+                    var nextSectionLink = nextSectionLinks[ ni ];
+
+                    nextSectionLink.addEventListener("click", function(e)
+                    {
+                        e.preventDefault();
+
+                        $.fn.fullpage.moveSlideRight();
                     });
                 }
             }
@@ -657,7 +679,7 @@ IIDO.Page = IIDO.Page || {};
 
     page.goToSection = function( sectionIndex )
     {
-        $.fn.fullpage.moveTo( sectionIndex );
+        $.fn.fullpage.moveTo( sectionIndex, 0 );
 
         return false;
     };
