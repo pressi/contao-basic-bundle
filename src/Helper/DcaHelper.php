@@ -331,10 +331,10 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function copyField($fieldName, $strTable, $fromFieldName)
+    public static function copyField($fieldName, $strTable, $fromFieldName, $langTable = '')
     {
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]                   = $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fromFieldName ];
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']          = self::renderFieldLabel($strTable, '', $fieldName); //&$GLOBALS['TL_LANG'][ $strTable ][ $fieldName ];
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']          = self::renderFieldLabel($strTable, $langTable, $fieldName); //&$GLOBALS['TL_LANG'][ $strTable ][ $fieldName ];
     }
 
 

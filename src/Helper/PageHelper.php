@@ -42,14 +42,14 @@ class PageHelper
             $objSearchPage = $db->prepare("SELECT * FROM tl_page WHERE id=?")->limit(1)->execute( $objPageId );
         }
 
-        if( $objSearchPage )
+        if( $objSearchPage && $objSearchPage->pid > 0)
         {
 //            $objParentPage = \PageModel::findByPk( $objSearchPage->pid );
             $objParentPage = $db->prepare("SELECT * FROM tl_page WHERE id=?")->limit(1)->execute( $objSearchPage->pid );
 
             if( $objParentPage )
             {
-                if( !$objParentPage->addPageLoader && $objParentPage->pid > 0 )
+                if( !$objParentPage->addPageLoader )
                 {
                     return self::checkIfParentPagesHasPageLoader( $objParentPage );
                 }
@@ -62,5 +62,35 @@ class PageHelper
         }
 
         return false;
+    }
+
+
+
+    public static function isFullPageEnabled( \PageModel $objPage = NULL, \LayoutModel $objLayout = NULL )
+    {
+        $fullpage = false;
+
+        if( $objPage == NULL )
+        {
+            global $objPage;
+        }
+
+        if( $objPage->enableFullpage )
+        {
+            $fullpage = true;
+        }
+
+        if( !$fullpage )
+        {
+            $objLayout  = (($objLayout != NULL) ? $objLayout : BasicHelper::getPageLayout( $objPage ));
+            $strClass   = trim($objPage->cssClass) . " " . trim($objLayout->cssClass);
+
+            if( preg_match("/enable-fullpage/", $strClass) )
+            {
+                $fullpage = true;
+            }
+        }
+
+        return $fullpage;
     }
 }

@@ -33,4 +33,16 @@ class Message
 
         return $objTemplate->parse();
     }
+
+
+
+    public static function renderWidthTitle( $strTitle, $strMessage, $strMode )
+    {
+        $objTemplate = new \FrontendTemplate( self::$strTemplate );
+
+        $objTemplate->class     = $strMode;
+        $objTemplate->message   = '<strong>' . $strTitle . '</strong><br>' . $strMessage;
+
+        return $objTemplate->parse();
+    }
 }

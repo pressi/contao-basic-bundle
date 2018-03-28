@@ -241,4 +241,11 @@ class ImageHelper extends \Backend
         return false;
     }
 
+
+
+    public static function renderImagePath( $strPath )
+    {
+        return preg_replace('/ /', '%20', $strPath);
+    }
+
 }

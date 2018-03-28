@@ -570,6 +570,13 @@ class StylesheetHelper
 
 
 
+    public static function addMasterStylesheet( $stylesheetName )
+    {
+        $GLOBALS['TL_USER_CSS'][ $stylesheetName ] = 'files/master/css/' . $stylesheetName . '.css' . self::getStylesheetMode();
+    }
+
+
+
     public static function getStylesheetSource( $scriptName, $public = false )
     {
         $strPath        = BundleConfig::getBundlePath() . self::$stylesheetPath;
