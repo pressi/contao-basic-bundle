@@ -136,7 +136,7 @@ foreach($GLOBALS['TL_DCA'][ $strTableName ]['palettes'] as $strPalette => $strFi
         $strFields      = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend', $strFields);
     }
 
-    if( \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
+    if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
     {
         $strFields = str_replace(',addPageLoader', ',removePageLoader', $strFields);
     }

@@ -73,11 +73,11 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('design_legend', 'dimensions_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
     ->addLegend('navigation_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
     ->addLegend('animation_legend', 'expert_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
-    ->addLegend('divider_legend', 'animation_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
+    ->addLegend('divider_legend', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
 
 
     ->addField(array('fullHeight', 'fullWidth'), 'dimensions_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
-    ->addField(array('addBackgroundImage', 'addBackgroundOverlay', 'addBackgroundVideo'), 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+    ->addField(array('bgColor', 'gradientAngle', 'gradientColors', 'addBackgroundImage', 'addBackgroundOverlay', 'addBackgroundVideo'), 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
     ->addField(array('hideInMenu', 'overviewImage', 'navLinkMode'), 'navigation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
 
     ->addField(array('articleType', 'navTitle', 'navSubTitle'), 'title', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
@@ -149,7 +149,7 @@ if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articl
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("fullHeight", "opticalHeight,textMiddle", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("textMiddle", "textMiddleOptical", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("fullWidth", "fullWidthInside", $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addBackgroundImage", array('bgColor', 'bgImage', 'bgPosition', 'bgRepeat', 'gradientAngle', 'gradientColors', 'bgAttachment', 'bgSize', 'enableBackgroundParallax'), $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addBackgroundImage", array('bgImage', 'bgPosition', 'bgRepeat', 'bgAttachment', 'bgSize', 'enableBackgroundParallax'), $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addBackgroundVideo", "videoSRC,posterSRC", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuSRC_news", "submenuNewsArchive", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("isFixed", "position,articleWidth,articleHeight", $strFileName);
@@ -186,7 +186,8 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['title']['eval']['tl_class'] = trim
 
 
 // Design Legend
-\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundImage", $strFileName, 'fullHeight');
+//\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundImage", $strFileName, 'fullHeight');
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("addBackgroundImage", $strFileName, array(), 'clr no-clr-after', false, true);
 
 \IIDO\BasicBundle\Helper\DcaHelper::addImageField("bgImage", $strFileName, array('mandatory'=>true));
 \IIDO\BasicBundle\Helper\DcaHelper::addColorField("bgColor", $strFileName, array(), 'no-clr-after-clr');
@@ -200,8 +201,10 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['title']['eval']['tl_class'] = trim
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("enableBackgroundParallax", $strFileName, array(), 'clr');
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundVideo", $strFileName, 'fullHeight');
-\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundOverlay", $strFileName, 'fullHeight');
+//\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundVideo", $strFileName, 'fullHeight');
+//\IIDO\BasicBundle\Helper\DcaHelper::copyField("addBackgroundOverlay", $strFileName, 'fullHeight');
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("addBackgroundVideo", $strFileName, array(), 'clr no-clr-after', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("addBackgroundOverlay", $strFileName, array(), 'clr no-clr-after', false, true);
 
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['videoSRC'] = array
@@ -266,4 +269,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['videoSRC'] = array
 
 
 // Divider Legend
+//\IIDO\BasicBundle\Helper\DcaHelper::copyField("addDivider", $strFileName, 'fullHeight');
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("addDivider", $strFileName, array(), 'clr no-clr-after', false, true);
+
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField("dividerStyle", $strFileName);

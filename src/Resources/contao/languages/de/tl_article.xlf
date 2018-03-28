@@ -262,6 +262,18 @@
 
 
 
+            <trans-unit id="tl_article.addDivider.0">
+                <source>add divider</source>
+                <target>Trenner hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.dividerStyle.0">
+                <source>divider style</source>
+                <target>Trenner Style</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_article.background_legend">
@@ -494,19 +506,19 @@
             </trans-unit>
             <trans-unit id="tl_article.options.dividerStyle.style8">
                 <source>style8</source>
-                <target>Schräge Linie (von links nach rechts)</target>
+                <target>Schräge Linie (von links oben nach rechts unten)</target>
             </trans-unit>
             <trans-unit id="tl_article.options.dividerStyle.style9">
                 <source>style9</source>
-                <target>Schräge Linie (von links nach rechts, flacher)</target>
+                <target>Schräge Linie (von links oben nach rechts unten, flacher)</target>
             </trans-unit>
             <trans-unit id="tl_article.options.dividerStyle.style10">
                 <source>style10</source>
-                <target>Schräge Linie (von rechts nach links)</target>
+                <target>Schräge Linie (von rechts oben nach links unten)</target>
             </trans-unit>
             <trans-unit id="tl_article.options.dividerStyle.style11">
                 <source>style11</source>
-                <target>Schräge Linie (von rechts nach links, flacher)</target>
+                <target>Schräge Linie (von rechts oben nach links unten, flacher)</target>
             </trans-unit>
 
 
