@@ -31,7 +31,7 @@ class BundleConfig
      * @param bool $includeListener
      *
      * @return array
-     * @TODO custom return oder?!
+     * @TODO custom return order?!
      */
     public static function getBundleConfigArray( $includeListener = true )
     {
