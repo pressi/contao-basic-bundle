@@ -11,6 +11,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 
 use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\PageHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\StylesheetHelper;
@@ -101,6 +102,20 @@ class PageListener extends DefaultListener
         if( $footerMode )
         {
             $GLOBALS['TL_CSS']['footer'] = $this->bundlePathPublic . '/css/footer.css||static';
+        }
+
+        $objArticles = \ArticleModel::findBy(array('pid=?', 'published=?'), array($objPage->id, "1") );
+
+        if( $objArticles )
+        {
+            while( $objArticles->next() )
+            {
+                if( $objArticles->addDivider )
+                {
+                    StylesheetHelper::addMasterStylesheet("article-divider");
+                    break;
+                }
+            }
         }
 
 
@@ -496,6 +511,9 @@ class PageListener extends DefaultListener
 
                 if( $objArticles )
                 {
+                    $count      = $objArticles->count();
+                    $zIndex     = 100 + (10 * $count);
+
                     while( $objArticles->next() )
                     {
                         if( !$objArticles->published )
@@ -530,27 +548,119 @@ class PageListener extends DefaultListener
 //                            $strImage = $objImage->path;
 //                        }
 
-                        $addContainer = '';
+                        $addContainer   = '';
+                        $articleID      = (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]);
+                        $artBgName      = $objArticles->id . '_background';
 
                         if( preg_match('/bg-in-container/', $cssID[1]) )
                         {
                             $addContainer = ' .background-container';
                         }
 
-                        $arrPageStyles[ $objArticles->id ] = array
-                        (
-                            'selector'          => '#container .mod_article#' . (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]) . $addContainer,
+                        if( $objArticles->addDivider )
+                        {
+                            $addContainer = ' .article-inside';
+                        }
 
-//                            'background'        => TRUE,
-//                            'bgcolor'           => $objArticles->bgColor,
-//                            'bgimage'           => $strImage,
-//                            'bgrepeat'          => $objArticles->bgRepeat,
-//                            'bgposition'        => $objArticles->bgPosition,
-//                            'gradientAngle'     => $objArticles->gradientAngle,
-//                            'gradientColors'    => $objArticles->gradientColors
+                        $arrPageStyles[ $artBgName ] = array
+                        (
+                            'selector'          => '#container .mod_article#' . $articleID . $addContainer
                         );
 
-                        $arrPageStyles[ $objArticles->id ] = array_merge($arrPageStyles[ $objArticles->id ], StylesheetHelper::getBackgroundStyles($objArticles->current()));
+                        $arrPageStyles[ $artBgName ] = array_merge($arrPageStyles[ $artBgName ], StylesheetHelper::getBackgroundStyles($objArticles->current()));
+
+
+                        if( $objArticles->addDivider )
+                        {
+                            $arrPageStyles[ $artBgName . '_article' ] = array
+                            (
+                                'selector'  => '#container .mod_article#' . $articleID,
+                                'own'       => $arrPageStyles[ $artBgName . '_article' ]['own'] . 'z-index:' . $zIndex . ';'
+                            );
+
+                            $bgColor = ColorHelper::compileColor( \StringUtil::deserialize($objArticles->bgColor, TRUE) );
+
+                            switch( $objArticles->dividerStyle )
+                            {
+                                case "style1":
+                                    $arrPageStyles[ $objArticles->id . '_arrow-left' ]  = array
+                                    (
+                                        'selector'  => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                        'own'       => 'background:linear-gradient(to left bottom, ' . $bgColor . ' 50%, transparent 50%);'
+                                    );
+
+                                    $arrPageStyles[ $objArticles->id . '_arrow-right' ] = array
+                                    (
+                                        'selector'  => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                        'own'       => 'background:linear-gradient(to right bottom, ' . $bgColor . ' 50%, transparent 50%);'
+                                    );
+                                    break;
+
+                                case "style2":
+                                    $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticles->pid, $objArticles->inColumn, $objArticles->sorting));
+
+                                    $arrPageStyles[ $objArticles->id . '_bow-bottom_background' ] = array
+                                    (
+                                        'selector'      => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                        'background'    => '1',
+                                        'bgcolor'       => $objArticles->bgColor
+                                    );
+
+                                    $arrPageStyles[ $objArticles->id . '_bow-bottom' ] = array
+                                    (
+                                        'selector'      => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                        'background'    => '1',
+                                        'bgcolor'       => $objNextArticle->bgColor
+                                    );
+                                    break;
+
+                                case "style3":
+                                    $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticles->pid, $objArticles->inColumn, $objArticles->sorting));
+
+                                    $arrPageStyles[ $objArticles->id . '_bow-bottom-top_background' ] = array
+                                    (
+                                        'selector'      => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                        'background'    => '1',
+                                        'bgcolor'       => $objNextArticle->bgColor
+                                    );
+
+                                    $arrPageStyles[ $objArticles->id . '_bow-bottom-top' ] = array
+                                    (
+                                        'selector'      => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                        'background'    => '1',
+                                        'bgcolor'       => $objArticles->bgColor
+                                    );
+                                    break;
+
+                                case "style4":
+                                case "style5":
+                                    $arrPageStyles[ $objArticles->id . '_arrow-bottom' ] = array
+                                    (
+                                        'selector'  => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                        'own'       => 'border-top-color:' . $bgColor . ';'
+                                    );
+                                    break;
+
+                                case "style6":
+                                    $arrPageStyles[ $objArticles->id . '_bows-bottom' ] = array
+                                    (
+                                        'selector'  => '.mod_article.has-article-divider#' . $articleID . ':before,.mod_article.has-article-divider#' . $articleID . ':after',
+                                        'own'       => 'border-color:' . $bgColor . ';'
+                                    );
+                                    break;
+
+                                case "style7":
+                                    $arrPageStyles[ $objArticles->id . '_clouds_background' ] = array
+                                    (
+                                        'selector'      => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                        'background'    => '1',
+                                        'bgcolor'       => $objArticles->bgColor
+                                    );
+                                    break;
+                            }
+
+//                            echo "<pre>"; print_r( $arrPageStyles ); exit;
+                        }
 
 //                        $bgColor        = deserialize($objArticles->bgColor, TRUE);
 //                        $arrOwnStyles   = array();
@@ -566,6 +676,8 @@ class PageListener extends DefaultListener
 //                        $arrPageStyles[ $objArticles->id ]['fontcolor'] = serialize(array('fff', ''));
 //                    }
 //                }
+
+                        $zIndex = ($zIndex - 10);
                     }
                 }
 //            }
