@@ -260,6 +260,16 @@
                 <target>Füge den Titel des nächsten Artikel zum Pfeil/Button</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.toNextArrowFixed.0">
+                <source>add to next area arrow</source>
+                <target>Pfeil/Button Fixiert</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.toNextArrowPosition.0">
+                <source>add to next area arrow</source>
+                <target>Pfeil/Button Position</target>
+            </trans-unit>
+
 
 
             <trans-unit id="tl_article.addDivider.0">
@@ -520,6 +530,48 @@
                 <source>style11</source>
                 <target>Schräge Linie (von rechts oben nach links unten, flacher)</target>
             </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.toNextArrowPosition.left-top">
+                <source>top left</source>
+                <target>Oben Links</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowPosition.center-top">
+                <source>top left</source>
+                <target>Oben Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowPosition.right-top">
+                <source>top left</source>
+                <target>Oben Rechts</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.options.toNextArrowPosition.left-center">
+                <source>top left</source>
+                <target>Mitte Links</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowPosition.center-center">
+                <source>top left</source>
+                <target>Mitte Mitte (Zentriert)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowPosition.right-center">
+                <source>top left</source>
+                <target>Mitte Rechts</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.options.toNextArrowPosition.left-bottom">
+                <source>top left</source>
+                <target>Unten Links</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowPosition.center-bottom">
+                <source>top left</source>
+                <target>Unten Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.toNextArrowPosition.right-bottom">
+                <source>top left</source>
+                <target>Unten Rechts</target>
+            </trans-unit>
+
 
 
         </body>

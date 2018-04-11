@@ -30,6 +30,42 @@
                 <target>Wetter</target>
             </trans-unit>
 
+            <trans-unit id="CTE.iido_imprint.0">
+                <source>Imprint</source>
+                <target>Impressum / Datenschutz</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_wrapper">
+                <source>HTML container</source>
+                <target>HTML-Container</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_wrapperStart.0">
+                <source>start</source>
+                <target>Anfang</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_wrapperSeparator.0">
+                <source>separator</source>
+                <target>Trenner</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_wrapperStop.0">
+                <source>end</source>
+                <target>Ende</target>
+            </trans-unit>
+
+
+            <trans-unit id="CTE.news">
+                <source>News</source>
+                <target>Nachrichten</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.newslist.0">
+                <source>Newslist</source>
+                <target>Nachrichtenliste</target>
+            </trans-unit>
+
 
 
 <!-- ### PAGE TYPES ######################################################################################################### -->
