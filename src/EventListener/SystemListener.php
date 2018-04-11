@@ -12,6 +12,8 @@ namespace IIDO\BasicBundle\EventListener;
 
 use Contao\System;
 use Contao\Config;
+use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\BasicHelper;
 
 
 /**
@@ -41,28 +43,9 @@ class SystemListener extends DefaultListener
 //                if( $this->isBackendScope() && 'contao_backend' === $route && 'contao_install' != $route )
                 if( 'contao_backend' === $route && 'contao_install' != $route )
                 {
-//                    $this->initSystem();
                     $this->initBackend();
 //                    $this->runImport();
                 }
-            }
-        }
-    }
-
-
-
-    /**
-     * initialize system
-     *
-     * TODO: no more in use??!
-     */
-    protected function initSystem()
-    {
-        if( !Config::get("iido_initSystem") )
-        {
-            if( !\Input::get("do") == "iidoConfigContao" )
-            {
-                \Controller::redirect( \Controller::addToUrl("do=iidoConfigContao") );
             }
         }
     }
@@ -134,7 +117,8 @@ class SystemListener extends DefaultListener
 
     protected function generateErrorFiles( $arrFiles )
     {
-        $rootDir            = dirname(System::getContainer()->getParameter('kernel.root_dir'));
+        $rootDir    = BasicHelper::getRootDir();
+        $bundlePath = BundleConfig::getBundlePath();
 
         if( count($arrFiles) )
         {
@@ -174,9 +158,9 @@ class SystemListener extends DefaultListener
             {
                 if( !file_exists($rootDir . $this->resourcePath . '/ContaoCoreBundle/views/Error/' . $strFile . '.html.twig') )
                 {
-                    if( file_exists($rootDir . '/vendor/2do/contao-basic-bundle/Resources/views/Error/' . $strFile . '.html.twig') )
+                    if( file_exists($rootDir . '/' . $bundlePath . '/Resources/views/Error/' . $strFile . '.html.twig') )
                     {
-                        copy($rootDir . '/vendor/2do/contao-basic-bundle/Resources/views/Error/' . $strFile . '.html.twig', $rootDir . $this->resourcePath . '/ContaoCoreBundle/views/Error/' . $strFile . '.html.twig');
+                        copy($rootDir . '/' . $bundlePath . '/Resources/views/Error/' . $strFile . '.html.twig', $rootDir . $this->resourcePath . '/ContaoCoreBundle/views/Error/' . $strFile . '.html.twig');
                     }
                 }
             }

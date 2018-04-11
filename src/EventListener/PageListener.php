@@ -436,11 +436,11 @@ class PageListener extends DefaultListener
             $modSearch  = ''; //\Controller::getFrontendModule( 10 );
             $modNavi    = ''; //\Controller::getFrontendModule( $objNavModule->id ); // 11
 
-            $objArticle = \ArticleModel::findByAlias('ge_mobile-menu_' . $objRootPage->alias . '_' . $objPage->language);
+            $objArticle = \ArticleModel::findByAlias('ge_mobile-menu_' . $objRootPage->alias );
 
             if( $objArticle )
             {
-                $modNavi = \Controller::replaceInsertTags('{{insert_article::ge_mobile-menu_' . $objRootPage->alias . '_' . $objPage->language . '}}');
+                $modNavi = \Controller::replaceInsertTags('{{insert_article::ge_mobile-menu_' . $objRootPage->alias . '}}');
             }
             else
             {
@@ -660,6 +660,33 @@ class PageListener extends DefaultListener
                             }
 
 //                            echo "<pre>"; print_r( $arrPageStyles ); exit;
+                        }
+
+                        if( $objArticles->toNextArrow )
+                        {
+                            $strArrowColor      = ColorHelper::compileColor( \StringUtil::deserialize($objArticles->toNextArrowColor, TRUE) );
+
+                            if( $strArrowColor !== "transparent" )
+                            {
+                                $arrPageStyles[ $objArticles->id . '_next-arrow' ] = array
+                                (
+                                    'selector'      => '.mod_article#' . $articleID . ' .arrow .arrow-inside-container:before,.mod_article#' . $articleID . ' .arrow .arrow-inside-container:after',
+                                    'background'    => '1',
+                                    'bgcolor'       => $objArticles->toNextArrowColor
+                                );
+                            }
+
+                            $strArrowHoverColor     = ColorHelper::compileColor( \StringUtil::deserialize($objArticles->toNextArrowHoverColor, TRUE) );
+
+                            if( $strArrowHoverColor !== "transparent" )
+                            {
+                                $arrPageStyles[ $objArticles->id . '_next-arrow-hover' ] = array
+                                (
+                                    'selector'      => '.mod_article#' . $articleID . ' .arrow:hover .arrow-inside-container:before,.mod_article#' . $articleID . ' .arrow:hover .arrow-inside-container:after',
+                                    'background'    => '1',
+                                    'bgcolor'       => $objArticles->toNextArrowHoverColor
+                                );
+                            }
                         }
 
 //                        $bgColor        = deserialize($objArticles->bgColor, TRUE);

@@ -101,7 +101,73 @@ class InsertTagsListener extends DefaultListener
                     case "date":
                         if( isset($arrSplit[2]) )
                         {
-                            $return = (( isset($arrSplit[3]) ) ? date($arrSplit[2], $arrSplit[3]) : date($arrSplit[2]) );
+                            $dateFormat = $arrSplit[2];
+
+                            if( preg_match('/\+/', $dateFormat) )
+                            {
+                                $isSourceTime   = isset($arrSplit[3]);
+                                $sourceTime     = $arrSplit[3];
+
+                                $arrMode    = preg_split("/\+/", $dateFormat);
+                                $isMode     = false;
+
+                                $nextMonth  = false;
+
+                                foreach($arrMode as $key => $value)
+                                {
+                                    if( $isMode )
+                                    {
+                                        preg_match('/^([0-9]{1,})/', $value, $arrModeMatches);
+
+                                        $strValue   = preg_replace('/^([0-9]{1,})/', '', $value);
+                                        $isMode     = false;
+
+                                        $format     = $arrMode[ ($key - 1) ];
+                                        $strReturn  = ($isSourceTime ? date($format, $sourceTime) : date($format));
+                                        $strReturn  = ((int) $strReturn + (int) $arrModeMatches[1]);
+
+                                        if( $format === "d" )
+                                        {
+                                            $monthDays = date("t");
+
+                                            if( $strReturn > $monthDays )
+                                            {
+                                                $strReturn = ($strReturn - $monthDays);
+
+                                                $nextMonth = true;
+                                            }
+
+                                            if( strlen($strReturn) === 1)
+                                            {
+                                                $strReturn = '0' . $strReturn;
+                                            }
+                                        }
+
+                                        if( $nextMonth && preg_match('/m/', $strValue) )
+                                        {
+                                            $strMonth = ($isSourceTime ? date("m", $sourceTime) : date("m"));
+                                            $strMonth = ((int) $strMonth + 1);
+
+                                            if( strlen($strMonth) === 1 )
+                                            {
+                                                $strMonth = '0' . $strMonth;
+                                            }
+
+                                            $strValue = preg_replace('/m/', $strMonth, $strValue);
+                                        }
+
+                                        $return .= $strReturn . ($isSourceTime ? date($strValue, $sourceTime) : date($strValue));
+                                    }
+                                    else
+                                    {
+                                        $isMode = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                $return = (( isset($arrSplit[3]) ) ? date($dateFormat, $arrSplit[3]) : date($dateFormat) );
+                            }
                         }
                         else
                         {
@@ -147,13 +213,18 @@ class InsertTagsListener extends DefaultListener
                         $strHref    = \Controller::replaceInsertTags( $arrSplit[2] );
                         $strTarget  = (($arrSplit[3])? ' target="_' . $arrSplit[3] . '"' : '');
 
-                        if( $strHref == "close" || $strHref == "end" || $arrSplit == "link_close" )
+                        if( $strHref == "close" || $strHref == "end" || $arrSplit[1] === "link_close" )
                         {
                             $return = '</a>';
                         }
                         else
                         {
                             $return = '<a href="' . $strHref . '"' .$strTarget . '>';
+                        }
+
+                        if( $arrSplit[2] === "void" )
+                        {
+                            $return = 'javascrpt:void(0)';
                         }
 
                         break;

@@ -28,11 +28,13 @@ class ContentListener extends DefaultListener
     (
         'sliderStart',
         'slick-content-start',
-//        'slick-slide-separator'
+        'slick-slide-separator',
 
         'iido_wrapperStart',
         'iido_wrapperStop',
-        'iido_wrapperSeparator'
+        'iido_wrapperSeparator',
+
+        'rocksolid_slider'
     );
 
 
@@ -61,7 +63,16 @@ class ContentListener extends DefaultListener
 
         $arrElementClasses = array();
 
-//        if( $objRow->type == "module" )
+        if( $objRow->type === "alias" )
+        {
+            $rowClasses = $objRow->classes[0];
+
+            $objRow = \ContentModel::findByPk ( $objRow->cteAlias );
+
+            $strBuffer = $this->addClassToContentElement($strBuffer, $objRow, explode(" ", $rowClasses) );
+        }
+
+//        if( $objRow->type === "module" )
 //        {
 //            $objModule = \ModuleModel::findByPk( $objRow->module );
 //
@@ -123,6 +134,12 @@ class ContentListener extends DefaultListener
                 {
                     $strBuffer = Helper::generateImageHoverTags( $strBuffer, $objRow );
                 }
+
+                if( preg_match('/add-image-sizer/', $cssID[1]) )
+                {
+                    $strBuffer = preg_replace('/<figure([A-Za-z0-9\s\-_,;.:\/\\="]{0,})class="image_container([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-_,;.:\/\\="]{0,})>/', '<figure$1class="image_container$2"$3><div class="image-figure-inside">', $strBuffer);
+                    $strBuffer = preg_replace('/<\/figure>/', '</div><div class="image-sizer"></div></figure>', $strBuffer);
+                }
             }
 
             if( preg_match('/first-p-big/', $cssID[1]) && preg_match('/add-first-p-big-divider/', $cssID[1]))
@@ -148,6 +165,24 @@ class ContentListener extends DefaultListener
                 }
             }
 
+            if( preg_match('/text-middle/', $cssID[1]) )
+            {
+                $attrMatcher    = '([A-Za-z0-9\s\-_="\(\)\{\}:;\/]{0,})';
+                $classMatcher   = '([A-Za-z0-9\s\-\{\}_:;]{0,})';
+
+                $toReplaceTag   = '/<div' . $attrMatcher . 'class="' . $elementClass . $classMatcher . '"' . $attrMatcher . '>/';
+                $replaceTag     = '<div$1class="' . $elementClass . '$2"$3>';
+
+                if( $objRow->addImage )
+                {
+                    $toReplaceTag   = '/<\/figure>/';
+                    $replaceTag     = '</figure>';
+                }
+
+                $strBuffer = preg_replace($toReplaceTag, $replaceTag . '<div class="table-container"><div class="ctable"><div class="ctable-row"><div class="ctable-cell">', $strBuffer);
+                $strBuffer = $strBuffer . '</div></div></div></div>';
+            }
+
 //            $strBuffer = Helper::renderText($strBuffer);
         }
 
@@ -171,16 +206,6 @@ class ContentListener extends DefaultListener
 
                 $strBuffer      = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strBuffer);
             }
-
-//            echo "<pre>";
-//            print_r( $strBuffer );
-//            echo "<br>";
-//            print_r( $arrImageMatches );
-//            echo "<br>";
-//            print_r( $arrImages );
-//            echo "<br>";
-//            print_r( $objRow );
-//            exit;
         }
 
 
@@ -193,6 +218,9 @@ class ContentListener extends DefaultListener
             case "gallery":
                 $strBuffer = $this->renderGallery( $strBuffer, $objRow, $objElement );
                 break;
+
+            case "slick-slider":
+                $strBuffer = $this->renderSlickSliderImages( $strBuffer, $objRow, $objElement );
         }
 
         if( !in_array($objRow->type, $this->arrNotInsideClassElements) )
@@ -319,6 +347,11 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['top']) )
+                    {
+                        $useUnit = false;
+                    }
+
                     $strStyles .= " margin-top:" . $arrPosMargin['top'] . (($useUnit)?$unit:'') . ";";
 
                     $useUnit    = true;
@@ -327,6 +360,11 @@ class ContentListener extends DefaultListener
                 if( $arrPosMargin['right'] )
                 {
                     if( preg_match('/(' . implode('|', $GLOBALS['TL_CSS_UNITS']) . ')$/', $arrPosMargin['right']) )
+                    {
+                        $useUnit = false;
+                    }
+
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['right']) )
                     {
                         $useUnit = false;
                     }
@@ -343,6 +381,11 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['bottom']) )
+                    {
+                        $useUnit = false;
+                    }
+
                     $strStyles .= " margin-bottom:" . $arrPosMargin['bottom'] . (($useUnit)?$unit:'') . ";";
 
                     $useUnit    = true;
@@ -355,7 +398,7 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['left']) )
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['left']) )
                     {
                         $useUnit = false;
                     }
@@ -427,7 +470,6 @@ class ContentListener extends DefaultListener
         $headline       = $arrHeadline['value'];
 
         $strTopClass    = $strSubClass = ' unit-' . $unit;
-
 
         if( $objRow->addTopHeadline )
         {
@@ -521,9 +563,11 @@ class ContentListener extends DefaultListener
 
 
 
-    protected function renderHyperlink( $strContent, $objRow, $objElement )
+    protected function renderHyperlink( $strContent, $objRow, &$objElement )
     {
-        $arrClasses = array();
+        $arrClasses         = array();
+        $arrRemoveClasses   = array();
+        $cssID              = \StringUtil::deserialize( $objRow->cssID, true);
 
         if( $objRow->showAsButton )
         {
@@ -574,6 +618,18 @@ class ContentListener extends DefaultListener
                 break;
         }
 
+        if( preg_match_all('/atag-([A-Za-z0-9\-]{0,})/', $cssID[1], $arrClassMatches) )
+        {
+            foreach($arrClassMatches[1] as $strMatchClass)
+            {
+                $arrLinkClasses[] = $strMatchClass;
+
+//                $cssID[1] = str_replace($strMatchClass, '', $cssID[1]);
+//                $cssID[1] = preg_replace('/(\s{2,})/', ' ', $cssID[1]);
+                $arrRemoveClasses[] = 'atag-' . $strMatchClass;
+            }
+        }
+
         if( count($arrLinkClasses) )
         {
             $strContent = preg_replace('/class="hyperlink_txt/', 'class="hyperlink_txt ' . implode(' ', $arrLinkClasses), $strContent);
@@ -584,13 +640,14 @@ class ContentListener extends DefaultListener
 
         if( count($arrMatches[0]) )
         {
-            $strTitle   = trim(preg_replace('/;/', '', $arrMatches[2][0]));
+//            $strTitle   = trim(preg_replace('/;/', '', $arrMatches[2][0]));
 //            $strContent = preg_replace('/title="' . preg_quote($arrMatches[2][0], '/') . '"/', 'title="' . $strTitle . '"', $strContent);
             $strContent = preg_replace('/>' . preg_quote($arrMatches[2][0], '/') . '</', '>' . Helper::renderText($arrMatches[2][0], true). '<', $strContent);
 //            $strContent = preg_replace('/title="([A-Za-z0-9\s\-;,.:\{\}<>="]{0,})" rel="/', 'title="' . $strTitle . '" rel="', $strContent);
         }
 
         $strContent = $this->addClassToContentElement( $strContent, $objRow, $arrClasses );
+        $strContent = $this->removeClassFromContentElement( $strContent, $objRow, $arrRemoveClasses );
 
         return $strContent;
     }
@@ -606,15 +663,63 @@ class ContentListener extends DefaultListener
             $strContent = Helper::generateImageHoverTags( $strContent, $objRow );
         }
 
+        $arrImages = ImageHelper::getMultipleImages($objRow->multiSRC, $objRow->orderSRC);
+
+        preg_match_all('/<figure([A-Za-z0-9\s\-,;.:_\/\(\)\{\}="]{0,})>(.*?)<\/figure>/si', $strContent, $arrImageMatches);
+
+        foreach( $arrImageMatches[0] as $key => $strImageFigure)
+        {
+            $arrImage       = $arrImages[ $key ];
+            $strImageClass  = ($arrImage['meta']['cssClass'] ? ' ' : '') . $arrImage['meta']['cssClass'];
+
+            $newImageFigure = preg_replace('/class="image_container/', 'class="image_container' . $strImageClass, $strImageFigure);
+            $strContent     = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strContent);
+        }
+
         return $strContent;
+    }
+
+
+
+    protected function renderSlickSliderImages( $strBuffer, $objRow, $objElement )
+    {
+        if( preg_match('/data-lightbox/', $strBuffer) )
+        {
+            $strBuffer = preg_replace('/<\/a>([\s\n]{0,})<\/figure>/', '<div class="plus"></div></a></figure>', $strBuffer);
+        }
+
+        return $strBuffer;
     }
 
 
 
     protected function addClassToContentElement( $strContent, $objRow, array $arrClasses )
     {
-        $elementClass   = $this->getElementClass( $objRow );
-        $strContent     = preg_replace('/class="' . $elementClass . '/', 'class="' . $elementClass . ' ' . implode(" ", $arrClasses), $strContent);
+
+        if( count($arrClasses) )
+        {
+            $elementClass       = $this->getElementClass( $objRow );
+            $elementClassNew    = preg_replace('/(\s{2,})/', ' ', $elementClass);
+
+            $newElementClasses  = preg_replace('/(\s{2,})/', '', ' ' . implode(' ', $arrClasses));
+
+            $strContent     = preg_replace('/class="' . $elementClass . '/', 'class="' . trim($elementClassNew) . $newElementClasses, $strContent);
+        }
+
+        return $strContent;
+    }
+
+
+
+    protected function removeClassFromContentElement( $strContent, $objRow, array $arrClasses)
+    {
+
+        foreach($arrClasses as $strClass)
+        {
+            $strContent     = preg_replace('/ ' . preg_quote($strClass, '/') . '/', '', $strContent);
+        }
+
+//        $strContent     = preg_replace('/(\s{2,})/', ' ', $strContent);
 
         return $strContent;
     }
@@ -650,6 +755,11 @@ class ContentListener extends DefaultListener
             {
                 $elementClass = 'mod_' . $objModule->type;
             }
+        }
+
+        if( preg_match('/rocksolid/', $objRow->type) )
+        {
+            $elementClass = 'mod_' . $objRow->type;
         }
 
         if( $elementClass === "ce_alias" )
@@ -712,6 +822,12 @@ class ContentListener extends DefaultListener
                     {
                         $strClass       = 'boxes';
                         $strBoxClass    = ' no-padding';
+                    }
+
+                    if( preg_match('/is-multiline/', $cssID[1]))
+                    {
+                        $strClass       .= ' is-multiline';
+                        $strBoxClass    .= ' multiline-boxes';
                     }
 
                     $strBuffer = '<div class="box-container clr-after' . $strBoxClass . '"><div class="box-cont-inside"><div class="box-cont-wrapper ' . $strClass . '">' . $strBuffer;
