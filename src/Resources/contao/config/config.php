@@ -80,6 +80,8 @@ array_insert($GLOBALS['BE_MOD']['system'], 2, array
  * Content elements
  */
 
+$GLOBALS['TL_CTE']['news']['newslist']                      = '\ModuleNewsList';
+
 $GLOBALS['TL_CTE']['module']['iido_navigation']             = $ns . '\ContentElement\NavigationElement';
 $GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $ns . '\ContentElement\FilesFilterElement';
 $GLOBALS['TL_CTE']['module']['iido_detail']                 = $ns . '\ContentElement\DetailElement';
@@ -89,9 +91,9 @@ $GLOBALS['TL_CTE']['module']['iido_imprint']                = $ns . '\ContentEle
 //$GLOBALS['TL_CTE']['module']['iido_navigation']          = $ns . '\FrontendModule\NavigationModule';
 
 
-$GLOBALS['TL_CTE']['module']['iido_wrapperStart']           = $ns . '\ContentElement\WrapperStartElement';
-$GLOBALS['TL_CTE']['module']['iido_wrapperStop']            = $ns . '\ContentElement\WrapperStopElement';
-$GLOBALS['TL_CTE']['module']['iido_wrapperSeparator']       = $ns . '\ContentElement\WrapperSeparatorElement';
+$GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperStart']     = $ns . '\ContentElement\WrapperStartElement';
+$GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperSeparator'] = $ns . '\ContentElement\WrapperSeparatorElement';
+$GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperStop']      = $ns . '\ContentElement\WrapperStopElement';
 
 
 
@@ -160,6 +162,8 @@ $GLOBALS['TL_HOOKS']['getCombinedFile'][]                   = array($listenerNam
 //$GLOBALS['TL_HOOKS']['getForm'][]                           = array($listenerName . '.form', 'getCustomizeForm');
 $GLOBALS['TL_HOOKS']['loadFormField'][]                     = array($listenerName . '.form', 'loadCustomizeFormField');
 $GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerName . '.form', 'parseCustomizeWidget');
+
+$GLOBALS['TL_HOOKS']['parseArticles'][]                     = array($listenerName . '.news', 'parseCustomizeArticles');
 
 
 
