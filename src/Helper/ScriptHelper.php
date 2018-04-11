@@ -19,7 +19,7 @@ use IIDO\BasicBundle\Config\BundleConfig;
  */
 class ScriptHelper
 {
-    protected static $scriptPath        = '/src/Resources/public/javascript/';
+    protected static $scriptPath        = '/Resources/public/javascript/';
 
 
     protected static $scriptPathPublic  = '/javascript/';
@@ -77,6 +77,11 @@ class ScriptHelper
 
 
 
+    /**
+     * Check if current page has active isotope script
+     *
+     * @return boolean
+     */
     public static function hasPageIsotope()
     {
         global $objPage;
@@ -94,7 +99,10 @@ class ScriptHelper
 
 
     /**
+     * Add script
+     *
      * @param string|array $scriptName
+     * @param bool         $addStylesheet
      */
     public static function addScript( $scriptName, $addStylesheet = false )
     {
@@ -110,12 +118,12 @@ class ScriptHelper
                 $fileKey = $fileName;
             }
 
-            $filePath       = self::getScriptSource( $fileName, true );
+//            $filePath       = self::getScriptSource( $fileName, true );
             $filePathIntern = self::getScriptSource( $fileName );
 
             if( file_exists(BasicHelper::getRootDir( true ) . $filePathIntern) )
             {
-                $GLOBALS['TL_JAVASCRIPT'][ $fileKey ] = $filePath . self::getScriptMode();
+                $GLOBALS['TL_JAVASCRIPT'][ $fileKey ] = $filePathIntern . self::getScriptMode();
 
                 if( $addStylesheet )
                 {
@@ -127,6 +135,11 @@ class ScriptHelper
 
 
 
+    /**
+     * Add intern script
+     *
+     * @param string $scriptName
+     */
     public static function addInternScript( $scriptName )
     {
         $GLOBALS['TL_JAVASCRIPT']['iido_' . $scriptName ] = BundleConfig::getBundlePath( true ) . self::$scriptPathPublic . self::getActiveJavascriptLibrary() . '/iido/IIDO.' . ucfirst( $scriptName ) . '.js' . self::getScriptMode();
@@ -134,6 +147,12 @@ class ScriptHelper
 
 
 
+    /**
+     * Add source script
+     *
+     * @param string $scriptName
+     * @param string $sourceScriptName
+     */
     public static function addSourceScript( $scriptName, $sourceScriptName )
     {
         if( !is_array($sourceScriptName) )
@@ -160,6 +179,15 @@ class ScriptHelper
 
 
 
+    /**
+     * Get script source
+     *
+     * @param string $scriptName
+     * @param bool   $public
+     * @param bool   $withoutFile
+     *
+     * @return string
+     */
     public static function getScriptSource( $scriptName, $public = false, $withoutFile = false )
     {
         $strPath    = BundleConfig::getBundlePath() . self::$scriptPath;
@@ -167,7 +195,7 @@ class ScriptHelper
 
         if( !is_dir( $strPath . $subFolder . '/' . $scriptName) )
         {
-            $subFolder  = self::getActiveJavascriptLibrary();
+            $subFolder = self::getActiveJavascriptLibrary();
         }
 
         $folderVersion = self::getScriptVersion( $scriptName );
@@ -189,6 +217,13 @@ class ScriptHelper
 
 
 
+    /**
+     * Get script version
+     *
+     * @param string $scriptName
+     *
+     * @return mixed|null
+     */
     public static function getScriptVersion( $scriptName )
     {
         $tableFieldPrefix = BundleConfig::getTableFieldPrefix();
@@ -197,6 +232,11 @@ class ScriptHelper
 
 
 
+    /**
+     * Get active javascript library
+     *
+     * @return bool|string
+     */
     public static function getActiveJavascriptLibrary()
     {
         global $objPage;
@@ -221,6 +261,11 @@ class ScriptHelper
 
 
 
+    /**
+     * Get Script Mode
+     *
+     * @return string
+     */
     public static function getScriptMode()
     {
         global $objPage;

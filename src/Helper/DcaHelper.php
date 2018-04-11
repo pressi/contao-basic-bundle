@@ -747,7 +747,7 @@ class DcaHelper extends \Frontend
 
 
 
-    protected static function addPositionField($fieldName, $strTable, $eval, $classes, $replaceClasses, $shortOptions, $useUnits, $langTable, $defaultConfig)
+    public static function addPositionField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $shortOptions = false, $useUnits = true, $langTable = '', $defaultConfig = array())
     {
         $langTable = self::renderLangTable( $langTable );
 

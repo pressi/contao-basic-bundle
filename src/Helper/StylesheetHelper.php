@@ -16,7 +16,7 @@ use IIDO\BasicBundle\Config\BundleConfig;
 
 class StylesheetHelper
 {
-    protected static $stylesheetPath        = '/src/Resources/public/css/';
+    protected static $stylesheetPath        = '/Resources/public/css/';
 
 
     protected static $stylesheetPathPublic  = '/css/';
@@ -594,7 +594,7 @@ class StylesheetHelper
             }
         }
 
-        return BundleConfig::getBundlePath( $public ) . ($public ? self::$stylesheetPathPublic : self::$stylesheetPath) . '/' . $scriptName . '/' . $folderVersion . '/' . $fileName;
+        return BundleConfig::getBundlePath( $public ) . ($public ? self::$stylesheetPathPublic : self::$stylesheetPath) . $scriptName . '/' . $folderVersion . '/' . $fileName;
     }
 
 

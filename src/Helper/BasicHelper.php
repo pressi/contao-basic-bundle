@@ -24,7 +24,7 @@ class BasicHelper extends \Frontend
      *
      * @var string
      */
-    protected static $weatherConfigFile    = '/src/Resources/config/data-weather.json';
+    protected static $weatherConfigFile    = '/Resources/config/data-weather.json';
 
 
 
@@ -917,11 +917,158 @@ class BasicHelper extends \Frontend
 
 
 
+    public static function getCustomerFolderFromBackend( $objElement )
+    {
+        $objArticle         = \ArticleModel::findByPk( $objElement->pid );
+
+        if( $objArticle )
+        {
+            $objCurrentPage     = \PageModel::findByPk( $objArticle->pid );
+
+            if( $objCurrentPage )
+            {
+                $objRootPage = \PageModel::findByPk( $objCurrentPage->rootId );
+
+                if( $objRootPage )
+                {
+                    if( $objRootPage->language !== "de" )
+                    {
+                        $germanAlias        = preg_replace('/-en$/', '', $objRootPage->alias);
+
+                        $objGermanRootPage  = \PageModel::findBy(array('alias=?', 'language=?', 'type=?'), array($germanAlias, "de", "root"));
+
+                        if( $objGermanRootPage )
+                        {
+                            return $objGermanRootPage->alias;
+                        }
+                    }
+                    else
+                    {
+                        return $objRootPage->alias;
+                    }
+                }
+            }
+        }
+
+        return '';
+    }
+
+
+
     public static function getWeatherData()
     {
         $rootDir    = self::getRootDir();
         $bundlePath = BundleConfig::getBundlePath();
 
         return json_decode( file_get_contents($rootDir . '/' . $bundlePath . self::$weatherConfigFile), TRUE );
+    }
+
+
+
+    public static function renderPosition( $objElement, $positionMarginName = 'positionMargin', $returnStyles = true, $returnStylesAsArray = false, $returnClasses = false, $positionName = 'position', $posFixedName = 'positionFixed' )
+    {
+        $arrClasses = array();
+        $arrStyles  = array();
+        $strStyles  = '';
+
+        if( $returnClasses )
+        {
+            $arrClasses[] = 'pos-' . ($objElement->$posFixedName ? 'fixed' : 'abs');
+            $arrClasses[] = 'pos-' . str_replace('_', '-', $objElement->$positionName);
+        }
+
+        $arrPosMargin = deserialize($objElement->$positionMarginName, TRUE);
+
+        if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
+        {
+            $unit       = $arrPosMargin['unit']?:'px';
+            $useUnit    = true;
+
+            if( $arrPosMargin['top'] )
+            {
+                if( preg_match('/(' . implode('|', $GLOBALS['TL_CSS_UNITS']) . ')$/', $arrPosMargin['top']) )
+                {
+                    $useUnit = false;
+                }
+
+                if( preg_match('/' . $unit . '$/', $arrPosMargin['top']) )
+                {
+                    $useUnit = false;
+                }
+
+                $strStyles .= " margin-top:" . $arrPosMargin['top'] . (($useUnit)?$unit:'') . ";";
+                $arrStyles['margin-top'] = $arrPosMargin['top'] . (($useUnit)?$unit:'');
+
+                $useUnit    = true;
+            }
+
+            if( $arrPosMargin['right'] )
+            {
+                if( preg_match('/(' . implode('|', $GLOBALS['TL_CSS_UNITS']) . ')$/', $arrPosMargin['right']) )
+                {
+                    $useUnit = false;
+                }
+
+                if( preg_match('/' . $unit . '$/', $arrPosMargin['right']) )
+                {
+                    $useUnit = false;
+                }
+
+                $strStyles .= " margin-right:" . $arrPosMargin['right'] . (($useUnit)?$unit:'') . ";";
+                $arrStyles['margin-right'] = $arrPosMargin['right'] . (($useUnit)?$unit:'');
+
+                $useUnit    = true;
+            }
+
+            if( $arrPosMargin['bottom'] )
+            {
+                if( preg_match('/(' . implode('|', $GLOBALS['TL_CSS_UNITS']) . ')$/', $arrPosMargin['bottom']) )
+                {
+                    $useUnit = false;
+                }
+
+                if( preg_match('/' . $unit . '$/', $arrPosMargin['bottom']) )
+                {
+                    $useUnit = false;
+                }
+
+                $strStyles .= " margin-bottom:" . $arrPosMargin['bottom'] . (($useUnit)?$unit:'') . ";";
+                $arrStyles['margin-bottom'] = $arrPosMargin['bottom'] . (($useUnit)?$unit:'');
+
+                $useUnit    = true;
+            }
+
+            if( $arrPosMargin['left'] )
+            {
+                if( preg_match('/(' . implode('|', $GLOBALS['TL_CSS_UNITS']) . ')$/', $arrPosMargin['left']) )
+                {
+                    $useUnit = false;
+                }
+
+                if( preg_match('/' . $unit . '$/', $arrPosMargin['left']) )
+                {
+                    $useUnit = false;
+                }
+
+                $strStyles .= " margin-left:" . $arrPosMargin['left'] . (($useUnit)?$unit:'') . ";";
+                $arrStyles['margin-left'] = $arrPosMargin['left'] . (($useUnit)?$unit:'');
+
+                $useUnit    = true;
+            }
+        }
+
+        $arrReturn = array();
+
+        if( $returnStyles )
+        {
+            $arrReturn[] = ($returnStylesAsArray ? $arrStyles : $strStyles);
+        }
+
+        if( $returnClasses )
+        {
+            $arrReturn[] = $arrClasses;
+        }
+
+        return (count($arrReturn) === 1 ? $arrReturn[0] : $arrReturn);
     }
 }

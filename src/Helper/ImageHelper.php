@@ -199,11 +199,18 @@ class ImageHelper extends \Backend
 
     public static function getImageTag( $imageSRC, $arrSize = array(), $addDefaultAttr = false )
     {
-        $objImage = \FilesModel::findByPk( $imageSRC );
+        if( !$imageSRC instanceof \FilesModel )
+        {
+            $objImage = \FilesModel::findByPk( $imageSRC );
+        }
+        else
+        {
+            $objImage = $imageSRC;
+        }
 
         if( $objImage )
         {
-            $arrMeta    = \Frontend::getMetaData($objImage->meta, $GLOBALS['TL_LANGUAGE']);
+            $arrMeta    = \Frontend::getMetaData($objImage->meta, BasicHelper::getLanguage());
             $attributes = '';
 
             if( $addDefaultAttr )
@@ -221,7 +228,14 @@ class ImageHelper extends \Backend
 
     public static function getImagePath( $imageSRC, $arrSize = array() )
     {
-        $objImage = \FilesModel::findByPk( $imageSRC );
+        if( !$imageSRC instanceof \FilesModel )
+        {
+            $objImage = \FilesModel::findByPk( $imageSRC );
+        }
+        else
+        {
+            $objImage = $imageSRC;
+        }
 
         if( $objImage )
         {
@@ -230,7 +244,7 @@ class ImageHelper extends \Backend
                 $objFactory = \System::getContainer()->get('contao.image.image_factory');
                 /* @var $objFactory \Contao\CoreBundle\Image\ImageFactory */
 
-                $src = $objFactory->create( $objImage->path, $arrSize )->getUrl( TL_ROOT );
+                $src = $objFactory->create( BasicHelper::getRootDir( true ) . $objImage->path, $arrSize )->getUrl( BasicHelper::getRootDir() );
 
                 return $src;
             }
