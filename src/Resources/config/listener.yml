@@ -42,9 +42,14 @@ services:
         class: IIDO\BasicBundle\Ajax\ManageAjax
 
     iido_basic.listener.form:
-            class: IIDO\BasicBundle\EventListener\FormListener
-            arguments:
-                - "@contao.framework"
+        class: IIDO\BasicBundle\EventListener\FormListener
+        arguments:
+            - "@contao.framework"
+
+    iido_basic.listener.news:
+        class: IIDO\BasicBundle\EventListener\NewsListener
+        arguments:
+            - "@contao.framework"
 
 
     iido_basic.table.all:
