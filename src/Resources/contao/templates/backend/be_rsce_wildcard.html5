@@ -1,0 +1,16 @@
+<?
+$folderName = \IIDO\BasicBundle\Helper\BasicHelper::getCustomerFolderFromBackend( $this );
+$arrConfig  = include \IIDO\BasicBundle\Helper\BasicHelper::getRootDir(true) . 'templates/' . $folderName . '/' . $this->type . '_config.php';
+
+$internLabel = '';
+
+if( $arrConfig['internLabelFields'] )
+{
+    $fieldName  = $arrConfig['internLabelFields'];
+
+    $internLabel = $this->$fieldName;
+}
+?>
+<div class="tl_gray">
+    ### <?= $internLabel ?> ###
+</div>

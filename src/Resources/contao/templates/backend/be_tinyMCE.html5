@@ -3,10 +3,12 @@
 namespace Contao;
 
 use IIDO\BasicBundle\Helper\BasicHelper;
+use IIDO\BasicBundle\Helper\ColorHelper;
 
 
 if ($GLOBALS['TL_CONFIG']['useRTE']):
 
+    $themeColors = ColorHelper::getThemeColors();
 
     if( version_compare(BasicHelper::getContaoVersion(), '4.5', '<') ):
 ?>
@@ -47,6 +49,24 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                             {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
                             {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
                         ],
+                    <? if( count($themeColors ) ): ?>
+                    style_formats_merge: true,
+                    style_formats:
+                        [
+                            {
+                                title: 'Farben',
+                                items:
+                                [
+                                    <? $i=0; foreach( $themeColors as $theme => $arrColors):
+                                    foreach($arrColors as $code => $color):
+                                        $code = preg_replace('/&#35;/', '#', $code);
+                                    ?>
+                                        <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
+                                    <? $i++; endforeach; endforeach ?>
+                                ]
+                            }
+                        ],
+                    <? endif ?>
                     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks',
                     browser_spellcheck: true,
                     tabfocus_elements: ':prev,:next',
@@ -100,6 +120,16 @@ setTimeout(function()
         {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
         {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
     ],
+      <? if( count($themeColors) ): ?>
+      style_formats:
+      [
+          <? $i=0; foreach( $themeColors as $theme => $arrColors):
+            foreach($arrColors as $code => $color):
+          ?>
+          <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', styles:{color:'<?= $code ?>'}}
+          <? $i++; endforeach; endforeach ?>
+      ],
+      <? endif ?>
     content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.css',
     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks visualchars',
     browser_spellcheck: true,
@@ -107,7 +137,7 @@ setTimeout(function()
     importcss_append: true,
     extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
     menubar: 'file edit insert view format table',
-    toolbar: 'link unlink | image | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | undo redo | code'
+    toolbar: 'link unlink | image<? if(count($themeColors) ): ?> | styleselect<? endif ?> | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | undo redo | code'
   });
 }, 0);
 </script>
