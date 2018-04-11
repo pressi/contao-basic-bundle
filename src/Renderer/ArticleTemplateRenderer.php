@@ -433,6 +433,8 @@ class ArticleTemplateRenderer
                     $arrowStyle = $objArticle->toNextArrowStyle;
                     $arrowTitle = '';
                     $arrowType  = 'page';
+                    $arrowPos   = 'abs';
+                    $arrowPosOffset = 'center-bottom';
 
                     if( $objArticle->toNextArrowAddTitle )
                     {
@@ -449,7 +451,33 @@ class ArticleTemplateRenderer
                         }
                     }
 
-                    $divTableEnd = '<div class="pos-abs pos-center-bottom arrow arrow-down arrow-' . $arrowStyle . ' big scroll-to-next-' . $arrowType . '"><div class="arrow-inside-container"><div class="arrow-inside">' . $arrowTitle . '</div></div></div>' . $divTableEnd;
+                    if( $objArticle->toNextArrowFixed )
+                    {
+                        $arrowPos = 'fixed';
+                    }
+
+                    if( $objArticle->toNextArrowPosition )
+                    {
+                        $arrowPosOffset = $objArticle->toNextArrowPosition;
+                    }
+
+                    $strArrowStyles     = '';
+                    $strPositionStyles  = BasicHelper::renderPosition( $objArticle, 'toNextArrowPositionMargin');
+
+//                    $strArrowColor      = ColorHelper::compileColor( \StringUtil::deserialize($objArticle->toNextArrowColor, TRUE) );
+//
+//                    if( $strArrowColor && $strArrowColor !== "transparent" )
+//                    {
+//                        $strPositionStyles .= 'color:' . $strArrowColor . ';';
+//                    }
+
+                    if( $strPositionStyles )
+                    {
+                        $strArrowStyles = ' style="' . $strPositionStyles . '"';
+                    }
+
+
+                    $divTableEnd = '<div class="pos-' . $arrowPos . ' pos-' . $arrowPosOffset . ' arrow arrow-down arrow-' . $arrowStyle . ' big scroll-to-next-' . $arrowType . '"' . $strArrowStyles . '><div class="arrow-inside-container"><div class="arrow-inside">' . $arrowTitle . '</div></div></div>' . $divTableEnd;
                 }
 
                 if( preg_match('/add-footer/', $cssID[1]) )
