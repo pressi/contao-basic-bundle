@@ -33,18 +33,18 @@ if( count( $db->listTables() ) > 0 )
 		if( $act && $act === "edit")
 		{
 //			$objNews = \NewsModel::findByPk($id);
-			$objNews = $db->prepare("SELECT * FROM " . $strFileName . " WHERE id=?")->limt(1)->execute( $id );
+			$objNews = $db->prepare("SELECT * FROM " . $strFileName . " WHERE id=?")->limit(1)->execute( $id );
 
 			if($objNews)
 			{
 //				$objArchive = \NewsArchiveModel::findByPk( $objNews->pid );
-				$objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limt(1)->execute( $objNews->pid );
+				$objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limit(1)->execute( $objNews->pid );
 			}
 		}
 		else
 		{
 //            $objArchive = \NewsArchiveModel::findByPk( $id );
-            $objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limt(1)->execute( $id );
+            $objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limit(1)->execute( $id );
 		}
 	}
 }

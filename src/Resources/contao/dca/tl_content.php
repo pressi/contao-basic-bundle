@@ -18,7 +18,9 @@ $do             = Input::get("do");
 $act            = Input::get("act");
 $id             = (int) Input::get("id");
 $theme          = \Backend::getTheme();
-$strFileName    = \ContentModel::getTable();
+
+$strFileName    = \IIDO\BasicBundle\Config\BundleConfig::getFileTable( __FILE__ );
+$strTableClass  = \IIDO\BasicBundle\Config\BundleConfig::getTableClass( $strFileName );
 
 //if ($do == 'iidoPlaceholder')
 //{
@@ -50,7 +52,7 @@ if( $act == "edit" && is_numeric($id) && $id > 0 )
  * List
  */
 
-//$GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = array('IIDO\Customize\Table\Content', 'addContentTitle');
+$GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = array( $strTableClass, 'addContentTitle');
 
 
 
@@ -91,10 +93,12 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStart', '', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintFields_legend},imprintText;', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName);
+
+
 
 $defaultPaletteStart    = '{type_legend},type,headline,subHeadline;';
 $defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
-
 
 
 $GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']         = $defaultPaletteStart . '{config_legend},navModule,navPages,navigationTpl;' . $defaultPaletteEnd;
@@ -756,7 +760,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 
 
 // HYPERLINK BUTTON
-\IIDO\BasicBundle\Helper\DcaHelper::addField("showAsButton", "checkbox", $strFileName, array(), "clr");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("showAsButton", "checkbox", $strFileName, array('submitOnChange'=>true), "clr");
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['showAsButton'] = array
 //(
 //    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['showAsButton'],
@@ -1144,3 +1149,16 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintEmail', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintWeb', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('addImprintContactLabel', $strFileName);
+
+
+
+// Newslist
+
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_archives', $strFileName, 'news_archives', 'tl_module');
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_featured', $strFileName, 'news_featured', 'tl_module');
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('skipFirst', $strFileName, 'skipFirst', 'tl_module');
+//\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('perPage', $strFileName, 'perPage', 'tl_module');
+//\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('numberOfItems', $strFileName, 'numberOfItems', 'tl_module');
+
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_metaFields', $strFileName, 'news_metaFields', 'tl_module');
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_template', $strFileName, 'news_template', 'tl_module');

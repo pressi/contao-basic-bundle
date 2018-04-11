@@ -120,7 +120,7 @@ foreach($GLOBALS['TL_DCA'][ $strTableName ]['palettes'] as $strPalette => $strFi
         $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight,addPageLoader', $strFields);
 
         $strFields      = str_replace('{meta_legend', '{page_legend},enableFullpage;{meta_legend', $strFields);
-        $strFields      = str_replace('{meta_legend', '{navigation_legend},submenuNoPages,hide,hideTitle,openPageInLightbox,guests,overviewImage,pageColor,overviewText;{meta_legend', $strFields);
+        $strFields      = str_replace('{meta_legend', '{navigation_legend},hide,hideTitle,guests,openPageInLightbox,submenuNoPages,overviewImage,pageColor,overviewText;{meta_legend', $strFields);
 
         if( \Config::get("folderUrl") )
         {

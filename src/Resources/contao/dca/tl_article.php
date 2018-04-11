@@ -15,9 +15,11 @@
 $objArticle         = FALSE;
 $objParentPage      = FALSE;
 
+$db                 = \Database::getInstance();
 $act                = \Input::get("act");
 $id                 = \Input::get("id");
 $table              = \Input::get("table");
+$articleCounter     = 1;
 
 $strFileName        = \IIDO\BasicBundle\Config\BundleConfig::getTableName( __FILE__ );
 $strFileClass       = \IIDO\BasicBundle\Config\BundleConfig::getTableClass( $strFileName );
@@ -25,13 +27,13 @@ $strFileClass       = \IIDO\BasicBundle\Config\BundleConfig::getTableClass( $str
 
 if( $act === "edit" )
 {
-    $objArticle = \ArticleModel::findByPk( $id );
+    $objArticle = $db->prepare("SELECT * FROM $strFileName WHERE id=?")->limit(1)->execute( $id ); //\ArticleModel::findByPk( $id );
 }
 else
 {
     if( $table === "tl_content" && $id && \Input::get("do") === "article" )
     {
-        $objArticle = \ArticleModel::findByPk( $id );
+        $objArticle = $db->prepare("SELECT * FROM $strFileName WHERE id=?")->limit(1)->execute( $id ); //\ArticleModel::findByPk( $id );
 
         if( $objArticle->noContent )
         {
@@ -43,7 +45,13 @@ else
 
 if( $objArticle )
 {
-    $objParentPage = \Database::getInstance()->prepare("SELECT * FROM tl_page WHERE id=?")->limit(1)->execute( $objArticle->pid );
+    $objParentPage = $db->prepare("SELECT * FROM tl_page WHERE id=?")->limit(1)->execute( $objArticle->pid );
+
+    if( $objParentPage )
+    {
+        $objArticles    = $db->prepare("SELECT id FROM $strFileName WHERE pid=?")->execute( $objParentPage->id );
+        $articleCounter = $objArticles->count();
+    }
 }
 
 
@@ -104,7 +112,7 @@ if( $objParentPage && $objParentPage->submenuNoPages && $objParentPage->submenuS
 }
 
 
-if( $objParentPage && $objParentPage->enableFullpage )
+if( $objParentPage && ($objParentPage->enableFullpage || $articleCounter > 1) )
 {
     Contao\CoreBundle\DataContainer\PaletteManipulator::create()
         ->addField(array('toNextArrow'), 'noContent', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
@@ -155,9 +163,10 @@ if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articl
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("isFixed", "position,articleWidth,articleHeight", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_intern", "navLinkPage", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_extern", "navLinkUrl,navLinkNewWindow", $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("toNextArrow", "toNextArrowStyle,toNextArrowAddTitle", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addDivider", "dividerStyle", $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("toNextArrow", "toNextArrowStyle,toNextArrowColor,toNextArrowHoverColor,toNextArrowAddTitle,toNextArrowFixed,toNextArrowPosition,toNextArrowPositionMargin", $strFileName);
 
 
 
@@ -234,9 +243,14 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['videoSRC'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("hiddenArea", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("noContent", $strFileName);
 
-\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("toNextArrow", $strFileName, array(), '', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("toNextArrow", $strFileName, array(), 'clr', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField("toNextArrowStyle", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("toNextArrowAddTitle", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("toNextArrowFixed", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField("toNextArrowPosition", $strFileName, array(), '', false, 'center-bottom');
+\IIDO\BasicBundle\Helper\DcaHelper::addPositionField("toNextArrowPositionMargin", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addColorField("toNextArrowColor", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addColorField("toNextArrowHoverColor", $strFileName, array(), 'clr o50');
 
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField("navLinkMode", $strFileName, array('includeBlankOption'=>true), 'clr', false, '', false, true);
