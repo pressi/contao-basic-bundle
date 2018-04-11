@@ -10,6 +10,9 @@
 namespace IIDO\BasicBundle\Config;
 
 
+use IIDO\BasicBundle\Helper\BasicHelper;
+
+
 /**
  * Bundle Config Class
  *
@@ -257,7 +260,15 @@ class BundleConfig
         }
         else
         {
-            return 'vendor/' . self::getBundleGroup() . '/' . self::getBundleName();
+            $rootDir    = BasicHelper::getRootDir();
+            $addon      = '';
+
+            if( is_dir($rootDir . '/vendor/' . self::getBundleGroup() . '/' . self::getBundleName() . '/src') )
+            {
+                $addon = '/src';
+            }
+
+            return 'vendor/' . self::getBundleGroup() . '/' . self::getBundleName() . $addon;
         }
     }
 
