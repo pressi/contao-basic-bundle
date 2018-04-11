@@ -23,8 +23,8 @@ IIDO.Page = IIDO.Page || {};
         $wrapper    = $("#wrapper");
         $navOffset  = $("header").height();
 
-        /* this.initHeader();
-        // this.initSearch(); */
+        // this.initHeader();
+        this.initSearch();
         this.initMobileNavigation();
         this.initNavigation();
         this.initOnePage();
@@ -81,6 +81,20 @@ IIDO.Page = IIDO.Page || {};
                     IIDO.Page.scrollTo(e, 'image_arrow_ankor_' + ankorID, 0);
                 })
             }
+        }
+
+        var topLink = document.querySelector(".ce_toplink");
+
+        if( topLink )
+        {
+            topLink.addEventListener("click", function(e)
+            {
+                e.preventDefault();
+
+               IIDO.Page.scrollTo(e, 'top');
+
+               return false;
+            });
         }
     };
 
@@ -669,6 +683,33 @@ IIDO.Page = IIDO.Page || {};
                            articleIndex     = articleTag.getAttribute("data-index");
 
                         $.fn.fullpage.moveTo( (parseInt(articleIndex) + 1) );
+                    });
+                }
+            }
+        }
+        else
+        {
+            var nextLinks = document.querySelectorAll(".scroll-to-next-page");
+
+            if( nextLinks.length )
+            {
+                for(var i=0; i<nextLinks.length; i++)
+                {
+                    var nextLink = nextLinks[ i ];
+
+                    nextLink.addEventListener("click", function(e)
+                    {
+                        e.preventDefault();
+
+                        var parenArticle    = this.parentNode,
+                            nextArticle     = parenArticle.nextElementSibling;
+
+                        if( nextArticle )
+                        {
+                            IIDO.Page.scrollTo(e, nextArticle.getAttribute("id"), -171 );
+                        }
+
+                        return false;
                     });
                 }
             }
@@ -1883,6 +1924,56 @@ IIDO.Page = IIDO.Page || {};
 
             });
         }
+    };
+
+
+
+    page.initSearch = function()
+    {
+        $searchForm  = $("div.fullscreen-search-form");
+
+        if( $searchForm.length )
+        {
+            var searchLinks = $("a.open-fullscreen-search");
+
+            if( searchLinks.length )
+            {
+                searchLinks.each( function(index, element) {
+                    var el      = $(element);
+
+                    IIDO.Base.addEvent(element, "click", IIDO.Page.openFullscreenSearch);
+                });
+            }
+
+            IIDO.Base.addEvent($searchForm.find("a.fullscreen-search-form-close")[0], "click", IIDO.Page.closeFullscreenSearch);
+        }
+    };
+
+
+
+    page.openFullscreenSearch = function( event )
+    {
+        IIDO.Base.eventPreventDefault(event);
+        $searchForm.addClass("is-pre-active");
+
+        var trash = $searchForm.offsetWidth;
+
+        $searchForm.addClass("is-active");
+        $searchForm.removeClass("is-pre-active");
+
+        setTimeout( function() { $searchForm.find("input.text").focus(); }, 500 );
+
+        $("html").addClass("noscroll");
+    };
+
+
+
+    page.closeFullscreenSearch = function( event )
+    {
+        IIDO.Base.eventPreventDefault(event);
+        $searchForm.removeClass("is-active");
+
+        $("html").removeClass("noscroll");
     };
 
 })(window, jQuery, IIDO.Page);

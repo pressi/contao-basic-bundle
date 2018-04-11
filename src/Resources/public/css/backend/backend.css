@@ -30,6 +30,10 @@ span.subtitle.after {
     margin-left: 2%;
 }
 
+.wizard .color-select + img {
+    margin-top: 7px;
+}
+
 .color-preview {
     display: block;
     float: left;
@@ -58,7 +62,8 @@ span.subtitle.after {
 }
 
 .o50 {
-    margin-left: 52%;
+    /*margin-left: 52%;*/
+    margin-left: calc(50% + 15px);
 }
 
 fieldset.rsce_list {

@@ -23,14 +23,37 @@ IIDO.Content = IIDO.Content || {};
 
     content.initAnimations = function()
     {
-        setTimeout(function()
+        window.addEventListener("load", function()
         {
-            var articles = document.querySelectorAll('.mod_article');
-            Array.prototype.forEach.call(articles, function(article, index)
+            var animatedPositions = document.querySelectorAll(".animate-box.pos-center-top,.animate-box.pos-center-bottom,.animate-box.pos-center-center");
+
+            if( animatedPositions )
             {
-                IIDO.Content.startAnimate( article );
-            });
-        }, 500);
+                for( var i = 0; i < animatedPositions.length; i++ )
+                {
+                    var boxPos = animatedPositions[ i ];
+
+                    boxPos.style.marginLeft = '-' + (boxPos.offsetWidth / 2) + 'px';
+
+                    if( boxPos.classList.contains("pos-center-center") )
+                    {
+                        boxPos.style.marginTop = '-' + (boxPos.offsetHeight / 2) + 'px';
+                    }
+
+                    boxPos.classList.add("no-transform");
+                }
+            }
+
+            setTimeout(function()
+            {
+                var articles = document.querySelectorAll('.mod_article');
+
+                Array.prototype.forEach.call(articles, function(article, index)
+                {
+                    IIDO.Content.startAnimate( article );
+                });
+            }, 500);
+        });
     };
 
 
