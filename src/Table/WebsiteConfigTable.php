@@ -76,7 +76,7 @@ class WebsiteConfigTable
     public function getScriptVersion( $dc )
     {
         $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
-        $folderPath         = BasicHelper::getRootDir() . '/' . BundleConfig::getBundlePath() . '/src/Resources/public/javascript/';
+        $folderPath         = BasicHelper::getRootDir() . '/' . BundleConfig::getBundlePath() . '/Resources/public/javascript/';
 
         $arrOptions     = array();
         $fieldName      = lcfirst( preg_replace('/^' . $tableFieldPrefix . 'script/', '', $dc->field) );

@@ -261,9 +261,9 @@ class ContentTable extends \Backend
      */
     public function addContentTitle( $arrRow )
     {
-        $objTableContent	= new \tl_content();
-        $strContent			= $objTableContent->addCteType( $arrRow );
-        $addContentTitle	= "";
+        $objTableContent    = new \tl_content();
+        $strContent         = $objTableContent->addCteType( $arrRow );
+        $addContentTitle    = "";
 
         if( $arrRow['elementIsBox'] )
         {
@@ -275,7 +275,38 @@ class ContentTable extends \Backend
             $addContentTitle = " - " . $addContentTitle;
         }
 
-        $strContent			= preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/', '<div class="cte_type$1">$2' . $addContentTitle . '</div>', $strContent);
+        if( $arrRow['type'] === "newslist" )
+        {
+            $newsConfig     = '';
+            $arrArchives    = \StringUtil::deserialize($arrRow['news_archives'], TRUE);
+
+            if( count($arrArchives) )
+            {
+                $newsConfig = 'Archiv' . (count($arrArchives) > 1 ? 'e: ' : ': ');
+
+                foreach($arrArchives as $num => $archiveID)
+                {
+                    $objArchive = \NewsArchiveModel::findByPk( $archiveID );
+
+                    if( $objArchive )
+                    {
+                        if( $num > 0 )
+                        {
+                            $newsConfig .= ', ';
+                        }
+
+                        $newsConfig .= $objArchive->title;
+                    }
+                }
+            }
+
+            $newsConfig .= (strlen($newsConfig) ? ' / ' : '') . 'Anzahl: ' . $arrRow['numberOfItems'];
+            $newsConfig .= (strlen($newsConfig) ? ' / ' : '') . 'Anzeige: ' . $GLOBALS['TL_LANG']['tl_module'][ $arrRow['news_featured'] ];
+
+            $strContent = preg_replace('/<div([A-Za-z0-9\s\-=":;,._]{0,})class="tl_gray([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-=":;,.]{0,})>([A-Za-z0-9\s\-#;,:._]{0,})<\/div>/', '<div$1class="tl_gray$2"$3>$4<br>' . $newsConfig . '</div>', $strContent);
+        }
+
+        $strContent = preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/', '<div class="cte_type$1">$2' . $addContentTitle . '</div>', $strContent);
 
         return $strContent;
     }
