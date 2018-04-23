@@ -415,9 +415,10 @@ class ContentListener extends DefaultListener
             }
         }
 
-        if( preg_match('/<h([1-6])>/', $strBuffer) )
+        if( preg_match('/<h([1-6])([A-Za-z0-9\s\-=":;,._]{0,})>/', $strBuffer) )
         {
-            $strBuffer = preg_replace('/<h([1-6])>/', '<h$1 class="headline">', $strBuffer);
+            //TODO: check if match class attribute!!
+            $strBuffer = preg_replace('/<h([1-6])([A-Za-z0-9\s\-=":;,._]{0,})>/', '<h$1 class="headline"$2>', $strBuffer);
         }
 
         $strBuffer = $this->renderHeadlines($strBuffer, $objRow);

@@ -181,6 +181,28 @@ class FormListener
         {
             $objWidget->class = "btn-secondary";
         }
+//        elseif( $objWidget->type === "select" )
+//        {
+//            if( preg_match('/selected-get/', $objWidget->class) )
+//            {
+//                $value      = \Input::get( $objWidget->name );
+//                $arrOptions = $objWidget->options;
+//
+//                foreach( $arrOptions as $num => $option)
+//                {
+//                    if( $option['value'] === $value )
+//                    {
+////                        \Input::setPost($objWidget->name, $value);
+//
+//                        $arrOptions[ $num ]['selected'] = 'selected';
+//                        break;
+//                    }
+//                }
+//
+//                $objWidget->options = $arrOptions;
+//            }
+//        }
+
 //        else
 //        {
 //            $strClass = trim($objWidget->class . ' field');
@@ -193,6 +215,35 @@ class FormListener
 //            $objWidget->class = $strClass;
 //        }
         return $objWidget;
+    }
+
+
+
+    public function compileCustomizeFormFields( $arrFields, $formId, $objClass )
+    {
+        foreach($arrFields as $num => $arrField)
+        {
+            if( preg_match('/selected-get/', $arrField->class) )
+            {
+                $value      = \Input::get( $arrField->name );
+                $arrOptions = \StringUtil::deserialize($arrField->options, TRUE);
+
+                foreach( $arrOptions as $key => $option)
+                {
+                    if( $option['value'] === $value )
+                    {
+//                        \Input::setPost($arrField->name, $value);
+
+                        $arrOptions[ $key ]['default']  = '1';
+                        break;
+                    }
+                }
+
+                $arrFields[ $num ]->options = serialize( $arrOptions );
+            }
+        }
+
+        return $arrFields;
     }
 
 

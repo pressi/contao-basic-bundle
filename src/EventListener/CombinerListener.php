@@ -56,6 +56,11 @@ class CombinerListener extends DefaultListener
                     $objMinify = new Minify\JS();
                     $objMinify->add( $strContent );
                     $strContent = $objMinify->minify();
+
+                    if( preg_match('/\)$/', trim($strContent)) )
+                    {
+                        $strContent = trim($strContent) . ';';
+                    }
                 }
             }
         }

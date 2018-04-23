@@ -56,6 +56,11 @@ class PageListener extends DefaultListener
      */
     public function generateCustomizePage( \PageModel $objPage, \LayoutModel $objLayout, \PageRegular $objPageRegular )
     {
+        if( $objLayout->master_ID === 0 || $objLayout->master_ID === "" || !$objLayout->master_ID || $objLayout->master_ID === "0" )
+        {
+            return;
+        }
+
         Helper::replaceOtherDefaultScripts();
         Helper::checkForUniqueScripts();
 
@@ -85,7 +90,7 @@ class PageListener extends DefaultListener
 //            $GLOBALS['TL_JAVASCRIPT']['jquery_ui'] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.min.js|static';
 //            $GLOBALS['TL_CSS']['jquery_ui']        = $this->bundlePathPublic . '/css/frontend/jquery-ui.css||static';
 //        }
-        $GLOBALS['TL_JAVASCRIPT']['jquery_ui']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.1.12.1.min.js|static';
+//        $GLOBALS['TL_JAVASCRIPT']['jquery_ui']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.1.12.1.min.js|static';
 //        $GLOBALS['TL_JAVASCRIPT']['easing']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easing.min.js|static';
 
         if( $objPage->enableFullpage && $jsPrefix == "jquery" )
@@ -170,27 +175,20 @@ class PageListener extends DefaultListener
 
             if( $isActiveWaypoints )
             {
-                $waypointsVersion = \Config::get( $tableFieldPrefix . 'scriptsWaypoints');
-
-//                $GLOBALS['TL_JAVASCRIPT']['waypoints']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/' . $waypointsVersion . '/jquery.waypoints.min.js|static';
                 ScriptHelper::addScript('waypoints');
                 ScriptHelper::addSourceScript('waypoints', array('wp_inview' => 'inview', 'wp_sticky'=>'sticky'));
 
-
 //            $GLOBALS['TL_JAVASCRIPT']['wp_infinite']   = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/infinite.min.js|static';
-//                $GLOBALS['TL_JAVASCRIPT']['wp_inview']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/' . $waypointsVersion . '/src/inview.min.js|static';
-//                $GLOBALS['TL_JAVASCRIPT']['wp_sticky']          = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/' . $waypointsVersion . '/src/sticky.min.js|static';
             }
 
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.sticky-kit.min.js|static';
 
-            $isActiveIsotope = ScriptHelper::hasPageIsotope();
-
-            if( $isActiveIsotope )
+            if( ScriptHelper::hasPageIsotope() )
             {
-                $isotopeVersion = \Config::get( $tableFieldPrefix . 'scriptsIsotope');
+                ScriptHelper::addScript('isotope');
 
-                $GLOBALS['TL_JAVASCRIPT']['isotope']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/' . $isotopeVersion . '/isotope.pkgd.min.js|static';
+//                $isotopeVersion = \Config::get( $tableFieldPrefix . 'scriptsIsotope');
+//                $GLOBALS['TL_JAVASCRIPT']['isotope']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/' . $isotopeVersion . '/isotope.pkgd.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT']['iso_fit-columns']    = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/isotope/fit-columns.js|static';
             }
 
@@ -220,8 +218,9 @@ class PageListener extends DefaultListener
         }
 
         // TODO: script nur laden wenn nötig && version!!
-        $GLOBALS['TL_JAVASCRIPT']['scrollmagic'] = $this->bundlePathPublic . '/javascript/ScrollMagic.min.js|static';
-        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.gsap.min.js|static';
+//        $GLOBALS['TL_JAVASCRIPT']['scrollmagic'] = $this->bundlePathPublic . '/javascript/ScrollMagic.min.js|static';
+//        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.gsap.min.js|static';
+
 //        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_debug'] = $this->bundlePathPublic . '/javascript/scrollmagic/debug.addIndicators.min.js|static';
 //        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap'] = $this->bundlePathPublic . '/javascript/scrollmagic/animation.velocity.min.js|static';
 
@@ -229,7 +228,9 @@ class PageListener extends DefaultListener
         {
             //TODO: barab version!!
             $arrBodyClasses[] = 'page-fade-animation';
-            $GLOBALS['TL_JAVASCRIPT']['barba']              = $this->bundlePathPublic . '/javascript/barba.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT']['barba']              = $this->bundlePathPublic . '/javascript/barba.min.js|static';
+
+            ScriptHelper::addScript('barba');
         }
 
         if( $objLayout->loadDomainCSS )
@@ -259,7 +260,8 @@ class PageListener extends DefaultListener
         if( $objRootPage->enableCookie || $objPage->enableCookie )
         {
             //TODO: cooke version!!
-            $GLOBALS['TL_JAVASCRIPT']['cookie'] = $this->bundlePathPublic . '/javascript/cookie.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT']['cookie'] = $this->bundlePathPublic . '/javascript/cookie.min.js|static';
+            ScriptHelper::addScript('cookie');
         }
 
 
@@ -268,7 +270,8 @@ class PageListener extends DefaultListener
             //TODO: lazyload script!!
             if($jquery)
             {
-                $GLOBALS['TL_JAVASCRIPT']['lazyload'] = $this->bundlePathPublic . '/javascript/jquery/jquery.lazyload.min.js|static';
+//                $GLOBALS['TL_JAVASCRIPT']['lazyload'] = $this->bundlePathPublic . '/javascript/jquery/jquery.lazyload.min.js|static';
+                ScriptHelper::addScript('lazyload');
             }
             elseif($mootools)
             {
@@ -289,94 +292,7 @@ class PageListener extends DefaultListener
 //            }
 //        }
 
-
-
-//        if( $objArticle )
-//        {
-//            while( $objArticle->next() )
-//            {
-//                $cssID = deserialize($objArticle->cssID, true);
-//
-//                if( $objArticle->addBackgroundImage )
-//                {
-//                    $addToTag = '';
-//                    if( preg_match('/bg-image-height/', $cssID[1]) )
-//                    {
-//                        $addToTag = ' .article-inside';
-//                    }
-//
-//                    $objImage = \FilesModel::findByPk( $objArticle->backgroundSRC );
-//
-//                    if( $objImage )
-//                    {
-//                        $strStyles .= '#main .mod_article#' . $objArticle->alias . $addToTag . '{background-image:url("' . $objImage->path . '");';
-//
-//                        if( $objArticle->backgroundPosition )
-//                        {
-//                            $setPos = false;
-//
-////                            if( $objArticle->backgroundPosition == "center_top" && $objArticle->backgroundMode == "cover" )
-////                            {
-////                                if( in_array("first", $objArticle->classes) )
-////                                {
-////                                    $setPos = true;
-////                                    $strStyles .= 'background-position:center 125px;';
-////                                }
-////                            }
-//
-//                            if( !$setPos )
-//                            {
-//                                $strStyles .= 'background-position:' . str_replace('_', ' ', $objArticle->backgroundPosition) . ';';
-//                            }
-//                        }
-//
-//                        if( $objArticle->backgroundMode )
-//                        {
-//                            if( preg_match('/repeat/', $objArticle->backgroundMode) )
-//                            {
-//                                $strStyles .= 'background-repeat:' . $objArticle->backgroundMode . ';';
-//                            }
-//                            else
-//                            {
-//                                $strStyles .= 'background-repeat:no-repeat;';
-////                                $strStyles .= '-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover;';
-//                            }
-//                        }
-//
-//                        if( $objArticle->backgroundAttachment )
-//                        {
-//                            if( $objArticle->backgroundAttachment == "scrol" )
-//                            {
-//                                $objArticle->backgroundAttachment = "scroll";
-//                            }
-//                            $strStyles .= 'background-attachment:' . $objArticle->backgroundAttachment . ';';
-//                        }
-//
-//                        $strStyles .= '}';
-//                    }
-//                }
-//            }
-//        }
-//
-//        if( strlen($strStyles) )
-//        {
-//            $GLOBALS['TL_HEAD'][] = '<style>' . $strStyles . '</style>';
-//        }
-
         $arrBodyClasses = $this->createDefaultStylesheet( $arrBodyClasses );
-
-//        if ( is_array( $externalJavascript ) && count( $externalJavascript ) > 0 )
-//        {
-//            foreach ( $externalJavascript as $jsFile )
-//            {
-//                $objFile = \FilesModel::findByPk( $jsFile );
-//
-//                if( file_exists($this->rootDir . '/' . $objFile->path ) && strlen($objFile->path) )
-//                {
-//                    $GLOBALS[ 'TL_JAVASCRIPT' ][ ] = $objFile->path . '|static';
-//                }
-//            }
-//        }
 
         $this->addDefaultScripts();
 
@@ -398,6 +314,11 @@ class PageListener extends DefaultListener
         $objRootPage    = \PageModel::findByPk( $objPage->rootId );
         $objLayout      = Helper::getPageLayout( $objPage );
         $objTheme       = \ThemeModel::findByPk( $objLayout->pid );
+
+        if( $objLayout->master_ID === 0 || $objLayout->master_ID === "" || !$objLayout->master_ID || $objLayout->master_ID === "0" )
+        {
+            return $strBuffer;
+        }
 
         if ('fe_page' === $templateName)
         {

@@ -62,32 +62,18 @@ class InsertTagsListener extends DefaultListener
                 switch( $arrSplit[1] )
                 {
                     case "insert_article":
-                        $strInsertAlias     = \Controller::replaceInsertTags( $arrSplit[2] );
-                        $objInsertArticle   = \ArticleModel::findByAlias( $strInsertAlias );
-
-                        if( $objInsertArticle )
+                        if( ($strOutput = \Controller::getArticle($arrSplit[2], false, true)) !== false )
                         {
-                            $return = \Controller::replaceInsertTags( '{{insert_article::' . $arrSplit[2] . '}}' );
-                            $return = '<div class="' . $arrSplit[3] . '"><div class="' . $arrSplit[3] . '-inside">' . $return . '</div></div>';
+                            $return = ltrim($strOutput);
+
+                            if( $arrSplit[3] )
+                            {
+                                $return = '<div class="' . $arrSplit[3] . '"><div class="' . $arrSplit[3] . '-inside">' . $return . '</div></div>';
+                            }
                         }
                         break;
 
 
-
-//                    case "website":
-//
-//                        switch( $arrSplit[2] )
-//                        {
-//                            case "header":
-//                                $return = WebsiteHelper::renderWebsiteHeader();
-//                                break;
-//
-//                            case "footer":
-//                                $return = WebsiteHelper::renderWebsiteFooter();
-//                                break;
-//                        }
-//                        break;
-                    
                     case "lang":
                         $langName   = $arrSplit[2];
                         $langValue  = $GLOBALS['TL_LANG']['IIDO'][ $langName ];
@@ -97,6 +83,7 @@ class InsertTagsListener extends DefaultListener
                             $return = $langValue;
                         }
                         break;
+
 
                     case "date":
                         if( isset($arrSplit[2]) )
@@ -202,7 +189,6 @@ class InsertTagsListener extends DefaultListener
 //
 //                            $return = '<a href="' . $strHref . '">' . $return . '</a>';
 //                        }
-//
 //                        break;
 
                     case "link":
@@ -211,9 +197,9 @@ class InsertTagsListener extends DefaultListener
                     case "link_close":
                     case "link_end":
                         $strHref    = \Controller::replaceInsertTags( $arrSplit[2] );
-                        $strTarget  = (($arrSplit[3])? ' target="_' . $arrSplit[3] . '"' : '');
+                        $strTarget  = (($arrSplit[3]) ? ' target="_' . $arrSplit[3] . '"' : '');
 
-                        if( $strHref == "close" || $strHref == "end" || $arrSplit[1] === "link_close" )
+                        if( $strHref === "close" || $strHref === "end" || $arrSplit[1] === "link_close" || $arrSplit[1] === "link_end" )
                         {
                             $return = '</a>';
                         }
@@ -226,7 +212,6 @@ class InsertTagsListener extends DefaultListener
                         {
                             $return = 'javascrpt:void(0)';
                         }
-
                         break;
 
 //                    case "icon":
@@ -237,13 +222,6 @@ class InsertTagsListener extends DefaultListener
 //                        $return = SocialmediaHelper::render( $arrSplit[2] );
 //                        break;
 
-//                    case "if":
-//                        if ($arrSplit[2] != '' && !$this->checkExpression( $arrSplit[2]))
-//                        {
-//                            break;
-//                        }
-//                        unset( $arrCache[ $strCurTag ] );
-//                        break;
 
                     case "page":
                         switch( $arrSplit[2])
@@ -258,26 +236,23 @@ class InsertTagsListener extends DefaultListener
                         }
                         break;
 
+
                     case "event":
                         $adapter    = $this->framework->getAdapter(\CalendarEventsModel::class);
                         $idOrAlias  = \Input::get("auto_item");
                         $eventKey   = strtolower( $arrSplit[2] );
-//echo "<pre>";
-//print_r( $eventKey );
-//echo "<br>";
+
                         if( !$idOrAlias )
                         {
                             $idOrAlias = \Input::get("events");
                         }
-//print_r( $idOrAlias );
-//                        exit;
+
                         if (null !== ($objEvent = $adapter->findByIdOrAlias($idOrAlias)))
                         {
                             $return = $objEvent->$eventKey;
 
                             if( $eventKey === "date" )
                             {
-//                                echo "<pre>"; print_r( $objEvent ); exit;
                                 $return = date(\Config::get("dateFormat"), $objEvent->startDate);
                             }
                             elseif( $eventKey === "dateto" )
@@ -293,7 +268,18 @@ class InsertTagsListener extends DefaultListener
                                 }
                             }
                         }
+                        break;
 
+
+
+                    case "get":
+                        $return = \Input::get( $arrSplit[2] );
+                        break;
+
+
+
+                    case "post":
+                        $return = \Input::get( $arrSplit[2] );
                         break;
                 }
                 break;
@@ -321,7 +307,7 @@ class InsertTagsListener extends DefaultListener
 
             if( count($arrSearchParts) > 1 )
             {
-                if( $arrSearchParts[0] == "page" )
+                if( $arrSearchParts[0] === "page" )
                 {
                     $searchIn = $objPage->cssClass;
                 }
@@ -330,13 +316,7 @@ class InsertTagsListener extends DefaultListener
 //                    $modelClass = ucfirst($arrSearchParts[0]) . 'Model';
 //                }
             }
-//echo "<pre>";
-//            print_r( $searchThis);
-//            echo "<br>";
-//            print_r( $searchIn );
-//            echo "<br>";
-//            print_r( $not );
-//            exit;
+
             if( preg_match('/' . $searchThis . '/', $searchIn) )
             {
                 if( !$not )

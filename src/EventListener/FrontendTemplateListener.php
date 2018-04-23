@@ -11,6 +11,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
 
 use IIDO\BasicBundle\Renderer\ArticleTemplateRenderer;
@@ -551,7 +552,14 @@ class FrontendTemplateListener extends DefaultListener
             $arrClasses[] = $colorClass;
         }
 
-        $arrClasses[] = 'lang-' . \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
+        $arrClasses[] = 'lang-' . BasicHelper::getLanguage();
+
+        $objRootPage = \PageModel::findByPk( $objPage->rootId );
+
+        if( $objRootPage && strlen(trim($objRootPage->cssClass)) )
+        {
+            $arrClasses = array_merge($arrClasses, explode(" ", trim($objRootPage->cssClass)));
+        }
 
         $arrBodyClasses = array_merge($arrBodyClasses, $arrClasses);
         $arrBodyClasses = array_values($arrBodyClasses);
