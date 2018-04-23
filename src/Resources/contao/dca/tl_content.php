@@ -162,7 +162,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 
     $strFields = preg_replace('/{expert_legend/', '{position_legend},position,positionMargin,positionFixed;{expert_legend', $strFields);
 
-    $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = $strFields;
+    $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = '{intern_legend:hide},internName;' . $strFields;
 }
 
 //if( $GLOBALS['TL_CONFIG']['iidoCustomize_backgroundInternetExplorerFallback'] )
@@ -236,12 +236,14 @@ foreach($GLOBALS['TL_DCA']['tl_content']['subpalettes'] as $strSubpalette => $st
  * Fields
  */
 
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField("internName", $strFileName);
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['headlineImagePosition'] = array
 (
     'label'                 => &$GLOBALS['TL_LANG']['tl_content']['headlineImagePosition'],
     'exclude'               => true,
     'inputType'             => 'select',
-    'input_field_callback'  => array('IIDO\BasicBundle\Table\ContentTable', 'parseHeadlineImagePostionField'),
+    'input_field_callback'  => array($strTableClass, 'parseHeadlineImagePostionField'),
     'eval'                  => array
     (
         'tl_class'              => 'w50'
@@ -255,7 +257,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navModule'] = array
     'label'                 => &$GLOBALS['TL_LANG']['tl_content']['navModule'],
     'exclude'               => true,
     'inputType'             => 'select',
-    'options_callback'      => array('IIDO\BasicBundle\Table\ContentTable', 'getNavigationModule'),
+    'options_callback'      => array($strTableClass, 'getNavigationModule'),
     'eval'                  => array
     (
         'tl_class'              => 'w50'
@@ -388,7 +390,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'] = array
 //);
 
 
+
 // TRENNLINIE (DIVIDER)
+
 $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'] = array
 (
 	'label'						=> &$GLOBALS['TL_LANG']['tl_content']['dividerSize'],
@@ -404,44 +408,14 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'] = array
 );
 
 \IIDO\BasicBundle\Helper\DcaHelper::addField('dividerColor', 'color', $strFileName);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['dividerColor'] = array
-//(
-//	'label'						=> &$GLOBALS['TL_LANG']['tl_content']['dividerColor'],
-//	'inputType'					=> 'text',
-//	'eval'						=> array
-//	(
-//		'maxlength'					=> 6,
-//		'multiple'					=> true,
-//		'size'						=> 2,
-//		'colorpicker'				=> true,
-//		'isHexColor'				=> true,
-//		'decodeEntities'			=> true,
-//		'tl_class'					=> 'w50 wizard'
-//	),
-//	'sql'						=> "varchar(64) NOT NULL default ''"
-//);
-
 \IIDO\BasicBundle\Helper\DcaHelper::addField('dividerStyle', 'select', $strFileName, array('includeBlankOption' => true));
-//$GLOBALS['TL_DCA']['tl_content']['fields']['dividerStyle'] = array
-//(
-//	'label'						=> &$GLOBALS['TL_LANG']['tl_content']['dividerStyle'],
-//	'inputType'					=> 'select',
-//	'options'					=> array('solid', 'dotted', 'dashed', 'double'),
-//	'eval'						=> array
-//	(
-//		'includeBlankOption'		=> true,
-//		'tl_class'					=> 'clr w50'
-//	),
-//	'sql'						=> "varchar(64) NOT NULL default ''"
-//);
 
 
 
 // Random Image
+
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('imgSize', $strFileName, 'imgSize', 'tl_module');
-//$GLOBALS['TL_DCA']['tl_content']['fields']['imgSize']       = $GLOBALS['TL_DCA']['tl_module']['fields']['imgSize'];
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('useCaption', $strFileName, 'useCaption', 'tl_module');
-//$GLOBALS['TL_DCA']['tl_content']['fields']['useCaption']    = $GLOBALS['TL_DCA']['tl_module']['fields']['useCaption'];
 
 
 
@@ -671,19 +645,11 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'] = array
 
 
 // HEADLINE
+
 \IIDO\BasicBundle\Helper\DcaHelper::addField('topHeadline', 'text', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField('subHeadline', 'text', $strFileName, array(), 'clr');
 
-
 \IIDO\BasicBundle\Helper\DcaHelper::addField('addTopHeadline', 'checkbox__selector', $strFileName, array(), 'clr sub-box');
-//$GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadline'] = array
-//(
-//	'label'				=> &$GLOBALS['TL_LANG']['tl_content']['addTopHeadline'],
-//	'exclude'			=> true,
-//	'inputType'			=> 'checkbox',
-//	'eval'				=> array('tl_class'=>'w50 clr m12', 'submitOnChange'=>true),
-//	'sql'				=> "char(1) NOT NULL default ''"
-//);
 
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addSubHeadline']			= $GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadline'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addSubHeadline']['label']	= &$GLOBALS['TL_LANG']['tl_content']['addSubHeadline'];
@@ -760,93 +726,14 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 
 
 // HYPERLINK BUTTON
+
 \IIDO\BasicBundle\Helper\DcaHelper::addField("showAsButton", "checkbox", $strFileName, array('submitOnChange'=>true), "clr");
-
-//$GLOBALS['TL_DCA']['tl_content']['fields']['showAsButton'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['showAsButton'],
-//    'exclude'                 => true,
-//    'inputType'               => 'checkbox',
-//    'eval'                    => array
-//    (
-//        'tl_class'              => 'w50 clr m12',
-//        'submitOnChange'        => true
-//    ),
-//    'sql'                     => "char(1) NOT NULL default ''"
-//);
-
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonStyle", "select", $strFileName);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonStyle'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonStyle'],
-//    'exclude'                 => true,
-//    'inputType'               => 'select',
-//    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonStyle'],
-//    'eval'                    => array
-//    (
-//        'tl_class'              => 'w50',
-////        'includeBlankOption'    => true
-//    ),
-//    'sql'                     => "varchar(50) NOT NULL default ''"
-//);
-
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddon", "select__selector", $strFileName, array('includeBlankOption' => true));
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddon'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddon'],
-//    'exclude'                 => true,
-//    'inputType'               => 'select',
-//    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonAddon'],
-//    'eval'                    => array
-//    (
-//        'tl_class'              => 'w50',
-//        'includeBlankOption'    => true,
-//        'submitOnChange'        => true
-//    ),
-//    'sql'                     => "varchar(50) NOT NULL default ''"
-//);
-
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonType", "select", $strFileName);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonType'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonType'],
-//    'exclude'                 => true,
-//    'inputType'               => 'select',
-//    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonType'],
-//    'eval'                    => array
-//    (
-//        'tl_class'              => 'w50'
-//    ),
-//    'sql'                     => "varchar(255) NOT NULL default ''"
-//);
-
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonLinkMode", "select", $strFileName);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonLinkMode'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonLinkMode'],
-//    'exclude'                 => true,
-//    'inputType'               => 'select',
-//    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonLinkMode'],
-//    'eval'                    => array
-//    (
-//        'tl_class'              => 'w50'
-//    ),
-//    'sql'                     => "varchar(255) NOT NULL default ''"
-//);
-
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddonPosition", "select", $strFileName);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonPosition'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddonPosition'],
-//    'exclude'                 => true,
-//    'inputType'               => 'select',
-//    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonAddonPosition'],
-//    'eval'                    => array
-//    (
-//        'tl_class'              => 'w50'
-//    ),
-//    'sql'                     => "varchar(255) NOT NULL default ''"
-//);
+
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
 (
@@ -862,18 +749,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
 );
 
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddonArrow", "select", $strFileName);
-//$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonArrow'] = array
-//(
-//    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddonArrow'],
-//    'exclude'                 => true,
-//    'inputType'               => 'select',
-//    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['buttonAddonArrow'],
-//    'eval'                    => array
-//    (
-//        'tl_class'              => 'w50'
-//    ),
-//    'sql'                     => "varchar(255) NOT NULL default ''"
-//);
 
 
 

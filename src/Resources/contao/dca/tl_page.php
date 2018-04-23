@@ -130,10 +130,13 @@ foreach($GLOBALS['TL_DCA'][ $strTableName ]['palettes'] as $strPalette => $strFi
             $strFields      = str_replace(',type', '', $strFields);
             $strFields      = str_replace(',title', ',title,type', $strFields);
         }
+
+
     }
     else
     {
-        $strFields      = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend', $strFields);
+        $strFields  = str_replace('{publish_legend', '{expert_legend},cssClass;{publish_legend', $strFields);
+        $strFields  = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend', $strFields);
     }
 
     if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
