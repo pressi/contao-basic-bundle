@@ -57,7 +57,7 @@ class ConnectTool
     /**
      * @var string
      */
-    private $configFile      = 'src/Resources/config/master-connection.json';
+    private $configFile      = 'Resources/config/master-connection.json';
 
 
     /**
@@ -681,6 +681,10 @@ class ConnectTool
                         $valueVarValue = password_hash($valueVarValue, PASSWORD_DEFAULT);
                     }
                 }
+                elseif( $valueVar === "tstamp" )
+                {
+                    $valueVarValue = time();
+                }
 
                 $objModel->$valueVar = $valueVarValue;
             }
@@ -746,8 +750,10 @@ class ConnectTool
 
 
 
-    public function createNewModelEntry($modelName, array $arrModelValue, array $arrAddToModel = array())
+    public function createNewModelEntry($modelName, array $arrModelValue, array $arrAddToModel = array(), array $arrModules = array())
     {
+        $arrReturn = array();
+
         if( is_array($arrModelValue) && count($arrModelValue) )
         {
             $modelClass = '\\' . $modelName . 'Model';
@@ -758,9 +764,42 @@ class ConnectTool
 
                 foreach($arrValue as $valueVar => $valueVarValue)
                 {
-                    $valueVarValue = $this->replaceVars( $valueVarValue);
+                    if( $valueVar !== "id" )
+                    {
+                        $valueVarValue = $this->replaceVars( $valueVarValue);
 
-                    $objModel->$valueVar = $valueVarValue;
+                        if( $valueVar === "tstamp" )
+                        {
+                            $valueVarValue = time();
+                        }
+                        elseif( $valueVar === "modules" && $modelName === "Layout" )
+                        {
+                            $arrThemeModules    = \StringUtil::deserialize($valueVarValue, TRUE);
+                            $arrAddThemeModules = array();
+
+                            if( count($arrThemeModules) && count($arrModules) )
+                            {
+                                foreach( $arrThemeModules as $num => $arrThemeModule )
+                                {
+                                    $modID = $arrThemeModule['mod'];
+
+                                    foreach( $arrModules as $arrModule)
+                                    {
+                                        if( $arrModule->master_ID === $modID )
+                                        {
+                                            $arrThemeModule['mod'] = $arrModule->id;
+                                        }
+                                    }
+
+                                    $arrAddThemeModules[ $num ] = $arrThemeModule;
+                                }
+
+                                $valueVarValue = deserialize($arrAddThemeModules);
+                            }
+                        }
+
+                        $objModel->$valueVar = $valueVarValue;
+                    }
                 }
 
                 if( count($arrAddToModel) )
@@ -791,14 +830,18 @@ class ConnectTool
                     }
                 }
 
-                $objModel->save();
+//                $arrReturn[] = $objModel;
+                $arrReturn[] = $objModel->save();
+
             }
         }
+
+        return $arrReturn;
     }
 
 
 
-    public function createPages( array $arrPages, array $arrAddToPage = array() )
+    public function createPages( array $arrPages, array $arrAddToPage = array(), array $arrLayouts = array() )
     {
         if( is_array($arrPages) && count($arrPages) )
         {
@@ -814,6 +857,21 @@ class ConnectTool
                 if( count($arrAddToPage) )
                 {
                     $arrPage = array_merge($arrPage, $arrAddToPage);
+
+                    if(count($arrLayouts) && $arrPage['type'] === "root" )
+                    {
+                        $layoutID = $arrPage['layout'];
+
+                        foreach($arrLayouts as $arrLayout)
+                        {
+                            if( $arrLayout->master_ID === $layoutID )
+                            {
+                                $layoutID = $arrLayout->id;
+                            }
+                        }
+
+                        $arrPage['layout'] = $layoutID;
+                    }
                 }
 
 //                $objInsertPage = false;
@@ -838,10 +896,7 @@ class ConnectTool
 
                 if( is_array($arrSubPages) && count($arrSubPages) )
                 {
-                    $arrAddToPage = array
-                    (
-                        'pid' => $objInsertPage->id
-                    );
+                    $arrAddToPage = array('pid' => $objInsertPage->id);
 
                     $this->createPages( $arrSubPages, $arrAddToPage );
                 }

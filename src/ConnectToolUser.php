@@ -29,7 +29,7 @@ class ConnectToolUser
     /**
      * @var int
      */
-    private $timeout = 300;
+    private $timeout = 1800;
 
 
 
