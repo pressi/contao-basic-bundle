@@ -68,7 +68,7 @@ class ConnectionController implements ContainerAwareInterface
 
         if( $connectTool->connectionLost() )
         {
-            return $this->render('noConection.html.twig');
+            return $this->render('noConnection.html.twig');
         }
 
         if( $connectTool->isLocked() )
@@ -349,23 +349,23 @@ class ConnectionController implements ContainerAwareInterface
         unset($arrTheme['imageSizes']);
         unset($arrTheme['imageSizeItems']);
 
-        $connectTool->createNewOneModelEntry("Theme", $arrTheme, array('master_ID' => $themeID));
-
-        // Create Layouts
-        $connectTool->createNewModelEntry("Layout", (array) $arrData->theme->layouts, array('master_ID' => 'field_id', 'webfonts' => $webfont));
+        $objInsertTheme = $connectTool->createNewOneModelEntry("Theme", $arrTheme, array('master_ID' => $themeID));
 
         // Create Modules
-        $connectTool->createNewModelEntry("Module", (array) $arrData->theme->modules, array('master_ID' => 'field_id'));
+        $arrModules = $connectTool->createNewModelEntry("Module", (array) $arrData->theme->modules, array('pid' => $objInsertTheme->id, 'master_ID' => 'field_id'));
+
+        // Create Layouts
+        $arrLayouts = $connectTool->createNewModelEntry("Layout", (array) $arrData->theme->layouts, array('pid' => $objInsertTheme->id, 'master_ID' => 'field_id', 'webfonts' => $webfont), $arrModules);
 
         // Create Image Sizes
-        $connectTool->createNewModelEntry("ImageSize", (array) $arrData->theme->imageSizes);
+        $connectTool->createNewModelEntry("ImageSize", (array) $arrData->theme->imageSizes, array('pid' => $objInsertTheme->id));
 
         // Create Image Size Items
-        $connectTool->createNewModelEntry("ImageSizeItem", (array) $arrData->theme->imageSizeItems);
+        $connectTool->createNewModelEntry("ImageSizeItem", (array) $arrData->theme->imageSizeItems, array('pid' => $objInsertTheme->id));
 
 
         // Create Pages
-        $connectTool->createPages( (array) $arrData->pages );
+        $connectTool->createPages( (array) $arrData->pages, array(), $arrLayouts );
 
 
         // Backend Users
