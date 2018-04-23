@@ -249,12 +249,29 @@
 
 
 
+			<trans-unit id="tl_content.internName.0">
+				<source>intern name</source>
+				<target>Interner Name</target>
+			</trans-unit>
+            <trans-unit id="tl_content.internName.1">
+                <source>intern name</source>
+                <target>Der Name wird in der Element-Übersicht angezeigt, um besser zu erkennen um welches Element es sich handelt.</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
-			<trans-unit id="tl_content.caroufredsel_legend">
-				<source>carouFredSel-Einstellungen</source>
-				<target>Slideshow-Einstellungen</target>
+			<trans-unit id="tl_content.intern_legend">
+				<source>Intern-Settings</source>
+				<target>Interne-Einstellungen</target>
 			</trans-unit>
+
+
+            <trans-unit id="tl_content.caroufredsel_legend">
+                <source>carouFredSel-Einstellungen</source>
+                <target>Slideshow-Einstellungen</target>
+            </trans-unit>
 
 
 			<trans-unit id="tl_content.caroufredsel_thumbnails_legend">
