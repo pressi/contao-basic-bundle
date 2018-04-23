@@ -82,16 +82,12 @@ class WebsiteConfigTable
         $fieldName      = lcfirst( preg_replace('/^' . $tableFieldPrefix . 'script/', '', $dc->field) );
         $subFolder      = 'lib';
 
-        if( !is_dir( $folderPath . 'lib/' . $fieldName ) )
+        if( !is_dir( $folderPath . $subFolder . '/' . $fieldName ) )
         {
-            $folderPath = $folderPath . 'jquery/';
-
             $subFolder = 'jquery';
         }
-        else
-        {
-            $folderPath = $folderPath . 'lib/';
-        }
+
+        $folderPath = $folderPath . $subFolder . '/';
 
         if( is_dir( $folderPath . $fieldName ) )
         {
