@@ -476,14 +476,13 @@ class ArticleTemplateRenderer
                         $strArrowStyles = ' style="' . $strPositionStyles . '"';
                     }
 
-
-                    $divTableEnd = '<div class="pos-' . $arrowPos . ' pos-' . $arrowPosOffset . ' arrow arrow-down arrow-' . $arrowStyle . ' big scroll-to-next-' . $arrowType . '"' . $strArrowStyles . '><div class="arrow-inside-container"><div class="arrow-inside">' . $arrowTitle . '</div></div></div>' . $divTableEnd;
+                    $divTableEnd = '<div class="pos-' . $arrowPos . ' pos-' . $arrowPosOffset . ' arrow arrow-down arrow-' . $arrowStyle . ' bigger scroll-to-next-' . $arrowType . '"' . $strArrowStyles . '><div class="arrow-inside-container"><div class="arrow-inside">' . $arrowTitle . '</div></div></div>' . $divTableEnd;
                 }
 
                 if( preg_match('/add-footer/', $cssID[1]) )
                 {
                     $lang       = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
-                    $strFooter  = \Frontend::replaceInsertTags( '{{insert_article::ge_footer_' . $objPage->rootAlias . '_' . $lang . '}}' );
+                    $strFooter  = \Frontend::replaceInsertTags( '{{insert_article::ge_footer_' . $objPage->rootAlias . '}}' );
 
                     if( strlen($strFooter) )
                     {
