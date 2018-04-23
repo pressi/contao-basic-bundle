@@ -335,4 +335,3 @@ IIDO.Project = IIDO.Project || {};
     };
 
 })(window, jQuery, IIDO.Project);
-var huhu;

@@ -12,7 +12,7 @@ IIDO.Page = IIDO.Page || {};
 {
 
     var $header, $wrapper, $searchForm, $mobileNav, $openButton, $mobileIsOpened, $tagline,
-        $lbOpen = false, $openLinkTag = false, $headOptions = {},
+        $lbOpen = false, $openLinkTag = false, $headOptions = {}, $menuLink,
 
         $navOffset = 0;
 
@@ -875,6 +875,20 @@ IIDO.Page = IIDO.Page || {};
                     // {
                     //     activeTag.removeClass( "active" );
                     // }*/
+
+                    if( $menuLink )
+                    {
+                        $menuLink.removeClass("active");
+                        $menuLink = '';
+                    }
+
+                    if( $openLinkTag )
+                    {
+                        $openLinkTag.removeClass("active");
+                        $openLinkTag = '';
+                    }
+
+                    $lbOpen = false;
                 }
             }
         };
@@ -888,7 +902,15 @@ IIDO.Page = IIDO.Page || {};
 
         if( openType === "ajax" )
         {
-            options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,selector:'#main > .inside',slideClass:slideClassName}});
+            // options = $.extend({}, options, {opts:{fitToView:true,width:'100%',height:'100%',margin:0,filter:'#main > .inside',selector:'#main > .inside',slideClass:slideClassName}});
+
+            options.opts.fitToView = true;
+            options.opts.width = '100%';
+            options.opts.height = '100%';
+            options.opts.margin = 0;
+            options.opts.filter = '#main > .inside';
+            options.opts.selector = '#main > .inside';
+            options.opts.sliderClass = slideClassName;
         }
 
         if( el.hasClass("fit") || el.hasClass("fit-to-view") || el.hasClass("ftv") )
@@ -952,6 +974,12 @@ IIDO.Page = IIDO.Page || {};
         {
             if( el.hasClass("active") )
             {
+                if( $menuLink )
+                {
+                    $menuLink.removeClass("active");
+                    $menuLink = '';
+                }
+
                 siblingLinks.each(function(index, element) { $(element).find("a").removeClass("active") });
                 $.fancybox.close();
 
@@ -963,6 +991,11 @@ IIDO.Page = IIDO.Page || {};
                 $.fancybox.close();
                 $lbOpen = false;
 
+                if( $menuLink )
+                {
+                    $menuLink.removeClass("active");
+                    $menuLink = '';
+                }
                 siblingLinks.each(function(index, element) { $(element).find("a").removeClass("active") });
             }
         }
@@ -981,6 +1014,8 @@ IIDO.Page = IIDO.Page || {};
                 {
                     linkTag.addClass("active");
                     activeTag = linkTag;
+
+                    $menuLink = linkTag;
                 }
             });
 
