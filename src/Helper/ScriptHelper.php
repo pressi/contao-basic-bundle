@@ -151,7 +151,7 @@ class ScriptHelper
      * Add source script
      *
      * @param string $scriptName
-     * @param string $sourceScriptName
+     * @param string|array $sourceScriptName
      */
     public static function addSourceScript( $scriptName, $sourceScriptName )
     {

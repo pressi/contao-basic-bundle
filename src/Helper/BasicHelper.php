@@ -784,6 +784,7 @@ class BasicHelper extends \Frontend
 
                 /** @var \Module $objModule */
                 $objModule = new $strClass($objModule, $strColumn);
+                $objModule->id = $navModuleID;
                 $objModule->cssID = ''; //$cssID; //array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
 
                 $strBuffer = $objModule->generate();

@@ -295,7 +295,7 @@ class StylesheetHelper
     {
 //        global $objPage;
 
-        preg_match_all('/\/\*#[^*]+#\*\//', $strContent, $arrChunks);
+        preg_match_all('/\/\*#[^=]+#\*\//', $strContent, $arrChunks);
 
         foreach ($arrChunks[0] as $strChunk)
         {
@@ -311,6 +311,24 @@ class StylesheetHelper
 //                    $pageColor  = ColorHelper::getPageColor( $objPage );
 //                    $strContent = str_replace($strChunk . '#fff', $pageColor, $strContent);
 //                    break;
+
+                case (preg_match('/^calc_/', $strKey) ? true : false):
+                    $arrCalc    = explode("__", $strKey);
+                    $calc       = self::replaceThemeVars( preg_replace('/^calc_/', '', $arrCalc[0]) );
+                    $result     = 0; //MathHelper::calculate( $calc );
+
+                    eval("\$result = " . $calc . ";");
+
+                    $op = '';
+
+                    if( $arrCalc[1] && $arrCalc[1] === 'neg' )
+                    {
+                        $op = '-';
+                    }
+
+                    $strContent = str_replace($strChunk . '1px', $op . $result . 'px', $strContent);
+
+                    break;
             }
         }
 
@@ -354,6 +372,25 @@ class StylesheetHelper
         }
 
         return $strContent;
+    }
+
+
+
+    public static function replaceThemeVars( $string )
+    {
+        global $objPage;
+
+        $objLayout  = BasicHelper::getPageLayout( $objPage );
+        $objTheme   = \ThemeModel::findByPk( $objLayout->pid );
+
+        $themeVars  = \StringUtil::deserialize($objTheme->vars, TRUE);
+
+        foreach( $themeVars as $arrVar )
+        {
+            $string = preg_replace('/#' . $arrVar['key'] . '#/', preg_replace('/px$/', '', $arrVar['value']), $string);
+        }
+
+        return $string;
     }
 
 
