@@ -36,16 +36,25 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
      */
     public function getBundles(ParserInterface $parser)
     {
+        $arrLoadAfter   = [ContaoCoreBundle::class, ContaoNewsBundle::class, ContaoCalendarBundle::class];
+        $vendorPath     = preg_replace('/2do\/contao-basic-bundle\/src\/ContaoManager/', '', __DIR__);
+
+        if( is_dir( $vendorPath . 'delahaye/dlh_googlemaps') )
+        {
+            $arrLoadAfter[] = 'dlh_googlemaps';
+        }
+
         return [
             BundleConfig::create(IIDOBasicBundle::class)
-                ->setLoadAfter([ContaoCoreBundle::class, ContaoNewsBundle::class, ContaoCalendarBundle::class])
+                ->setLoadAfter($arrLoadAfter)
         ];
     }
 
 
-
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
