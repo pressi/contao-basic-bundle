@@ -160,6 +160,7 @@ $GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerNam
 $GLOBALS['TL_HOOKS']['getCombinedFile'][]                   = array($listenerName . '.combiner', 'getCustomizeCombinedFile');
 
 //$GLOBALS['TL_HOOKS']['getForm'][]                           = array($listenerName . '.form', 'getCustomizeForm');
+$GLOBALS['TL_HOOKS']['compileFormFields'][]                 = array($listenerName . '.form', 'compileCustomizeFormFields');
 $GLOBALS['TL_HOOKS']['loadFormField'][]                     = array($listenerName . '.form', 'loadCustomizeFormField');
 $GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerName . '.form', 'parseCustomizeWidget');
 
