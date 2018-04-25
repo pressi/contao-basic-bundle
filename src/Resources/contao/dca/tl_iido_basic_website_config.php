@@ -55,6 +55,11 @@ $arrFields =
 
         $fieldPrefix . 'scriptBarba',
         $fieldPrefix . 'scriptVelocity'
+    ],
+
+    'support_legend' =>
+    [
+        $fieldPrefix . 'enableSupportForm'
     ]
 ];
 
@@ -66,7 +71,20 @@ $arrFields =
  * Subpalettes
  */
 
+$arrSupportFormSubpalette =
+[
+    'supportCompany',
+    'supportEmployee',
+    'supportStreet',
+    'supportPostal',
+    'supportCity',
+
+    'supportMail',
+    'supportPhone'
+];
+
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette($fieldPrefix . 'weatherIconsSet_own', $fieldPrefix . 'weatherIconsUrl', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette($fieldPrefix . 'enableSupportForm', $fieldPrefix . implode( ',' . $fieldPrefix, $arrSupportFormSubpalette), $strFileName);
 
 
 
@@ -125,3 +143,13 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields'][$fieldPrefix . 'scriptExplanation']
         'tl_class'          => 'long'
     )
 );
+
+
+
+// Support
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField($fieldPrefix . 'enableSupportForm', $strFileName, array(), '', false, true);
+
+foreach( $arrSupportFormSubpalette as $strFieldName)
+{
+    \IIDO\BasicBundle\Helper\DcaHelper::addTextField($fieldPrefix . $strFieldName, $strFileName);
+}

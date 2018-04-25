@@ -102,6 +102,48 @@
 
 
 
+            <trans-unit id="tl_iido_basic_website_config.enableSupportForm.0">
+                <source>enable support form</source>
+                <target>Support Formular anzeigen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.supportCompany.0">
+                <source>contact: company</source>
+                <target>Kontakt: Firma</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.supportEmployee.0">
+                <source>contact: employee</source>
+                <target>Kontakt: Mitarbeiter</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.supportStreet.0">
+                <source>contact: street</source>
+                <target>Kontakt: Straße</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.supportPostal.0">
+                <source>contact: postal</source>
+                <target>Kontakt: Postleitzahl</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.supportCity.0">
+                <source>contact: city</source>
+                <target>Kontakt: Ort</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.supportMail.0">
+                <source>contact: email</source>
+                <target>Kontakt: E-Mail</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.supportPhone.0">
+                <source>contact: phone</source>
+                <target>Kontakt: Telefon</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_iido_basic_website_config.weather_legend">
@@ -112,6 +154,11 @@
             <trans-unit id="tl_iido_basic_website_config.scripts_legend">
                 <source>scripts-settings</source>
                 <target>JavaScript-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.support_legend">
+                <source>support-settings</source>
+                <target>Support-Einstellungen (Backend)</target>
             </trans-unit>
 
 
