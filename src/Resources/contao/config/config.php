@@ -151,6 +151,7 @@ $GLOBALS['TL_HOOKS']['outputFrontendTemplate'][]            = array($listenerNam
 $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerName . '.frontend_template', 'parseCustomizeFrontendTemplate');
 
 $GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.backend_template', 'outputCustomizeBackendTemplate');
+$GLOBALS['TL_HOOKS']['parseBackendTemplate'][]              = array($listenerName . '.backend_template', 'parseCustomizeBackendTemplate');
 
 $GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags');
 
