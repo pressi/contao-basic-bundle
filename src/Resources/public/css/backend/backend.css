@@ -382,3 +382,46 @@ body.popup #main .tl_formbody_submit {
 #sub_iidoBasic_weatherIconsSet {
     clear: none;
 }
+
+.backend-welcome-container h2 {
+    margin: 18px 0 6px;
+}
+
+.backend-welcome-container:after {
+    content: '';
+
+    display: table;
+    float: none;
+    clear: both;
+}
+
+.backend-welcome-container .half-column {
+    float: left;
+    width: 50%;
+}
+
+/*.backend-welcome-container .half-column:first-child {*/
+    /*border-right: 1px solid #e6e6e8;*/
+/*}*/
+
+.backend-welcome-container .form-widget {
+    padding: 5px 0 15px;
+}
+
+.backend-welcome-container .form-widget label {
+    display: block;
+}
+
+.backend-welcome-container .form-widget input,
+.backend-welcome-container .form-widget textarea {
+    width: 80%;
+    resize: none;
+}
+
+.backend-welcome-container .form-widget textarea {
+    min-height: 50px;
+}
+
+.backend-welcome-container .support-contact {
+    line-height: 1.5em;
+}
