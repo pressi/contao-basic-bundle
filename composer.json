@@ -21,6 +21,7 @@
         "contao/news-bundle"        : "~4",
         "contao/calendar-bundle"    : "~4",
         "madeyourday/contao-rocksolid-custom-elements": "~2",
+        "heimrichhannot/contao-be_explanation-bundle": "~1",
         "codefog/contao-cookiebar": "~1"
     },
     "require-dev":
