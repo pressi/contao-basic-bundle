@@ -262,6 +262,13 @@ class DcaHelper extends \Frontend
 
 
 
+    public static function copyPalette( $strNewPalette, $strOldPalette, $strTable)
+    {
+        $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strNewPalette ] = $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strOldPalette ];
+    }
+
+
+
     public static function addSubpalette($strName, $arrFields, $strTable, $override = FALSE)
     {
         $strFields = $arrFields;
