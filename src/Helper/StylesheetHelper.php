@@ -369,6 +369,8 @@ class StylesheetHelper
             $strContent = preg_replace('/\/\*#' . $varName . '_trans20#\*\/' . $add . '/', $rgba . '0.2)', $strContent);
             $strContent = preg_replace('/\/\*#' . $varName . '_trans15#\*\/' . $add . '/', $rgba . '0.15)', $strContent);
             $strContent = preg_replace('/\/\*#' . $varName . '_trans10#\*\/' . $add . '/', $rgba . '0.1)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans05#\*\/' . $add . '/', $rgba . '0.05)', $strContent);
+            $strContent = preg_replace('/\/\*#' . $varName . '_trans5#\*\/' . $add . '/', $rgba . '0.05)', $strContent);
         }
 
         return $strContent;
@@ -404,28 +406,85 @@ class StylesheetHelper
 
     public static function getGlobalElementStyles( $mode, $objData )
     {
-        $arrStyles = array();
+        $arrStyles      = array();
+        $objTopHeader   = false;
 
-        if( $mode === "header" || $mode === "footer" )
+        if( $mode === "topheader" || $mode === "header" || $mode === "footer" )
         {
+            $selector = $mode;
+
+            if( $mode === "header" )
+            {
+                $objTopHeader = HeaderHelper::headerTopBarExists();
+
+                if( $objTopHeader )
+                {
+                    $selector = 'header .header-bar';
+                }
+            }
+            elseif( $mode === "topheader" )
+            {
+                $selector = 'header .header-top-bar';
+            }
+
             $arrStyles = array
             (
-                'selector'      => $mode,
+                'selector'      => $selector,
             );
 
             if( $objData->isFixed )
             {
-                $arrPosition    = array();
+                $arrPosition    = array('top'=>'','right'=>'','bottom'=>'','left'=>'','unit'=>'px');
                 $articleWidth   = \StringUtil::deserialize($objData->articleWidth, true);
                 $articleHeight  = \StringUtil::deserialize($objData->articleHeight, true);
 
-                $arrStyles = array
-                (
-                    'selector'      => $mode . '.is-fixed',
+                if( $mode === "header" )
+                {
+                    if( $objTopHeader )
+                    {
+                        $arrStyles = array
+                        (
+                            'selector'      => $selector,
 
-                    'positioning'   => true,
-                    'position'      => 'fixed'
-                );
+                            'positioning'   => true,
+                            'position'      => $objTopHeader->isAbsolute ? 'absolute' : 'fixed'
+                        );
+                    }
+                    else
+                    {
+                        $selector = $selector . '.is-fixed';
+
+                        $arrStyles = array
+                        (
+                            'selector'      => $selector,
+
+                            'positioning'   => true,
+                            'position'      => 'fixed'
+                        );
+                    }
+                }
+                elseif( $mode === "topheader" )
+                {
+                    $arrStyles = array
+                    (
+                        'selector'      => $selector,
+
+                        'positioning'   => true,
+                        'position'      => $objData->isAbsolute ? 'absolute' : 'fixed'
+                    );
+                }
+                else
+                {
+                    $selector = $selector . '.is-fixed';
+
+                    $arrStyles = array
+                    (
+                        'selector'      => $selector,
+
+                        'positioning'   => true,
+                        'position'      => 'fixed'
+                    );
+                }
 
                 if( $articleWidth['value'] || $articleHeight['value'] )
                 {
@@ -459,7 +518,7 @@ class StylesheetHelper
                     if( !$articleHeight['value'] || $articleHeight['value'] === 100 || $articleHeight['value'] === "100" )
                     {
                         $arrPosition['top']     = '0';
-                        $arrPosition['botom']   = '0';
+                        $arrPosition['bottom']   = '0';
                     }
                 }
                 elseif( $objData->position === "bottom" )
@@ -479,7 +538,7 @@ class StylesheetHelper
                     if( !$articleHeight['value'] || $articleHeight['value'] === 100 || $articleHeight['value'] === "100" )
                     {
                         $arrPosition['top']     = '0';
-                        $arrPosition['botom']   = '0';
+                        $arrPosition['bottom']   = '0';
                     }
                 }
 

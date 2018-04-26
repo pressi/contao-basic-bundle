@@ -262,4 +262,20 @@ class ImageHelper extends \Backend
         return preg_replace('/ /', '%20', $strPath);
     }
 
+
+
+    public static function getImageMetaFromPath( $singleSRC )
+    {
+        $objImage = \FilesModel::findByPath( $singleSRC );
+
+        if( $objImage )
+        {
+            $arrMeta = \StringUtil::deserialize($objImage->meta, TRUE);
+
+            return $arrMeta[ BasicHelper::getLanguage() ];
+        }
+
+        return array();
+    }
+
 }

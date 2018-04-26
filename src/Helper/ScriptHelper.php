@@ -72,6 +72,11 @@ class ScriptHelper
             }
         }
 
+        if( !$hasAnimation && (HeaderHelper::isHeaderIsSticky() ||  HeaderHelper::isTopHeaderIsSticky()) )
+        {
+            $hasAnimation = true;
+        }
+
         return $hasAnimation;
     }
 
@@ -165,14 +170,14 @@ class ScriptHelper
 
         foreach( $sourceScriptName as $srcKey => $srcFileName )
         {
-            if( file_exists(BasicHelper::getRootDir(true) . $filePathIntern . $srcFileName) )
+            if( file_exists(BasicHelper::getRootDir(true) . $filePathIntern . $srcFileName . '.min.js') )
             {
                 if( is_numeric($srcKey) )
                 {
                     $srcKey = $scriptName . '_' . $srcFileName;
                 }
 
-                $GLOBALS['TL_JAVASCRIPT'][ $srcKey ] = $filePath . $srcFileName . '.min.js' . self::getScriptMode();
+                $GLOBALS['TL_JAVASCRIPT'][ $srcKey ] = $filePath. $srcFileName . '.min.js' . self::getScriptMode();
             }
         }
     }

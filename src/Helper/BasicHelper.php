@@ -966,7 +966,7 @@ class BasicHelper extends \Frontend
 
 
 
-    public static function renderPosition( $objElement, $positionMarginName = 'positionMargin', $returnStyles = true, $returnStylesAsArray = false, $returnClasses = false, $positionName = 'position', $posFixedName = 'positionFixed' )
+    public static function renderPosition( $objElement, $positionMarginName = 'positionMargin', $returnStyles = true, $returnStylesAsArray = false, $returnClasses = false, $positionName = 'position', $posFixedName = 'positionFixed', $reverseFixed = false )
     {
         $arrClasses = array();
         $arrStyles  = array();
@@ -974,7 +974,7 @@ class BasicHelper extends \Frontend
 
         if( $returnClasses )
         {
-            $arrClasses[] = 'pos-' . ($objElement->$posFixedName ? 'fixed' : 'abs');
+            $arrClasses[] = 'pos-' . (($objElement->$posFixedName && !$reverseFixed) ? 'fixed' : 'abs');
             $arrClasses[] = 'pos-' . str_replace('_', '-', $objElement->$positionName);
         }
 
@@ -1071,5 +1071,14 @@ class BasicHelper extends \Frontend
         }
 
         return (count($arrReturn) === 1 ? $arrReturn[0] : $arrReturn);
+    }
+
+
+
+    public static function getRootPageAlias()
+    {
+        global $objPage;
+
+        return $objPage->rootAlias;
     }
 }
