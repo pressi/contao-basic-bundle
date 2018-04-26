@@ -22,7 +22,7 @@ $arrStates = $objSessionBag->get("fieldset_states");
 
                         <div class="long widget">
                             <div class="be_explanation tl_info">
-                                <div>Text wird mit <strong>Twig</strong> gerendert! Vorsicht beim eingeben von Variablen.</div>
+                                <div>Text wird mit <strong>Twig</strong> gerendert! Vorsicht beim eingeben von Variablen. Contao Inserts Tags sehen folgendermaßen aus: "{{ '{{iflng::de}}' }}"</div>
                             </div>
                         </div>
 
