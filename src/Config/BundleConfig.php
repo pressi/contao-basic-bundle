@@ -261,14 +261,15 @@ class BundleConfig
         else
         {
             $rootDir    = BasicHelper::getRootDir();
+            $bundleName = self::getBundleGroup() . '/' . self::getBundleName();
             $addon      = '';
 
-            if( is_dir($rootDir . '/vendor/' . self::getBundleGroup() . '/' . self::getBundleName() . '/src') )
+            if( is_dir($rootDir . '/vendor/' . $bundleName . '/src') )
             {
                 $addon = '/src';
             }
 
-            return 'vendor/' . self::getBundleGroup() . '/' . self::getBundleName() . $addon;
+            return 'vendor/' . $bundleName . $addon;
         }
     }
 
