@@ -1932,30 +1932,55 @@ IIDO.Page = IIDO.Page || {};
         {
             Array.prototype.forEach.call(stickyElements, function(element, index)
             {
-                var stickyElement = new Waypoint.Sticky(
+                var stickyConfig = {
+                    element: $(element),
+                    handler: function( direction )
                     {
-                        element: $(element),
-                        handler: function( direction )
-                        {
-                            /*/ var footer = pageTitle.parent().next(".footer");
-                            // $(document.body).toggleClass("fixed-page-title");
-                            // pageContainer.toggleClass("is-fixed");*/
-                        },
-                        offset: function()
-                        {
-                            var stickyOffset = 0;
+                        /*/ var footer = pageTitle.parent().next(".footer");
+                        // $(document.body).toggleClass("fixed-page-title");
+                        // pageContainer.toggleClass("is-fixed");*/
+                    },
+                    offset: function()
+                    {
+                        var stickyOffset    = 0,
+                            stickyElement   = element; //this.element.children[0]
 
-                            Array.prototype.forEach.call(this.element.children[0].classList, function(classTitle)
+                        Array.prototype.forEach.call(stickyElement.classList, function(classTitle)
+                        {
+                            if( classTitle.indexOf("sticky-offset") !== -1 )
                             {
-                                if( classTitle.indexOf("sticky-offset") !== -1 )
-                                {
-                                    stickyOffset = parseInt( classTitle.replace('sticky-offset-', '') );
-                                }
-                            });
+                                stickyOffset = parseInt( classTitle.replace('sticky-offset-', '') );
+                            }
+                        });
 
-                            return -(stickyOffset);
+                        if( stickyOffset === 0 )
+                        {
+                            var dataOffset = parseInt( stickyElement.getAttribute("data-offset") );
+
+                            if( dataOffset > 0 )
+                            {
+                                stickyOffset = dataOffset;
+                            }
                         }
-                    });
+
+                        if( stickyOffset === 0 )
+                        {
+                            var style = stickyElement.currentStyle || window.getComputedStyle(stickyElement);
+                            stickyOffset = parseInt( style.marginTop );
+                        }
+
+                        return -(stickyOffset);
+                    }
+                };
+
+                var addWrapper = $(element).attr("data-wrapper");
+
+                if( addWrapper && addWrapper === "no" )
+                {
+                    stickyConfig.wrapper = null;
+                }
+
+                var stickyElement = new Waypoint.Sticky(stickyConfig);
 
             });
         }
