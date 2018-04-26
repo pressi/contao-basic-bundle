@@ -66,14 +66,15 @@ class ArticleTable extends \Backend
         $strArticleTable    = new \tl_article();
         $strLabel           = $strArticleTable->addIcon( $row, $label );
 
-        if( $row['inColumn'] === "main" && $row['articleType'] !== "content" )
+        if( $row['articleType'] !== "content" )
         {
-            $strColumn      = $GLOBALS['TL_LANG']['COLS'][ $row['inColumn'] ];
-            $strNewColumn   = $GLOBALS['TL_LANG']['COLS'][ $row['articleType'] ];
+            \Controller::loadLanguageFile( $this->strTable );
+
+            $strNewColumn   = $GLOBALS['TL_LANG'][ $this->strTable ]['options']['articleType'][ $row['articleType'] ];
 
             if( strlen($strNewColumn) )
             {
-                $strLabel   = str_replace('[' . $strColumn . ']', '[' .$strNewColumn . ']', $strLabel);
+                $strLabel   = preg_replace('/\[([A-Za-z\s\-_:]{0,})\]/', '[' . $strNewColumn . ']', trim($strLabel));
             }
         }
 

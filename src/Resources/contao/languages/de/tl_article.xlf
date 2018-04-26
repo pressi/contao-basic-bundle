@@ -419,7 +419,7 @@
                 <target>Top Bereich oben (oberhalb der Seite, versteckt)</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.headerTopBar">
-                <source>Header</source>
+                <source>Header: top bar</source>
                 <target>Kopfzeile: Top Bar</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.header">

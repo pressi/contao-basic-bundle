@@ -121,7 +121,7 @@ if( $objParentPage && ($objParentPage->enableFullpage || $articleCounter > 1) )
 }
 
 
-if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articleType === "footer") )
+if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articleType === "headerTopBar" || $objArticle->articleType === "footer") )
 {
     $arrRemove = array
     (
@@ -134,7 +134,7 @@ if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articl
     $arrRemoveLegends = array
     (
         'dimensions', 'navigation', 'teaser', 'syndication',
-        'protected', 'animation'
+        'protected', 'animation', 'divider'
     );
 
     \IIDO\BasicBundle\Helper\DcaHelper::removeField($arrRemove, $strFileName);
@@ -160,7 +160,7 @@ if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articl
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addBackgroundImage", array('bgImage', 'bgPosition', 'bgRepeat', 'bgAttachment', 'bgSize', 'enableBackgroundParallax'), $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addBackgroundVideo", "videoSRC,posterSRC", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuSRC_news", "submenuNewsArchive", $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("isFixed", "position,articleWidth,articleHeight", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("isFixed", "position,positionMargin,isAbsolute,articleWidth,articleHeight", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_intern", "navLinkPage", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("navLinkMode_extern", "navLinkUrl,navLinkNewWindow", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strFileName);
@@ -277,8 +277,10 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['videoSRC'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("isFixed", $strFileName, array(), '', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("enableSticky", $strFileName, array(), 'clr w50');
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField("position", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPositionField("positionMargin", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addUnitField("articleWidth", $strFileName, array(), 'clr');
 \IIDO\BasicBundle\Helper\DcaHelper::addUnitField("articleHeight", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("isAbsolute", $strFileName);
 
 
 
