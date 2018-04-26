@@ -67,9 +67,9 @@ class WebsiteConfigMaintenance extends \Backend implements \executable
      */
     public function runImprint( &$objTemplate )
     {
-        $rootDir    = BasicHelper::getRootDir();
+        $rootDir    = BasicHelper::getRootDir( true );
         $bundlePath = BundleConfig::getBundlePath();
-        $folderPath = $rootDir . '/' . $bundlePath . '/src/Resources/views/Website/';
+        $folderPath = $rootDir . $bundlePath . '/Resources/views/Website/';
 
         $arrTexts   = array();
         $arrFiles   = scan( $folderPath );
@@ -172,9 +172,9 @@ class WebsiteConfigMaintenance extends \Backend implements \executable
 
     protected function writeTextToFile( $strText, $strFileName )
     {
-        $rootDir    = BasicHelper::getRootDir();
+        $rootDir    = BasicHelper::getRootDir( true );
         $bundlePath = BundleConfig::getBundlePath();
-        $folderPath = $rootDir . '/' . $bundlePath . '/src/Resources/views/Website/';
+        $folderPath = $rootDir . $bundlePath . '/Resources/views/Website/';
         $sfileName  = 'imprint_' . $strFileName . '.html.twig';
 
         if( file_exists($folderPath . $sfileName ) )
