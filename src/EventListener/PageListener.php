@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\ColorHelper;
+use IIDO\BasicBundle\Helper\HeaderHelper;
 use IIDO\BasicBundle\Helper\PageHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\StylesheetHelper;
@@ -635,6 +636,20 @@ class PageListener extends DefaultListener
 
         if( $objHeader )
         {
+            $objTopHeader = HeaderHelper::headerTopBarExists();
+
+            if( $objTopHeader )
+            {
+                $arrTopHeaderStyles = StylesheetHelper::getGlobalElementStyles('topheader', $objTopHeader);
+
+                if( ($objTopHeader->tstamp > $createTime || $this->getArticleLastSave( $objTopHeader->id ) > $createTime) && count($arrTopHeaderStyles) )
+                {
+                    $createFile     = TRUE;
+                }
+
+                $arrPageStyles[ 'topheader_' . $objTopHeader->id ] = $arrTopHeaderStyles;
+            }
+
             $arrHeaderStyles = StylesheetHelper::getGlobalElementStyles('header', $objHeader);
 
             if( ($objHeader->tstamp > $createTime || $this->getArticleLastSave( $objHeader->id ) > $createTime) && count($arrHeaderStyles) )
@@ -644,6 +659,7 @@ class PageListener extends DefaultListener
 
             $arrPageStyles[ 'header_' . $objHeader->id ] = $arrHeaderStyles;
         }
+
 
         $objFooter = \ArticleModel::findByAlias('ge_footer_' . $objRootPage->alias);
 

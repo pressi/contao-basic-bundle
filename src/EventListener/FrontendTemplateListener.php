@@ -13,6 +13,7 @@ namespace IIDO\BasicBundle\EventListener;
 use IIDO\BasicBundle\Helper\BasicHelper as Helper;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
+use IIDO\BasicBundle\Helper\HeaderHelper;
 
 use IIDO\BasicBundle\Renderer\ArticleTemplateRenderer;
 
@@ -257,7 +258,15 @@ class FrontendTemplateListener extends DefaultListener
 
                 if( $objFooterArticle->isFixed )
                 {
-                    $footerClass = trim($footerClass . ' is-fixed');
+                    if( !$objFooterArticle->isAbsolute )
+                    {
+                        $footerClass = trim($footerClass . ' is-fixed');
+                    }
+                    else
+                    {
+                        $footerClass = trim($footerClass . ' pos-abs');
+                    }
+
 
                     if( $objFooterArticle->position === "top" )
                     {
@@ -313,60 +322,75 @@ class FrontendTemplateListener extends DefaultListener
             }
             else
             {
-                $objHeaderArticle   = \ArticleModel::findByAlias("ge_header_" . $objRootPage->alias);
-                $headerClass        = \StringUtil::deserialize($objHeaderArticle->cssID, true)[1];
-                $arrHeaderAttribute = array();
+                $strBuffer = HeaderHelper::renderHeader( $strBuffer );
 
-                if( $objHeaderArticle->isFixed )
-                {
-                    $headerClass = trim($headerClass . ' is-fixed');
-
-                    if( $objHeaderArticle->position === "top" )
-                    {
-                        $headerClass = trim($headerClass . ' pos-top');
-                    }
-                    elseif( $objHeaderArticle->position === "right" )
-                    {
-                        $headerClass = trim($headerClass . ' pos-right');
-                    }
-                    elseif( $objHeaderArticle->position === "bottom" )
-                    {
-                        $headerClass = trim($headerClass . ' pos-bottom');
-                    }
-                    elseif( $objHeaderArticle->position === "left" )
-                    {
-                        $headerClass = trim($headerClass . ' pos-left');
-                    }
-
-                    $arrHeaderWidth = \StringUtil::deserialize($objHeaderArticle->articleWidth, TRUE);
-
-                    if( $arrHeaderWidth['value'] )
-                    {
-                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' width:' . $arrHeaderWidth['value'] . ($arrHeaderWidth['unit'] . ';' ? : 'px;'));
-                    }
-
-                    $arrHeaderHeight = \StringUtil::deserialize($objHeaderArticle->articleHeight, TRUE);
-
-                    if( $arrHeaderHeight['value'] )
-                    {
-                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' height:' . $arrHeaderHeight['value'] . ($arrHeaderHeight['unit'] . ';' ? : 'px;'));
-                    }
-                }
-
-                if( strlen($headerClass) )
-                {
-                    $strAttributes = '';
-
-                    if( count($arrHeaderAttribute) )
-                    {
-                        foreach($arrHeaderAttribute as $key => $value)
-                        {
-                            $strAttributes .= ' ' . $key . '="' . $value . '"';
-                        }
-                    }
-
-                    $strBuffer = preg_replace('/<header/', '<header class="' . $headerClass . '"' . $strAttributes, $strBuffer);
-                }
+//                $objHeaderArticle   = \ArticleModel::findByAlias("ge_header_" . $objRootPage->alias);
+//                $headerClass        = \StringUtil::deserialize($objHeaderArticle->cssID, true)[1];
+//                $arrHeaderAttribute = array();
+//
+//                $objTopHeaderArticle    = \ArticleModel::findByAlias("ge_headerTopBar_" . $objRootPage->alias);
+//
+//                if( $objHeaderArticle->isFixed )
+//                {
+//                    if( !$objHeaderArticle->isAbsolute )
+//                    {
+//                        $headerClass = trim($headerClass . ' is-fixed');
+//                    }
+//                    else
+//                    {
+//                        $headerClass = trim($headerClass . ' pos-abs');
+//                    }
+//
+//
+//                    if( $objHeaderArticle->position === "top" )
+//                    {
+//                        $headerClass = trim($headerClass . ' pos-top');
+//                    }
+//                    elseif( $objHeaderArticle->position === "right" )
+//                    {
+//                        $headerClass = trim($headerClass . ' pos-right');
+//                    }
+//                    elseif( $objHeaderArticle->position === "bottom" )
+//                    {
+//                        $headerClass = trim($headerClass . ' pos-bottom');
+//                    }
+//                    elseif( $objHeaderArticle->position === "left" )
+//                    {
+//                        $headerClass = trim($headerClass . ' pos-left');
+//                    }
+//
+//                    $arrHeaderWidth = \StringUtil::deserialize($objHeaderArticle->articleWidth, TRUE);
+//
+//                    if( $arrHeaderWidth['value'] )
+//                    {
+//                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' width:' . $arrHeaderWidth['value'] . ($arrHeaderWidth['unit'] . ';' ? : 'px;'));
+//                    }
+//
+//                    $arrHeaderHeight = \StringUtil::deserialize($objHeaderArticle->articleHeight, TRUE);
+//
+//                    if( $arrHeaderHeight['value'] )
+//                    {
+//                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' height:' . $arrHeaderHeight['value'] . ($arrHeaderHeight['unit'] . ';' ? : 'px;'));
+//                    }
+//                }
+//
+//                if( strlen($headerClass) )
+//                {
+//                    $strAttributes = '';
+//
+//                    if( count($arrHeaderAttribute) )
+//                    {
+//                        foreach($arrHeaderAttribute as $key => $value)
+//                        {
+//                            $strAttributes .= ' ' . $key . '="' . $value . '"';
+//                        }
+//                    }
+//
+//                    if( !$objTopHeaderArticle )
+//                    {
+//                        $strBuffer = preg_replace('/<header/', '<header class="' . $headerClass . '"' . $strAttributes, $strBuffer);
+//                    }
+//                }
             }
 
             if( $objPage->removeLeft )

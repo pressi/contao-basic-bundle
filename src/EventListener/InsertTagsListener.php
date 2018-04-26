@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\Config;
+use IIDO\BasicBundle\Helper\HeaderHelper;
 
 use Contao\Environment;
 use Contao\PageModel;
@@ -64,11 +65,36 @@ class InsertTagsListener extends DefaultListener
                     case "insert_article":
                         if( ($strOutput = \Controller::getArticle($arrSplit[2], false, true)) !== false )
                         {
-                            $return = ltrim($strOutput);
+                            $return     = ltrim($strOutput);
+                            $strClass   = $arrSplit[3];
 
-                            if( $arrSplit[3] )
+                            $addClasses     = '';
+                            $strAttributes  = '';
+
+                            if( $strClass )
                             {
-                                $return = '<div class="' . $arrSplit[3] . '"><div class="' . $arrSplit[3] . '-inside">' . $return . '</div></div>';
+                                if( $strClass === "header-bar" || $strClass === "header-top-bar" )
+                                {
+                                    $isTopBar       = ($strClass === "header-top-bar");
+                                    $objTopHeader   = HeaderHelper::headerTopBarExists();
+
+                                    if( $objTopHeader )
+                                    {
+                                        if( $isTopBar )
+                                        {
+                                            $arrData = HeaderHelper::getTopHeaderData();
+                                        }
+                                        else
+                                        {
+                                            $arrData = HeaderHelper::getHeaderData( );
+                                        }
+
+                                        $addClasses     = ' ' . $arrData['class'];
+                                        $strAttributes  = ' ' . $arrData['attributes'];
+                                    }
+                                }
+
+                                $return = '<div class="' . $strClass . $addClasses . '"' . $strAttributes . '><div class="' . $strClass . '-inside">' . $return . '</div></div>';
                             }
                         }
                         break;

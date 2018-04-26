@@ -170,8 +170,8 @@ class BackendTemplateListener extends DefaultListener
     {
         if( \Input::post("FORM_SUBMIT") === "iido_welcome_support" )
         {
+            $adminEmail = \Config::get("adminEmail");
             $objUser    = \BackendUser::getInstance();
-
             $objEmail   = new \Email();
 
             $objEmail->subject  = 'Support Anfrage (' . \Config::get("websiteTitle") . ')';
@@ -184,7 +184,14 @@ class BackendTemplateListener extends DefaultListener
             Backend-Benutzer: ' . $objUser->username . ' (' . $objUser->email . ')<br><br><br>
             Gesendet von: ' . \Environment::get("base") . ' am ' . date(\Config::get("dateFormat"), time()) . ' um ' . date(\Config::get("timeFormat"), time()) . ' Uhr';
 
-//            $objEmail->sendTo('mail@stephanpressl.at');
+            if( $adminEmail === "development@prestep.at" )
+            {
+                $objEmail->sendTo( \Config::get("adminEmail") );
+            }
+            else
+            {
+                $objEmail->sendTo( \Config::get("adminEmail"), "development@prestep.at" );
+            }
         }
     }
 

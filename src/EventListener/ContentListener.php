@@ -536,12 +536,17 @@ class ContentListener extends DefaultListener
         {
             $replaceClass = 'headline';
 
-            if( $objRow->type === "headline" )
-            {
-                $replaceClass = 'ce_headline';
-            }
+//            if( $objRow->type === "headline" )
+//            {
+//                $replaceClass = 'ce_headline';
+//            }
 
             $strContent = preg_replace('/<h([1-6]) class="' . $replaceClass . '/', '<h$1 class="' . $replaceClass . ' ' . implode(" ", $arrHeadlineClasses), $strContent);
+        }
+
+        if( $objRow->type === "headline" )
+        {
+            $strContent = '<div class="ce_headline content-element ' . implode(" ", $objRow->classes) . (count($objRow->classes) ? ' ' : '') . 'block"><div class="element-inside">' . $strContent . '</div></div>';
         }
 
         return $strContent;
