@@ -42,6 +42,36 @@ class RSCEHelper extends \Frontend
 
 
     /**
+     * Get MultiSRC (Image Gallery) Config
+     *
+     * @param string|array $label
+     * @param string       $orderFieldName
+     *
+     * @return array
+     */
+    public static function getImagesFieldConfig( $label, $orderFieldName = 'orderSRC' )
+    {
+        return array
+        (
+            'label'         => self::renderLabel( $label ),
+            'inputType'     => 'fileTree',
+            'eval'          => array
+            (
+                'multiple'          => true,
+                'fieldType'         => 'checkbox',
+                'orderField'        => $orderFieldName,
+                'files'             => true,
+                'isGallery'         => true,
+                'extensions'        => \Config::get('validImageTypes'),
+                'tl_class'          => 'clr',
+            )
+        );
+
+    }
+
+
+
+    /**
      * Get Textareafield Config
      *
      * @param string|array $label
@@ -503,7 +533,7 @@ class RSCEHelper extends \Frontend
 
 
 
-    public static function getImageTag( $image, $arrSize = array(), &$objClass = false, $returnPath = false )
+    public static function getImageTag( $image, $arrSize = array(), &$objClass = false, $returnPath = false, $floating = '' )
     {
         $strContent = '';
 
@@ -520,11 +550,74 @@ class RSCEHelper extends \Frontend
             }
             else
             {
-                $strContent = '<figure class="image_container"><img src="' . trim($image->src?:$image->picture['img']['src']) . '" alt="' .  trim($image->alt?:$image->picture['alt']) . '"' . $image->imgSize . '></figure>';
+                $floatClass = '';
+
+                if( $floating )
+                {
+                    $floatClass = ' float_' . $floating;
+                }
+
+                $strContent = '<figure class="image_container' . $floatClass . '"><img src="' . trim($image->src?:$image->picture['img']['src']) . '" alt="' .  trim($image->alt?:$image->picture['alt']) . '"' . $image->imgSize . '></figure>';
             }
         }
 
         return $strContent;
+    }
+
+
+
+    public static function getImages( $arrImages )
+    {
+        $images     = array();
+
+        if( $arrImages )
+        {
+            $arrImages  = \StringUtil::deserialize( $arrImages, TRUE );
+
+            if( is_array($arrImages) && count($arrImages) )
+            {
+                echo "<pre>"; print_r( $arrImages ); exit;
+            }
+
+            echo "<pre>1"; print_r( $arrImages ); exit;
+        }
+
+        return $images;
+    }
+
+
+
+    public static function getImagesArray( $imagesField, $orderField, $likeFancybox = false )
+    {
+        $arrImages = ImageHelper::getMultipleImages( $imagesField, $orderField );
+
+        if( $likeFancybox )
+        {
+            foreach($arrImages as $num => $arrImage)
+            {
+                $strTitle = '';
+
+                if( !preg_match('/(jpg|jpeg|png|gif|tif|tiff)$/', strtolower($arrImage['meta'][ BasicHelper::getLanguage() ]['title'])) )
+                {
+                    $strTitle = $arrImage['meta'][ BasicHelper::getLanguage() ]['title'];
+                }
+
+                unset( $arrImages[ $num ] );
+
+                $arrImages[ $num ] = array();
+                $arrImages[ $num ]['src']   = $arrImage['singleSRC'];
+
+                if( $strTitle )
+                {
+                    $arrImages[ $num ]['opts']  = array
+                    (
+                        'caption'       => $strTitle
+                    );
+                }
+            }
+        }
+
+        return $arrImages;
     }
 
 }

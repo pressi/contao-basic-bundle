@@ -262,6 +262,13 @@ class DcaHelper extends \Frontend
 
 
 
+    public static function copyPalette( $strNewPalette, $strOldPalette, $strTable)
+    {
+        $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strNewPalette ] = $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strOldPalette ];
+    }
+
+
+
     public static function addSubpalette($strName, $arrFields, $strTable, $override = FALSE)
     {
         $strFields = $arrFields;
@@ -664,7 +671,7 @@ class DcaHelper extends \Frontend
             \Controller::loadLanguageFile( $langTable );
         }
 
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]                = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
 
         $defaultEval = array
         (
@@ -697,6 +704,7 @@ class DcaHelper extends \Frontend
         }
 
         unset( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['search'] );
+        unset( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label'] );
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']    = self::renderFieldLabel($strTable, $langTable, $fieldName);
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']     = $defaultEval;

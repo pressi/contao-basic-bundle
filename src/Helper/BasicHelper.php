@@ -948,6 +948,33 @@ class BasicHelper extends \Frontend
                         return $objRootPage->alias;
                     }
                 }
+                else
+                {
+                    $objParentPage = self::getPage( $objCurrentPage->pid );
+
+                    if( $objParentPage->pid == 0 )
+                    {
+                        return $objParentPage->alias;
+                    }
+                    else
+                    {
+                        $objParentParentPage = self::getPage( $objParentPage->pid );
+
+                        if( $objParentParentPage->pid == 0 )
+                        {
+                            return $objParentParentPage->alias;
+                        }
+                        else
+                        {
+                            $objPPPartenPage = self::getPage( $objParentParentPage->pid );
+
+                            if( $objPPPartenPage->pid == 0 )
+                            {
+                                return $objPPPartenPage->alias;
+                            }
+                        }
+                    }
+                }
             }
         }
 
