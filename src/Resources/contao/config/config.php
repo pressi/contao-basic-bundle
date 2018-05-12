@@ -115,6 +115,7 @@ $GLOBALS['BE_FFL']['metaWizard']        = $ns . '\Widget\MetaWizardWidget';
 $GLOBALS['BE_FFL']['imageSize']         = $ns . '\Widget\ImageSizeWidget';
 $GLOBALS['BE_FFL']['text']              = $ns . '\Widget\TextFieldWidget';
 $GLOBALS['BE_FFL']['iidoTag']           = $ns . '\Widget\TagsFieldWidget';
+$GLOBALS['BE_FFL']['explanation']       = $ns . '\Widget\ExplanationWidget';
 
 
 
