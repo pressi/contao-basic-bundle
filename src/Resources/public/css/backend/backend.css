@@ -425,3 +425,30 @@ body.popup #main .tl_formbody_submit {
 .backend-welcome-container .support-contact {
     line-height: 1.5em;
 }
+
+
+
+/* explanation */
+
+.be_explanation {
+    margin-top: 15px; }
+.be_explanation .intro {
+    display: inline; }
+.be_explanation .collapse {
+    display: none; }
+.be_explanation .toggle {
+    background-repeat: no-repeat;
+    background: url("bundles/iido_basic/images/backend/icons/explanation_open.png");
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    float: right; }
+.be_explanation.open .intro {
+    display: none; }
+.be_explanation.open .toggle {
+    background-image: url("bundles/iido_basic/images/backend/icons/explanation_close.png");}
+.be_explanation.open .collapse {
+    display: inline; }
+
+.isContao4 .be_explanation {
+    font-size: .875rem !important; }

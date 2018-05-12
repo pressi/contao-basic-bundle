@@ -8,6 +8,7 @@
 var IIDO        = IIDO          || {};
 IIDO.Backend    = IIDO.Backend  || {};
 
+/*
 // AjaxRequest.toggleFieldset = function(el, id, table)
 // {
 //     el.blur();
@@ -48,9 +49,17 @@ IIDO.Backend    = IIDO.Backend  || {};
 //
 //     return false;
 // };
+*/
 
 (function(backend)
 {
+    backend.init = function()
+    {
+        this.initExplanation();
+    };
+
+
+
     backend.setMainFilterLabel = function(labelName, fieldName, labelTag)
     {
         var field       = $('ctrl_' + fieldName);
@@ -122,6 +131,32 @@ IIDO.Backend    = IIDO.Backend  || {};
         }
     };
 
+
+
+    backend.initExplanation = function()
+    {
+        if( $$(".be_explanation") )
+        {
+            this.initExplanationCollapsibles();
+        }
+    };
+
+
+
+    backend.initExplanationCollapsibles = function()
+    {
+        $$('.be_explanation .toggle').addEvent('click', function()
+        {
+            var $toggle = $(this);
+
+            $toggle.parent().toggleClass('open');
+        });
+    };
+    
+
 })(IIDO.Backend);
 
-// $(document).addEvent("domready", function() {});
+$(document).addEvent("domready", function()
+{
+    IIDO.Backend.init();
+});
