@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
+use IIDO\BasicBundle\Helper\ContentHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
 
 
@@ -82,8 +83,14 @@ class ContentListener extends DefaultListener
 //            }
 //        }
 
-
-        if( $objRow->type == "text")
+        if( $objRow->type == "image" )
+        {
+            if( $objRow->fullsize )
+            {
+                $strBuffer = ContentHelper::generateImageHoverTags($strBuffer, $objRow);
+            }
+        }
+        elseif( $objRow->type == "text")
         {
             if( $objRow->addImage )
             {
@@ -339,6 +346,12 @@ class ContentListener extends DefaultListener
             {
                 $unit       = $arrPosMargin['unit']?:'px';
                 $useUnit    = true;
+                $prefix     = 'margin';
+
+                if( preg_match('/mip/', $cssID[1]) )
+                {
+                    $prefix = 'padding';
+                }
 
                 if( $arrPosMargin['top'] )
                 {
@@ -347,12 +360,12 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( preg_match('/' . $unit . '$/', $arrPosMargin['top']) )
+                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['top']) )
                     {
                         $useUnit = false;
                     }
 
-                    $strStyles .= " margin-top:" . $arrPosMargin['top'] . (($useUnit)?$unit:'') . ";";
+                    $strStyles .= " " . $prefix . "-top:" . $arrPosMargin['top'] . (($useUnit)?$unit:'') . ";";
 
                     $useUnit    = true;
                 }
@@ -364,12 +377,12 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( preg_match('/' . $unit . '$/', $arrPosMargin['right']) )
+                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['right']) )
                     {
                         $useUnit = false;
                     }
 
-                    $strStyles .= " margin-right:" . $arrPosMargin['right'] . (($useUnit)?$unit:'') . ";";
+                    $strStyles .= " " . $prefix . "-right:" . $arrPosMargin['right'] . (($useUnit)?$unit:'') . ";";
 
                     $useUnit    = true;
                 }
@@ -381,12 +394,12 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( preg_match('/' . $unit . '$/', $arrPosMargin['bottom']) )
+                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['bottom']) )
                     {
                         $useUnit = false;
                     }
 
-                    $strStyles .= " margin-bottom:" . $arrPosMargin['bottom'] . (($useUnit)?$unit:'') . ";";
+                    $strStyles .= " " . $prefix . "-bottom:" . $arrPosMargin['bottom'] . (($useUnit)?$unit:'') . ";";
 
                     $useUnit    = true;
                 }
@@ -398,12 +411,12 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( preg_match('/' . $unit . '$/', $arrPosMargin['left']) )
+                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['left']) )
                     {
                         $useUnit = false;
                     }
 
-                    $strStyles .= " margin-left:" . $arrPosMargin['left'] . (($useUnit)?$unit:'') . ";";
+                    $strStyles .= " " . $prefix . "-left:" . $arrPosMargin['left'] . (($useUnit)?$unit:'') . ";";
 
                     $useUnit    = true;
                 }
