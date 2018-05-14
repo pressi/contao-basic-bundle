@@ -1,5 +1,5 @@
 {{ '{{iflng::de}}' }}
-<h1>{{ content.headline|default("Impressum") }}</h1>
+<h1 class="headline">{{ content.headline|default("Impressum") }}</h1>
 <p>Informationspflicht laut §5 E-Commerce Gesetz, §14 Unternehmensgesetzbuch, §63 Gewerbeordnung und Offenlegungspflicht laut §25 Mediengesetz</p>
 <p>
     <strong>{{ content.companyName }}</strong><br>
@@ -7,33 +7,65 @@
     {% if content.street %}{{ content.street }}<br>{%  endif %}
     {% if content.postal and content.city %}{{ content.postal }} {{ content.city }}{%  endif %}
 </p>
-
+{% if content.objectOfTheCompany or content.VATnumber %}
+<p>
+    {% if content.objectOfTheCompany %}
+        <strong>Unternehmensgegenstand:</strong> {{ content.objectOfTheCompany }}<br>
+    {% endif %}
+    {% if content.VATnumber %}
+        <strong>UID-Nummer:</strong> {{ content.VATnumber }}<br>
+    {% endif %}
+</p>
+{% endif %}
 <p>
     {% if content.phone %}
         {% if addContactLabel %}
             <span class="contact-label">Tel.:</span>
         {%  endif %}
         {{ content.phone }}<br>
-    {%  endif %}
+    {% endif %}
     {% if content.fax %}
         {% if addContactLabel %}
             <span class="contact-label">Fax:</span>
         {%  endif %}
         {{ content.fax }}<br>
-    {%  endif %}
+    {% endif %}
     {% if content.email %}
         {% if addContactLabel %}
             <span class="contact-label">Email:</span>
         {%  endif %}
         {{ content.email }}<br>
-    {%  endif %}
+    {% endif %}
     {% if content.website %}
         {% if addContactLabel %}
             <span class="contact-label">Web:</span>
         {%  endif %}
         {{ content.website }}
-    {%  endif %}
+    {% endif %}
 </p>
+{% if content.mitglied or content.berufsrecht %}
+<p>
+    {% if content.mitglied %}
+        <strong>Mitglied bei:</strong> {{ content.mitglied }}<br>
+    {% endif %}
+    {% if content.berufsrecht %}
+        <strong>Berufsrecht:</strong> {{ content.berufsrecht }}<br>
+    {% endif %}
+</p>
+{% endif %}
+{% if content.behoerde or content.beruf or content.country %}
+    <p>
+        {% if content.behoerde %}
+            <strong>Aufsichtsbehörde/Gewerbebehörde:</strong> {{ content.behoerde }}<br>
+        {% endif %}
+        {% if content.beruf %}
+            <strong>Berufsbezeichnng:</strong> {{ content.beruf }}<br>
+        {% endif %}
+        {% if content.country %}
+            <strong>Verleihungsstaat:</strong> {{ content.country }}<br>
+        {% endif %}
+    </p>
+{% endif %}
 {{ '{{iflng::en}}' }}
 <h1>Imprint</h1>
 <p>EN TEXT</p>

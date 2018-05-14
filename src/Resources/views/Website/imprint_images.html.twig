@@ -1,0 +1,16 @@
+{{ '{{iflng::de}}' }}
+{% if content.companies|length > 0 %}
+<h3 class="headline">Bildernachweis</h3>
+<p>Die Bilder, Fotos und Grafiken auf dieser Webseite sind urheberrechtlich geschützt.<br>
+    Die Bilderrechte liegen bei den folgenden Fotografen und Unternehmen:<br>
+    <ul>
+        {% for company in content.companies %}
+            <li>{% if company.link %}<a href="{{ company.link }}">{% endif %}{{ company.name }}{% if company.link %}</a>{% endif %}</li>
+        {% endfor %}
+    </ul>
+</p>
+{% endif %}
+{{ '{{iflng::en}}' }}
+<h1>Imprint</h1>
+<p>EN TEXT</p>
+{{ '{{iflng}}' }}

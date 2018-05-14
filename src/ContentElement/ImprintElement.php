@@ -40,14 +40,12 @@ class ImprintElement extends \ContentElement
      */
     public function generate()
     {
-        $this->imprintText = \StringUtil::deserialize($this->imprintText, TRUE);
-
         if( TL_MODE === "BE" )
         {
             /** @var \BackendTemplate|object $objTemplate */
             $objTemplate = new \BackendTemplate('be_wildcard');
 
-            $objTemplate->wildcard  = '### IMPRINT ###';
+            $objTemplate->wildcard  = '### IMPRINT / PRIVACY POLICY ###';
             $objTemplate->title     = $this->headline;
             $objTemplate->id        = $this->id;
             $objTemplate->link      = $this->name;
@@ -55,6 +53,9 @@ class ImprintElement extends \ContentElement
 
             return $objTemplate->parse();
         }
+
+        $this->imprintText          = \StringUtil::deserialize($this->imprintText, TRUE);
+        $this->privacyPolicyText    = \StringUtil::deserialize($this->privacyPolicyText, TRUE);
 
         return parent::generate();
     }
@@ -66,6 +67,8 @@ class ImprintElement extends \ContentElement
      */
     protected function compile()
     {
+        $strContent = '';
+
         $context    =
         [
             "content" =>
@@ -80,17 +83,36 @@ class ImprintElement extends \ContentElement
                 "phone"         => $this->imprintPhone,
                 "fax"           => $this->imprintFax,
                 "email"         => $this->imprintEmail,
-                "website"       => $this->imprintWeb
+                "website"       => $this->imprintWeb,
+
+                "mitglied"              => $this->imprintMitglied,
+                "berufsrecht"           => $this->imprintBerufsrecht,
+                "behoerde"              => $this->imprintBehoerde,
+                "beruf"                 => $this->imprintBeruf,
+                "country"               => $this->imprintCountry,
+                "objectOfTheCompany"    => $this->imprintObjectOfTheCompany,
+                "VATnumber"             => $this->imprintVATnumber,
+
+                "companies"     => array()
             ],
 
             "addContactLabel"   => $this->addImprintContactLabel
         ];
 
-        $strContent = TwigHelper::render('Website/imprint_intro.html.twig', $context)->getContent();
+
+        if( count($this->imprintText) )
+        {
+            $strContent = TwigHelper::render('Website/imprint_intro.html.twig', $context)->getContent();
+        }
 
         foreach( $this->imprintText as $key => $value )
         {
-            $strContent .= TwigHelper::render('Website/imprint_' . $value . '.html.twig')->getContent();
+            $strContent .= TwigHelper::render('Website/imprint_' . $value . '.html.twig', $context)->getContent();
+        }
+
+        foreach( $this->privacyPolicyText as $key => $value )
+        {
+            $strContent .= TwigHelper::render('Website/imprint_' . $value . '.html.twig', $context)->getContent();
         }
 
         $this->Template->content = $strContent;

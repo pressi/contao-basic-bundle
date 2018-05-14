@@ -92,7 +92,7 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
  */
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStart', '', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintFields_legend},imprintText;', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintAdd_legend},imprintMitglied,imprintBerufsrecht,imprintBehoerde,imprintBeruf,imprintCountry,imprintObjectOfTheCompany,imprintVATnumber;{imprintFields_legend},imprintText,privacyPolicyText;', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName);
 
 
@@ -1014,16 +1014,25 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 // IMPRINT
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyName', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('imprintText', $strFileName, array('multiple'=>true,'sorting'=>true), '', false, false, '', array('inputType'=>'checkboxWizard'));
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('privacyPolicyText', $strFileName, array('multiple'=>true,'sorting'=>true), '', false, false, '', array('inputType'=>'checkboxWizard'));
 
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintStreet', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintSubline', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintPostal', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCity', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintPhone', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintFax', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintEmail', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintWeb', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintStreet', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintSubline', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintPostal', $strFileName, array('maxlength'=>8));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCity', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintPhone', $strFileName, array('maxlength'=>45));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintFax', $strFileName, array('maxlength'=>45));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintEmail', $strFileName, array('maxlength'=>40));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintWeb', $strFileName, array('maxlength'=>30));
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('addImprintContactLabel', $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintMitglied', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintBerufsrecht', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintBehoerde', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintBeruf', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCountry', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintObjectOfTheCompany', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintVATnumber', $strFileName, array('maxlength'=>12));
 
 
 

@@ -247,6 +247,73 @@
                 <target>Firmenname / Website Inhaber</target>
             </trans-unit>
 
+            <trans-unit id="tl_content.imprintMitglied.0">
+                <source>Mitglied bei: (WKO, Landesinnung etc.)</source>
+                <target>Mitglied bei: (WKO, Landesinnung etc.)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.imprintMitglied.1">
+                <source>Bsp.:  WKÖ, WKSTMK, WKW Sparte Handel</source>
+                <target>Bsp.:  WKÖ, WKSTMK, WKW Sparte Handel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintBerufsrecht.0">
+                <source>Gewerbeordnung</source>
+                <target>Gewerbeordnung</target>
+            </trans-unit>
+            <trans-unit id="tl_content.imprintBerufsrecht.1">
+                <source>Gewerbeordnung</source>
+                <target>www.ris.bka.gv.at</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintBehoerde.0">
+                <source>Aufsichtsbehörde/Gewerbebehörde</source>
+                <target>Aufsichtsbehörde/Gewerbebehörde</target>
+            </trans-unit>
+            <trans-unit id="tl_content.imprintBehoerde.1">
+                <source>Aufsichtsbehörde/Gewerbebehörde</source>
+                <target>Bsp.: Bezirkshauptmannschaft Gmunden</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintBeruf.0">
+                <source>Berufsbezeichnung</source>
+                <target>Berufsbezeichnung</target>
+            </trans-unit>
+            <trans-unit id="tl_content.imprintBeruf.1">
+                <source>Berufsbezeichnung</source>
+                <target>Bsp.: Meisterbetrieb / Webdesigner, Grafiker</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintCountry.0">
+                <source>Verleihungsstaat</source>
+                <target>Verleihungsstaat</target>
+            </trans-unit>
+            <trans-unit id="tl_content.imprintCountry.1">
+                <source>Verleihungsstaat</source>
+                <target>Bsp.: Österreich</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintObjectOfTheCompany.0">
+                <source>Unternehmensgegenstand</source>
+                <target>Unternehmensgegenstand</target>
+            </trans-unit>
+            <trans-unit id="tl_content.imprintObjectOfTheCompany.1">
+                <source>Unternehmensgegenstand</source>
+                <target>Bsp.: Webdesign / IT Dienstleistungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintVATnumber.0">
+                <source>UID-Nummer</source>
+                <target>UID-Nummer</target>
+            </trans-unit>
+            <trans-unit id="tl_content.imprintVATnumber.1">
+                <source>UID-Nummer</source>
+                <target>Bsp.: ATU12345678</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.privacyPolicyText.0">
+                <source>Datenschutz-Texte</source>
+                <target>Datenschutz-Texte</target>
+            </trans-unit>
 
 
 			<trans-unit id="tl_content.internName.0">
@@ -299,9 +366,14 @@
                 <target>Impressums-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_content.imprintAdd_legend">
+                <source>Imprint-Settings</source>
+                <target>Impressums Zusatz-Einstellungen</target>
+            </trans-unit>
+
             <trans-unit id="tl_content.imprintFields_legend">
                 <source>Imprint texts-Settings</source>
-                <target>Impressums-Texte-Einstellungen</target>
+                <target>Impressums- / Datenschutz-Texte</target>
             </trans-unit>
 
 
@@ -1073,7 +1145,12 @@
 
 <!-- ### IMPRINT ############################################################################################################ -->
 
-            <trans-unit id="tl_content.options.imprintText.disclaimer">
+
+			<trans-unit id="tl_content.options.imprintText.dispute">
+				<source>Dispute</source>
+				<target><![CDATA[<span class="gray">[Dispute]</span> Online-Streitbeilegung]]></target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.imprintText.disclaimer">
                 <source>Disclaimer</source>
                 <target><![CDATA[<span class="gray">[Disclaimer]</span> Haftungsausschuss]]></target>
             </trans-unit>
@@ -1081,46 +1158,130 @@
                 <source>Disclaimer Content</source>
                 <target><![CDATA[<span class="gray">[Disclaimer]</span> Haftung für Inhalte dieser Webseite]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.disclaimer_copyright">
-                <source>Copyright</source>
-                <target><![CDATA[<span class="gray">[Disclaimer]</span> Urheberrecht]]></target>
-            </trans-unit>
             <trans-unit id="tl_content.options.imprintText.disclaimer_links">
                 <source>Disclaimer Links</source>
                 <target><![CDATA[<span class="gray">[Disclaimer]</span> Haftung für Links auf Webseiten Dritter]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.dispute">
-                <source>Dispute</source>
-                <target><![CDATA[<span class="gray">[Dispute]</span> Online-Streitbeilegung]]></target>
+            <trans-unit id="tl_content.options.imprintText.disclaimer_copyright">
+                <source>Copyright</source>
+                <target><![CDATA[<span class="gray">[Disclaimer]</span> Urheberrecht]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.privacy-policy">
+            <trans-unit id="tl_content.options.imprintText.images">
+                <source>Copyright</source>
+                <target><![CDATA[<span class="gray">[Image Rights]</span> Bildrechte]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy">
                 <source>Privacy policy</source>
                 <target><![CDATA[ <span class="gray">[Privacy Policy]</span> Datenschutzerklärung]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.privacy-policy_cookies">
-                <source>Cookies</source>
-                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Cookies]]></target>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_auto-save">
+                <source>Privacy policy</source>
+                <target><![CDATA[ <span class="gray">[Privacy Policy]</span> Automatische Datenspeicherung]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.privacy-policy_forms-comments">
-                <source>Forms and comments</source>
-                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Formulardaten und Kommentare]]></target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.privacy-policy_google-analytics">
-                <source>Google Analytics</source>
-                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Analytics]]></target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.privacy-policy_google-maps">
-                <source>Google Maps</source>
-                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Maps]]></target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.imprintText.privacy-policy_personal-data">
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_personal-data">
                 <source>Personal Data</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Persönliche Daten]]></target>
             </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_user-rights">
+                <source>Personal Data</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Benutzer Rechte]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_https">
+                <source>Cookies</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> HTTPS]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_cookies">
+                <source>Cookies</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Cookies]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_newsletter">
+                <source>Cookies</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Newsletter]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_google-maps">
+                <source>Google Maps</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Maps]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_google-analytics">
+                <source>Google Analytics</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Analytics]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_google-fonts">
+                <source>Google Analytics</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Fonts]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_forms-comments">
+                <source>Forms and comments</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Formulardaten und Kommentare]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_facebook">
+                <source>Facebook</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Facebook]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_youtube">
+                <source>YouTube</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> YouTube]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_twitter">
+                <source>Twitter</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Twitter]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_google-plus">
+                <source>Google Plus</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Plus]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_instagram">
+                <source>Instagram</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Instagram]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_linkedin">
+                <source>LinkedIn</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> LinkedIn]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_pinterest">
+                <source>Pinterest</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Pinterest]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_soundcloud">
+                <source>SoundCloud</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> SoundCloud]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_xing">
+                <source>Xing</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Xing]]></target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_facebook-pixel">
+                <source>Facebook Pixel</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Facebook Pixel]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_google-adsense">
+                <source>Google AdSense</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google AdSense]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_amazon">
+                <source>Amazon</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> Amazon Partnerprogramm]]></target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_share-this">
+                <source>ShareThis</source>
+                <target><![CDATA[<span class="gray">[Privacy Policy]</span> ShareThis]]></target>
+            </trans-unit>
+
+
+
 
 			<trans-unit id="tl_content.options.imprint.intro">
-			<source>intro</source>
-			<target>Impressums-Einleitung</target>
+			    <source>intro</source>
+			    <target>Impressums-Einleitung</target>
 			</trans-unit>
 
 
