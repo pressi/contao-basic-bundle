@@ -184,13 +184,13 @@ class BackendTemplateListener extends DefaultListener
             Backend-Benutzer: ' . $objUser->username . ' (' . $objUser->email . ')<br><br><br>
             Gesendet von: ' . \Environment::get("base") . ' am ' . date(\Config::get("dateFormat"), time()) . ' um ' . date(\Config::get("timeFormat"), time()) . ' Uhr';
 
-            if( $adminEmail === "development@prestep.at" )
+            if( $adminEmail === "development@prestep.at" || $adminEmail === "mail@stephanpresl.at" )
             {
-                $objEmail->sendTo( \Config::get("adminEmail") );
+                $objEmail->sendTo( $adminEmail );
             }
             else
             {
-                $objEmail->sendTo( \Config::get("adminEmail"), "development@prestep.at" );
+                $objEmail->sendTo( $adminEmail, "development@prestep.at" );
             }
         }
     }
