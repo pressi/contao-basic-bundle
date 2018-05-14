@@ -16,6 +16,11 @@ use IIDO\BasicBundle\Helper\BasicHelper;
 class AppExtension extends \Twig_Extension
 {
 
+    /**
+     * get Twig Template Filter
+     *
+     * @return array|\Twig_Filter[]
+     */
     public function getFilters()
     {
         return array
@@ -29,6 +34,11 @@ class AppExtension extends \Twig_Extension
 
 
 
+    /**
+     * get Twig Template Functions
+     *
+     * @return array|\Twig_Function[]
+     */
     public function getFunctions()
     {
         return array

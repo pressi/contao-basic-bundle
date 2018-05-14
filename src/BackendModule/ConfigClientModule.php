@@ -1,4 +1,4 @@
-<?php
+<?
 /*******************************************************************
  * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
@@ -8,6 +8,7 @@
  *******************************************************************/
 
 namespace IIDO\BasicBundle\BackendModule;
+
 
 use IIDO\BasicBundle\Connection\ClientSetup;
 use IIDO\BasicBundle\Connection\MasterConnection;

@@ -42,6 +42,7 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
         if( is_dir( $vendorPath . 'delahaye/dlh_googlemaps') )
         {
             $arrLoadAfter[] = 'dlh_googlemaps';
+            $arrLoadAfter[] = 'delahaye/dlh_googlemaps';
         }
 
         return [
