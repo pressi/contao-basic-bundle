@@ -60,8 +60,8 @@ $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = a
  * Selectors
  */
 
-$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'showAsButton';
-$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'buttonAddon';
+//$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'showAsButton';
+//$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'buttonAddon';
 
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = "elementIsBox";
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'addOrnament';
@@ -92,17 +92,21 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
  */
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStart', '', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperSeparator', '', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStop', '', $strFileName);
+
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintAdd_legend},imprintMitglied,imprintBerufsrecht,imprintBehoerde,imprintBeruf,imprintCountry,imprintObjectOfTheCompany,imprintVATnumber;{imprintFields_legend},imprintText,privacyPolicyText;', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName);
 
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_navigation', '{config_legend},navModule,navPages,navigationTpl;', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_weather', '{config_legend},addIcon,addSnow,addTemperature,snowUrl;', $strFileName);
+
+//$defaultPaletteStart    = '{type_legend},type,headline,subHeadline;';
+//$defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
 
 
-$defaultPaletteStart    = '{type_legend},type,headline,subHeadline;';
-$defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
-
-
-$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']         = $defaultPaletteStart . '{config_legend},navModule,navPages,navigationTpl;' . $defaultPaletteEnd;
-$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_weather']            = $defaultPaletteStart . '{config_legend},addIcon,addSnow,addTemperature,snowUrl;' . $defaultPaletteEnd;
+//$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_navigation']         = $defaultPaletteStart . '{config_legend},navModule,navPages,navigationTpl;' . $defaultPaletteEnd;
+//$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_weather']            = $defaultPaletteStart . '{config_legend},addIcon,addSnow,addTemperature,snowUrl;' . $defaultPaletteEnd;
 
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_divider']           = '{type_legend},type;{divide_legend},dividerSize,dividerColor,dividerStyle,addOrnament;' . $defaultPaletteEnd;
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_ticker']            = '{type_legend},type;{ticker_legend},tickerMode,usedTime,tickerDate,tickerShowMode;{text_legend},textBefore,textAfter;' . $defaultPaletteEnd;
@@ -143,15 +147,12 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 //        {
 //            $strFields = preg_replace( '/\{' . $prefix . '_legend([a-z:]{0,})\},([a-zA-Z0-9_\-,]{0,});/', '{' . $prefix . '_legend$1},$2;{box_legend},elementIsBox;', $strFields );
 //        }
-//
-//        $strFields  = str_replace( ',caption', ',caption,addImageBorder', $strFields );
-//        $strFields  = str_replace(',space', ',space,spaceHorizontal', $strFields);
-//
-//        if( $objContent && $objContent->type == "gallery" )
+
+//        if( $objContent && $objContent->type === "gallery" )
 //        {
 //            $strFields = str_replace('{template_legend', '{text_legend},addGalleryText;{template_legend', $strFields);
 //        }
-//
+
 //		$strFields = $strFields . ';{add_legend},insertClearAfter;';
 
         if( !in_array($strPalette, ['boxStop','accordionStop','sliderStop','html','code','alias','article']) )
@@ -165,13 +166,9 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
     $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = '{intern_legend:hide},internName;' . $strFields;
 }
 
-//if( $GLOBALS['TL_CONFIG']['iidoCustomize_backgroundInternetExplorerFallback'] )
-//{
-//    $GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_backgroundImage'] = str_replace("ieFallback,", "", $GLOBALS['TL_DCA']['tl_content']['palettes']['iidoCustomize_backgroundImage']);
-//}
-//
-$GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace(',rel', ',rel,showAsButton', $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink']);
-//$GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace('url,', 'hyperlinkUrlToFiles,url,', $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink']);
+
+\IIDO\BasicBundle\Helper\DcaHelper::replacePaletteFields('hyperlink', ',rel', ',rel,showAsButton', $strFileName);
+//$GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace(',rel', ',rel,showAsButton', $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink']);
 
 
 
@@ -179,10 +176,15 @@ $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace(',rel', 
  * Subpalettes
  */
 
-$GLOBALS['TL_DCA']['tl_content']['subpalettes']['showAsButton']         = 'buttonStyle,buttonType,buttonAddon,buttonLinkMode';
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('showAsButton', 'buttonStyle,buttonType,buttonAddon,buttonLinkMode', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('buttonAddon_arrow', 'buttonAddonPosition,buttonAddonArrow', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('buttonAddon_icon', 'buttonAddonPosition,buttonAddonIcon', $strFileName);
+//$GLOBALS['TL_DCA']['tl_content']['subpalettes']['showAsButton']         = 'buttonStyle,buttonType,buttonAddon,buttonLinkMode';
 
-$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_arrow']     = 'buttonAddonPosition,buttonAddonArrow';
-$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_icon']      = 'buttonAddonPosition,buttonAddonIcon';
+//$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_arrow']     = 'buttonAddonPosition,buttonAddonArrow';
+//$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_icon']      = 'buttonAddonPosition,buttonAddonIcon';
+
+
 
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxWidth,boxHeight,boxLink,boxLinkText,boxBackgroundColor";
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['usedTime']             = "tickerTime";
@@ -727,7 +729,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 
 // HYPERLINK BUTTON
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField("showAsButton", "checkbox", $strFileName, array('submitOnChange'=>true), "clr");
+\IIDO\BasicBundle\Helper\DcaHelper::addField("showAsButton", "checkbox__selector", $strFileName, array('submitOnChange'=>true), "clr");
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonStyle", "select", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddon", "select__selector", $strFileName, array('includeBlankOption' => true));
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonType", "select", $strFileName);
@@ -958,7 +960,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addField('positionFixed', 'checkbox', $strFileName, array(), 'clr');
 
 
-
 $GLOBALS['TL_DCA']['tl_content']['fields']['navPages']                 = $GLOBALS['TL_DCA']['tl_module']['fields']['rootPage'];
 $GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['label']        = &$GLOBALS['TL_LANG']['tl_content']['navPages'];
 $GLOBALS['TL_DCA']['tl_content']['fields']['navPages']['eval']['tl_class']    = 'clr';
@@ -994,9 +995,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navPagesOrder'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addField("addIcon", "checkbox", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("addSnow", "checkbox__selector", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("addTemperature", "checkbox", $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowDepth", "text", $strFileName, array('rgxp'=>'digit'));
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowUnit", "text", $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addField("snowSubline", "text", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowDepth", "text", $strFileName, array('rgxp'=>'digit','maxlength'=>5));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowUnit", "text", $strFileName, array('maxlength'=>15));
+\IIDO\BasicBundle\Helper\DcaHelper::addField("snowSubline", "text", $strFileName, array('maxlength'=>100));
 
 //\IIDO\BasicBundle\Helper\DcaHelper::copyField("snowUrl", $strFileName, 'imageUrl');
 $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']                 = $GLOBALS['TL_DCA']['tl_content']['fields']['imageUrl'];
@@ -1036,8 +1037,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 
 
 
-// Newslist
-
+// NEWSLIST
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_archives', $strFileName, 'news_archives', 'tl_module');
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_featured', $strFileName, 'news_featured', 'tl_module');
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('skipFirst', $strFileName, 'skipFirst', 'tl_module');

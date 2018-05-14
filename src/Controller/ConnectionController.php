@@ -10,7 +10,6 @@
 namespace IIDO\BasicBundle\Controller;
 
 
-//use Contao\Encryption;
 use Contao\Environment;
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\ConnectTool;
