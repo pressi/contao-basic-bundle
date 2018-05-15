@@ -18,6 +18,7 @@ use Doctrine\DBAL\DriverManager;
  * Creates a database connection object.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
+ * @deprecated NO MORE IN USE!
  */
 class ConnectionFactory
 {

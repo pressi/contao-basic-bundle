@@ -16,7 +16,7 @@ namespace IIDO\BasicBundle\Widget;
  * @property integer $maxlength
  * @property array   $options
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ *
  */
 class ImageSizeWidget extends \ImageSize
 {

@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Contao Open Source CMS
- *
- * Copyright (c) 2005-2017 Leo Feyer
- *
- * @license LGPL-3.0+
- */
 
 namespace IIDO\BasicBundle\FormField;
 
@@ -17,7 +10,7 @@ namespace IIDO\BasicBundle\FormField;
  * @property boolean $mandatory
  * @property array   $options
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ *
  */
 class RadioButtonTable extends \RadioButton
 {

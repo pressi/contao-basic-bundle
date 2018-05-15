@@ -10,11 +10,10 @@
 namespace IIDO\BasicBundle\Page;
 
 
-
 /**
- * Provide methods to handle a regular front end page.
  *
- * @author Leo Feyer <https://github.com/leofeyer>
+ *
+ *
  */
 class RegularRedirectPage extends \PageRegular
 {

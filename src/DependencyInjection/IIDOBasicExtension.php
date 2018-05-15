@@ -28,6 +28,8 @@ class IIDOBasicExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function load(array $mergedConfig, ContainerBuilder $container)
     {
@@ -41,9 +43,10 @@ class IIDOBasicExtension extends Extension implements PrependExtensionInterface
     }
 
 
-
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function prepend(ContainerBuilder $container)
     {
