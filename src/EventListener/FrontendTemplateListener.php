@@ -10,11 +10,10 @@
 namespace IIDO\BasicBundle\EventListener;
 
 
-use IIDO\BasicBundle\Helper\BasicHelper as Helper;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\HeaderHelper;
-
+use IIDO\BasicBundle\Helper\PageHelper;
 use IIDO\BasicBundle\Renderer\ArticleTemplateRenderer;
 
 
@@ -119,32 +118,18 @@ class FrontendTemplateListener extends DefaultListener
             }
         }
 
-//        elseif( $strTemplate === "picture_default" )
-//        {
-//            echo "<pre>"; print_r( $strContent ); exit;
-//        }
-
-//        elseif( $strTemplate === "gallery_default" )
-//        {
-//            preg_match_all('/<figure([A-Za-z0-9\s\-,;.:_\/\(\)\{\}="]{0,})>(.*?)<\/figure>/si', $strContent, $arrImageMatches);
-
-//            echo "<pre>";
-//            print_r( $arrImageMatches );
-//            echo "<br>";
-//            print_r( $strContent );
-//            exit;
-//        }
-//        echo "<pre>"; print_r( $strTemplate ); echo "</pre>";
         return $strContent;
     }
 
 
 
     /**
-     *
+     * output frontend template
      *
      * @param string $strBuffer
      * @param string $strTemplate
+     *
+     * @return string
      */
     public function outputCustomizeFrontendTemplate($strBuffer, $strTemplate)
     {
@@ -153,15 +138,13 @@ class FrontendTemplateListener extends DefaultListener
 
         $arrBodyClasses     = array();
         $objRootPage        = \PageModel::findByPk( $objPage->rootId );
-        $objLayout          = Helper::getPageLayout( $objPage) ;
-        $isFullpage         = $this->isFullPageEnabled( $objPage, $objLayout );
-        $strLanguage        = \System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
-//        $outerID            = 'wrapper';
+        $objLayout          = BasicHelper::getPageLayout( $objPage) ;
+        $isFullpage         = PageHelper::isFullPageEnabled( $objPage, $objLayout );
 
         if( $strTemplate === 'fe_page' )
         {
-            $strBuffer          = $this->replaceBodyClasses( $strBuffer );
-            $strBuffer          = $this->replaceWebsiteTitle( $strBuffer );
+            $strBuffer          = PageHelper::replaceBodyClasses( $strBuffer );
+            $strBuffer          = PageHelper::replaceWebsiteTitle( $strBuffer );
 
             $layoutHasFooter    = $objLayout->rows;
             $footerMode         = (($objLayout->footerAtBottom && ($layoutHasFooter == "2rwf" || $layoutHasFooter == "3rw")) ? true : false);
@@ -180,7 +163,8 @@ class FrontendTemplateListener extends DefaultListener
             {
                 if( preg_match("/<footer/", $strBuffer) )
                 {
-                    $strBuffer = preg_replace('/<body([^>]+)class="/', '<body$1class="footerpage ', $strBuffer);
+//                    $strBuffer = preg_replace('/<body([^>]+)class="/', '<body$1class="footerpage ', $strBuffer);
+                    $arrBodyClasses[] = 'footerpage';
 
                     $divsOpen   = '<div id="page"><div id="outer">';
                     $divsClose  = '</div></div></div>';
@@ -195,8 +179,7 @@ class FrontendTemplateListener extends DefaultListener
             {
                 if($objLayout->addPageWrapperOuter)
                 {
-                    $outerID    = 'outer';
-                    $strBuffer  = str_replace('<div id="wrapper">', '<div id="outer"><div id="wrapper">', $strBuffer);
+                    $strBuffer = str_replace('<div id="wrapper">', '<div id="outer"><div id="wrapper">', $strBuffer);
 
                     if( preg_match('/<footer/', $strBuffer) )
                     {
@@ -210,8 +193,7 @@ class FrontendTemplateListener extends DefaultListener
 
                 if($objLayout->addPageWrapperPage)
                 {
-                    $outerID    = 'page';
-                    $replaceID  = "wrapper";
+                    $replaceID = "wrapper";
 
                     if($objLayout->addPageWrapperOuter)
                     {
@@ -266,7 +248,6 @@ class FrontendTemplateListener extends DefaultListener
                     {
                         $footerClass = trim($footerClass . ' pos-abs');
                     }
-
 
                     if( $objFooterArticle->position === "top" )
                     {
@@ -323,82 +304,14 @@ class FrontendTemplateListener extends DefaultListener
             else
             {
                 $strBuffer = HeaderHelper::renderHeader( $strBuffer );
-
-//                $objHeaderArticle   = \ArticleModel::findByAlias("ge_header_" . $objRootPage->alias);
-//                $headerClass        = \StringUtil::deserialize($objHeaderArticle->cssID, true)[1];
-//                $arrHeaderAttribute = array();
-//
-//                $objTopHeaderArticle    = \ArticleModel::findByAlias("ge_headerTopBar_" . $objRootPage->alias);
-//
-//                if( $objHeaderArticle->isFixed )
-//                {
-//                    if( !$objHeaderArticle->isAbsolute )
-//                    {
-//                        $headerClass = trim($headerClass . ' is-fixed');
-//                    }
-//                    else
-//                    {
-//                        $headerClass = trim($headerClass . ' pos-abs');
-//                    }
-//
-//
-//                    if( $objHeaderArticle->position === "top" )
-//                    {
-//                        $headerClass = trim($headerClass . ' pos-top');
-//                    }
-//                    elseif( $objHeaderArticle->position === "right" )
-//                    {
-//                        $headerClass = trim($headerClass . ' pos-right');
-//                    }
-//                    elseif( $objHeaderArticle->position === "bottom" )
-//                    {
-//                        $headerClass = trim($headerClass . ' pos-bottom');
-//                    }
-//                    elseif( $objHeaderArticle->position === "left" )
-//                    {
-//                        $headerClass = trim($headerClass . ' pos-left');
-//                    }
-//
-//                    $arrHeaderWidth = \StringUtil::deserialize($objHeaderArticle->articleWidth, TRUE);
-//
-//                    if( $arrHeaderWidth['value'] )
-//                    {
-//                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' width:' . $arrHeaderWidth['value'] . ($arrHeaderWidth['unit'] . ';' ? : 'px;'));
-//                    }
-//
-//                    $arrHeaderHeight = \StringUtil::deserialize($objHeaderArticle->articleHeight, TRUE);
-//
-//                    if( $arrHeaderHeight['value'] )
-//                    {
-//                        $arrHeaderAttribute['style'] = trim($arrHeaderAttribute['style'] . ' height:' . $arrHeaderHeight['value'] . ($arrHeaderHeight['unit'] . ';' ? : 'px;'));
-//                    }
-//                }
-//
-//                if( strlen($headerClass) )
-//                {
-//                    $strAttributes = '';
-//
-//                    if( count($arrHeaderAttribute) )
-//                    {
-//                        foreach($arrHeaderAttribute as $key => $value)
-//                        {
-//                            $strAttributes .= ' ' . $key . '="' . $value . '"';
-//                        }
-//                    }
-//
-//                    if( !$objTopHeaderArticle )
-//                    {
-//                        $strBuffer = preg_replace('/<header/', '<header class="' . $headerClass . '"' . $strAttributes, $strBuffer);
-//                    }
-//                }
             }
 
             if( $objPage->removeLeft )
             { //TODO: check DIV tags!
-                $strBuffer = preg_replace('/<aside id="left"([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_>\n<\{\}]{0,})<\/aside>/', '', $strBuffer);
+                $strBuffer = preg_replace('/<aside id="left"([A-Za-z0-9öäüÖÄÜß\s\-:\/\\.,;:_>="\n<\{\}]{0,})<\/aside>/', '', $strBuffer);
             }
 
-            if( preg_match('/<footer/', $strBuffer) && $this->hasBodyClass("homepage", $strBuffer) )
+            if( preg_match('/<footer/', $strBuffer) && PageHelper::hasBodyClass("homepage", $strBuffer) )
             {
                 if( preg_match('/<footer([A-Za-z0-9\s\-=",;.:_\(\)\{\}]{0,})class/', $strBuffer) )
                 {
@@ -450,28 +363,28 @@ class FrontendTemplateListener extends DefaultListener
 
             if( count($arrBodyClasses) )
             {
-                $strBuffer = $this->replaceBodyClasses($strBuffer, $arrBodyClasses);
+                $strBuffer = PageHelper::replaceBodyClasses($strBuffer, $arrBodyClasses);
             }
 
-            if( $this->hasBodyClass("homepage", $strBuffer) )
+            if( PageHelper::hasBodyClass("homepage", $strBuffer) )
             {
                 $arrContainerClasses[]  = 'home-container';
                 $arrMainClasses[]       = 'home-main';
             }
 
-            if( $this->hasBodyClass("projectpage", $strBuffer) )
+            if( PageHelper::hasBodyClass("projectpage", $strBuffer) )
             {
                 $arrContainerClasses[]  = 'container-projectpage';
                 $arrMainClasses[]       = 'main-projectpage';
             }
 
-            if( $this->hasBodyClass("teampage", $strBuffer) )
+            if( PageHelper::hasBodyClass("teampage", $strBuffer) )
             {
                 $arrContainerClasses[]  = 'container-teampage';
                 $arrMainClasses[]       = 'main-teampage';
             }
 
-            if( $this->hasBodyClass("projectdetailpage", $strBuffer) )
+            if( PageHelper::hasBodyClass("projectdetailpage", $strBuffer) )
             {
                 $arrContainerClasses[]  = 'container-projectdetailpage';
                 $arrMainClasses[]       = 'main-projectdetailpage';
@@ -506,113 +419,6 @@ class FrontendTemplateListener extends DefaultListener
         }
 
         return $strBuffer;
-    }
-
-
-
-    protected function hasBodyClass( $className, $strBuffer )
-    {
-        preg_match_all('/<body([A-Za-z0-9\s\-_=",;.:]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"/', $strBuffer, $arrMatches);
-
-        if( is_array($arrMatches) && count($arrMatches) && count($arrMatches[0]) )
-        {
-            if( preg_match('/' . preg_quote($className, '/') . '/', $arrMatches[2][0]) )
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-
-
-    protected function isFullPageEnabled( \PageModel $objPage = NULL, \LayoutModel $objLayout = NULL )
-    {
-        $fullpage = false;
-
-        if( $objPage == NULL )
-        {
-            global $objPage;
-        }
-
-        if( $objPage->enableFullpage )
-        {
-            $fullpage = true;
-        }
-
-        if( !$fullpage )
-        {
-            $objLayout  = (($objLayout != NULL) ? $objLayout : Helper::getPageLayout( $objPage ));
-            $strClass   = trim($objPage->cssClass) . " " . trim($objLayout->cssClass);
-
-            if( preg_match("/enable-fullpage/", $strClass) )
-            {
-                $fullpage = true;
-            }
-        }
-
-        return $fullpage;
-    }
-
-
-
-    protected function replaceBodyClasses( $strContent, array $arrBodyClasses = array() )
-    {
-        global $objPage;
-
-        $arrClasses = array();
-
-        if( $this->isFullPageEnabled() )
-        {
-            $arrClasses[] = 'enable-fullpage';
-        }
-
-        $colorClass = ColorHelper::getPageColorClass( $objPage );
-
-        if( $colorClass )
-        {
-            $arrClasses[] = $colorClass;
-        }
-
-        $arrClasses[] = 'lang-' . BasicHelper::getLanguage();
-
-        $objRootPage = \PageModel::findByPk( $objPage->rootId );
-
-        if( $objRootPage && strlen(trim($objRootPage->cssClass)) )
-        {
-            $arrClasses = array_merge($arrClasses, explode(" ", trim($objRootPage->cssClass)));
-        }
-
-        $arrBodyClasses = array_merge($arrBodyClasses, $arrClasses);
-        $arrBodyClasses = array_values($arrBodyClasses);
-        $arrBodyClasses = array_unique($arrBodyClasses);
-
-        $strContent = preg_replace('/<body([^>]+)class="/', '<body$1class="' . implode(" ", $arrBodyClasses) . ' ', $strContent);
-
-        return $strContent;
-    }
-
-
-
-    protected function replaceWebsiteTitle( $strContent )
-    {
-        global $objPage;
-
-        $rootTitle = (($objPage->rootPageTitle) ? $objPage->rootPageTitle : $objPage->rootTitle);
-
-        preg_match_all('/<title>(.*)' . $rootTitle . '<\/title>/', $strContent, $matches);
-
-        if( count($matches[1]) > 0)
-        {
-            $newTitle   = trim( str_replace("-", "", $matches[1][0]) );
-            $strContent = preg_replace('/<title>' . preg_quote($matches[1][0] . $rootTitle, "/") .'<\/title>/', '<title>' . $newTitle . ' - ' . $rootTitle . '</title>', $strContent);
-        }
-
-//        $strContent = str_replace(":: ::", "::", $strContent);
-
-        return $strContent;
     }
 
 }

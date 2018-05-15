@@ -16,7 +16,7 @@ use IIDO\BasicBundle\Helper\HeaderHelper;
 use IIDO\BasicBundle\Helper\PageHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\StylesheetHelper;
-use IIDO\BasicBundle\Helper\BasicHelper as Helper;
+use IIDO\BasicBundle\Helper\BasicHelper;
 
 
 /**
@@ -62,8 +62,8 @@ class PageListener extends DefaultListener
             return;
         }
 
-        Helper::replaceOtherDefaultScripts();
-        Helper::checkForUniqueScripts();
+        BasicHelper::replaceOtherDefaultScripts();
+        BasicHelper::checkForUniqueScripts();
 
         $arrBodyClasses     = array();
         $strStyles          = '';
@@ -94,7 +94,7 @@ class PageListener extends DefaultListener
 //        $GLOBALS['TL_JAVASCRIPT']['jquery_ui']        = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery-ui.1.12.1.min.js|static';
 //        $GLOBALS['TL_JAVASCRIPT']['easing']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easing.min.js|static';
 
-        if( $objPage->enableFullpage && $jsPrefix == "jquery" )
+        if( $objPage->enableFullpage && $jsPrefix === "jquery" )
         {
             // TODO: fullpage versioning / easings / scrolloverflow
 
@@ -169,17 +169,17 @@ class PageListener extends DefaultListener
 //            $GLOBALS['TL_JAVASCRIPT']['easings']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.easings.min.js|static';
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.scrollTo.min.js|static';
             $GLOBALS['TL_JAVASCRIPT']['smoothscroll']       = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.smooth-scroll.min.js|static';
+
+
+            // parallax background
             $GLOBALS['TL_JAVASCRIPT']['stellar']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.stellar.min.js|static';
 
 
-            $isActiveWaypoints = ScriptHelper::hasPageAnimation();
-
-            if( $isActiveWaypoints )
+            if( ScriptHelper::hasPageAnimation() )
             {
                 ScriptHelper::addScript('waypoints');
                 ScriptHelper::addSourceScript('waypoints', array('wp_inview' => 'inview', 'wp_sticky'=>'sticky'));
-
-//            $GLOBALS['TL_JAVASCRIPT']['wp_infinite']   = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/waypoints/infinite.min.js|static';
+//                ScriptHelper::addSourceScript('waypoints', array('wp_inview' => 'inview', 'wp_sticky'=>'sticky', 'wp_infinite'=>'infinite'));
             }
 
 //            $GLOBALS['TL_JAVASCRIPT'][] = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.sticky-kit.min.js|static';
@@ -302,7 +302,7 @@ class PageListener extends DefaultListener
             $objPage->cssClass = $objPage->cssClass . ((strlen($objPage->cssClass)) ? ' ' : '') . implode(" ", $arrBodyClasses);
         }
 
-        Helper::checkForUniqueScripts();
+        BasicHelper::checkForUniqueScripts();
     }
 
 
@@ -313,7 +313,7 @@ class PageListener extends DefaultListener
         global $objPage;
 
         $objRootPage    = \PageModel::findByPk( $objPage->rootId );
-        $objLayout      = Helper::getPageLayout( $objPage );
+        $objLayout      = BasicHelper::getPageLayout( $objPage );
         $objTheme       = \ThemeModel::findByPk( $objLayout->pid );
 
         if( $objLayout->master_ID === 0 || $objLayout->master_ID === "" || !$objLayout->master_ID || $objLayout->master_ID === "0" )
