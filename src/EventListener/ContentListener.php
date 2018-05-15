@@ -360,7 +360,7 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['top']) )
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['top']) )
                     {
                         $useUnit = false;
                     }
@@ -377,7 +377,7 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['right']) )
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['right']) )
                     {
                         $useUnit = false;
                     }
@@ -394,7 +394,7 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['bottom']) )
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['bottom']) )
                     {
                         $useUnit = false;
                     }
@@ -411,7 +411,7 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( !preg_match('/' . $unit . '$/', $arrPosMargin['left']) )
+                    if( preg_match('/' . $unit . '$/', $arrPosMargin['left']) )
                     {
                         $useUnit = false;
                     }
