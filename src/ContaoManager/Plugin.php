@@ -45,6 +45,11 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
             $arrLoadAfter[] = 'delahaye/dlh_googlemaps';
         }
 
+        if( is_dir( $vendorPath . 'codefog/contao-news_categories') )
+        {
+            $arrLoadAfter[] = \Codefog\NewsCategoriesBundle\CodefogNewsCategoriesBundle::class;
+        }
+
         return [
             BundleConfig::create(IIDOBasicBundle::class)
                 ->setLoadAfter($arrLoadAfter)
