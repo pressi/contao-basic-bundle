@@ -257,4 +257,16 @@ class AllTables
 
         return $varValue;
     }
+
+
+
+    /**
+     * Add a link to the list items import wizard
+     *
+     * @return string
+     */
+    public function listImportWizard()
+    {
+        return ' <a href="' . \Frontend::addToUrl('key=list') . '" title="' . \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_import'][1]) . '" onclick="Backend.getScrollOffset()">' . \Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][0]) . '</a>';
+    }
 }

@@ -82,6 +82,11 @@ array_insert($GLOBALS['BE_MOD']['system'], 2, array
 
 $GLOBALS['TL_CTE']['news']['newslist']                      = '\ModuleNewsList';
 
+if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_categories') )
+{
+    $GLOBALS['TL_CTE']['news']['newscategories']            = \Codefog\NewsCategoriesBundle\FrontendModule\NewsCategoriesModule::class;
+}
+
 $GLOBALS['TL_CTE']['module']['iido_navigation']             = $ns . '\ContentElement\NavigationElement';
 $GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $ns . '\ContentElement\FilesFilterElement';
 $GLOBALS['TL_CTE']['module']['iido_detail']                 = $ns . '\ContentElement\DetailElement';
@@ -116,6 +121,7 @@ $GLOBALS['BE_FFL']['imageSize']         = $ns . '\Widget\ImageSizeWidget';
 $GLOBALS['BE_FFL']['text']              = $ns . '\Widget\TextFieldWidget';
 $GLOBALS['BE_FFL']['iidoTag']           = $ns . '\Widget\TagsFieldWidget';
 $GLOBALS['BE_FFL']['explanation']       = $ns . '\Widget\ExplanationWidget';
+$GLOBALS['BE_FFL']['listWizard']        = $ns . '\Widget\ListWizardWidget';
 
 
 
