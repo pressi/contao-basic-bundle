@@ -357,4 +357,12 @@ class BundleConfig
         $packages = \System::getContainer()->getParameter('kernel.packages');
         return $packages['contao/core-bundle'];
     }
+
+
+
+    public static function isActiveBundle( $bundleName )
+    {
+        $packages = \System::getContainer()->getParameter('kernel.packages');
+        return key_exists($bundleName, $packages);
+    }
 }
