@@ -392,11 +392,15 @@ class PageListener extends DefaultListener
 //            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-_,;.:\{\}\(\)="\'<>%\/]{0,})>/',  '<body$1>' . $menuOpen . $menuMobile, $strBuffer);
             $strBuffer = preg_replace('/<\/body>/',  $menuOpen . $menuMobile . '</body>', $strBuffer);
 
-//            if( $objPage->addPageLoader )
+
             if( !$objPage->removePageLoader && ($objPage->addPageLoader || PageHelper::checkIfParentPagesHasPageLoader( $objPage )) )
             {
+                $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
+
+                $pageLoaderColor    = ColorHelper::compileColor( \StringUtil::deserialize(\Config::get($tableFieldPrefix . 'pageLoaderBackgroundColor'), TRUE)  );
+
                 $loaderTag      = '<div id="fakeLoader"></div>';
-                $loaderScript   = '<script type="text/javascript">$("#fakeLoader").fakeLoader({timeToHide:1600,zIndex:"9999",spinner:"spinner1",bgColor:"#484848"})</script>';
+                $loaderScript   = '<script type="text/javascript">$("#fakeLoader").fakeLoader({timeToHide:1600,zIndex:"9999",spinner:"' . (\Config::get($tableFieldPrefix . 'pageLoaderStyle') ?: "spinner1") . '",bgColor:"' . (($pageLoaderColor !== "transparent") ? $pageLoaderColor : '#545454')  . '"})</script>';
 
                 $strBuffer = preg_replace('/<\/body>/',  $loaderTag . $loaderScript . '</body>', $strBuffer);
             }
