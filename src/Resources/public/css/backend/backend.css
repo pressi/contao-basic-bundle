@@ -431,24 +431,83 @@ body.popup #main .tl_formbody_submit {
 /* explanation */
 
 .be_explanation {
-    margin-top: 15px; }
+    margin-top: 15px;
+}
 .be_explanation .intro {
-    display: inline; }
+    display: inline;
+}
 .be_explanation .collapse {
-    display: none; }
+    display: none;
+}
 .be_explanation .toggle {
     background-repeat: no-repeat;
     background: url("bundles/iido_basic/images/backend/icons/explanation_open.png");
     width: 16px;
     height: 16px;
     cursor: pointer;
-    float: right; }
+    float: right;
+}
 .be_explanation.open .intro {
-    display: none; }
+    display: none;
+}
 .be_explanation.open .toggle {
-    background-image: url("bundles/iido_basic/images/backend/icons/explanation_close.png");}
+    background-image: url("bundles/iido_basic/images/backend/icons/explanation_close.png");
+}
 .be_explanation.open .collapse {
-    display: inline; }
+    display: inline;
+}
 
 .isContao4 .be_explanation {
-    font-size: .875rem !important; }
+    font-size: .875rem !important;
+}
+
+
+/* list wizard */
+
+.tl_listwizard li.size-2:not(.has-label) .tl_text,
+.tl_listwizard li.has-label.size-2 > span.input-cont {
+    width: 37%;
+}
+.tl_listwizard li.size-3:not(.has-label) .tl_text,
+.tl_listwizard li.has-label.size-3 > span.input-cont {
+    width: 26%;
+}
+
+.tl_listwizard li.size-2.has-checkbox:not(.has-label) .tl_text,
+.tl_listwizard li.has-label.size-2.has-checkbox > span.input-cont:not(.is-checkbox) {
+    width: 32%;
+}
+
+.tl_listwizard li.has-label.size-2.has-checkbox > span.input-cont.is-checkbox {
+    width: 10%;
+    text-align: center;
+}
+
+.tl_listwizard li {
+    padding: 0 0 20px;
+}
+
+.tl_listwizard li.has-label:after {
+    content: '';
+
+    display: table;
+    float: none;
+    clear: both;
+}
+
+.tl_listwizard li.has-label > span.input-cont {
+    float: left;
+    display: block;
+}
+
+.tl_listwizard li.has-label > span.input-cont .tl_text {
+    width: 95%;
+}
+
+.tl_listwizard li.has-label > span.input-cont > label {
+    display: block;
+    padding: 0 0 4px;
+}
+.tl_listwizard li.has-label > span.input-cont.is-checkbox > label {
+    padding: 0 0 13px;
+}

@@ -95,11 +95,16 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperSeparator', '', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStop', '', $strFileName);
 
-\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintAdd_legend},imprintMitglied,imprintBerufsrecht,imprintBehoerde,imprintBeruf,imprintCountry,imprintObjectOfTheCompany,imprintVATnumber;{imprintFields_legend},imprintText,privacyPolicyText;', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintAdd_legend},imprintMitglied,imprintBerufsrecht,imprintBehoerde,imprintBeruf,imprintCountry,imprintObjectOfTheCompany,imprintVATnumber;{imprintBigAdd_legend},imprintCompanyWording,imprintManagingDirector,imprintSection,imprintOccupationalGroup,imprintCompanyRegister,imprintFirmengericht,imprintAddText;{imprintFields_legend},imprintText,privacyPolicyText;{imprintImageCopyright_legend},imprintImageCopyrights;', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName);
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_navigation', '{config_legend},navModule,navPages,navigationTpl;', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_weather', '{config_legend},addIcon,addSnow,addTemperature,snowUrl;', $strFileName);
+
+if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_categories') )
+{
+    \IIDO\BasicBundle\Helper\DcaHelper::copyPaletteFromTable('newscategories', 'tl_module', 'newscategories', $strFileName);
+}
 
 //$defaultPaletteStart    = '{type_legend},type,headline,subHeadline;';
 //$defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
@@ -250,7 +255,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineImagePosition'] = array
     (
         'tl_class'              => 'w50'
     ),
-    'sql'                   => "varchar(255) NOT NULL default ''"
+    'sql'                   => "varchar(60) NOT NULL default ''"
 );
 
 
@@ -985,7 +990,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navPagesOrder'] = array
 // ANIMATION
 \IIDO\BasicBundle\Helper\DcaHelper::addField("addAnimation", "checkbox__selector", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("animationType", "select__short", $strFileName, array('includeBlankOption'=>true));
-\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset", "text", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("animationOffset", "text", $strFileName, array('maxlength'=>80));
 \IIDO\BasicBundle\Helper\DcaHelper::addField("animationWait", "checkbox", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("animateRun", "select", $strFileName);
 
@@ -1034,6 +1039,40 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCountry', $strFileName,array('maxlength'=>100));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintObjectOfTheCompany', $strFileName, array('maxlength'=>100));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintVATnumber', $strFileName, array('maxlength'=>12));
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyWording', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintManagingDirector', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintSection', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintOccupationalGroup', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyRegister', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintFirmengericht', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField('imprintAddText', $strFileName, array(), '', false, true);
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imprintImageCopyrights'],
+    'exclude'                 => true,
+    'inputType'               => 'listWizard',
+    'eval'                    => array
+    (
+        'size'              => 2,
+        'multiple'          => true,
+        'addCheckbox'          => true,
+        'allowHtml'         => true,
+        'tl_class'          => 'clr',
+        'labels'            => array
+        (
+            'Name / Titel',
+            'Link',
+            'Titel verlinken'
+        )
+    ),
+    'xlabel' => array
+    (
+        array(\IIDO\BasicBundle\Table\AllTables::class, 'listImportWizard')
+    ),
+    'sql'                     => "blob NULL"
+);
 
 
 

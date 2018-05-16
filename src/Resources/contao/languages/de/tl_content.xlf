@@ -237,6 +237,95 @@
 
 
 
+            <trans-unit id="tl_content.imprintSubline.0">
+                <source>Subline</source>
+                <target>Subline / 2. Zeile</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintStreet.0">
+                <source>Street</source>
+                <target>Straße</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintPostal.0">
+                <source>Postal</source>
+                <target>Postleitzahl</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintCity.0">
+                <source>City</source>
+                <target>Ort</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintPhone.0">
+                <source>Phone</source>
+                <target>Telefon</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintFax.0">
+                <source>Fax</source>
+                <target>Fax</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintEmail.0">
+                <source>Email</source>
+                <target>Email</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintWeb.0">
+                <source>Web</source>
+                <target>Web-Adresse</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.addImprintContactLabel.0">
+                <source>add imprint contact labels</source>
+                <target>Fügt die Labels bei den Kontaktfeldern hinzu</target>
+            </trans-unit>
+            <trans-unit id="tl_content.addImprintContactLabel.1">
+                <source>add imprint contact labels</source>
+                <target>Telefon, E-Mail, Web, usw. wird als Label vor den Feldern hinzugefügt</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintCompanyWording.0">
+                <source>Company Wording</source>
+                <target>Firmenwortlaut</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintManagingDirector.0">
+                <source>Managing Director</source>
+                <target>Geschäftsführer</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintSection.0">
+                <source>Section</source>
+                <target>Fachgruppe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintOccupationalGroup.0">
+                <source>Occupational Group</source>
+                <target>Berufsgruppe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintCompanyRegister.0">
+                <source>Company Register</source>
+                <target>Firmenbuchnummer</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintFirmengericht.0">
+                <source>Firmengericht</source>
+                <target>Firmengericht</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintAddText.0">
+                <source>add Text</source>
+                <target>Text-Zusatz</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintImageCopyrights.0">
+                <source>Bildrechte</source>
+                <target>Bildrechte</target>
+            </trans-unit>
+
             <trans-unit id="tl_content.imprintText.0">
                 <source>Imprint-Texts</source>
                 <target>Impressums-Texte</target>
@@ -371,9 +460,19 @@
                 <target>Impressums Zusatz-Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_content.imprintBigAdd_legend">
+                <source>Imprint-Settings</source>
+                <target>Impressums Zusatz (Große Webseiten)-Einstellungen</target>
+            </trans-unit>
+
             <trans-unit id="tl_content.imprintFields_legend">
                 <source>Imprint texts-Settings</source>
                 <target>Impressums- / Datenschutz-Texte</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.imprintImageCopyright_legend">
+                <source>Imprint Image-Rights-Settings</source>
+                <target>Impressums Bildrechte-Einstellungen</target>
             </trans-unit>
 
 

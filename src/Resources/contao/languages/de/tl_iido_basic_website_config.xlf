@@ -144,6 +144,18 @@
 
 
 
+            <trans-unit id="tl_iido_basic_website_config.pageLoaderBackgroundColor.0">
+                <source>Seitenlade-Overlay: Hintergrundfarbe</source>
+                <target>Seitenlade-Overlay: Hintergrundfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.pageLoaderStyle.0">
+                <source>Seitenlade-Overlay: Style</source>
+                <target>Seitenlade-Overlay: Style</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_iido_basic_website_config.weather_legend">
@@ -154,6 +166,11 @@
             <trans-unit id="tl_iido_basic_website_config.scripts_legend">
                 <source>scripts-settings</source>
                 <target>JavaScript-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_config.colorAndAdd_legend">
+                <source>color-settings</source>
+                <target><![CDATA[Farb & Zusatz-Einstellungen]]></target>
             </trans-unit>
 
             <trans-unit id="tl_iido_basic_website_config.support_legend">
@@ -174,6 +191,40 @@
                 <source>weather data</source>
                 <target><![CDATA[<div><strong>jquery</strong> => jQuery Bibliothek wird benötigt // <strong>lib</strong> => keine JS-Bibliothek wird benötigt // <strong>mootools</strong> => Mootools-Bibliothek wird benötigt</div>]]></target>
             </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_iido_basic_website_config.options.pageLoaderStyle.spinner1">
+                <source>spinner1</source>
+                <target>Style 1 (Kreise pulsierend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_config.options.pageLoaderStyle.spinner2">
+                <source>spinner1</source>
+                <target>Style 2 (gepunkteter Kreis drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_config.options.pageLoaderStyle.spinner3">
+                <source>spinner1</source>
+                <target>Style 3 (Quadrat drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_config.options.pageLoaderStyle.spinner4">
+                <source>spinner1</source>
+                <target>Style 4 (2 Kreise drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_config.options.pageLoaderStyle.spinner5">
+                <source>spinner1</source>
+                <target>Style 5 (2 Quadrate drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_config.options.pageLoaderStyle.spinner6">
+                <source>spinner1</source>
+                <target>Style 6 (Rechtecke in einer Reihe, springend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_config.options.pageLoaderStyle.spinner7">
+                <source>spinner1</source>
+                <target>Style 7 (Kreise in einer Reihe, springend)</target>
+            </trans-unit>
+
 
         </body>
     </file>

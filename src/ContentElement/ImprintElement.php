@@ -57,6 +57,8 @@ class ImprintElement extends \ContentElement
         $this->imprintText          = \StringUtil::deserialize($this->imprintText, TRUE);
         $this->privacyPolicyText    = \StringUtil::deserialize($this->privacyPolicyText, TRUE);
 
+        $this->imageCopyrights      = \StringUtil::deserialize($this->imprintImageCopyrights, TRUE);
+
         return parent::generate();
     }
 
@@ -93,7 +95,16 @@ class ImprintElement extends \ContentElement
                 "objectOfTheCompany"    => $this->imprintObjectOfTheCompany,
                 "VATnumber"             => $this->imprintVATnumber,
 
-                "companies"     => array()
+                "companies"     => $this->renderLinkList($this->imageCopyrights),
+
+                "companyWording"        => $this->imprintCompanyWording,
+                "managingDirector"      => $this->imprintManagingDirector,
+                "section"               => $this->imprintSection,
+                "occupationalGroup"     => $this->imprintOccupationalGroup,
+                "companyRegister"       => $this->imprintCompanyRegister,
+                "firmengericht"         => $this->imprintFirmengericht,
+
+                "additionalText"        =>  \StringUtil::encodeEmail( \StringUtil::toHtml5($this->imprintAddText) )
             ],
 
             "addContactLabel"   => $this->addImprintContactLabel
@@ -116,5 +127,35 @@ class ImprintElement extends \ContentElement
         }
 
         $this->Template->content = $strContent;
+    }
+
+
+
+    protected function renderLinkList( $arrLinks )
+    {
+        foreach( $arrLinks as $key => $arrValue)
+        {
+            $strLink = $arrValue[ 1 ];
+
+            if( strlen($strLink) && !preg_match('/^http/', $strLink) )
+            {
+                $strLink = 'http://' . $strLink;
+            }
+
+            if( !strlen($strLink) )
+            {
+                $strLink = 0;
+            }
+
+            $arrLinks[ $key ] = array
+            (
+                'name'      => trim($arrValue[ 0 ]),
+                'link'      => trim($strLink),
+                'linkName'  => trim($arrValue[1]),
+                'titleLink' => ($arrValue[ 2 ] ?: 0)
+            );
+        }
+
+        return $arrLinks;
     }
 }

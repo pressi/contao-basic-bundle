@@ -56,6 +56,7 @@
             </trans-unit>
 
 
+
             <trans-unit id="CTE.news">
                 <source>News</source>
                 <target>Nachrichten</target>
@@ -64,6 +65,15 @@
             <trans-unit id="CTE.newslist.0">
                 <source>Newslist</source>
                 <target>Nachrichtenliste</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.newscategories.0">
+                <source>News categories list</source>
+                <target>Liste mit Nachrichten-Kategorien</target>
+            </trans-unit>
+            <trans-unit id="CTE.newscategories.1">
+                <source>Adds a categories list to the page.</source>
+                <target>Fügt eine Nachrichten-Kategorieliste in die Seite ein.</target>
             </trans-unit>
 
 

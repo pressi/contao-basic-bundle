@@ -5,7 +5,7 @@
     Die Bilderrechte liegen bei den folgenden Fotografen und Unternehmen:<br>
     <ul>
         {% for company in content.companies %}
-            <li>{% if company.link %}<a href="{{ company.link }}">{% endif %}{{ company.name }}{% if company.link %}</a>{% endif %}</li>
+            <li>{% if company.titleLink %}<a href="{{ company.link }}">{% endif %}{{ company.name }}{% if company.titleLink %}</a>{% endif %}{% if company.link and not company.titleLink %}, <a href="{{ company.link }}" target="_blank">{{ company.linkName }}</a>{% endif %}</li>
         {% endfor %}
     </ul>
 </p>

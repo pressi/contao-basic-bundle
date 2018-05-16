@@ -7,8 +7,17 @@
     {% if content.street %}{{ content.street }}<br>{%  endif %}
     {% if content.postal and content.city %}{{ content.postal }} {{ content.city }}{%  endif %}
 </p>
-{% if content.objectOfTheCompany or content.VATnumber %}
+{% if content.objectOfTheCompany or content.VATnumber or content.companyWording or content.managingDirector or content.section %}
 <p>
+    {% if content.companyWording %}
+        <strong>Firmenwortlaut:</strong> {{ content.companyWording }}<br>
+    {% endif %}
+    {% if content.managingDirector %}
+        <strong>Geschäftsführer:</strong> {{ content.managingDirector }}<br>
+    {% endif %}
+    {% if content.section %}
+        <strong>Fachgruppe:</strong> {{ content.section }}<br>
+    {% endif %}
     {% if content.objectOfTheCompany %}
         <strong>Unternehmensgegenstand:</strong> {{ content.objectOfTheCompany }}<br>
     {% endif %}
@@ -43,7 +52,7 @@
         {{ content.website }}
     {% endif %}
 </p>
-{% if content.mitglied or content.berufsrecht %}
+{% if content.mitglied or content.berufsrecht or content.occupationalGroup %}
 <p>
     {% if content.mitglied %}
         <strong>Mitglied bei:</strong> {{ content.mitglied }}<br>
@@ -51,9 +60,12 @@
     {% if content.berufsrecht %}
         <strong>Berufsrecht:</strong> {{ content.berufsrecht }}<br>
     {% endif %}
+    {% if content.occupationalGroup %}
+        <strong>Berufsgruppe:</strong> {{ content.occupationalGroup }}<br>
+    {% endif %}
 </p>
 {% endif %}
-{% if content.behoerde or content.beruf or content.country %}
+{% if content.behoerde or content.beruf or content.country or content.companyRegister or content.firmengericht %}
     <p>
         {% if content.behoerde %}
             <strong>Aufsichtsbehörde/Gewerbebehörde:</strong> {{ content.behoerde }}<br>
@@ -61,10 +73,19 @@
         {% if content.beruf %}
             <strong>Berufsbezeichnng:</strong> {{ content.beruf }}<br>
         {% endif %}
+        {% if content.companyRegister %}
+            <strong>Firmenbuchnummer:</strong> {{ content.companyRegister }}<br>
+        {% endif %}
+        {% if content.firmengericht %}
+            <strong>Firmengericht:</strong> {{ content.firmengericht }}<br>
+        {% endif %}
         {% if content.country %}
             <strong>Verleihungsstaat:</strong> {{ content.country }}<br>
         {% endif %}
     </p>
+{% endif %}
+{% if content.additionalText %}
+    {{ content.additionalText|raw }}
 {% endif %}
 {{ '{{iflng::en}}' }}
 <h1>Imprint</h1>
