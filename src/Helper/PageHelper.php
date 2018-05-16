@@ -112,6 +112,15 @@ class PageHelper
             $arrClasses[] = $colorClass;
         }
 
+        if( self::checkIfPageHasRocksolidSlider( $objPage ) )
+        {
+            $arrClasses[] = 'page-has-startslider';
+        }
+        else
+        {
+            $arrClasses[] = 'page-has-no-startslider';
+        }
+
         $arrClasses[] = 'lang-' . BasicHelper::getLanguage();
 
         $objRootPage = \PageModel::findByPk( $objPage->rootId );
@@ -121,6 +130,11 @@ class PageHelper
             $arrClasses = array_merge($arrClasses, explode(" ", trim($objRootPage->cssClass)));
         }
 
+        if( ($objPage->addPageLoader || self::checkIfParentPagesHasPageLoader( $objPage ) || $objRootPage->addPageLoader) && !$objPage->removePageLoader )
+        {
+            $arrClasses[] = 'enable-pageloader';
+        }
+
         $arrBodyClasses = array_merge($arrBodyClasses, $arrClasses);
         $arrBodyClasses = array_values($arrBodyClasses);
         $arrBodyClasses = array_unique($arrBodyClasses);
@@ -128,6 +142,30 @@ class PageHelper
         $strContent = preg_replace('/<body([^>]+)class="/', '<body$1class="' . implode(" ", $arrBodyClasses) . ' ', $strContent);
 
         return $strContent;
+    }
+
+
+
+    public static function checkIfPageHasRocksolidSlider( $objPage = null )
+    {
+        if( $objPage === null )
+        {
+            global $objPage;
+        }
+
+        $objFirstArticle = \ArticleModel::findPublishedByPidAndColumn( $objPage->id, "main", array("order"=>"sorting", "limit"=>1));
+
+        if( $objFirstArticle )
+        {
+            $objFirstElement = \ContentModel::findByPid( $objFirstArticle->id, array("order"=>"sorting", "limit"=>1));
+
+            if( $objFirstElement && $objFirstElement->type === "rocksolid_slider" )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 

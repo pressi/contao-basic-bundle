@@ -255,6 +255,25 @@ class DcaHelper extends \Frontend
 
 
 
+    public static function copyPaletteFromTable( $fromPalette, $fromTable, $toPalette, $toTable)
+    {
+        \Controller::loadDataContainer( $fromTable );
+
+        $newPalette = $GLOBALS['TL_DCA'][ $fromTable ]['palettes'][ $fromPalette ];
+
+        if( $fromTable === "tl_module" )
+        {
+            $newPalette = preg_replace('/^\{title_legend\},name,headline,type;/', self::$paletteStart, $newPalette);
+            $newPalette = preg_replace('/\{protected_legend:hide\},protected;\{expert_legend:hide\},guests,cssID,space$/', self::$paletteEnd, $newPalette);
+
+            self::checkIfFieldsExists( $newPalette, $toTable, $fromTable );
+        }
+
+        $GLOBALS['TL_DCA'][ $toTable ]['palettes'][ $toPalette ] = $newPalette;
+    }
+
+
+
     public static function replacePaletteFields($strName, $oldFields, $newFields, $strTable)
     {
         $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ] = preg_replace('/' . $oldFields . '/', $newFields, $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ]);
@@ -575,11 +594,11 @@ class DcaHelper extends \Frontend
             $defaultEval = array_merge($defaultEval, $eval);
         }
 
-        $arrOptions = $GLOBALS['TL_LANG'][ $langTable?:$strTable ]['options'][ $fieldName ];
+        $arrOptions = $GLOBALS['TL_LANG'][ $langTable?:$strTable ]['options'][ self::renderOptionsLabel( $fieldName ) ];
 
         if( $shortOptions )
         {
-            $arrOptions = $GLOBALS['TL_LANG'][ $langTable?:$strTable ]['options_' . $fieldName ];
+            $arrOptions = $GLOBALS['TL_LANG'][ $langTable?:$strTable ]['options_' . self::renderOptionsLabel( $fieldName ) ];
         }
 
         if( $isSelector )
@@ -1230,5 +1249,44 @@ class DcaHelper extends \Frontend
         }
 
         return $langTable;
+    }
+
+
+
+    protected static function renderOptionsLabel( $strFieldName )
+    {
+        return preg_replace('/^iido([A-Za-z0-9]{0,})_/', '', $strFieldName);
+    }
+
+
+
+    protected static function checkIfFieldsExists( $strPalette, $strTable, $fromTable )
+    {
+//        \Controller::loadDataContainer( $strTable );
+//        \Controller::loadDataContainer( $fromTable );
+
+        $arrExistFields = $GLOBALS['TL_DCA'][ $strTable ]['fields'];
+
+        $arrGroups = explode(";", preg_replace('/;$/', '', $strPalette));
+
+        if( count($arrGroups) )
+        {
+            foreach( $arrGroups as $strGroup )
+            {
+                $arrFields = explode(",", $strGroup);
+                array_shift( $arrFields );
+
+                if( count($arrFields) )
+                {
+                    foreach( $arrFields as $strField )
+                    {
+                        if( !key_exists($strField, $arrExistFields) )
+                        {
+                            self::copyFieldFromTable( $strField, $strTable, $strField, $fromTable);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

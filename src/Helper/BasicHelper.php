@@ -564,6 +564,8 @@ class BasicHelper extends \Frontend
         }
     }
 
+
+
     public static function checkForUniqueScripts()
     {
         if( is_array($GLOBALS['TL_JAVASCRIPT']) )
