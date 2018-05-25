@@ -1,4 +1,7 @@
-<? $this->extend("block_searchable") ?>
+<? $this->extend("block_searchable");
+
+$this->class = trim($this->class . ' ce_text');
+?>
 
 <? $this->block('content'); ?>
 
