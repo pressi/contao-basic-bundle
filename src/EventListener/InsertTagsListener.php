@@ -236,7 +236,7 @@ class InsertTagsListener extends DefaultListener
 
                         if( $arrSplit[2] === "void" )
                         {
-                            $return = 'javascrpt:void(0)';
+                            $return = 'javascript:void(0)';
                         }
                         break;
 
@@ -303,9 +303,12 @@ class InsertTagsListener extends DefaultListener
                         break;
 
 
-
                     case "post":
-                        $return = \Input::get( $arrSplit[2] );
+                        $return = \Input::post( $arrSplit[2] );
+                        break;
+
+                    case "postRaw":
+                        $return = \Input::postRaw( $arrSplit[2] );
                         break;
                 }
                 break;
