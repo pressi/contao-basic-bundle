@@ -167,6 +167,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
     }
 
     $strFields = preg_replace('/{expert_legend/', '{position_legend},position,positionMargin,positionFixed;{expert_legend', $strFields);
+    $strFields = preg_replace('/,invisible/', ',invisible,hideOnMobile,showOnMobile', $strFields);
 
     $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = '{intern_legend:hide},internName;' . $strFields;
 }
