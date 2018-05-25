@@ -451,4 +451,20 @@ class ContentHelper
         return ImageHelper::getImageTag( $strImage, $arrImageSize );
     }
 
+
+
+    public static function getArticleLastSave( $articleID )
+    {
+        $objResult = \Database::getInstance()->prepare("SELECT * FROM tl_version WHERE fromTable=? AND pid=? ORDER BY tstamp DESC LIMIT 1")->execute("tl_article", $articleID);
+
+        if( $objResult->numRows > 0 )
+        {
+            $objResult = $objResult->first();
+
+            return $objResult->tstamp;
+        }
+
+        return 0;
+    }
+
 }

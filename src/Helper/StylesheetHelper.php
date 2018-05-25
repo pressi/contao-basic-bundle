@@ -26,9 +26,6 @@ class StylesheetHelper
 
 
 
-
-
-
     public static function renderStyleVars( $strContent )
     {
         global $objPage;
@@ -403,7 +400,7 @@ class StylesheetHelper
     }
 
 
-
+    //TODO: funktion in global elements helper??
     public static function getGlobalElementStyles( $mode, $objData )
     {
         $arrStyles      = array();
@@ -702,6 +699,430 @@ class StylesheetHelper
         $objLayout = BasicHelper::getPageLayout( $objPage );
 
         return ($objLayout->combineScripts ? self::$stylesheetModeCombine : '');
+    }
+
+
+
+    public static function addDefaultStylesheets()
+    {
+        $rootAlias = BasicHelper::getRootPageAlias();
+
+        $cssPath        = BundleConfig::getBundlePath( true ) . '/css/';
+        $cssPathStd     = $cssPath . 'frontend/iido/';
+        $cssPathMaster  = 'files/master/css/';
+        $cssPathCustom  = 'files/' . $rootAlias . '/css/';
+
+        $arrFiles       = array
+        (
+            'reset.css',
+            'animate.css',
+//            'grid16.css',
+            'styles.css',
+            'standards.css',
+            'page.css'
+        );
+
+        $arrMasterFiles = array
+        (
+            'reset.css',
+            'animate.css',
+            'hamburgers.css',
+            'hamburgers.min.css',
+            'core.css',
+            'buttons.css',
+            'form.css',
+            'forms.css',
+            'layout.css',
+            'navigation.css',
+            'bulma/columns.css',
+            'bulma/tile.css',
+            'bulma/form.css',
+            'bulma/checkradio.css',
+            'content.css',
+            'responsive.css'
+        );
+
+        $arrCustomFiles = array
+        (
+            'fonts.css',
+            'icons.css',
+            'animate.css',
+            'core.css',
+            'buttons.css',
+            'form.css',
+            'forms.css',
+            'layout.css',
+            'hamburgers.css',
+            'hamburgers.min.css',
+            'navigation.css',
+            'content.css',
+            'style.css',
+            'styles.css',
+            'page.css',
+            'responsive.css'
+        );
+
+        $rootDir = BasicHelper::getRootDir();
+
+        foreach($arrFiles as $strFile)
+        {
+            if( file_exists( $rootDir . '/' . $cssPathStd . $strFile) )
+            {
+                $GLOBALS['TL_USER_CSS'][ 'std_' . $strFile ] =  $cssPathStd . $strFile . '||static';
+            }
+        }
+
+        foreach($arrMasterFiles as $strFile)
+        {
+            if( file_exists($rootDir . '/' . $cssPathMaster  . $strFile) )
+            {
+                $GLOBALS['TL_USER_CSS'][ 'master_' . $strFile ] =  $cssPathMaster . $strFile . '||static';
+            }
+        }
+
+        foreach($arrCustomFiles as $strFile)
+        {
+            if( file_exists($rootDir . '/' . $cssPathCustom  . $strFile) )
+            {
+                $GLOBALS['TL_USER_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
+            }
+        }
+
+        if( file_exists($rootDir . '/' . $cssPathCustom  . '/page-styles.css') )
+        {
+            $strFile = $rootDir. '/' . $cssPathCustom  . '/page-styles.css';
+
+            $GLOBALS['TL_HEAD']['custom_page_styles'] = '<style>' . self::renderHeadStyles( file_get_contents($strFile) ) . '</style>';
+        }
+    }
+
+
+
+    public static function createDefaultStylesheet( $arrBodyClasses )
+    {
+        global $objPage; // TODO: CSS-Datei je Seite / Seitenbaum / Domain bzw. je einzelne Seite (wenn mehrere Seiten in einer installation)
+
+        $objRootPage        = \PageModel::findByPk( $objPage->rootId );
+
+        $arrPageStyles      = array();
+        $objAllPages        = \PageModel::findAll(); //\PageModel::findPublishedByPid( $objPage->rootId, array("order"=>"sorting") );
+        $createTime         = 0;
+        $createFile         = FALSE;
+        $objFile            = new \File('assets/css/page-styles.css');
+
+        if( $objFile->exists() )
+        {
+            $createTime = $objFile->mtime;
+        }
+
+//        if( $objAllPages )
+//        {
+//            while( $objAllPages->next() )
+//            {
+        $objArticles = \ArticleModel::findAll();
+//                $objArticles = \ArticleModel::findPublishedByPidAndColumn( $objAllPages->id, "main");
+
+        if( $objArticles )
+        {
+            $count      = $objArticles->count();
+            $zIndex     = 100 + (10 * $count);
+
+            while( $objArticles->next() )
+            {
+                if( !$objArticles->published )
+                {
+                    continue;
+                }
+
+                if( $objArticles->articleType === "header" || $objArticles->articleType === "footer" || $objArticles->articleType === "ge" )
+                {
+                    continue;
+                }
+
+                if( $objArticles->tstamp > $createTime || ContentHelper::getArticleLastSave( $objArticles->id ) > $createTime )
+                {
+                    $createFile     = TRUE;
+                }
+
+                if( $objArticles->fullWidth )
+                {
+                    if( !preg_match('/content-width/', $objAllPages->cssClass) && !in_array('content-width', $arrBodyClasses))
+                    {
+                        $arrBodyClasses[] = 'content-width';
+                    }
+                }
+
+                $cssID      = deserialize($objArticles->cssID, TRUE);
+//                        $strImage   = '';
+//                        $objImage   = \FilesModel::findByUuid( $objArticles->bgImage );
+//
+//                        if( $objImage && file_exists($this->rootDir . '/' . $objImage->path) )
+//                        {
+//                            $strImage = $objImage->path;
+//                        }
+
+                $addContainer   = '';
+                $articleID      = (empty($cssID[0])? 'article-' . $objArticles->id : $cssID[0]);
+                $artBgName      = $objArticles->id . '_background';
+
+                if( preg_match('/bg-in-container/', $cssID[1]) )
+                {
+                    $addContainer = ' .background-container';
+                }
+
+                if( $objArticles->addDivider )
+                {
+                    $addContainer = ' .article-inside';
+                }
+
+                $arrPageStyles[ $artBgName ] = array
+                (
+                    'selector'          => '#container .mod_article#' . $articleID . $addContainer
+                );
+
+                $arrPageStyles[ $artBgName ] = array_merge($arrPageStyles[ $artBgName ], StylesheetHelper::getBackgroundStyles($objArticles->current()));
+
+
+                if( $objArticles->addDivider )
+                {
+                    $arrPageStyles[ $artBgName . '_article' ] = array
+                    (
+                        'selector'  => '#container .mod_article#' . $articleID,
+                        'own'       => $arrPageStyles[ $artBgName . '_article' ]['own'] . 'z-index:' . $zIndex . ';'
+                    );
+
+                    $bgColor = ColorHelper::compileColor( \StringUtil::deserialize($objArticles->bgColor, TRUE) );
+
+                    switch( $objArticles->dividerStyle )
+                    {
+                        case "style1":
+                            $arrPageStyles[ $objArticles->id . '_arrow-left' ]  = array
+                            (
+                                'selector'  => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                'own'       => 'background:linear-gradient(to left bottom, ' . $bgColor . ' 50%, transparent 50%);'
+                            );
+
+                            $arrPageStyles[ $objArticles->id . '_arrow-right' ] = array
+                            (
+                                'selector'  => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                'own'       => 'background:linear-gradient(to right bottom, ' . $bgColor . ' 50%, transparent 50%);'
+                            );
+                            break;
+
+                        case "style2":
+                            $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticles->pid, $objArticles->inColumn, $objArticles->sorting));
+
+                            $arrPageStyles[ $objArticles->id . '_bow-bottom_background' ] = array
+                            (
+                                'selector'      => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                'background'    => '1',
+                                'bgcolor'       => $objArticles->bgColor
+                            );
+
+                            $arrPageStyles[ $objArticles->id . '_bow-bottom' ] = array
+                            (
+                                'selector'      => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                'background'    => '1',
+                                'bgcolor'       => $objNextArticle->bgColor
+                            );
+                            break;
+
+                        case "style3":
+                            $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticles->pid, $objArticles->inColumn, $objArticles->sorting));
+
+                            $arrPageStyles[ $objArticles->id . '_bow-bottom-top_background' ] = array
+                            (
+                                'selector'      => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                'background'    => '1',
+                                'bgcolor'       => $objNextArticle->bgColor
+                            );
+
+                            $arrPageStyles[ $objArticles->id . '_bow-bottom-top' ] = array
+                            (
+                                'selector'      => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                'background'    => '1',
+                                'bgcolor'       => $objArticles->bgColor
+                            );
+                            break;
+
+                        case "style4":
+                        case "style5":
+                            $arrPageStyles[ $objArticles->id . '_arrow-bottom' ] = array
+                            (
+                                'selector'  => '.mod_article.has-article-divider#' . $articleID . ':after',
+                                'own'       => 'border-top-color:' . $bgColor . ';'
+                            );
+                            break;
+
+                        case "style6":
+                            $arrPageStyles[ $objArticles->id . '_bows-bottom' ] = array
+                            (
+                                'selector'  => '.mod_article.has-article-divider#' . $articleID . ':before,.mod_article.has-article-divider#' . $articleID . ':after',
+                                'own'       => 'border-color:' . $bgColor . ';'
+                            );
+                            break;
+
+                        case "style7":
+                            $arrPageStyles[ $objArticles->id . '_clouds_background' ] = array
+                            (
+                                'selector'      => '.mod_article.has-article-divider#' . $articleID . ':before',
+                                'background'    => '1',
+                                'bgcolor'       => $objArticles->bgColor
+                            );
+                            break;
+                    }
+
+//                            echo "<pre>"; print_r( $arrPageStyles ); exit;
+                }
+
+                if( $objArticles->toNextArrow )
+                {
+                    $strArrowColor      = ColorHelper::compileColor( \StringUtil::deserialize($objArticles->toNextArrowColor, TRUE) );
+
+                    if( $strArrowColor !== "transparent" )
+                    {
+                        $arrPageStyles[ $objArticles->id . '_next-arrow' ] = array
+                        (
+                            'selector'      => '.mod_article#' . $articleID . ' .arrow .arrow-inside-container:before,.mod_article#' . $articleID . ' .arrow .arrow-inside-container:after',
+                            'background'    => '1',
+                            'bgcolor'       => $objArticles->toNextArrowColor
+                        );
+                    }
+
+                    $strArrowHoverColor     = ColorHelper::compileColor( \StringUtil::deserialize($objArticles->toNextArrowHoverColor, TRUE) );
+
+                    if( $strArrowHoverColor !== "transparent" )
+                    {
+                        $arrPageStyles[ $objArticles->id . '_next-arrow-hover' ] = array
+                        (
+                            'selector'      => '.mod_article#' . $articleID . ' .arrow:hover .arrow-inside-container:before,.mod_article#' . $articleID . ' .arrow:hover .arrow-inside-container:after',
+                            'background'    => '1',
+                            'bgcolor'       => $objArticles->toNextArrowHoverColor
+                        );
+                    }
+                }
+
+//                        $bgColor        = deserialize($objArticles->bgColor, TRUE);
+//                        $arrOwnStyles   = array();
+
+//                if( !empty($bgColor[0]) )
+//                {
+//                    $rgb = ColorHelper::HTMLToRGB( $bgColor[0] );
+//                    $hsl = ColorHelper::RGBToHSL( $rgb );
+//
+//                    if( $hsl->lightness < 200 )
+//                    {
+//                        $arrPageStyles[ $objArticles->id ]['font']      = TRUE;
+//                        $arrPageStyles[ $objArticles->id ]['fontcolor'] = serialize(array('fff', ''));
+//                    }
+//                }
+
+                $zIndex = ($zIndex - 10);
+            }
+        }
+//            }
+//        }
+
+//        $objHeader = \ArticleModel::findByAlias('ge_header_' . $objRootPage->alias);
+        $objHeader = GlobalElementsHelper::getObject('header', $objRootPage->alias);
+
+        if( $objHeader )
+        {
+            $objTopHeader = HeaderHelper::headerTopBarExists();
+
+            if( $objTopHeader )
+            {
+                $arrTopHeaderStyles = StylesheetHelper::getGlobalElementStyles('topheader', $objTopHeader);
+
+                if( ($objTopHeader->tstamp > $createTime || ContentHelper::getArticleLastSave( $objTopHeader->id ) > $createTime) && count($arrTopHeaderStyles) )
+                {
+                    $createFile     = TRUE;
+                }
+
+                $arrPageStyles[ 'topheader_' . $objTopHeader->id ] = $arrTopHeaderStyles;
+            }
+
+            $arrHeaderStyles = StylesheetHelper::getGlobalElementStyles('header', $objHeader);
+
+            if( ($objHeader->tstamp > $createTime || ContentHelper::getArticleLastSave( $objHeader->id ) > $createTime) && count($arrHeaderStyles) )
+            {
+                $createFile     = TRUE;
+            }
+
+            $arrPageStyles[ 'header_' . $objHeader->id ] = $arrHeaderStyles;
+        }
+
+
+//        $objFooter = \ArticleModel::findByAlias('ge_footer_' . $objRootPage->alias);
+        $objFooter = GlobalElementsHelper::getObject('footer', $objRootPage->alias);
+
+        if( $objFooter )
+        {
+            $arrFooterStyles = StylesheetHelper::getGlobalElementStyles('footer', $objFooter);
+
+            if( ($objFooter->tstamp > $createTime || ContentHelper::getArticleLastSave( $objFooter->id ) > $createTime) && count($arrFooterStyles) )
+            {
+                $createFile     = TRUE;
+            }
+
+            $arrPageStyles[ 'footer_' . $objFooter->id ] = $arrFooterStyles;
+        }
+
+        if( count($arrPageStyles) && $createFile )
+        {
+            if( $objFile->exists() )
+            {
+                $objFile->delete();
+            }
+
+            $objStyleSheets     = new \StyleSheets();
+            $arrStyles          = array();
+
+            foreach($arrPageStyles as $arrPageStyle)
+            {
+                $arrStyles[] = $objStyleSheets->compileDefinition($arrPageStyle, true);
+            }
+
+            if( count($arrStyles) )
+            {
+                $writeToFile = FALSE;
+
+                $objFile = new \File('assets/css/page-styles.css');
+                $objFile->write("/* Auto generated File - by IIDO */\n");
+
+                foreach($arrStyles as $strStyle)
+                {
+                    $strOnlyStyles = preg_replace('/#container .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
+
+                    if( strlen(trim($strOnlyStyles)) )
+                    {
+                        $writeToFile = TRUE;
+                        $objFile->append($strStyle, '');
+                    }
+                }
+
+                $objFile->close();
+
+                if( !$writeToFile )
+                {
+                    $objFile->delete();
+                }
+            }
+        }
+
+        $rootDir = BasicHelper::getRootDir();
+
+        if( file_exists($rootDir . '/assets/css/page-styles.css') )
+        {
+            $GLOBALS['TL_CSS']['custom_page-styles'] = 'assets/css/page-styles.css||static';
+        }
+
+        if( file_exists($rootDir . '/files/' . $objRootPage->alias . '/css/theme.css') )
+        {
+            $GLOBALS['TL_CSS']['custom_theme'] = 'files/' . $objRootPage->alias . '/css/theme.css||static';
+        }
+
+        return $arrBodyClasses;
     }
 
 }

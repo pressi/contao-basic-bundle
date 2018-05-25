@@ -1104,10 +1104,22 @@ class BasicHelper extends \Frontend
 
 
 
-    public static function getRootPageAlias()
+    public static function getRootPageAlias( $deRoot = false )
     {
         global $objPage;
 
-        return $objPage->rootAlias;
+        $strLang    = self::getLanguage();
+
+        if( $strLang !== "de" && $deRoot )
+        {
+            $objRooPage = \PageModel::findOneBy("language", "de");//TODO: verbindung zwischen root pages herstellen!!
+            $rootAlias  =  $objRooPage->alias;
+        }
+        else
+        {
+            $rootAlias = $objPage->rootAlias;
+        }
+
+        return $rootAlias;
     }
 }
