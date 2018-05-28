@@ -59,15 +59,24 @@ class RSCEHelper extends \Frontend
             (
                 'multiple'          => true,
                 'fieldType'         => 'checkbox',
-                'orderField'        => $orderFieldName,
+//                'orderField'        => $orderFieldName,
                 'files'             => true,
                 'isGallery'         => true,
                 'extensions'        => \Config::get('validImageTypes'),
                 'tl_class'          => 'clr',
             )
         );
-
     }
+
+
+
+//    public static function getImagesOrderFieldConfig( $label )
+//    {
+//        return array
+//        (
+//            'label'         => self::renderLabel( $label ),
+//        );
+//    }
 
 
 
@@ -576,10 +585,84 @@ class RSCEHelper extends \Frontend
 
             if( is_array($arrImages) && count($arrImages) )
             {
-                echo "<pre>"; print_r( $arrImages ); exit;
-            }
+                $objFiles = \FilesModel::findMultipleByUuids( $arrImages );
 
-            echo "<pre>1"; print_r( $arrImages ); exit;
+                if( $objFiles && $objFiles->count() )
+                {
+                    while ($objFiles->next())
+                    {
+                        // Continue if the files has been processed or does not exist
+                        if (isset($images[$objFiles->path]) || !file_exists(BasicHelper::getRootDir() . '/' . $objFiles->path))
+                        {
+                            continue;
+                        }
+
+                        // Single files
+                        if ($objFiles->type == 'file')
+                        {
+                            $objFile = new \File($objFiles->path);
+
+                            if (!$objFile->isImage)
+                            {
+                                continue;
+                            }
+
+                            // Add the image
+                            $images[$objFiles->path] = array
+                            (
+                                'id'         => $objFiles->id,
+                                'uuid'       => $objFiles->uuid,
+                                'name'       => $objFile->basename,
+                                'singleSRC'  => $objFiles->path,
+                                'title'      => \StringUtil::specialchars($objFile->basename),
+                                'filesModel' => $objFiles->current()
+                            );
+
+                            $auxDate[] = $objFile->mtime;
+                        }
+
+                        // Folders
+                        else
+                        {
+                            $objSubfiles = \FilesModel::findByPid($objFiles->uuid, array('order' => 'name'));
+
+                            if ($objSubfiles === null)
+                            {
+                                continue;
+                            }
+
+                            while ($objSubfiles->next())
+                            {
+                                // Skip subfolders
+                                if ($objSubfiles->type == 'folder')
+                                {
+                                    continue;
+                                }
+
+                                $objFile = new \File($objSubfiles->path);
+
+                                if (!$objFile->isImage)
+                                {
+                                    continue;
+                                }
+
+                                // Add the image
+                                $images[$objSubfiles->path] = array
+                                (
+                                    'id'         => $objSubfiles->id,
+                                    'uuid'       => $objSubfiles->uuid,
+                                    'name'       => $objFile->basename,
+                                    'singleSRC'  => $objSubfiles->path,
+                                    'title'      => \StringUtil::specialchars($objFile->basename),
+                                    'filesModel' => $objSubfiles->current()
+                                );
+
+                                $auxDate[] = $objFile->mtime;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         return $images;
