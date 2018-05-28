@@ -90,8 +90,15 @@ class WebsiteConfigMaintenance extends \Backend implements \executable
                 {
                     $keyNum     = $num;
 
+                    $strFileName    = 'imprintText';
+
+                    if( preg_match('/privacy-policy/', $strFile) )
+                    {
+                        $strFileName = 'privacyPolicyText';
+                    }
+
                     $strName    = preg_replace(array('/^imprint_/', '/.html.twig$/'), '', $strFile);
-                    $strLabel   = $this->renderLabel( $strName );
+                    $strLabel   = $this->renderLabel( $strName, $strFileName );
                     $strContent = file_get_contents( $folderPath . $strFile );
 
 //                    $strContent = TwigHelper::render( 'Website/' . $strFile );
@@ -136,11 +143,11 @@ class WebsiteConfigMaintenance extends \Backend implements \executable
 
 
 
-    protected function renderLabel( $strName )
+    protected function renderLabel( $strName, $strFieldName = 'imprintText' )
     {
         \Controller::loadLanguageFile("tl_content");
 
-        $strLabel   = $GLOBALS['TL_LANG']['tl_content']['options']['imprintText'][ $strName ];
+        $strLabel   = $GLOBALS['TL_LANG']['tl_content']['options'][ $strFieldName ][ $strName ];
 
         if( $strName === "intro" )
         {
