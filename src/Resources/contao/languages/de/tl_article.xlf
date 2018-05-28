@@ -416,23 +416,23 @@
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.canvasTop">
                 <source>top canvas</source>
-                <target>Top Bereich oben (oberhalb der Seite, versteckt)</target>
+                <target>Top Bereich oben (oberhalb der Seite, versteckt) [canvas-top]</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.headerTopBar">
                 <source>Header: top bar</source>
-                <target>Kopfzeile: Top Bar</target>
+                <target>Kopfzeile: Top Bar [topHeader]</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.header">
                 <source>Header</source>
-                <target>Kopfzeile</target>
+                <target>Kopfzeile [header]</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.pitLane">
                 <source>Pit lane</source>
-                <target>Boxengasse</target>
+                <target>Boxengasse [pitlane]</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.footer">
                 <source>Footer</source>
-                <target>Fußzeile</target>
+                <target>Fußzeile [footer]</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.ge">
                 <source>global Element</source>
