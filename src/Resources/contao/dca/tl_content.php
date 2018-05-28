@@ -130,7 +130,7 @@ if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_c
 
 foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strFields)
 {
-    if( $strPalette == "__selector__" )
+    if( $strPalette === "__selector__" )
     {
         continue;
     }
@@ -163,6 +163,11 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
         if( !in_array($strPalette, ['boxStop','accordionStop','sliderStop','html','code','alias','article']) )
         {
             $strFields = $strFields . ';{animate_legend},addAnimation;';
+        }
+
+        if( $strPalette === "gallery" )
+        {
+            $strFields = preg_replace('/{template_legend/', '{text_legend},text;{template_legend', $strFields);
         }
     }
 
@@ -244,9 +249,15 @@ foreach($GLOBALS['TL_DCA']['tl_content']['subpalettes'] as $strSubpalette => $st
  * Fields
  */
 
+if( $objContent && $act === "edit" && $objContent->type === "gallery" )
+{
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields']['text']['eval']['mandatory'] = false;
+}
+
+
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField("internName", $strFileName);
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['headlineImagePosition'] = array
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['headlineImagePosition'] = array
 (
     'label'                 => &$GLOBALS['TL_LANG']['tl_content']['headlineImagePosition'],
     'exclude'               => true,
@@ -1051,7 +1062,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 (
-    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['imprintImageCopyrights'],
+    'label'                   => &$GLOBALS['TL_LANG'][ $strFileName ]['imprintImageCopyrights'],
     'exclude'                 => true,
     'inputType'               => 'listWizard',
     'eval'                    => array
