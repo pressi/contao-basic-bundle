@@ -60,12 +60,6 @@ $arrFields =
     'support_legend' =>
     [
         $fieldPrefix . 'enableSupportForm'
-    ],
-
-    'colorAndAdd_legend' =>
-    [
-        $fieldPrefix . 'pageLoaderBackgroundColor',
-        $fieldPrefix . 'pageLoaderStyle'
     ]
 ];
 
@@ -159,9 +153,3 @@ foreach( $arrSupportFormSubpalette as $strFieldName)
 {
     \IIDO\BasicBundle\Helper\DcaHelper::addTextField($fieldPrefix . $strFieldName, $strFileName);
 }
-
-
-
-// Color and Add
-\IIDO\BasicBundle\Helper\DcaHelper::addColorField( $fieldPrefix . 'pageLoaderBackgroundColor', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addSelectField($fieldPrefix . 'pageLoaderStyle', $strFileName);

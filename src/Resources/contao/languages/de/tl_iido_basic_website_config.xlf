@@ -144,18 +144,6 @@
 
 
 
-            <trans-unit id="tl_iido_basic_website_config.pageLoaderBackgroundColor.0">
-                <source>Seitenlade-Overlay: Hintergrundfarbe</source>
-                <target>Seitenlade-Overlay: Hintergrundfarbe</target>
-            </trans-unit>
-
-            <trans-unit id="tl_iido_basic_website_config.pageLoaderStyle.0">
-                <source>Seitenlade-Overlay: Style</source>
-                <target>Seitenlade-Overlay: Style</target>
-            </trans-unit>
-
-
-
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_iido_basic_website_config.weather_legend">
@@ -166,11 +154,6 @@
             <trans-unit id="tl_iido_basic_website_config.scripts_legend">
                 <source>scripts-settings</source>
                 <target>JavaScript-Einstellungen</target>
-            </trans-unit>
-
-            <trans-unit id="tl_iido_basic_website_config.colorAndAdd_legend">
-                <source>color-settings</source>
-                <target><![CDATA[Farb & Zusatz-Einstellungen]]></target>
             </trans-unit>
 
             <trans-unit id="tl_iido_basic_website_config.support_legend">

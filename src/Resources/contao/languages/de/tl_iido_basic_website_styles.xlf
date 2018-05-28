@@ -1,0 +1,167 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_basic_website_styles.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_iido_basic_website_styles.pageWidth.0">
+                <source>page width</source>
+                <target>Breite</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.pageContentWidth.0">
+                <source>page content width</source>
+                <target>Inhaltsbreite</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_iido_basic_website_styles.colors.0">
+                <source>Farben</source>
+                <target>Farben</target>
+            </trans-unit>
+
+
+
+
+            <trans-unit id="tl_iido_basic_website_styles.pageLoaderBackgroundColor.0">
+                <source>Overlay: Hintergrundfarbe</source>
+                <target>Overlay: Hintergrundfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.pageLoaderStyle.0">
+                <source>Overlay: Style</source>
+                <target>Overlay: Style</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.colorPrimary.0">
+                <source>Primary Farbe (Hauptfarbe)</source>
+                <target>Primary Farbe  (Hauptfarbe)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.colorSecondary.0">
+                <source>Secondary Farbe (Zweitfarbe)</source>
+                <target>Secondary Farbe (Zweitfarbe)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonColorPrimary.0">
+                <source>Primary: Farbe</source>
+                <target>Primary: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonFontColorPrimary.0">
+                <source>Primary: Schriftfarbe</source>
+                <target>Primary: Schriftfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverColorPrimary.0">
+                <source>Primary Hover: Farbe</source>
+                <target>Primary Hover: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverFontColorPrimary.0">
+                <source>Primary Hover: Schriftfarbe</source>
+                <target>Primary Hover: Schriftfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonColorSecondary.0">
+                <source>Secondary: Farbe</source>
+                <target>Secondary: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonFontColorSecondary.0">
+                <source>Secondary: Schriftfarbe</source>
+                <target>Secondary: Schriftfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverColorSecondary.0">
+                <source>Secondary Hover: Farbe</source>
+                <target>Secondary Hover: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverFontColorSecondary.0">
+                <source>Secondary Hover: Schriftfarbe</source>
+                <target>Secondary Hover: Schriftfarbe</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_iido_basic_website_styles.width_legend">
+                <source>width-settings</source>
+                <target>Breiten-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.colors_legend">
+                <source>colors-settings</source>
+                <target>Farb-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttons_legend">
+                <source>buttons-settings</source>
+                <target>Buttons-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.pageLoader_legend">
+                <source>page loader-settings</source>
+                <target>Seitenlade-Einstellungen</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_iido_basic_website_styles.options.pageLoaderStyle.spinner1">
+                <source>spinner1</source>
+                <target>Style 1 (Kreise pulsierend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.pageLoaderStyle.spinner2">
+                <source>spinner1</source>
+                <target>Style 2 (gepunkteter Kreis drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.pageLoaderStyle.spinner3">
+                <source>spinner1</source>
+                <target>Style 3 (Quadrat drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.pageLoaderStyle.spinner4">
+                <source>spinner1</source>
+                <target>Style 4 (2 Kreise drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.pageLoaderStyle.spinner5">
+                <source>spinner1</source>
+                <target>Style 5 (2 Quadrate drehend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.pageLoaderStyle.spinner6">
+                <source>spinner1</source>
+                <target>Style 6 (Rechtecke in einer Reihe, springend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.pageLoaderStyle.spinner7">
+                <source>spinner1</source>
+                <target>Style 7 (Kreise in einer Reihe, springend)</target>
+            </trans-unit>
+
+
+
+<!-- ### WIZARD FIELDS ###################################################################################################### -->
+
+            <trans-unit id="tl_iido_basic_website_styles.fields.colors.color">
+                <source>color</source>
+                <target>Farbcode</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.fields.colors.name">
+                <source>name</source>
+                <target>Name/Bezeichnung (Backend)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.fields.colors.variable">
+                <source>variable name</source>
+                <target>Variabelname (in CSS-Datei)</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.fields.colors.rootPage">
+                <source>root page</source>
+                <target>Seitenbaum (Root-Seite)</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

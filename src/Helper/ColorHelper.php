@@ -9,6 +9,9 @@ namespace IIDO\BasicBundle\Helper;
 
 //use IIDO\WebsiteBundle\Util\ColorUtil as Color;
 
+use IIDO\BasicBundle\Config\BundleConfig;
+
+
 class ColorHelper
 {
 
@@ -187,6 +190,18 @@ class ColorHelper
      */
     public static function compileColor($color, $blnWriteToFile=false, $vars=array())
     {
+        if( preg_match('/^#/', $color) )
+        {
+            return $color;
+        }
+
+        $checkColor = \StringUtil::deserialize($color);
+
+        if( is_array($checkColor) && is_string($color) )
+        {
+            $color = $checkColor;
+        }
+
         if( !is_array($color) )
         {
             return ((strlen($color)) ? '#' . self::shortenHexColor($color) : 'transparent');
@@ -214,7 +229,7 @@ class ColorHelper
         }
         else
         {
-            if( $color[2] && !$color[0])
+            if( $color[2] && !$color[0] )
             {
                 $color[0] = $color[2];
             }
@@ -439,6 +454,46 @@ class ColorHelper
         }
 
         return $arrOptions;
+    }
+
+
+
+    public static function getCurrentWebsiteColors()
+    {
+//        global $objPage;
+//        $objRootPage = \PageModel::findByPk( $objPage->rootId );
+
+        $parentLabel    = 'Standardfarben';
+        $arrColors      = array();
+        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+
+        $colors = \StringUtil::deserialize( \Config::get( $fieldPrefix . 'colors' ), TRUE );
+
+        if( count($colors) && $colors[0]['color'] )
+        {
+            foreach($colors as $arrColor)
+            {
+                $arrColors[ $parentLabel ][ $arrColor['color'] ] = $arrColor['name']; //TODO: check root page
+            }
+        }
+
+
+        $primary = self::compileColor( \Config::get( $fieldPrefix . 'colorPrimary' ) );
+
+        if( $primary && $primary !== "transparent" )
+        {
+            $arrColors[ $parentLabel ][ $primary ] = 'Primary - Hauptfarbe';
+        }
+
+
+        $secondary = self::compileColor( \Config::get( $fieldPrefix . 'colorSecondary' ) );
+
+        if( $secondary && $secondary !== "transparent" )
+        {
+            $arrColors[ $parentLabel ][ $secondary ] = 'Secondary - Zweitfarbe';
+        }
+
+        return $arrColors;
     }
 
 

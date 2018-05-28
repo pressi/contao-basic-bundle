@@ -365,6 +365,37 @@ class DcaHelper extends \Frontend
 
 
 
+    public static function addNewField( $fieldName, $strTable, $inputType, $label = "", $eval = array(), $sql = "", $defaultConfig = array())
+    {
+        $arrConfig = array
+        (
+            'label'     => $label?:self::renderFieldLabel( $strTable, '', $fieldName),
+            'inputType' => $inputType,
+        );
+
+        if( count($eval) )
+        {
+            $arrConfig['eval'] = $eval;
+        }
+
+        if( strlen($sql) )
+        {
+            $arrConfig['sql'] = $sql;
+        }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = $arrConfig;
+
+        if( count( $defaultConfig) )
+        {
+            foreach( $defaultConfig as $configKey => $configValue )
+            {
+                $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ][ $configKey ] = $configValue;
+            }
+        }
+    }
+
+
+
     public static function addCheckboxField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $isSelector = false, $langTable = '', $defaultConfig = array())
     {
         $sql = "char(1) NOT NULL default ''";

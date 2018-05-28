@@ -462,6 +462,7 @@ body.popup #main .tl_formbody_submit {
 }
 
 
+
 /* list wizard */
 
 .tl_listwizard li.size-2:not(.has-label) .tl_text,
@@ -511,3 +512,37 @@ body.popup #main .tl_formbody_submit {
 .tl_listwizard li.has-label > span.input-cont.is-checkbox > label {
     padding: 0 0 13px;
 }
+
+
+
+/* space / divider fields */
+
+.widget.space-top {
+    position: relative;
+
+    padding-top: 15px;
+    margin-top: 25px;
+
+    border-top: 1px solid #e6e6e8;
+}
+.widget.space-top:before,
+.widget.space-top:after {
+    content: '';
+
+    position: absolute;
+    top: -1px;
+
+    height: 1px;
+    width: 15px;
+
+    background: #e6e6e8;
+}
+
+.widget.space-top:before {
+    left: -15px;
+}
+
+.widget.space-top:after {
+    right: -15px;
+}
+

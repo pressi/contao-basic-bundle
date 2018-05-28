@@ -34,6 +34,11 @@ array_insert($GLOBALS['BE_MOD']['system'], 2, array
     $prefix . 'WebsiteConfig' => array
     (
         'tables'    => array($tablePrefix . 'website_config')
+    ),
+
+    $prefix . 'WebsiteStyles' => array
+    (
+        'tables'    => array($tablePrefix . 'website_styles')
     )
 ));
 

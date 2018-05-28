@@ -9,6 +9,8 @@ use IIDO\BasicBundle\Helper\ColorHelper;
 if ($GLOBALS['TL_CONFIG']['useRTE']):
 
     $themeColors = ColorHelper::getThemeColors();
+    $themeColors = array_merge($themeColors, ColorHelper::getCurrentWebsiteColors());
+
 
     if( version_compare(BasicHelper::getContaoVersion(), '4.5', '<') ):
 ?>
@@ -121,13 +123,21 @@ setTimeout(function()
         {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
     ],
       <? if( count($themeColors) ): ?>
+      style_formats_merge: true,
       style_formats:
       [
-          <? $i=0; foreach( $themeColors as $theme => $arrColors):
-            foreach($arrColors as $code => $color):
-          ?>
-          <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', styles:{color:'<?= $code ?>'}}
-          <? $i++; endforeach; endforeach ?>
+          {
+              title : 'Farben',
+              items :
+                  [
+                      <? $i=0; foreach( $themeColors as $theme => $arrColors):
+                      foreach($arrColors as $code => $color):
+                      $code = preg_replace('/&#35;/', '#', $code);
+                      ?>
+                          <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
+                      <? $i++; endforeach; endforeach; ?>
+                  ]
+          }
       ],
       <? endif ?>
     content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.css',

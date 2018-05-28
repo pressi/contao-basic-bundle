@@ -65,7 +65,7 @@ class TextFieldWidget extends \TextField
             $strField       =  $colorPreview . preg_replace('/class="tl_text_field/', 'class="tl_text_field color-picker', $strField);
             $strField       = preg_replace('/\$\("ctrl_' . $this->strField . '_0"\).value = color.hex.replace\("#", ""\);/', '$("ctrl_' . $this->strField . '_0").value = color.hex.replace("#", "");var strColor = color.hex, strField = $("ctrl_' . $this->strField . '_1"); if(strField.value){strColor=\'rgba(\' + color.rgb[0] + \',\' + color.rgb[1] + \',\' + color.rgb[2] + \',\' + (strField.value/100) + \')\'}$("colorPreview_' . $this->strField . '").setStyle("background", strColor);', $strField);
 
-            $strFunction    = ' var fn = function( el, mode )
+            $strFunction    = ' var fn_' . $this->id . ' = function( el, mode )
             {
                 var strField, strColor, varValue = el.value;
                 
@@ -141,22 +141,24 @@ class TextFieldWidget extends \TextField
             };
             
             $("ctrl_' . $this->strField . '_1").addEvents({
-    "change": function() { fn(this, "trans"); },
-    "keyup": function() { fn(this, "trans"); }
+    "change": function() { fn_' . $this->id . '(this, "trans"); },
+    "keyup": function() { fn_' . $this->id . '(this, "trans"); }
 });
             $("ctrl_' . $this->strField . '_0").addEvents({
-    "change": function() { fn(this, "color"); },
-    "keyup": function() { fn(this, "color"); }
+    "change": function() { fn_' . $this->id . '(this, "color"); },
+    "keyup": function() { fn_' . $this->id . '(this, "color"); }
 });
 
             $("ctrl_' . $this->strField . '_2").addEvents({
-    "change": function() { fn(this, "select"); }
+    "change": function() { fn_' . $this->id . '(this, "select"); }
 });
                 </script>';
             $strField       = preg_replace('/<\/script>/', $strFunction, $strField);
 
             $strSelectField     = '';
             $arrSelectOptions   = ColorHelper::getThemeColors();
+
+            $arrSelectOptions = array_merge($arrSelectOptions, ColorHelper::getCurrentWebsiteColors());
 
             if( !count($arrSelectOptions) )
             {
@@ -165,7 +167,14 @@ class TextFieldWidget extends \TextField
 
             if( count($arrSelectOptions) )
             {
-                $strSelectField = '<select name="' . $this->strField . '[]" id="ctrl_' . $this->strField . '_2" class="tl_select color-select">';
+                $selectAttribute = '';
+
+                if( $this->disableSelect )
+                {
+                    $selectAttribute = ' disabled="disabled"';
+                }
+
+                $strSelectField = '<select name="' . $this->strField . '[]" id="ctrl_' . $this->strField . '_2" class="tl_select color-select"' . $selectAttribute . '>';
 
                 if( $arrSelectOptions[0] !== "-" )
                 {
