@@ -62,6 +62,11 @@ class InsertTagsListener extends DefaultListener
 
                 switch( $arrSplit[1] )
                 {
+                    case "countdown":
+                        $return = $this->renderCountdown( $arrSplit[2], $arrSplit[3] );
+                        break;
+
+
                     case "insert_article":
                         if( ($strOutput = \Controller::getArticle($arrSplit[2], false, true)) !== false )
                         {
@@ -363,5 +368,95 @@ class InsertTagsListener extends DefaultListener
         }
 
         return false;
+    }
+
+
+
+    protected function renderCountdown( $date, $mode = 'static' )
+    {
+        $date = new \DateTime($date);
+        $now  = new \DateTime();
+
+        if( $now > $date )
+        {
+            return 'Der Bewerb hat bereits stattgefunden!';
+        }
+
+        $countdown  = '';
+        $interval   = $date->diff( $now );
+
+        $years      = $interval->y;
+        $months     = $interval->m;
+        $days       = $interval->d;
+        $hours      = $interval->h;
+        $minutes    = $interval->i;
+        $seconds    = $interval->s;
+
+        if( $years )
+        {
+            $countdown .= $years . ' ' . $GLOBALS['TL_LANG']['MSC'][ ($years > 1 ? 'years' : 'year') ];
+        }
+
+        if( $months )
+        {
+            if( strlen($countdown) )
+            {
+                $countdown .= ', ';
+            }
+
+            $countdown .= $months . ' ' . $GLOBALS['TL_LANG']['MSC'][ ($months > 1 ? 'months' : 'month') ];
+        }
+
+        if( $days )
+        {
+            if( strlen($countdown) )
+            {
+                $countdown .= ', ';
+            }
+
+            $countdown .= $days . ' ' . $GLOBALS['TL_LANG']['MSC'][ ($days > 1 ? 'days' : 'day') ];
+        }
+
+        if( $hours )
+        {
+            if( strlen($countdown) )
+            {
+                $countdown .= ', ';
+            }
+
+            $countdown .= $hours . ' ' . $GLOBALS['TL_LANG']['MSC'][ ($hours > 1 ? 'hours' : 'hour') ];
+        }
+
+        if( $minutes )
+        {
+            if( strlen($countdown) )
+            {
+                if( $mode === "live" )
+                {
+                    $countdown .= ', ';
+                }
+                else
+                {
+                    $countdown .= ' und ';
+                }
+            }
+
+            $countdown .= $minutes . ' ' . $GLOBALS['TL_LANG']['MSC'][ ($minutes > 1 ? 'minutes' : 'minute') ];
+        }
+
+        if( $mode === "live" )
+        {
+            if( $seconds )
+            {
+                if( strlen($countdown) )
+                {
+                    $countdown .= ' und ';
+                }
+
+                $countdown .= $seconds . ' ' . $GLOBALS['TL_LANG']['MSC'][ ($seconds > 1 ? 'seconds' : 'second') ];
+            }
+        }
+
+        return $countdown;
     }
 }
