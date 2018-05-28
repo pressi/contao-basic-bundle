@@ -74,6 +74,8 @@ class ArticleTable extends \Backend
 
             if( strlen($strNewColumn) )
             {
+                $strNewColumn = preg_replace('/ \[([A-Za-z0-9]{0,})\]/', '', $strNewColumn);
+
                 $strLabel   = preg_replace('/\[([A-Za-z\s\-_:]{0,})\]/', '[' . $strNewColumn . ']', trim($strLabel));
             }
         }
