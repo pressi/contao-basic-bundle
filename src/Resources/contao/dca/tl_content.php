@@ -145,7 +145,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
     if( !is_array($strFields) )
     {
 //        $headlineFields = 'addTopHeadline,headline,headlineFloating,addHeadlineBorder,addHeadlineLink,addSubHeadline;';
-        $headlineFields = 'addTopHeadline,headline,headlineFloating,subHeadline;';
+        $headlineFields = 'addTopHeadline,headline,headlineFloating,headlineStyles,subHeadline;';
         $strFields      = str_replace( 'headline;', $headlineFields, $strFields );
 
 //        if( !preg_match('/^box/', $strPalette) )
@@ -673,7 +673,6 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'] = array
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addSubHeadline']			= $GLOBALS['TL_DCA']['tl_content']['fields']['addTopHeadline'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['addSubHeadline']['label']	= &$GLOBALS['TL_LANG']['tl_content']['addSubHeadline'];
 
-
 $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 (
     'label'                   => &$GLOBALS['TL_LANG']['tl_content']['headlineFloating'],
@@ -681,9 +680,12 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
     'default'                 =>'header_left',
     'inputType'               => 'radioTable',
     'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['headlineFloating'],
-    'eval'                    => array('cols'=>3, 'tl_class'=>'w50'),
+    'eval'                    => array('cols'=>3, 'tl_class'=>'w25'),
     'sql'                     => "varchar(32) NOT NULL default 'header_left'"
 );
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField("headlineStyles", $strFileName, array('maxlength'=>255,'includeBlankOption'=>true), 'w25', true, '', false, false, '', array('options_callback'=>array($strTableClass, 'loadHeadlineStyles')));
+
 
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadlineFloating']			= $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadlineFloating']['label']	= &$GLOBALS['TL_LANG']['tl_content']['subHeadlineFloating'];

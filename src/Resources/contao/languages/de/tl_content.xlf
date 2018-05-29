@@ -128,6 +128,11 @@
 				<target>Rahmen hinzufügen</target>
 			</trans-unit>
 
+            <trans-unit id="tl_content.headlineStyles.0">
+                <source>Stil</source>
+                <target>Stil</target>
+            </trans-unit>
+
 
 			<trans-unit id="tl_content.dividerSize.0">
 				<source>divider size</source>
