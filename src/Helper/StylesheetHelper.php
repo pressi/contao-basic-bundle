@@ -334,54 +334,91 @@ class StylesheetHelper
                     $strContent = str_replace($strChunk . '1px', $op . $result . 'px', $strContent);
                     break;
 
-                case "color_primary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'colorPrimary') ?:'#000' );
+                case (preg_match("/^color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
+                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'color' . ucfirst($matches[1])) ?:'#000' );
                     $strContent = str_replace($strChunk . '#fff', $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
-                case "color_secondary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'colorSecondary') ?:'#fff' );
+//                case "color_secondary":
+//                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'colorSecondary') ?:'#fff' );
+//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
+//                    break;
+
+//                case "btn_color_primary":
+                case (preg_match("/^btn_color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
+                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonColor' . ucfirst($matches[1])) ?: \Config::get($fieldPrefix . 'color' . ucfirst($matches[1])) ?:'#000' );
                     $strContent = str_replace($strChunk . '#fff', $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
-                case "btn_color_primary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonColorPrimary') ?: \Config::get($fieldPrefix . 'colorPrimary') ?:'#000' );
+//                case "btn_font-color_primary":
+                case (preg_match("/^btn_font-color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
+                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonFontColor' . ucfirst($matches[1])) ?:'#000' );
                     $strContent = str_replace($strChunk . '#fff', $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
-                case "btn_hover_color_primary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonHoverColorPrimary') ?: self::getDarkerColor( \Config::get($fieldPrefix . 'buttonColorPrimary') ) ?:'#333' );
+//                case "btn_hover_color_primary":
+                case (preg_match("/^btn_hover_color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
+                    $arrColor   = \StringUtil::deserialize(\Config::get($fieldPrefix . 'buttonHoverColor' . ucfirst($matches[1])), TRUE);
+                    $strColor   = ColorHelper::compileColor( $arrColor );
+
+                    if( $strColor === "transparent" && $arrColor[0] === "" && $arrColor[1] === "" )
+                    {
+                        $arrColor   = \StringUtil::deserialize(\Config::get($fieldPrefix . 'buttonColor' . ucfirst($matches[1])), TRUE);
+                        $strColor   = self::getDarkerColor( ColorHelper::compileColor($arrColor) );
+
+                        if( $strColor === "transparent" && $arrColor[0] === "" && $arrColor[1] === "" )
+                        {
+                            $strColor = '#333';
+                        }
+                    }
+
+                    $color      = $strColor;
+                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
+                    break;
+
+                case (preg_match("/^btn_hover_font-color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
+                    $arrColor   = \StringUtil::deserialize(\Config::get($fieldPrefix . 'buttonHoverFontColor' . ucfirst($matches[1])), TRUE);
+                    $strColor   = ColorHelper::compileColor( $arrColor );
+
+                    if( $strColor === "transparent" && $arrColor[0] === "" && $arrColor[1] === "" )
+                    {
+                        $arrColor   = \StringUtil::deserialize(\Config::get($fieldPrefix . 'buttonFontColor' . ucfirst($matches[1])), TRUE);
+                        $strColor   = self::getLighterColor( ColorHelper::compileColor($arrColor) );
+
+                        if( $strColor === "transparent" && $arrColor[0] === "" && $arrColor[1] === "" )
+                        {
+                            $strColor = '#ff';
+                        }
+                    }
+
+                    $color      = $strColor;
                     $strContent = str_replace($strChunk . '#fff', $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
 
-                case "btn_color_secondary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonColorSecondary') ?:\Config::get($fieldPrefix . 'colorSecondary') ?:'#fff' );
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
-                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
-                    break;
+//                case "btn_color_secondary":
+//                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonColorSecondary') ?:\Config::get($fieldPrefix . 'colorSecondary') ?:'#fff' );
+//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
+//                    break;
 
-                case "btn_hover_color_secondary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonHoverColorSecondary') ?: self::getDarkerColor( \Config::get($fieldPrefix . 'buttonColorSecondary') ) ?:'#333' );
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
-                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
-                    break;
+//                case "btn_hover_color_secondary":
+//                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonHoverColorSecondary') ?: self::getDarkerColor( \Config::get($fieldPrefix . 'buttonColorSecondary') ) ?:'#333' );
+//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
+//                    break;
 
-                case "btn_font-color_primary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonFontColorPrimary') ?:'#000' );
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
-                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
-                    break;
-
-                case "btn_font-color_secondary":
-                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonFontColorSecondary') ?:'#fff' );
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
-                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
-                    break;
+//                case "btn_font-color_secondary":
+//                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonFontColorSecondary') ?:'#fff' );
+//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
+//                    break;
             }
         }
 
@@ -434,6 +471,13 @@ class StylesheetHelper
     public static function getDarkerColor( $color )
     {
         return ColorHelper::mixColors($color, '#000000', 20.0);
+    }
+
+
+
+    public static function getLighterColor( $color )
+    {
+        return ColorHelper::mixColors($color, '#ffffff', 90.0);
     }
 
 

@@ -77,6 +77,24 @@ class ScriptHelper
             $hasAnimation = true;
         }
 
+        if( !$hasAnimation )
+        {
+            $objContentElements = \ContentModel::findBy(array("invisible=?", "type=?"), array("", "rsce_feature-box"));
+
+            if( $objContentElements )
+            {
+                while( $objContentElements->next() )
+                {
+                    $cssID = \StringUtil::deserialize($objContentElements->cssID, TRUE);
+
+                    if( preg_match('/bg-parallax/', $cssID[1]) )
+                    {
+                        $hasAnimation = true;
+                    }
+                }
+            }
+        }
+
         return $hasAnimation;
     }
 
