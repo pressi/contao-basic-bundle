@@ -10,6 +10,7 @@
 namespace IIDO\BasicBundle\EventListener;
 
 
+use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
 use IIDO\BasicBundle\Helper\ContentHelper;
@@ -88,6 +89,20 @@ class ContentListener extends DefaultListener
             if( $objRow->fullsize )
             {
                 $strBuffer = ContentHelper::generateImageHoverTags($strBuffer, $objRow);
+            }
+
+            if( preg_match('/bg-image/', $cssID[1]) )
+            {
+                $bgImage    = '';
+                $objImage   = \FilesModel::findByPk( $objRow->singleSRC );
+
+                if( $objImage )
+                {
+                    $bgImage = $objImage->path;
+                }
+
+                $strBuffer = preg_replace('/<figure([A-Za-z0-9\s\-=",;.:_\(\)\{\}\/]{0,})>([A-Za-z0-9\s\n\-<>,;.:="\/_]{0,})<\/figure>/', '<figure$1 style="background-image:url(' . $bgImage . ')"></figure>', $strBuffer);
+                $strBuffer = preg_replace('/image_container/', 'image_container bg-image bg-cover', $strBuffer);
             }
         }
         elseif( $objRow->type == "text")
@@ -210,6 +225,11 @@ class ContentListener extends DefaultListener
                 $strImageClass  = ($arrImage['meta']['cssClass'] ? ' ' : '') . $arrImage['meta']['cssClass'];
 
                 $newImageFigure = preg_replace('/class="image_container/', 'class="image_container' . $strImageClass, $strImageFigure);
+
+                if( preg_match('/vmiddle/', $cssID[1]) )
+                {
+                    $newImageFigure = preg_replace(array('/<figure([A-Za-z0-9\s\-,;.:_\/\(\)\{\}="]{0,})>/', '/<\/figure>/'), array('<figure$1><div class="ctable"><div class="ctable-cell">', '</div></div></figure>'), $newImageFigure);
+                }
 
                 $strBuffer      = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strBuffer);
             }
@@ -502,6 +522,39 @@ class ContentListener extends DefaultListener
             $arrHeadlineClasses[]       = 'text-' . $floating;
             $arrTopHeadlineClasses[]    = 'text-' . $floating;
             $arrSubHeadlineClasses[]    = 'text-' . $floating;
+        }
+
+        if( $objRow->headlineStyles )
+        {
+            $arrConfig = \StringUtil::deserialize( \Config::get( BundleConfig::getTableFieldPrefix() . 'headlineStyles' ), TRUE );
+
+            if( count($arrConfig) )
+            {
+                foreach($arrConfig as $arrHeadlineConfig)
+                {
+                    if( $objRow->headlineStyles === $arrHeadlineConfig['id'] )
+                    {
+                        if( $arrHeadlineConfig['tagClasses'] )
+                        {
+                            $arrTagClasses      = explode(" ", $arrHeadlineConfig['tagClasses']);
+                            $arrElementClasses  = explode(" ", $arrHeadlineConfig['elementClasses']);
+
+                            foreach($arrTagClasses as $arrTagClass)
+                            {
+                                if( !in_array($arrTagClass, $arrHeadlineClasses) )
+                                {
+                                    $arrHeadlineClasses[] = $arrTagClass;
+                                }
+                            }
+
+                            if( count($arrElementClasses) )
+                            {
+                                $strContent = $this->addClassToContentElement($strContent, $objRow, $arrElementClasses);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if( count($arrTopHeadlineClasses) )
