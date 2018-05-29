@@ -253,9 +253,43 @@ body.popup #main .tl_formbody_submit {
     /*border-bottom: 1px solid #ccc;*/
 /*}*/
 
+.tl_modulewizard {
+    max-width: 100%;
+}
+
+.tl_modulewizard thead tr th,
+.tl_modulewizard tbody tr td {
+    padding: 0 5px;
+}
+
+.tl_modulewizard tbody tr td.field-color input.tl_text {
+    width: 80px;
+}
+
+.tl_modulewizard tbody tr td.field-size {
+    width: 120px;
+}
+
+.tl_modulewizard tbody tr td.field-size > .tl_text_unit {
+    width: calc(79% - 30px);
+}
+
+.tl_modulewizard tbody tr td.field-size > select {
+    width: 50px;
+}
+
 .tl_modulewizard tbody tr td > div.tl_text_field {
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.tl_modulewizard tbody tr td .tl_radio_table label {
+    display: inline;
+    float: none;
+}
+
+.tl_modulewizard tbody tr td .tl_radio_table tr td {
+    white-space: nowrap;
 }
 
 .mcw-radio-table table {
@@ -511,6 +545,24 @@ body.popup #main .tl_formbody_submit {
 }
 .tl_listwizard li.has-label > span.input-cont.is-checkbox > label {
     padding: 0 0 13px;
+}
+
+.widget.w25 {
+    float: left;
+    width: calc(25% - 30px);
+
+    clear: none;
+}
+
+.widget.wauto {
+    clear: none;
+    float: left;
+
+    width: auto;
+}
+
+.widget.wauto + *.widget:not(.wauto) {
+    clear: both;
 }
 
 

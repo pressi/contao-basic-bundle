@@ -17,6 +17,8 @@ IIDO.Content = IIDO.Content || {};
     {
         this.initStyleGuide();
         this.initAnimations();
+        this.initCountdown();
+        this.initAnimateBackgrounds();
     };
 
 
@@ -216,6 +218,134 @@ IIDO.Content = IIDO.Content || {};
     content.stopScrollContainer = function()
     {
         $($scrollContainer).stop();
+    };
+
+
+
+    content.initCountdown = function()
+    {
+        var containers = document.querySelectorAll(".countdown-container");
+
+        if( containers.length )
+        {
+            for(var i=0; i<containers.length; i++)
+            {
+                var container   = containers[ i ],
+                    strDate     = container.getAttribute("data-date"),
+                    arrDate     = strDate.split(" "),
+
+                    arrDMY      = arrDate[0].split("."),
+                    arrTime     = arrDate[1].split(":");
+
+                var contDate    = new Date( arrDMY[2], (arrDMY[1] - 1), arrDMY[0], arrTime[0], arrTime[1] ).getTime();
+
+                setInterval(IIDO.Content.runCountdown.bind( null, container, contDate ), 1000);
+            }
+        }
+    };
+
+
+    content.runCountdown = function( container, toDate )
+    {
+        var now         = new Date().getTime(),
+
+            distance    = (toDate - now),
+
+            years       = 0,
+            months      = 0,
+            days        = Math.floor(distance / (1000 * 60 * 60 * 24)),
+            hours       = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes     = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds     = Math.floor((distance % (1000 * 60)) / 1000);
+
+        if( distance < 0 )
+        {
+            container.innerHTML = "ENDE";
+        }
+        else
+        {
+            if( days > 30 )
+            {
+                months   = Math.floor( days / 30 );
+                days    = (days % 30);
+            }
+
+            if( months > 12 )
+            {
+                years   = Math.floor( months / 12 );
+                days    = (months % 12);
+            }
+
+            if( years > 0 )
+            {
+                container.querySelector(".box-years .value").innerHTML  = years;
+            }
+            else
+            {
+                if( container.querySelector(".box-years") )
+                {
+                    container.querySelector(".box-years").classList.add("hidden");
+                }
+            }
+
+            if( months > 0 )
+            {
+                container.querySelector(".box-months .value").innerHTML = months;
+            }
+            else
+            {
+                if( container.querySelector(".box-months") )
+                {
+                    container.querySelector(".box-months").classList.add("hidden");
+                }
+            }
+
+            if( days > 0 )
+            {
+                container.querySelector(".box-days .value").innerHTML   = days;
+            }
+            else
+            {
+                if( container.querySelector(".box-days") )
+                {
+                    container.querySelector(".box-days").classList.add("hidden");
+                }
+            }
+
+            container.querySelector(".box-hours .value").innerHTML      = hours;
+            container.querySelector(".box-minutes .value").innerHTML    = minutes;
+            container.querySelector(".box-seconds .value").innerHTML    = seconds;
+        }
+    };
+
+
+
+    content.initAnimateBackgrounds = function()
+    {
+        setTimeout(function()
+        {
+            $(".bg-parallax, .box-image .image_container").waypoint(function(direction)
+                {
+                    if(!$("body").is(".mobile,.ios,.android"))
+                    {
+                        $.stellar({
+                            horizontalOffset: 0,
+                            verticalOffset: 0,
+                            horizontalScrolling: false,
+                            verticalScrolling: true,
+                            parallaxBackgrounds: true,
+                            positionProperty: "position",
+                            scrollProperty: "scroll",
+                            parallaxElements: true,
+                            hideDistantElements: false
+                        });
+                    }
+                },
+                {
+                    offset: '100%',
+                    triggerOnce: true
+                });
+        }, 500);
     };
 
 })(window, jQuery, IIDO.Content);

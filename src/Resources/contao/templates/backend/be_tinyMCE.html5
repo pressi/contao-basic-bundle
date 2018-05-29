@@ -41,7 +41,10 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                     link_class_list:
                         [
                             {title: '--', value: ''},
-                            {title: 'Button', value: 'btn'},
+                            {title: 'Button Primary', value: 'btn btn-primary'},
+                            {title: 'Button Secondary', value: 'btn btn-secondary'},
+                            {title: 'Button Tertiary', value: 'btn btn-tertiary'},
+                            // {title: 'Button', value: 'btn'},
                             {title: 'Seite in Lightbox öffnen', value: 'open-page-in-lightbox'},
                             {title: 'Scroll zum Element', value: 'scroll-to-element'},
                             {title: 'Bild, Datei oder Video in Lightbox öffnen', value: 'open-file-in-lightbox'},
@@ -112,7 +115,10 @@ setTimeout(function()
     link_class_list:
     [
         {title: '--', value: ''},
-        {title: 'Button', value: 'btn'},
+        {title: 'Button Primary', value: 'btn btn-primary'},
+        {title: 'Button Secondary', value: 'btn btn-secondary'},
+        {title: 'Button Tertiary', value: 'btn btn-tertiary'},
+        // {title: 'Button', value: 'btn'},
         {title: 'Seite in Lightbox öffnen', value: 'open-page-in-lightbox'},
         {title: 'Scroll zum Element', value: 'scroll-to-element'},
         {title: 'Bild, Datei oder Video in Lightbox öffnen', value: 'open-file-in-lightbox'},
