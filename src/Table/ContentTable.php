@@ -10,6 +10,7 @@
 namespace IIDO\BasicBundle\Table;
 
 
+use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 
 
@@ -536,5 +537,33 @@ class ContentTable extends \Backend
         asort($arrIcons);
 
         return $arrIcons;
+    }
+
+
+
+    public static function loadHeadlineStyles( $dc )
+    {
+        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+
+        $arrOptions     = array();
+        $arrStyles      = \StringUtil::deserialize( \Config::get($fieldPrefix . 'headlineStyles'), TRUE);
+
+        if( count($arrStyles) )
+        {
+            foreach($arrStyles as $arrStyle)
+            {
+                if( strlen(trim($arrStyle['name'])) )
+                {
+                    $arrOptions[ $arrStyle['id'] ] = $arrStyle['name'];
+                }
+            }
+        }
+
+//        if( count($arrOptions) )
+//        {
+//            $arrOptions = array_merge(array(''=>'-'), $arrOptions);
+//        }
+
+        return $arrOptions;
     }
 }
