@@ -1033,8 +1033,9 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 
 // IMPRINT
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyName', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('imprintText', $strFileName, array('multiple'=>true,'sorting'=>true), '', false, false, '', array('inputType'=>'checkboxWizard'));
-\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('privacyPolicyText', $strFileName, array('multiple'=>true,'sorting'=>true), '', false, false, '', array('inputType'=>'checkboxWizard'));
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('imprintText', $strFileName, array('multiple'=>true,'sorting'=>false), '', false, false, '', array('inputType'=>'checkboxWizard'));
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('privacyPolicyText', $strFileName, array('multiple'=>true,'sorting'=>false), '', false, false, '', array('inputType'=>'checkboxWizard'));
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('privacyPolicySocialmediaText', $strFileName, array('multiple'=>true,'sorting'=>false), '', false, false, '', array('inputType'=>'checkboxWizard', 'options'=>$GLOBALS['TL_LANG'][ $strFileName ]['options']['privacyPolicyText_socialmedia']));
 
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintStreet', $strFileName,array('maxlength'=>100));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintSubline', $strFileName,array('maxlength'=>100));
@@ -1066,24 +1067,43 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 (
     'label'                   => &$GLOBALS['TL_LANG'][ $strFileName ]['imprintImageCopyrights'],
     'exclude'                 => true,
-    'inputType'               => 'listWizard',
+    'inputType'               => 'multiColumnWizard',
     'eval'                    => array
     (
-        'size'              => 2,
-        'multiple'          => true,
-        'addCheckbox'          => true,
-        'allowHtml'         => true,
         'tl_class'          => 'clr',
-        'labels'            => array
+        'columnFields'      => array
         (
-            'Name / Titel',
-            'Link',
-            'Titel verlinken'
+            'title' =>
+            [
+                'label'     => array('Name / Titel'),
+                'exclude'   => true,
+                'inputType' => 'text',
+                'eval'      => [ 'style' => 'width:300px' ],
+            ],
+
+            'link' =>
+            [
+                'label'     => array('Link'),
+                'exclude'   => true,
+                'inputType' => 'text',
+                'eval'      => [ 'style' => 'width:300px' ],
+            ],
+
+            'titleLink' =>
+            [
+                'label'     => array('Titel verlinken'),
+                'exclude'   => true,
+                'inputType' => 'checkbox',
+            ],
+
+            'linkTitle' =>
+            [
+                'label'     => array('Link Titel', 'Wenn Leer dann wird der Link ausgegeben.'),
+                'exclude'   => true,
+                'inputType' => 'text',
+                'eval'      => [ 'style' => 'width:180px' ],
+            ]
         )
-    ),
-    'xlabel' => array
-    (
-        array(\IIDO\BasicBundle\Table\AllTables::class, 'listImportWizard')
     ),
     'sql'                     => "blob NULL"
 );

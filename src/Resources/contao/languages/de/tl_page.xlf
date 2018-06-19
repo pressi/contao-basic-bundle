@@ -199,6 +199,13 @@
 
 
 
+            <trans-unit id="tl_page.googleAnalyticsId.0">
+                <source>Google-Analytics ID</source>
+                <target>Google-Analytics ID</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_page.overview_legend">
@@ -219,6 +226,11 @@
             <trans-unit id="tl_page.additional_legend">
                 <source>additional-settings</source>
                 <target>Zusatz-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.analytics_legend">
+                <source>analytics-settings</source>
+                <target>Google Analytics-Einstellungen</target>
             </trans-unit>
 
 

@@ -7,13 +7,13 @@
 
 
             <trans-unit id="MOD.iidoWebsiteConfig.0">
-                <source>Website-Config</source>
-                <target>Website-Konfiguration</target>
+                <source>Website Configuration</source>
+                <target>Website Konfiguration</target>
             </trans-unit>
 
             <trans-unit id="MOD.iidoWebsiteStyles.0">
-                <source>Website-Styleseditor</source>
-                <target>Website-Styleseditor</target>
+                <source>Website Styles-Editor</source>
+                <target>Website Styles-Editor</target>
             </trans-unit>
 
 

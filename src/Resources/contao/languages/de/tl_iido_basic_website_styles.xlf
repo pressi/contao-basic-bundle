@@ -154,6 +154,21 @@
 
 
 
+            <trans-unit id="tl_iido_basic_website_styles.options.formFieldStyle.round">
+                <source>round</source>
+                <target>Abgerundete Ecken</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.formFieldStyle.rounded">
+                <source>round</source>
+                <target>Runde Ecken</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.options.formFieldStyle.not-round">
+                <source>not round</source>
+                <target>Keine abgerundeten Ecken</target>
+            </trans-unit>
+
+
+
 <!-- ### WIZARD FIELDS ###################################################################################################### -->
 
             <trans-unit id="tl_iido_basic_website_styles.fields.colors.color">

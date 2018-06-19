@@ -50,6 +50,11 @@ $arrFields =
         $fieldPrefix . 'headlineStyles'
     ],
 
+    'form_legend:hide' =>
+    [
+        $fieldPrefix . 'formFieldStyle'
+    ],
+
     'buttons_legend:hide' =>
     [
         $fieldPrefix . 'buttonColorPrimary',
@@ -295,3 +300,8 @@ IIDO\BasicBundle\Helper\DcaHelper::addNewField( $fieldPrefix . 'headlineStyles',
 \IIDO\BasicBundle\Helper\DcaHelper::addColorField( $fieldPrefix . 'buttonFontColorQuaternary', $strFileName, array('disableSelect'=>true), 'space-top');
 \IIDO\BasicBundle\Helper\DcaHelper::addColorField( $fieldPrefix . 'buttonHoverColorQuaternary', $strFileName, array('disableSelect'=>true));
 \IIDO\BasicBundle\Helper\DcaHelper::addColorField( $fieldPrefix . 'buttonHoverFontColorQuaternary', $strFileName, array('disableSelect'=>true));
+
+
+
+// Forms
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField( $fieldPrefix . 'formFieldStyle', $strFileName);

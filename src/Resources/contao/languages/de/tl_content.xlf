@@ -579,6 +579,31 @@
 
 
 
+
+            <trans-unit id="tl_content.options.buttonSize.xs">
+                <source>xs</source>
+                <target>XS - Sehr Klein</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonSize.s">
+                <source>s</source>
+                <target>S - Klein</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonSize.m">
+                <source>m</source>
+                <target>M - Medium</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonSize.l">
+                <source>l</source>
+                <target>L - Groß</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonSize.xl">
+                <source>xl</source>
+                <target>XL - Sehr Groß</target>
+            </trans-unit>
+
+
+
+
 			<trans-unit id="tl_content.options.boxWidth.w1">
 				<source>width 1</source>
 				<target>Breite 1 (25%)</target>
@@ -1324,39 +1349,39 @@
             </trans-unit>
 
 
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_facebook">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.facebook">
                 <source>Facebook</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Facebook]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_youtube">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.youtube">
                 <source>YouTube</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> YouTube]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_twitter">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.twitter">
                 <source>Twitter</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Twitter]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_google-plus">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.google-plus">
                 <source>Google Plus</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Google Plus]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_instagram">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.instagram">
                 <source>Instagram</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Instagram]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_linkedin">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.linkedin">
                 <source>LinkedIn</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> LinkedIn]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_pinterest">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.pinterest">
                 <source>Pinterest</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Pinterest]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_soundcloud">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.soundcloud">
                 <source>SoundCloud</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> SoundCloud]]></target>
             </trans-unit>
-            <trans-unit id="tl_content.options.privacyPolicyText.privacy-policy_xing">
+            <trans-unit id="tl_content.options.privacyPolicyText_socialmedia.xing">
                 <source>Xing</source>
                 <target><![CDATA[<span class="gray">[Privacy Policy]</span> Xing]]></target>
             </trans-unit>
