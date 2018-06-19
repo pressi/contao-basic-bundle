@@ -52,13 +52,14 @@ class IIDOBasicExtension extends Extension implements PrependExtensionInterface
     {
         $rootDir = $container->getParameter('kernel.root_dir');
 
-        if (file_exists($rootDir.'/config/parameters.yml') || !file_exists($rootDir.'/config/parameters.yml.dist')) {
+        if (file_exists($rootDir . '/config/parameters.yml') || !file_exists($rootDir . '/config/parameters.yml.dist'))
+        {
             return;
         }
 
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator($rootDir.'/config')
+            new FileLocator($rootDir . '/config')
         );
 
         $loader->load('parameters.yml.dist');
