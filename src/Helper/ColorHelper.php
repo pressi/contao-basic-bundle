@@ -563,4 +563,28 @@ class ColorHelper
 
         return $strText;
     }
+
+
+
+    public static function renderColorConfig( $arrColor )
+    {
+        if( !is_array($arrColor) )
+        {
+            $arrColor = \StringUtil::deserialize( $arrColor, TRUE );
+        }
+
+        $strColor = self::compileColor( $arrColor );
+
+        if( $strColor !== "transparent" )
+        {
+            if( $arrColor[0] === "" && $arrColor[2] )
+            {
+                $arrColor[0] = preg_replace(array('/^#/'), '', $arrColor[2]);
+            }
+        }
+
+        unset($arrColor[2]);
+
+        return serialize($arrColor);
+    }
 }

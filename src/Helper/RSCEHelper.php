@@ -10,6 +10,9 @@
 namespace IIDO\BasicBundle\Helper;
 
 
+use Contao\Controller;
+
+
 /**
  * Class Helper
  * @package IIDO\BasicBundle
@@ -202,9 +205,9 @@ class RSCEHelper extends \Frontend
      *
      * @return array
      */
-    public static function getSelectFieldConfig( $label, $arrOptions, $includeBlank = false )
+    public static function getSelectFieldConfig( $label, $arrOptions, $includeBlank = false, array $eval = array(), $default = '' )
     {
-        return array
+        $arrConfig = array
         (
             'label'         => self::renderLabel( $label ),
             'inputType'     => 'select',
@@ -215,6 +218,15 @@ class RSCEHelper extends \Frontend
                 'tl_class'              => 'w50'
             )
         );
+
+        $arrConfig['eval'] = array_merge($arrConfig['eval'], $eval);
+
+        if( strlen($default) )
+        {
+            $arrConfig['default'] = $default;
+        }
+
+        return $arrConfig;
     }
 
 
@@ -701,6 +713,24 @@ class RSCEHelper extends \Frontend
         }
 
         return $arrImages;
+    }
+
+
+
+    public static function addButtonStylesConfig( $fieldName, &$arrConfig, $fieldNameIsLegend = false, $append = true )
+    {
+        Controller::loadLanguageFile("tl_content");
+
+        $intOffset = array_search( $fieldName, array_keys($arrConfig['fields']) );
+
+        array_insert($arrConfig['fields'], ($intOffset + 1), array
+        (
+            'buttonStyle'   => self::getSelectFieldConfig('Button-Stil', $GLOBALS['TL_LANG']['tl_content']['options']['buttonStyle'], false, array('tl_class'=>'clr w50')),
+            'buttonType'    => self::getSelectFieldConfig('Button-Typ', $GLOBALS['TL_LANG']['tl_content']['options']['buttonType']),
+            'buttonSize'    => self::getSelectFieldConfig('Button-Größe', $GLOBALS['TL_LANG']['tl_content']['options']['buttonSize'], false, array(), 'm')
+        ));
+
+        return $arrConfig;
     }
 
 }

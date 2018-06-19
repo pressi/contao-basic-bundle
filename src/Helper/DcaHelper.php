@@ -505,6 +505,13 @@ class DcaHelper extends \Frontend
 
     public static function addColorField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = self::getColorFieldConfig( $fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable );
+    }
+
+
+
+    public static function getColorFieldConfig( $fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '' )
+    {
         $langTable = self::renderLangTable( $langTable );
 
         if( strlen($langTable) )
@@ -528,7 +535,7 @@ class DcaHelper extends \Frontend
             $defaultEval = array_merge($defaultEval, $eval);
         }
 
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
+        return array
         (
             'label'                 => self::renderFieldLabel($strTable, $langTable, $fieldName),
             'inputType'             => 'text',
@@ -539,7 +546,7 @@ class DcaHelper extends \Frontend
 
 
 
-    protected static function addHeadlineField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $useSearch = false, $langTable = '')
+    public static function addHeadlineField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $useSearch = false, $langTable = '')
     {
         $langTable = self::renderLangTable( $langTable );
 
@@ -870,23 +877,34 @@ class DcaHelper extends \Frontend
 
         $orderFieldName = preg_replace('/SRC/', 'OrderSRC', $fieldName);
 
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]                = $GLOBALS['TL_DCA']['tl_content']['fields']['multiSRC'];
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']       = self::renderFieldLabel($strTable, $langTable, $fieldName);
-
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['mandatory']    = FALSE;
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['isGallery']    = TRUE;
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['extensions']   = \Config::get('validImageTypes');
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['tl_class']     = ($replaceClasses ? $classes : 'clr w50 hauto' . (strlen($classes) ? ' ' . $classes : ''));
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['orderField']   = $orderFieldName;
-
-        unset( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['load_callback'] );
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
+        (
+            'label'             => self::renderFieldLabel($strTable, $langTable, $fieldName),
+            'exclude'           => true,
+            'inputType'         => 'fileTree',
+            'eval'              => array
+            (
+                'multiple'          => true,
+                'fieldType'         => 'checkbox',
+                'orderField'        => $orderFieldName,
+                'files'             => true,
+                'isGallery'         => true,
+                'extensions'        => \Config::get('validImageTypes'),
+                'tl_class'          => ($replaceClasses ? $classes : 'clr w50 hauto' . (strlen($classes) ? ' ' . $classes : ''))
+            ),
+            'sql'               => "blob NULL",
+        );
 
         if( count($eval) )
         {
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'] = array_merge($GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'], $eval);
         }
 
-        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $orderFieldName ] = $GLOBALS['TL_DCA']['tl_content']['fields']['orderSRC'];
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $orderFieldName ] = array
+        (
+            'label' => $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label'][0] . ' Sortierung',
+            'sql'   => "blob NULL"
+        );
     }
 
 

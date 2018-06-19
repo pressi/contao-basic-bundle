@@ -1117,7 +1117,20 @@ class BasicHelper extends \Frontend
         }
         else
         {
-            $rootAlias = $objPage->rootAlias;
+            $rootAlias  = $objPage->rootAlias;
+            $objRooPage = \PageModel::findByPk( $objPage->rootId );
+
+            if( $objRooPage && !$objRooPage->rootIsFallback )
+            {
+                $objFallbackPage = \PageModel::findByPk( $objPage->languageMain );
+
+                if( $objFallbackPage )
+                {
+                    $objFallbackPage->loadDetails();
+
+                    $rootAlias = $objFallbackPage->rootAlias;
+                }
+            }
         }
 
         return $rootAlias;

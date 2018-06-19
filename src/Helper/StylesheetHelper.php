@@ -1097,7 +1097,7 @@ class StylesheetHelper
                         (
                             'selector'      => '.mod_article#' . $articleID . ' .arrow .arrow-inside-container:before,.mod_article#' . $articleID . ' .arrow .arrow-inside-container:after',
                             'background'    => '1',
-                            'bgcolor'       => $objArticles->toNextArrowColor
+                            'bgcolor'       => ColorHelper::renderColorConfig( $objArticles->toNextArrowColor )
                         );
                     }
 
@@ -1109,7 +1109,7 @@ class StylesheetHelper
                         (
                             'selector'      => '.mod_article#' . $articleID . ' .arrow:hover .arrow-inside-container:before,.mod_article#' . $articleID . ' .arrow:hover .arrow-inside-container:after',
                             'background'    => '1',
-                            'bgcolor'       => $objArticles->toNextArrowHoverColor
+                            'bgcolor'       => ColorHelper::renderColorConfig( $objArticles->toNextArrowHoverColor )
                         );
                     }
                 }
