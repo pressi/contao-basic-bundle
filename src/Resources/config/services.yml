@@ -1,4 +1,13 @@
 services:
+#    _instancof:
+#        Contao\CoreBundle\Framework\FrameworkAwareInterface:
+#            calls:
+#                - ["setFramework", ["@contao.framework"]]
+
+#        Contao\Component\DependencyInjection\ContainerAwareInterface:
+#            calls:
+#                - ["setContainer", ["@service_container"]]
+
     contao.connect_tool:
         class: IIDO\BasicBundle\ConnectTool
         arguments:
@@ -17,3 +26,9 @@ services:
 #        public: false
 #        tags:
 #            - { name: twig.extension }
+
+#    iido_basic.module.inheritArticleController:
+#        class: IIDO\BasicBundle\Controller\Module\InheritArticleController
+##        type: iido_inheritArticle
+#        tags:
+#            - { name: contao.frontend_module, category: inherit }

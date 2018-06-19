@@ -19,6 +19,8 @@ services:
 
     iido_basic.listener.insert_tags:
         class: IIDO\BasicBundle\EventListener\InsertTagsListener
+#        tags:
+#            - { name: contao.hook, hook: replaceInsertTags}
         arguments:
             - "@contao.framework"
 
@@ -52,6 +54,7 @@ services:
             - "@contao.framework"
 
 
+
     iido_basic.table.all:
         class: IIDO\BasicBundle\Table\AllTables
 
@@ -61,6 +64,12 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+
+#    iido_basic.module.navigation_controller:
+#        class: IIDO\BasicBundle\Module\NavigationController
+#        tags:
+#            - { name: contao.frontend_module, category: navigationMenu }
 
 
 #    kernel_bundle:
