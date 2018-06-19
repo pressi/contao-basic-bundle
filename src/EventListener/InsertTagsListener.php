@@ -63,7 +63,7 @@ class InsertTagsListener extends DefaultListener
                 switch( $arrSplit[1] )
                 {
                     case "countdown":
-                        $return = $this->renderCountdown( $arrSplit[2], $arrSplit[3], $arrSplit[4] );
+                        $return = $this->renderCountdown( $arrSplit[2], $arrSplit[3], $arrSplit[4], $arrSplit[5] );
                         break;
 
 
@@ -372,66 +372,69 @@ class InsertTagsListener extends DefaultListener
 
 
 
-    protected function renderCountdown( $date, $mode = 'static', $design = 'text' )
+    protected function renderCountdown( $date, $textAfter = 'Countdown ist beendet', $mode = 'static', $design = 'text' )
     {
-        $strDate = $date;
+        $originDate = $date;
 
-        $date = new \DateTime($date);
+        $date = new \DateTime( $date );
         $now  = new \DateTime();
+//        echo "<pre>"; print_r( $date ); exit;
+        $strDate = $date->getTimestamp() . '000';
 
         $boxed = ($design === "box" || $design === "boxed");
 
         if( $now > $date )
         {
-            return 'Der Bewerb hat bereits stattgefunden!';
+            return $textAfter;
         }
 
         $countdown  = '';
         $interval   = $date->diff( $now );
 
-        $years      = $interval->y;
-        $months     = $interval->m;
-        $days       = $interval->d;
+//        $years      = $interval->y;
+//        $months     = $interval->m;
+        $days       = $interval->days;
         $hours      = $interval->h;
         $minutes    = $interval->i;
         $seconds    = $interval->s;
 
-        if( $years )
-        {
-            $strYearsLabel = $GLOBALS['TL_LANG']['MSC'][ ($years > 1 ? 'years' : 'year') ];
+//        if( $years )
+//        {
+//            $strYearsLabel = $GLOBALS['TL_LANG']['MSC'][ ($years > 1 ? 'years' : 'year') ];
+//
+//            if( $boxed )
+//            {
+//                $countdown .= '<div class="box box-years"><span class="value">' . $years . '</span><span class="label">' . $strYearsLabel . '</span></div>';
+//            }
+//            else
+//            {
+//                $countdown .= $years . ' ' . $strYearsLabel;
+//            }
+//        }
+//
+//        if( $months )
+//        {
+//            $strMonthsLabel = $GLOBALS['TL_LANG']['MSC'][ ($months > 1 ? 'months' : 'month') ];
+//
+//            if( $boxed )
+//            {
+//                $countdown .= '<div class="box box-months"><span class="value">' . $months . '</span><span class="label">' . $strMonthsLabel . '</span></div>';
+//            }
+//            else
+//            {
+//                if( strlen($countdown) )
+//                {
+//                    $countdown .= ', ';
+//                }
+//
+//                $countdown .= $months . ' ' . $strMonthsLabel;
+//            }
+//        }
 
-            if( $boxed )
-            {
-                $countdown .= '<div class="box box-years"><span class="value">' . $years . '</span><span class="label">' . $strYearsLabel . '</span></div>';
-            }
-            else
-            {
-                $countdown .= $years . ' ' . $strYearsLabel;
-            }
-        }
-
-        if( $months )
-        {
-            $strMonthsLabel = $GLOBALS['TL_LANG']['MSC'][ ($months > 1 ? 'months' : 'month') ];
-
-            if( $boxed )
-            {
-                $countdown .= '<div class="box box-months"><span class="value">' . $months . '</span><span class="label">' . $strMonthsLabel . '</span></div>';
-            }
-            else
-            {
-                if( strlen($countdown) )
-                {
-                    $countdown .= ', ';
-                }
-
-                $countdown .= $months . ' ' . $strMonthsLabel;
-            }
-        }
-
-        if( $days )
-        {
-            $strDaysLabel = $GLOBALS['TL_LANG']['MSC'][ ($days > 1 ? 'days' : 'day') ];
+//        if( $days || (!$days && ($months || $years)) )
+//        if( $days )
+//        {
+            $strDaysLabel = $GLOBALS['TL_LANG']['MSC'][ (($days > 1 || $days === 0) ? 'days' : 'day') ];
 
             if( $boxed )
             {
@@ -446,11 +449,12 @@ class InsertTagsListener extends DefaultListener
 
                 $countdown .= $days . ' ' . $strDaysLabel;
             }
-        }
+//        }
 
-        if( $hours )
-        {
-            $strHoursLabel = $GLOBALS['TL_LANG']['MSC'][ ($hours > 1 ? 'hours' : 'hour') ];
+//        if( $hours || (!$hours && ($days || $months || $years))  )
+//        {
+//            $strHoursLabel = $GLOBALS['TL_LANG']['MSC'][ (($hours > 1 || $hours === 0) ? 'hours' : 'hour') ];
+            $strHoursLabel = $GLOBALS['TL_LANG']['MSC'][ 'hours'];
 
             if( $boxed )
             {
@@ -465,11 +469,12 @@ class InsertTagsListener extends DefaultListener
 
                 $countdown .= $hours . ' ' . $strHoursLabel;
             }
-        }
+//        }
 
-        if( $minutes )
-        {
-            $strMinutesLabel = $GLOBALS['TL_LANG']['MSC'][ ($minutes > 1 ? 'minutes' : 'minute') ];
+//        if( $minutes )
+//        {
+//            $strMinutesLabel = $GLOBALS['TL_LANG']['MSC'][ ($minutes > 1 ? 'minutes' : 'minute') ];
+            $strMinutesLabel = $GLOBALS['TL_LANG']['MSC']['minutes'];
 
             if( $boxed )
             {
@@ -491,13 +496,14 @@ class InsertTagsListener extends DefaultListener
 
                 $countdown .= $minutes . ' ' . $strMinutesLabel;
             }
-        }
+//        }
 
         if( $mode === "live" )
         {
             if( $seconds )
             {
-                $strSecondsLabel = $GLOBALS['TL_LANG']['MSC'][ ($seconds > 1 ? 'seconds' : 'second') ];
+//                $strSecondsLabel = $GLOBALS['TL_LANG']['MSC'][ ($seconds > 1 ? 'seconds' : 'second') ];
+                $strSecondsLabel = $GLOBALS['TL_LANG']['MSC']['seconds'];
 
                 if( $boxed )
                 {
@@ -517,7 +523,7 @@ class InsertTagsListener extends DefaultListener
 
         if( $boxed )
         {
-            $countdown = '<div class="countdown-container" data-date="' . $strDate . '">' . $countdown . '</div>';
+            $countdown = '<div class="countdown-container" data-date="' . $strDate . '" data-text="' . $textAfter . '">' . $countdown . '</div>';
         }
 
         return $countdown;

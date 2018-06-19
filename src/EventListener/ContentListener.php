@@ -499,11 +499,15 @@ class ContentListener extends DefaultListener
         $arrTopHeadlineClasses  = array();
         $arrSubHeadlineClasses  = array();
 
+        $arrStyleHeadlineClasses    = array();
+
         $arrHeadline    = deserialize($objRow->headline, TRUE);
         $unit           = $arrHeadline['unit'];
         $headline       = $arrHeadline['value'];
 
         $strTopClass    = $strSubClass = ' unit-' . $unit;
+        $replaceClass   = 'headline';
+
 
         if( $objRow->addTopHeadline )
         {
@@ -541,9 +545,9 @@ class ContentListener extends DefaultListener
 
                             foreach($arrTagClasses as $arrTagClass)
                             {
-                                if( !in_array($arrTagClass, $arrHeadlineClasses) )
+                                if( !in_array($arrTagClass, $arrStyleHeadlineClasses) )
                                 {
-                                    $arrHeadlineClasses[] = $arrTagClass;
+                                    $arrStyleHeadlineClasses[] = $arrTagClass;
                                 }
                             }
 
@@ -600,14 +604,13 @@ class ContentListener extends DefaultListener
 
         if( count($arrHeadlineClasses) )
         {
-            $replaceClass = 'headline';
-
-//            if( $objRow->type === "headline" )
-//            {
-//                $replaceClass = 'ce_headline';
-//            }
-
             $strContent = preg_replace('/<h([1-6]) class="' . $replaceClass . '/', '<h$1 class="' . $replaceClass . ' ' . implode(" ", $arrHeadlineClasses), $strContent);
+        }
+
+        if( count($arrStyleHeadlineClasses) )
+        {
+            $strUnit    = $arrHeadline['unit'];
+            $strContent = preg_replace('/<' . $strUnit . ' class="' . $replaceClass . '/', '<' . $strUnit . ' class="' . $replaceClass . ' ' . implode(" ", $arrStyleHeadlineClasses), $strContent);
         }
 
         if( $objRow->type === "headline" )

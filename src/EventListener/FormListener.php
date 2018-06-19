@@ -177,10 +177,10 @@ class FormListener
 
     public function loadCustomizeFormField($objWidget, $strForm, $arrForm)
     {
-        if( $objWidget->type === "submit" )
-        {
-            $objWidget->class = "btn-secondary";
-        }
+//        if( $objWidget->type === "submit" )
+//        {
+//            $objWidget->class = "btn-secondary";
+//        }
 //        elseif( $objWidget->type === "select" )
 //        {
 //            if( preg_match('/selected-get/', $objWidget->class) )
