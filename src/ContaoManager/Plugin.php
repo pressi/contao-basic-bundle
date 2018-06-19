@@ -23,13 +23,16 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+use Contao\ManagerPlugin\Config\ConfigPluginInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
+
 
 /**
  * Plugin for the Contao Manager.
  *
  * @author Stephan Preßl <development@prestep.at>
  */
-class Plugin implements BundlePluginInterface, RoutingPluginInterface
+class Plugin implements BundlePluginInterface, RoutingPluginInterface, ConfigPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -64,8 +67,15 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface
      */
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
     {
-        return $resolver
-            ->resolve(__DIR__.'/../Resources/config/routing.yml')
-            ->load(__DIR__.'/../Resources/config/routing.yml');
+        $file = __DIR__ . '/../Resources/config/routing.yml';
+
+        return $resolver->resolve($file)->load($file);
+    }
+
+
+
+    public function registerContainerConfiguration(LoaderInterface $loader, array $config)
+    {
+//        $loader->load(__DIR__ . '/config/custom.yml');
     }
 }
