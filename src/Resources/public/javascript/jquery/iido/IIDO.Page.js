@@ -689,15 +689,15 @@ IIDO.Page = IIDO.Page || {};
         }
         else
         {
-            var nextLinks = document.querySelectorAll(".scroll-to-next-page");
+            var nextPageLinks = document.querySelectorAll(".scroll-to-next-page");
 
-            if( nextLinks.length )
+            if( nextPageLinks.length )
             {
-                for(var i=0; i<nextLinks.length; i++)
+                for(var i=0; i<nextPageLinks.length; i++)
                 {
-                    var nextLink = nextLinks[ i ];
+                    var nextPageLink = nextPageLinks[ i ];
 
-                    nextLink.addEventListener("click", function(e)
+                    nextPageLink.addEventListener("click", function(e)
                     {
                         e.preventDefault();
 
@@ -706,7 +706,14 @@ IIDO.Page = IIDO.Page || {};
 
                         if( nextArticle )
                         {
-                            IIDO.Page.scrollTo(e, nextArticle.getAttribute("id"), -171 );
+                            var intOffset = 0;
+
+                            if( document.querySelector("header.is-fixed") )
+                            {
+                                intOffset = -(document.querySelector("header.is-fixed").clientHeight);
+                            }
+
+                            IIDO.Page.scrollTo(e, nextArticle.getAttribute("id"), intOffset );
                         }
 
                         return false;

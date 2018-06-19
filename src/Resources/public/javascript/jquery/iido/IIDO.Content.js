@@ -10,7 +10,7 @@ IIDO.Content = IIDO.Content || {};
 
 (function (window, $, content)
 {
-    var $scrollContainer;
+    var $scrollContainer, $tagline, $countdownInterval;
 
 
     content.init = function()
@@ -19,6 +19,7 @@ IIDO.Content = IIDO.Content || {};
         this.initAnimations();
         this.initCountdown();
         this.initAnimateBackgrounds();
+        this.initTagline();
     };
 
 
@@ -231,15 +232,15 @@ IIDO.Content = IIDO.Content || {};
             for(var i=0; i<containers.length; i++)
             {
                 var container   = containers[ i ],
-                    strDate     = container.getAttribute("data-date"),
-                    arrDate     = strDate.split(" "),
+                    strDate     = parseInt( container.getAttribute("data-date") );
+                    // arrDate     = strDate.split(" "),
+                    //
+                    // arrDMY      = arrDate[0].split("."),
+                    // arrTime     = arrDate[1].split(":");
 
-                    arrDMY      = arrDate[0].split("."),
-                    arrTime     = arrDate[1].split(":");
+                // var contDate    = new Date( arrDMY[2], (arrDMY[1] - 1), arrDMY[0], arrTime[0], arrTime[1] ).getTime();
 
-                var contDate    = new Date( arrDMY[2], (arrDMY[1] - 1), arrDMY[0], arrTime[0], arrTime[1] ).getTime();
-
-                setInterval(IIDO.Content.runCountdown.bind( null, container, contDate ), 1000);
+                $countdownInterval = setInterval(IIDO.Content.runCountdown.bind( null, container, strDate ), 1000);
             }
         }
     };
@@ -247,74 +248,110 @@ IIDO.Content = IIDO.Content || {};
 
     content.runCountdown = function( container, toDate )
     {
-        var now         = new Date().getTime(),
+        var t = IIDO.Content.getTimeRemaining( toDate );
 
-            distance    = (toDate - now),
-
-            years       = 0,
-            months      = 0,
-            days        = Math.floor(distance / (1000 * 60 * 60 * 24)),
-            hours       = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-            minutes     = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-            seconds     = Math.floor((distance % (1000 * 60)) / 1000);
-
-        if( distance < 0 )
+        if( t.total <= 0 )
         {
-            container.innerHTML = "ENDE";
+            clearInterval( $countdownInterval );
+            container.innerHTML = container.getAttribute("data-text");
         }
         else
         {
-            if( days > 30 )
-            {
-                months   = Math.floor( days / 30 );
-                days    = (days % 30);
-            }
+            container.querySelector(".box-days .value").innerHTML       = t.days;
+            container.querySelector(".box-hours .value").innerHTML      = t.hours; //('0' + t.hours).slice(-2);
+            container.querySelector(".box-minutes .value").innerHTML    = t.minutes; //('0' + t.minutes).slice(-2);
+            container.querySelector(".box-seconds .value").innerHTML    = t.seconds; //('0' + t.seconds).slice(-2);
+        }
 
-            if( months > 12 )
-            {
-                years   = Math.floor( months / 12 );
-                days    = (months % 12);
-            }
 
-            if( years > 0 )
-            {
-                container.querySelector(".box-years .value").innerHTML  = years;
-            }
-            else
-            {
-                if( container.querySelector(".box-years") )
-                {
-                    container.querySelector(".box-years").classList.add("hidden");
-                }
-            }
+        // var now         = new Date().getTime(),
+        //
+        //     distance    = (toDate - now),
+        //
+        //     years       = 0,
+        //     months      = 0,
+        //     days        = Math.floor(distance / (1000 * 60 * 60 * 24)),
+        //     hours       = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        //     minutes     = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        //     seconds     = Math.floor((distance % (1000 * 60)) / 1000);
+        //
+        // if( distance < 0 )
+        // {
+        //     clearInterval( $countdownInterval );
+        //     container.innerHTML = container.getAttribute("data-text");
+        // }
+        // else
+        // {
+        //     if( days > 30 )
+        //     {
+        //         months   = Math.floor( days / 30 );
+        //         days    = (days % 30);
+        //     }
+        //
+        //     if( months > 12 )
+        //     {
+        //         years   = Math.floor( months / 12 );
+        //         days    = (months % 12);
+        //     }
+        //
+        //     if( years > 0 )
+        //     {
+        //         container.querySelector(".box-years .value").innerHTML  = years;
+        //     }
+        //     else
+        //     {
+        //         if( container.querySelector(".box-years") )
+        //         {
+        //             container.querySelector(".box-years").classList.add("hidden");
+        //         }
+        //     }
+        //
+        //     if( months > 0 )
+        //     {
+        //         container.querySelector(".box-months .value").innerHTML = months;
+        //     }
+        //     else
+        //     {
+        //         if( container.querySelector(".box-months") )
+        //         {
+        //             container.querySelector(".box-months").classList.add("hidden");
+        //         }
+        //     }
+        //
+        //     if( days > 0 )
+        //     {
+        //         container.querySelector(".box-days .value").innerHTML   = days;
+        //     }
+        //     else
+        //     {
+        //         if( container.querySelector(".box-days") )
+        //         {
+        //             container.querySelector(".box-days").classList.add("hidden");
+        //         }
+        //     }
 
-            if( months > 0 )
-            {
-                container.querySelector(".box-months .value").innerHTML = months;
-            }
-            else
-            {
-                if( container.querySelector(".box-months") )
-                {
-                    container.querySelector(".box-months").classList.add("hidden");
-                }
-            }
+            // container.querySelector(".box-hours .value").innerHTML      = hours;
+            // container.querySelector(".box-minutes .value").innerHTML    = minutes;
+            // container.querySelector(".box-seconds .value").innerHTML    = seconds;
+        // }
+    };
 
-            if( days > 0 )
-            {
-                container.querySelector(".box-days .value").innerHTML   = days;
-            }
-            else
-            {
-                if( container.querySelector(".box-days") )
-                {
-                    container.querySelector(".box-days").classList.add("hidden");
-                }
-            }
 
-            container.querySelector(".box-hours .value").innerHTML      = hours;
-            container.querySelector(".box-minutes .value").innerHTML    = minutes;
-            container.querySelector(".box-seconds .value").innerHTML    = seconds;
+
+    content.getTimeRemaining = function( endtime )
+    {
+        var t       = endtime - Date.parse( new Date() ),
+            seconds = Math.floor( (t / 1000) % 60 ),
+            minutes = Math.floor( (t / 1000 / 60) % 60 ),
+            hours   = Math.floor( (t / (1000 * 60 * 60)) % 24 ),
+            days    = Math.floor( t / (1000 * 60 * 60 * 24) );
+
+        return {
+            'total'     : t,
+            'days'      : days,
+            'hours'     : hours,
+            'minutes'   : minutes,
+            'seconds'   : seconds
         }
     };
 
@@ -346,6 +383,59 @@ IIDO.Content = IIDO.Content || {};
                     triggerOnce: true
                 });
         }, 500);
+    };
+
+
+
+    content.initTagline = function()
+    {
+        var tagline = document.querySelector( ".content-element.tagline" );
+
+        if( tagline )
+        {
+            $tagline = tagline.querySelector(".element-inside");
+
+            IIDO.Content.resetTaglineStyles();
+
+            IIDO.Base.addEvent(window, "resize load", IIDO.Content.resetTaglineStyles);
+            IIDO.Base.addEvent(window, "scroll resize load", IIDO.Content.scrollTagline);
+            IIDO.Content.scrollTagline();
+        }
+    };
+
+
+
+    content.scrollTagline = function()
+    {
+        if( IIDO.Base.getZoomLevel() > 1.01 || (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) )
+        {
+            IIDO.Content.resetTaglineStyles();
+            return;
+        }
+
+        var taglineHeight   = $tagline && $tagline.offsetHeight,
+            offset          = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+
+        if( offset > 0 && offset < taglineHeight )
+        {
+            $tagline.parentNode.style.overflow = 'hidden';
+            $tagline.style.transform = $tagline.style.WebkitTransform = 'translate3d(0,' + Math.round(Math.min(offset, taglineHeight) / 2) + 'px,0)';
+            $tagline.style.opacity = (taglineHeight - (offset / 1.5)) / taglineHeight;
+        }
+        else
+        {
+            IIDO.Content.resetTaglineStyles();
+        }
+    };
+
+
+
+    content.resetTaglineStyles = function()
+    {
+        $tagline.parentNode.style.overflow = '';
+        $tagline.style.transform = $tagline.style.WebkitTransform = '';
+        $tagline.style.opacity = '';
     };
 
 })(window, jQuery, IIDO.Content);
