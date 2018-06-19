@@ -1,10 +1,12 @@
 {{ '{{iflng::de}}' }}
-<h1 class="healdine">Datenschutzerklärung</h1>
+{% if not content.headline %}<h1 class="headline has-sub-headline">Datenschutzerklärung</h1>{% endif %}
 <h2 class="headline sub-headline">Datenschutz</h2>
-<p>Wir haben diese Datenschutzerklärung verfasst, um Ihnen gemäß der Vorgaben der EU-Datenschutz-Grundverordnung zu erklären, welche Informationen wir sammeln, wie wir Daten verwenden und welche Entscheidungsmöglichkeiten Sie als Besucher dieser Webseite haben.</p>
+<p>Wir haben diese Datenschutzerklärung verfasst, um Ihnen gemäß der Vorgaben der EU-Datenschutz-Grundverordnung (EU) 2016/679 und dem <a href="https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10001597&tid=211063777" target="_blank">Datenschutzgesetz (DSG)</a> zu erklären, welche Informationen wir sammeln, wie wir Daten verwenden und welche Entscheidungsmöglichkeiten Sie als Besucher dieser Webseite haben.</p>
 <p>Leider liegt es in der Natur der Sache, dass diese Erklärungen sehr technisch klingen, wir haben uns bei der Erstellung jedoch bemüht die wichtigsten Dinge so einfach und klar zu beschreiben.</p>
 {# <p>Wir legen großen Wert auf den Schutz Ihrer Daten. Um Sie in vollem Umfang über die Verwendung personenbezogener Daten zu informieren, bitten wir Sie die folgenden Datenschutzhinweise zur Kenntnis zu nehmen.</p> #}
 {{ '{{iflng::en}}' }}
-<h2>Privacy Policy</h2>
-<p>EN TEXT</p>
+{% if not content.headline %}<h1 class="headline has-sub-headline">Privacy Policy</h1>{% endif %}
+<h2 class="headline sub-headline">Data protection</h2>
+<p>Wir haben diese Datenschutzerklärung verfasst, um Ihnen gemäß der Vorgaben der EU-Datenschutz-Grundverordnung (EU) 2016/679 und dem <a href="https://www.ris.bka.gv.at/GeltendeFassung.wxe?Abfrage=Bundesnormen&Gesetzesnummer=10001597&tid=211063777" target="_blank">Datenschutzgesetz (DSG)</a> zu erklären, welche Informationen wir sammeln, wie wir Daten verwenden und welche Entscheidungsmöglichkeiten Sie als Besucher dieser Webseite haben.</p>
+<p>Leider liegt es in der Natur der Sache, dass diese Erklärungen sehr technisch klingen, wir haben uns bei der Erstellung jedoch bemüht die wichtigsten Dinge so einfach und klar zu beschreiben.</p>
 {{ '{{iflng}}' }}
