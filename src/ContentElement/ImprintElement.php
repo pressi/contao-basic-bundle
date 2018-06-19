@@ -71,6 +71,16 @@ class ImprintElement extends \ContentElement
     {
         $strContent = '';
 
+        $isActiveInstagram  = key_exists("instagram", $this->privacyPolicySocialmediaText);
+        $isActiveYoutube    = key_exists("youtube", $this->privacyPolicySocialmediaText);
+        $isActiveFacebook   = key_exists("facebook", $this->privacyPolicySocialmediaText);
+        $isActiveTwitter    = key_exists("twitter", $this->privacyPolicySocialmediaText);
+
+        if( $this->imprintWeb && !preg_match('/^http/', $this->imprintWeb) )
+        {
+            $this->imprintWebLink = 'http://' . $this->imprintWeb;
+        }
+
         $context    =
         [
             "content" =>
@@ -86,6 +96,7 @@ class ImprintElement extends \ContentElement
                 "fax"           => $this->imprintFax,
                 "email"         => $this->imprintEmail,
                 "website"       => $this->imprintWeb,
+                "websiteLink"   => $this->imprintWebLink,
 
                 "mitglied"              => $this->imprintMitglied,
                 "berufsrecht"           => $this->imprintBerufsrecht,
@@ -95,7 +106,7 @@ class ImprintElement extends \ContentElement
                 "objectOfTheCompany"    => $this->imprintObjectOfTheCompany,
                 "VATnumber"             => $this->imprintVATnumber,
 
-                "companies"     => $this->renderLinkList($this->imageCopyrights),
+                "companies"             => $this->renderLinkList($this->imageCopyrights),
 
                 "companyWording"        => $this->imprintCompanyWording,
                 "managingDirector"      => $this->imprintManagingDirector,
@@ -104,10 +115,20 @@ class ImprintElement extends \ContentElement
                 "companyRegister"       => $this->imprintCompanyRegister,
                 "firmengericht"         => $this->imprintFirmengericht,
 
-                "additionalText"        =>  \StringUtil::encodeEmail( \StringUtil::toHtml5($this->imprintAddText) )
+                "additionalText"        =>  \StringUtil::encodeEmail( \StringUtil::toHtml5($this->imprintAddText) ),
+
+                "linkToPrivacyPolicy"   => ($this->privacyPolicyPage ? \PageModel::findByPk( $this->privacyPolicyPage )->getFrontendUrl() : '')
             ],
 
-            "addContactLabel"   => $this->addImprintContactLabel
+            "addContactLabel"   => $this->addImprintContactLabel,
+
+            "socialmedia" =>
+            [
+                "instagram"     => $isActiveInstagram,
+                "youtube"       => $isActiveYoutube,
+                "facebook"      => $isActiveFacebook,
+                "twitter"       => $isActiveTwitter
+            ]
         ];
 
 
@@ -121,10 +142,34 @@ class ImprintElement extends \ContentElement
             $strContent .= TwigHelper::render('Website/imprint_' . $value . '.html.twig', $context)->getContent();
         }
 
+        if( count($this->imprintText) && $this->privacyPolicyPage )
+        {
+            $strContent .= TwigHelper::render('Website/imprint_to_privacy-policy.html.twig', $context)->getContent();
+        }
+
+
+
+        // Privacy policy
+
         foreach( $this->privacyPolicyText as $key => $value )
         {
             $strContent .= TwigHelper::render('Website/imprint_' . $value . '.html.twig', $context)->getContent();
         }
+
+        if( count($this->privacyPolicySocialmediaText) && ($isActiveInstagram || $isActiveFacebook || $isActiveTwitter || $isActiveYoutube) )
+        {
+            $strContent = TwigHelper::render('Website/imprint_privacy-policy_socialmedia.html.twig', $context)->getContent();
+        }
+
+        foreach( $this->privacyPolicySocialmediaText as $key => $value )
+        {
+            $strContent .= TwigHelper::render('Website/imprint_privacy-policy_socialmedia_' . $value . '.html.twig', $context)->getContent();
+        }
+
+//        if( count($this->privacyPolicyText) )
+//        {
+//            $strContent .= '<p>Quelle: Erstellt mit dem <a href="https://www.firmenwebseiten.at/datenschutz-generator/" target="_blank">Datenschutz Generator von firmenwebseiten.at</a> in Kooperation mit <a href="http://checkmallorca.de" target="_blank">checkmallorca.de</a></p>';
+//        }
 
         $this->Template->content = $strContent;
     }
@@ -135,7 +180,7 @@ class ImprintElement extends \ContentElement
     {
         foreach( $arrLinks as $key => $arrValue)
         {
-            $strLink = $arrValue[ 1 ];
+            $strLink = $arrValue['link'];
 
             if( strlen($strLink) && !preg_match('/^http/', $strLink) )
             {
@@ -149,10 +194,10 @@ class ImprintElement extends \ContentElement
 
             $arrLinks[ $key ] = array
             (
-                'name'      => trim($arrValue[ 0 ]),
+                'name'      => trim($arrValue['title']),
                 'link'      => trim($strLink),
-                'linkName'  => trim($arrValue[1]),
-                'titleLink' => ($arrValue[ 2 ] ?: 0)
+                'linkName'  => trim($arrValue['linkTitle'] ? :$arrValue['link']),
+                'titleLink' => ($arrValue['titleLink'] ?: 0)
             );
         }
 
