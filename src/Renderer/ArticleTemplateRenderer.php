@@ -476,7 +476,7 @@ class ArticleTemplateRenderer
                         $strArrowStyles = ' style="' . $strPositionStyles . '"';
                     }
 
-                    $divTableEnd = '<div class="pos-' . $arrowPos . ' pos-' . $arrowPosOffset . ' arrow arrow-down arrow-' . $arrowStyle . ' bigger scroll-to-next-' . $arrowType . '"' . $strArrowStyles . '><div class="arrow-inside-container"><div class="arrow-inside">' . $arrowTitle . '</div></div></div>' . $divTableEnd;
+                    $divTableEnd = '<div class="pos-' . $arrowPos . ' pos-' . $arrowPosOffset . ' arrow arrow-down arrow-' . $arrowStyle . ' scroll-to-next-' . $arrowType . '"' . $strArrowStyles . '><div class="arrow-inside-container"><div class="arrow-inside">' . $arrowTitle . '</div></div></div>' . $divTableEnd;
                 }
 
                 if( preg_match('/add-footer/', $cssID[1]) )
@@ -563,6 +563,30 @@ class ArticleTemplateRenderer
 			</svg></div>';
 
             $strContent = preg_replace('/<\/div>$/', $strDivider . '</div>', $strContent);
+        }
+
+        preg_match_all('/<img([A-Za-z0-9\s\-_,;.:="]{0,})src="([A-Za-z0-9\s\-%\/._]{0,})"([A-Za-z0-9\s\-_,;.:="]{0,})>/', $strContent,$arrSVGImageMatches);
+
+        if( count($arrSVGImageMatches[0]) )
+        {
+            foreach($arrSVGImageMatches[2] as $key => $imgPath)
+            {
+                if( preg_match('/.svg$/', $imgPath) )
+                {
+                    $newImagePath   = $arrSVGImageMatches[0][ $key ];
+
+                    if( !preg_match('/class=/', $arrSVGImageMatches[0][ $key ]) )
+                    {
+                        $newImagePath   = preg_replace('/src=/', 'class="svg" src=', $newImagePath);
+                    }
+                    else
+                    {
+                        $newImagePath   = preg_replace('/class=/', 'class="svg ', $newImagePath);
+                    }
+
+                    $strContent     = preg_replace('/' . preg_quote($arrSVGImageMatches[0][ $key ], '/') . '/', $newImagePath, $strContent);
+                }
+            }
         }
 
         return $strContent;
