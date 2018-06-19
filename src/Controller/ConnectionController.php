@@ -13,18 +13,15 @@ namespace IIDO\BasicBundle\Controller;
 use Contao\Environment;
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\ConnectTool;
-//use Doctrine\DBAL\DBALException;
-//use Patchwork\Utf8;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
-//use Symfony\Component\Filesystem\Filesystem;
-//use Symfony\Component\Finder\Finder;
-//use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+
+//use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 /**
@@ -35,6 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @Route("/contao", defaults={"_scope" = "backend", "_token_check" = true})
  */
+//class ConnectionController extends Controller implements ContainerAwareInterface
 class ConnectionController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
@@ -42,7 +40,8 @@ class ConnectionController implements ContainerAwareInterface
     /**
      * @var array
      */
-    private $context = [
+    private $context =
+    [
         'initialized'   => false
     ];
 
@@ -57,7 +56,8 @@ class ConnectionController implements ContainerAwareInterface
      */
     public function indexAction()
     {
-        if( $this->container->has('contao.framework') )
+        //TODO: replace $this->container => $this->
+        if( $this->has('contao.framework') )
         {
             $this->container->get('contao.framework')->initialize();
         }
@@ -142,6 +142,8 @@ class ConnectionController implements ContainerAwareInterface
                 $this->addDefaultsToContext($context)
             )
         );
+
+//        return new Response( $this->get('twig')->render('@IIDOBasic/' . $name,  $this->addDefaultsToContext($context)) );
     }
 
 
