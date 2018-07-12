@@ -500,8 +500,8 @@ class InsertTagsListener extends DefaultListener
 
         if( $mode === "live" )
         {
-            if( $seconds )
-            {
+//            if( $seconds )
+//            {
 //                $strSecondsLabel = $GLOBALS['TL_LANG']['MSC'][ ($seconds > 1 ? 'seconds' : 'second') ];
                 $strSecondsLabel = $GLOBALS['TL_LANG']['MSC']['seconds'];
 
@@ -518,7 +518,7 @@ class InsertTagsListener extends DefaultListener
 
                     $countdown .= $seconds . ' ' . $strSecondsLabel;
                 }
-            }
+//            }
         }
 
         if( $boxed )

@@ -416,6 +416,22 @@ class FrontendTemplateListener extends DefaultListener
                     }
                 }
             }
+
+            // Remove empty canvasTop && pitLane
+//            $objCanvasTop = \ArticleModel::findByAlias("ge_canvas-top_" . $objRootPage->alias);
+
+//            if( !$objCanvasTop )
+//            {
+//                $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="canvasTop">([\s\n]{0,})<div class="inside">([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_\n\{\}<>]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
+//            }
+
+//            $objPitLane = \ArticleModel::findByAlias("ge_pitlane_" . $objRootPage->alias);
+
+//            if( !$objPitLane )
+//            {
+//                $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="pitLane">([\s\n]{0,})<div class="inside">([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_\n\{\}<>]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
+//            }
+
         }
 
         return $strBuffer;
