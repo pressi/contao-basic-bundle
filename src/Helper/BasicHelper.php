@@ -762,10 +762,10 @@ class BasicHelper extends \Frontend
 
                 $cssID = \StringUtil::deserialize($objClass->cssID, TRUE);
 
-                if( !strlen($cssID[1]) )
-                {
-                    $cssID = \StringUtil::deserialize($objModule->cssID, TRUE);
-                }
+//                if( !strlen($cssID[1]) )
+//                {
+//                    $cssID = \StringUtil::deserialize($objModule->cssID, TRUE);
+//                }
 
                 $objModule->pages           = $objClass->navPages;
                 $objModule->navPages        = $objClass->navPages;
@@ -788,6 +788,11 @@ class BasicHelper extends \Frontend
                 $objModule = new $strClass($objModule, $strColumn);
                 $objModule->id = $navModuleID;
                 $objModule->cssID = ''; //$cssID; //array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
+
+                if( $objClass->showHidden || preg_match('/show-hidden/', $cssID[1]) )
+                {
+                    $objModule->showHidden = TRUE;
+                }
 
                 $strBuffer = $objModule->generate();
 

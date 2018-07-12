@@ -467,16 +467,6 @@ class ColorHelper
         $arrColors      = array();
         $fieldPrefix    = BundleConfig::getTableFieldPrefix();
 
-        $colors = \StringUtil::deserialize( \Config::get( $fieldPrefix . 'colors' ), TRUE );
-
-        if( count($colors) && $colors[0]['color'] )
-        {
-            foreach($colors as $arrColor)
-            {
-                $arrColors[ $parentLabel ][ $arrColor['color'] ] = $arrColor['name']; //TODO: check root page
-            }
-        }
-
 
         $primary = self::compileColor( \Config::get( $fieldPrefix . 'colorPrimary' ) );
 
@@ -491,6 +481,18 @@ class ColorHelper
         if( $secondary && $secondary !== "transparent" )
         {
             $arrColors[ $parentLabel ][ $secondary ] = 'Secondary - Zweitfarbe';
+        }
+
+
+
+        $colors = \StringUtil::deserialize( \Config::get( $fieldPrefix . 'colors' ), TRUE );
+
+        if( count($colors) && $colors[0]['color'] )
+        {
+            foreach($colors as $arrColor)
+            {
+                $arrColors[ $parentLabel ][ '#' . $arrColor['color'] ] = $arrColor['name']; //TODO: check root page
+            }
         }
 
         return $arrColors;

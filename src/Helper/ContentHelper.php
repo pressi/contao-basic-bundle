@@ -467,4 +467,21 @@ class ContentHelper
         return 0;
     }
 
+
+
+    public static function getArticleID( $articleID )
+    {
+        $objArticle = \ArticleModel::findByPk( $articleID );
+
+        $cssID  = \StringUtil::deserialize($objArticle->cssID, TRUE);
+        $strID  = trim($cssID[0]);
+
+        if( !strlen($strID) )
+        {
+            $strID = 'article-' . $articleID;
+        }
+
+        return $strID;
+    }
+
 }

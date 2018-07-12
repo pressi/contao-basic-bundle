@@ -288,37 +288,58 @@ class StylesheetHelper
 
 
 
-    public static function replaceDefaultVars( $strContent )
+    public static function replaceDefaultVars( $strContent, $useDefaultMatcher = false )
     {
 //        global $objPage;
 
-        preg_match_all('/\/\*#[^=#]+#\*\//', $strContent, $arrChunks);
+//        if( $useDefaultMatcher )
+//        {
+//            preg_match_all('/#[^=#]+#/', $strContent, $arrChunks);
+//        }
+//        else
+//        {
+            preg_match_all('/\/\*#[^=#]+#\*\//', $strContent, $arrChunks);
+//        }
 
         $fieldPrefix = BundleConfig::getTableFieldPrefix();
 
         foreach ($arrChunks[0] as $strChunk)
         {
-            $strKey = strtolower(substr($strChunk, 3, -3));
+//            if( $useDefaultMatcher )
+//            {
+//                $addPx      = '';
+//                $addColor   = '';
+//
+//                $strKey     = strtolower(substr($strChunk, 1, -1));
+//            }
+//            else
+//            {
+                $addPx      = '1px';
+                $addColor   = '#fff';
+
+                $strKey     = strtolower(substr($strChunk, 3, -3));
+//            }
 
             switch( $strKey )
             {
                 case "page_width":
                     $pageWidth      = self::renderUnits( \Config::get($fieldPrefix . 'pageWidth') ?:'100%' );
-                    $strContent     = str_replace($strChunk . '1px', $pageWidth, $strContent);
+                    $strContent     = str_replace($strChunk . $addPx, $pageWidth, $strContent);
                     break;
 
                 case "page_content_width":
                     $contentWidth   = self::renderUnits( \Config::get($fieldPrefix . 'pageContentWidth') ?: \Config::get($fieldPrefix . 'pageWidth')?:'100%');
-                    $strContent     = str_replace($strChunk . '1px', $contentWidth, $strContent);
+                    $strContent     = str_replace($strChunk . $addPx, $contentWidth, $strContent);
                     break;
 
 //                case "page_color":
 //                    $pageColor  = ColorHelper::getPageColor( $objPage );
-//                    $strContent = str_replace($strChunk . '#fff', $pageColor, $strContent);
+//                    $strContent = str_replace($strChunk . $addColor, $pageColor, $strContent);
 //                    break;
 
                 case (preg_match('/^calc_/', $strKey) ? true : false):
                     $arrCalc    = explode("__", $strKey);
+//                    $calc       = preg_replace('/px/', '', self::replaceDefaultVars( self::replaceThemeVars( preg_replace('/^calc_/', '', $arrCalc[0]) ), true ));
                     $calc       = self::replaceThemeVars( preg_replace('/^calc_/', '', $arrCalc[0]) );
                     $result     = 0; //MathHelper::calculate( $calc );
 
@@ -331,32 +352,32 @@ class StylesheetHelper
                         $op = '-';
                     }
 
-                    $strContent = str_replace($strChunk . '1px', $op . $result . 'px', $strContent);
+                    $strContent = str_replace($strChunk . $addPx, $op . $result . 'px', $strContent);
                     break;
 
                 case (preg_match("/^color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
                     $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'color' . ucfirst($matches[1])) ?:'#000' );
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
 //                case "color_secondary":
 //                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'colorSecondary') ?:'#fff' );
-//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
 //                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
 //                    break;
 
 //                case "btn_color_primary":
                 case (preg_match("/^btn_color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
                     $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonColor' . ucfirst($matches[1])) ?: \Config::get($fieldPrefix . 'color' . ucfirst($matches[1])) ?:'#000' );
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
 //                case "btn_font-color_primary":
                 case (preg_match("/^btn_font-color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
                     $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonFontColor' . ucfirst($matches[1])) ?:'#000' );
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
@@ -377,7 +398,7 @@ class StylesheetHelper
                     }
 
                     $color      = $strColor;
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
@@ -397,26 +418,26 @@ class StylesheetHelper
                     }
 
                     $color      = $strColor;
-                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
                     break;
 
 
 //                case "btn_color_secondary":
 //                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonColorSecondary') ?:\Config::get($fieldPrefix . 'colorSecondary') ?:'#fff' );
-//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
 //                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
 //                    break;
 
 //                case "btn_hover_color_secondary":
 //                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonHoverColorSecondary') ?: self::getDarkerColor( \Config::get($fieldPrefix . 'buttonColorSecondary') ) ?:'#333' );
-//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
 //                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
 //                    break;
 
 //                case "btn_font-color_secondary":
 //                    $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'buttonFontColorSecondary') ?:'#fff' );
-//                    $strContent = str_replace($strChunk . '#fff', $color, $strContent);
+//                    $strContent = str_replace($strChunk . $addColor, $color, $strContent);
 //                    $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
 //                    break;
             }
@@ -490,10 +511,40 @@ class StylesheetHelper
         $objTheme   = \ThemeModel::findByPk( $objLayout->pid );
 
         $themeVars  = \StringUtil::deserialize($objTheme->vars, TRUE);
+        $themeVars  = self::combineVars($themeVars, self::getDefaultsCSS());
+
+        \Controller::loadDataContainer( "tl_iido_basic_website_styles" );
+
+        $arrFields      = $GLOBALS['TL_DCA']['tl_iido_basic_website_styles']['fields'];
+        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
 
         foreach( $themeVars as $arrVar )
         {
-            $string = preg_replace('/#' . $arrVar['key'] . '#/', preg_replace('/px$/', '', $arrVar['value']), $string);
+            $string = preg_replace('/;' . $arrVar['key'] . ';/', preg_replace('/px$/', '', $arrVar['value']), $string);
+        }
+
+        foreach($arrFields as $strField => $arrField)
+        {
+            $strField       = preg_replace('/^' . $fieldPrefix . '/', '', $strField);
+            $strNewField    = '';
+            $arrFieldParts  = $pieces = preg_split('/(?=[A-Z])/', $strField);
+
+            $i = 0;
+            foreach($arrFieldParts as $fieldPart)
+            {
+                $partName = strtolower( $fieldPart );
+
+                if( $partName === "button" )
+                {
+                    $partName = 'btn';
+                }
+
+                $strNewField .= (($i > 0) ? '_' : '') . $partName;
+
+                $i++;
+            }
+
+            $string = preg_replace('/;' . $strNewField . ';/', preg_replace('/px$/', '', self::replaceDefaultVars('/*#' . $strNewField . '#*/1px')), $string);
         }
 
         return $string;
@@ -1083,7 +1134,6 @@ class StylesheetHelper
                             );
                             break;
                     }
-
 //                            echo "<pre>"; print_r( $arrPageStyles ); exit;
                 }
 
