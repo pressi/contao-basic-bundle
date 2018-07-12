@@ -78,7 +78,7 @@ class NavigationModule extends \ModuleNavigation
             switch( $objPage->submenuSRC )
             {
                 case "articles":
-                    $arrCurrentSubPages = \ArticleModel::findBy( array('pid=?', 'published=?', 'hideInMenu=?'), array($objPage->id, '1', '') , array("order"=>"sorting") )->fetchAll();
+                    $arrCurrentSubPages = \ArticleModel::findBy( array('pid=?', 'published=?'), array($objPage->id, '1') , array("order"=>"sorting") )->fetchAll();
                     break;
             }
 
@@ -93,6 +93,13 @@ class NavigationModule extends \ModuleNavigation
 
                 foreach( $arrCurrentSubPages as $arrSubPage )
                 {
+                    $cssID = \StringUtil::deserialize($arrSubPage['cssID'], TRUE);
+
+                    if( $arrSubPage['hideInMenu'] && !preg_match('/show-hidden/', $cssID[1]) )
+                    {
+                        continue;
+                    }
+
                     $objItem    = \ArticleModel::findByPk( $arrSubPage['id'] );
                     $href       = $objPage->getFrontendUrl('/' . $langPartName . '/' . $objItem->alias);
                     $class      = '';
@@ -787,8 +794,9 @@ class NavigationModule extends \ModuleNavigation
             while( $objArticles->next() )
             {
                 $objItem    = $objArticles->current();
+                $cssID      = \StringUtil::deserialize($objItem->cssID, TRUE);
 
-                if( $objItem->hideInMenu || !$objItem->published )
+                if( preg_match('/always-hidden/', $cssID[1]) || ($objItem->hideInMenu && !$this->showHidden ) || !$objItem->published )
                 {
                     continue;
                 }
