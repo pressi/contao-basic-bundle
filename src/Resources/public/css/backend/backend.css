@@ -598,3 +598,13 @@ body.popup #main .tl_formbody_submit {
     right: -15px;
 }
 
+
+span.mobile-infos {
+    float: right;
+    margin-right: 150px;
+
+    color: #b0b0b0;
+}
+span.mobile-infos strong {
+    color: #919191;
+}
