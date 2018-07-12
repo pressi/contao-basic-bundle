@@ -314,6 +314,16 @@ class ContentTable extends \Backend
             $addContentTitle .= ' (' . $arrRow['internName'] . ')';
         }
 
+        if( $arrRow['hideOnMobile'] )
+        {
+            $addContentTitle .= ' <span class="mobile-infos"><strong>Nicht</strong> am Handy anzeigen</span>';
+        }
+
+        if( $arrRow['showOnMobile'] )
+        {
+            $addContentTitle .= ' <span class="mobile-infos"><strong>Nur</strong> am Handy anzeigen</span>';
+        }
+
         $strContent = preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/', '<div class="cte_type$1">$2' . $addContentTitle . '</div>', $strContent);
 
         return $strContent;
