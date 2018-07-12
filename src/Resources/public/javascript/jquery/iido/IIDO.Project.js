@@ -10,12 +10,32 @@ IIDO.Project = IIDO.Project || {};
 
 (function(window, $, project)
 {
-    var $projectImages = {}, $projectData = {},
-        $activeImage = 0, $maxImage = 0,
+    var $projectImages = {}, $projectData = {}, $projectSlider = {},
+        $activeImage = 0, $maxImage = 0, $activePage = 0,
         $nextImage, $prevImage, $imagesContainer, $projectDetailsAsPage = false;
+
+
+    project.init = function()
+    {
+        // if( window.innerWidth <= 800 )
+        // {
+        //     $projectDetailsAsPage = true;
+        // }
+    };
+
 
     project.open = function( openType, arrImagesOrUrlOrId )
     {
+        if( document.getElementById("projectItem_" + arrImagesOrUrlOrId).classList.contains("full-height") )
+        {
+            return;
+        }
+
+        // if( window.innerWidth <= 800 )
+        // {
+        //     $projectDetailsAsPage = true;
+        // }
+
         $activeImage = 0;
 
         if( openType === "images" )
@@ -89,7 +109,8 @@ IIDO.Project = IIDO.Project || {};
                 projectTitle.innerHTML = objProjectData.title;
 
 
-                var imageGallery = IIDO.Project.renderImageGallery( arrImagesOrUrlOrId );
+                var imageGallery    = IIDO.Project.renderImageGallery( arrImagesOrUrlOrId ),
+                    textAdded       = false;
 
                 if( imageGallery )
                 {
@@ -107,13 +128,35 @@ IIDO.Project = IIDO.Project || {};
                     projectImages.classList.add("image-gallery-container");
 
                     projectImagesInside.classList.add("image-gallery-inside");
+
                     projectImagesWrapper.classList.add("image-gallery-wrapper");
+                    projectImagesWrapper.classList.add("hidden");
 
                     projectImagesInside.append( projectImagesWrapper );
                     projectImages.append( projectImagesInside );
+
+                    if( document.getElementById("projectItem_" + arrImagesOrUrlOrId).classList.contains("has-slider") )
+                    {
+                        IIDO.Project.renderSlider( arrImagesOrUrlOrId, projectImagesWrapper );
+                    }
+                    else
+                    {
+                        if( document.getElementById("projectItem_" + arrImagesOrUrlOrId).classList.contains("box-w2") )
+                        {
+                            projectImagesWrapper.innerHTML = objProjectData.text;
+
+                            projectImagesWrapper.classList.remove("hidden");
+                            projectImages.classList.add("only-text");
+
+                            textAdded = true;
+                        }
+                    }
+
+                    document.getElementById("projectItem_" + arrImagesOrUrlOrId).parentNode.parentNode.scrollTop = 0;
                 }
 
                 projectText.classList.add("text");
+
 
                 var projectTextInside   = document.createElement("div"),
                     projectTextWrapper  = document.createElement("div");
@@ -121,7 +164,10 @@ IIDO.Project = IIDO.Project || {};
                 projectTextInside.classList.add("text-inside");
                 projectTextWrapper.classList.add("text-wrapper");
 
-                projectTextWrapper.innerHTML = objProjectData.text;
+                if( !textAdded )
+                {
+                    projectTextWrapper.innerHTML = objProjectData.text;
+                }
 
                 projectTextInside.append( projectTextWrapper );
                 projectText.append( projectTextInside );
@@ -134,11 +180,15 @@ IIDO.Project = IIDO.Project || {};
                     projectDetailContainer.classList.remove("open");
 
                     document.documentElement.classList.remove("locked");
+                    document.body.classList.remove("details-open");
 
                     setTimeout( function() { projectDetailContainer.parentNode.removeChild( projectDetailContainer ); }, 300);
                 });
 
                 projectDetailContainer.appendChild( projectTitle );
+
+                projectDetailContainer.appendChild( projectText );
+                projectDetailContainer.appendChild( projectClose );
 
                 if( imageGallery )
                 {
@@ -150,9 +200,6 @@ IIDO.Project = IIDO.Project || {};
                     projectDetailContainer.appendChild( projectImages );
                 }
 
-                projectDetailContainer.appendChild( projectText );
-                projectDetailContainer.appendChild( projectClose );
-
                 // document.body.appendChild( projectDetailContainer );
                 var cont = document.getElementById("projectItem_" + arrImagesOrUrlOrId);
 
@@ -162,6 +209,7 @@ IIDO.Project = IIDO.Project || {};
                 }
 
                 document.documentElement.classList.add("locked");
+                document.body.classList.add("details-open");
 
                 setTimeout( function() { projectDetailContainer.classList.add("open"); }, 200);
             }
@@ -334,4 +382,111 @@ IIDO.Project = IIDO.Project || {};
         $imagesContainer.style.transform = 'translateY(-' + (100 * $activeImage) + '%)';
     };
 
+
+
+    project.setProjectSlider = function(sliderID, sliderHTML, sliderScript)
+    {
+        $projectSlider[ sliderID ] = {
+            'html'  : sliderHTML,
+            'script' : sliderScript
+        };
+    };
+
+
+
+    project.renderSlider = function( sliderID, sliderContainer )
+    {
+        sliderContainer.innerHTML = $projectSlider[ sliderID ].html;
+
+        setTimeout(function()
+        {
+            eval( $projectSlider[ sliderID ].script );
+            sliderContainer.classList.remove("hidden");
+        }, 500);
+    };
+
+
+
+    project.initPagination = function( perPage, articleContID )
+    {
+        var articleCont     = document.getElementById( articleContID ),
+            cont            = articleCont.querySelector(".project-inside-container");
+
+        if( cont )
+        {
+            var items = cont.querySelectorAll(".project-item");
+
+            if( items.length )
+            {
+                var pageParentCont  = cont.parentNode,
+                    pageCont        = pageParentCont.querySelector(".project-pagination-container");
+
+                if( items.length > perPage && !pageCont )
+                {
+                    var contPagination = document.createElement("div"),
+
+                        pageNext        = document.createElement("div"),
+                        pagePrev        = document.createElement("div");
+
+                    contPagination.classList.add("project-pagination-container");
+
+                    pageNext.classList.add("project-next-page");
+                    pagePrev.classList.add("project-prev-page");
+
+                    contPagination.appendChild(pagePrev);
+                    contPagination.appendChild(pageNext);
+
+                    pagePrev.addEventListener("click", function() { IIDO.Project.toPrevPage(); });
+                    pageNext.addEventListener("click", function() { IIDO.Project.toNextPage(); });
+
+                    pageParentCont.parentNode.insertBefore(contPagination, pageParentCont);
+
+
+                    var projectItem = cont.querySelector(".project-item"),
+                        piWidth     = projectItem.offsetWidth,
+                        piHeight    = projectItem.offsetHeight,
+
+                        contWidth   = (piWidth * 6),
+                        contHeight  = (piHeight * 3),
+
+                        pages       = Math.ceil( items.length % perPage );
+
+                    if( projectItem.classList.contains("box-w2") )
+                    {
+                        contWidth = (piWidth * 3);
+                    }
+
+                    pageParentCont.style.height = contHeight + 'px';
+
+                    cont.classList.add("initialized");
+                    cont.style.width = (contWidth * pages) + 'px';
+
+                    var posTop = (contHeight / 2);
+
+                    pagePrev.style.top = posTop + 'px';
+                    pageNext.style.top = posTop + 'px';
+                }
+            }
+        }
+    };
+
+
+
+    project.toNextPage = function()
+    {
+        // console.log( this );
+        // console.log( this.targetNode );
+        // console.log( this.targetElm );
+    };
+
+
+
+    project.toPrevPage = function()
+    {
+        // console.log( this );
+        // console.log( this.targetNode );
+        // console.log( this.targetElm );
+    }
+
 })(window, jQuery, IIDO.Project);
+var huhu;

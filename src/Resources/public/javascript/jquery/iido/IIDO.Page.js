@@ -47,7 +47,7 @@ IIDO.Page = IIDO.Page || {};
             IIDO.Page.initMobile();
         });
 
-        $("a.open-in-lightbox").click( function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
+        $("a.open-in-lightbox,a.open-page-in-lightbox").click( function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
 
         $(document).keyup(function(e) {
             if (e.keyCode === 27)
