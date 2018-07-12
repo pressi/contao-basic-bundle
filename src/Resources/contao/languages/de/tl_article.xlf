@@ -233,6 +233,11 @@
                 <target>Teaser Galerie</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.multiSRC.0">
+                <source>Gallery-Images</source>
+                <target>Galerie-Bilder</target>
+            </trans-unit>
+
 
             <trans-unit id="tl_article.hiddenArea.0">
                 <source>hidden area</source>
