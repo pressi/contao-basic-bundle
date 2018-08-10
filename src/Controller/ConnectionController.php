@@ -57,7 +57,7 @@ class ConnectionController implements ContainerAwareInterface
     public function indexAction()
     {
         //TODO: replace $this->container => $this->
-        if( $this->has('contao.framework') )
+        if( $this->container->has('contao.framework') )
         {
             $this->container->get('contao.framework')->initialize();
         }
