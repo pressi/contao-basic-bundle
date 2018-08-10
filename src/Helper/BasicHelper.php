@@ -1,4 +1,4 @@
-<?
+<?php
 /*******************************************************************
  * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
@@ -890,7 +890,7 @@ class BasicHelper extends \Frontend
 
     public static function getRootDir( $includeSlash = false )
     {
-        return dirname(\System::getContainer()->getParameter('kernel.root_dir')) . ($includeSlash ? '/' : '');
+        return BundleConfig::getRootDir( $includeSlash );
     }
 
 

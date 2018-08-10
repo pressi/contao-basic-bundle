@@ -10,8 +10,6 @@
 namespace IIDO\BasicBundle\Config;
 
 
-use IIDO\BasicBundle\Helper\BasicHelper;
-
 
 /**
  * Bundle Config Class
@@ -260,7 +258,7 @@ class BundleConfig
         }
         else
         {
-            $rootDir    = BasicHelper::getRootDir();
+            $rootDir    = self::getRootDir();
             $bundleName = self::getBundleGroup() . '/' . self::getBundleName();
             $addon      = '';
 
@@ -364,5 +362,12 @@ class BundleConfig
     {
         $packages = \System::getContainer()->getParameter('kernel.packages');
         return key_exists($bundleName, $packages);
+    }
+
+
+
+    public static function getRootDir( $includeSlash = false )
+    {
+        return dirname(\System::getContainer()->getParameter('kernel.root_dir')) . ($includeSlash ? '/' : '');
     }
 }
