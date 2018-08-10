@@ -137,7 +137,7 @@ foreach($GLOBALS['TL_DCA'][ $strTableName ]['palettes'] as $strPalette => $strFi
     {
         $strFields  = str_replace('{global_legend', '{analytics_legend},googleAnalyticsId;{global_legend', $strFields);
         $strFields  = str_replace('{publish_legend', '{expert_legend},cssClass;{publish_legend', $strFields);
-        $strFields  = str_replace('{cache_legend', '{design_legend},pageStyles;{cache_legend', $strFields);
+//        $strFields  = str_replace('{cache_legend', '{design_legend},pageStyles;{cache_legend', $strFields);
         $strFields  = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend', $strFields);
     }
 
@@ -279,39 +279,39 @@ $arrFieldConfig = array
 
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField("googleAnalyticsId", $strTableName);
 
-$GLOBALS['TL_DCA'][ $strTableName ]['fields']['pageStyles'] = array
-(
-    'label'                 => &$GLOBALS['TL_LANG'][ $strTableName ]['pageStyles'],
-    'exclude'               => true,
-    'inputType'             => 'fieldpalette',
-    'foreignKey'            => 'tl_fieldpalette.id',
-    'relation'              => array('type' => 'hasOne', 'load' => 'eager'),
-    'sql'                   => "blob NULL",
-    'fieldpalette'          => array
-    (
-        'config' => array
-        (
-            'hidePublished' => true
-        ),
-
-        'list'     => array
-        (
-            'label' => array
-            (
-//                'fields' => array(),
-                'format' => 'Seiten-Styles (Überschreibt die Styles vom "Website Style-Editor".',
-            ),
-        ),
-
-        'palettes' => array
-        (
-            'default'   => '{color_legend},primaryColor,secondaryColor;'
-        ),
-
-        'fields' => array
-        (
-            'primaryColor'      => \IIDO\BasicBundle\Helper\DcaHelper::getColorFieldConfig('primaryColor', $strTableName),
-            'secondaryColor'    => \IIDO\BasicBundle\Helper\DcaHelper::getColorFieldConfig('secondaryColor', $strTableName)
-        )
-    )
-);
+//$GLOBALS['TL_DCA'][ $strTableName ]['fields']['pageStyles'] = array
+//(
+//    'label'                 => &$GLOBALS['TL_LANG'][ $strTableName ]['pageStyles'],
+//    'exclude'               => true,
+//    'inputType'             => 'fieldpalette',
+//    'foreignKey'            => 'tl_fieldpalette.id',
+//    'relation'              => array('type' => 'hasOne', 'load' => 'eager'),
+//    'sql'                   => "blob NULL",
+//    'fieldpalette'          => array
+//    (
+//        'config' => array
+//        (
+//            'hidePublished' => true
+//        ),
+//
+//        'list'     => array
+//        (
+//            'label' => array
+//            (
+////                'fields' => array(),
+//                'format' => 'Seiten-Styles (Überschreibt die Styles vom "Website Style-Editor".',
+//            ),
+//        ),
+//
+//        'palettes' => array
+//        (
+//            'default'   => '{color_legend},primaryColor,secondaryColor;'
+//        ),
+//
+//        'fields' => array
+//        (
+//            'primaryColor'      => \IIDO\BasicBundle\Helper\DcaHelper::getColorFieldConfig('primaryColor', $strTableName),
+//            'secondaryColor'    => \IIDO\BasicBundle\Helper\DcaHelper::getColorFieldConfig('secondaryColor', $strTableName)
+//        )
+//    )
+//);

@@ -1,4 +1,4 @@
-<?
+<?php
 $edit       = \Input::get("act");
 $objElement = false;
 
