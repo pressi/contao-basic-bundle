@@ -20,7 +20,7 @@ services:
     iido_basic.listener.insert_tags:
         class: IIDO\BasicBundle\EventListener\InsertTagsListener
 #        tags:
-#            - { name: contao.hook, hook: replaceInsertTags}
+#            - { name: contao.hook, hook: replaceInsertTags, method: replaceCustomizeInsertTags}
         arguments:
             - "@contao.framework"
 
@@ -50,6 +50,11 @@ services:
 
     iido_basic.listener.news:
         class: IIDO\BasicBundle\EventListener\NewsListener
+        arguments:
+            - "@contao.framework"
+
+    iido_basic.listener.user:
+        class: IIDO\BasicBundle\EventListener\UserListener
         arguments:
             - "@contao.framework"
 
