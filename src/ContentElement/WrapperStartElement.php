@@ -102,7 +102,16 @@ class WrapperStartElement extends \ContentElement
             $hasSeparator = true;
         }
 
+        $cssID = \StringUtil::deserialize($this->cssID, TRUE);
+        $cssClass = $cssID[1];
+
+        if( strlen( trim($cssClass) ) )
+        {
+            $this->Template->class          = preg_replace('/' . $cssClass . '/', '', $this->Template->class);
+        }
+
         $this->Template->addClasses     = ' inside-' . ($countSeparator + 1);
+        $this->Template->colClasses     = $cssClass;
         $this->Template->hasSeparator   = $hasSeparator;
     }
 }

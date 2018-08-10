@@ -58,5 +58,7 @@ class WrapperSeparatorElement extends \ContentElement
      */
     protected function compile()
     {
+        $cssID = \StringUtil::deserialize($this->cssID, TRUE);
+        $this->Template->colClasses = $cssID[1];
     }
 }
