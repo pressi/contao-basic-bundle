@@ -570,8 +570,8 @@ class BasicHelper extends \Frontend
     {
         if( is_array($GLOBALS['TL_JAVASCRIPT']) )
         {
-            $GLOBALS['TL_JAVASCRIPT'] = array_unique($GLOBALS['TL_JAVASCRIPT']);
-            $GLOBALS['TL_JAVASCRIPT'] = array_values($GLOBALS['TL_JAVASCRIPT']);
+//            $GLOBALS['TL_JAVASCRIPT'] = array_unique($GLOBALS['TL_JAVASCRIPT']);
+//            $GLOBALS['TL_JAVASCRIPT'] = array_values($GLOBALS['TL_JAVASCRIPT']);
 
             $arrScripts = array();
             foreach($GLOBALS['TL_JAVASCRIPT'] as $key => $scriptSRC)
@@ -589,8 +589,8 @@ class BasicHelper extends \Frontend
 
         if( is_array($GLOBALS['TL_CSS']) )
         {
-            $GLOBALS['TL_CSS'] = array_unique($GLOBALS['TL_CSS']);
-            $GLOBALS['TL_CSS'] = array_values($GLOBALS['TL_CSS']);
+//            $GLOBALS['TL_CSS'] = array_unique($GLOBALS['TL_CSS']);
+//            $GLOBALS['TL_CSS'] = array_values($GLOBALS['TL_CSS']);
 
             $arrStyles = array();
             foreach($GLOBALS['TL_CSS'] as $key => $styleSRC)
@@ -608,8 +608,8 @@ class BasicHelper extends \Frontend
 
         if( is_array($GLOBALS['TL_USER_CSS']) )
         {
-            $GLOBALS['TL_USER_CSS'] = array_unique($GLOBALS['TL_USER_CSS']);
-            $GLOBALS['TL_USER_CSS'] = array_values($GLOBALS['TL_USER_CSS']);
+//            $GLOBALS['TL_USER_CSS'] = array_unique($GLOBALS['TL_USER_CSS']);
+//            $GLOBALS['TL_USER_CSS'] = array_values($GLOBALS['TL_USER_CSS']);
 
             $arrUserStyles = array();
             foreach($GLOBALS['TL_USER_CSS'] as $key => $userStyleSRC)

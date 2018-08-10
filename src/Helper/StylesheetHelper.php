@@ -67,6 +67,8 @@ class StylesheetHelper
             }
         }
 
+        $strContent = self::replaceStylesEditorColors( $strContent );
+
         return self::replaceDefaultVars( $strContent );
     }
 
@@ -355,7 +357,7 @@ class StylesheetHelper
                     $strContent = str_replace($strChunk . $addPx, $op . $result . 'px', $strContent);
                     break;
 
-                case (preg_match("/^color_([a-zA-Z]{0,})$/", $strKey, $matches) ? true : false):
+                case (preg_match("/^color_(primary|secondary|tertiary|quaternary)$/", $strKey, $matches) ? true : false):
                     $color      = ColorHelper::compileColor( \Config::get($fieldPrefix . 'color' . ucfirst($matches[1])) ?:'#000' );
                     $strContent = str_replace($strChunk . $addColor, $color, $strContent);
                     $strContent = self::replaceColorVariants($strKey, $color, $strContent, '#fff');
@@ -548,6 +550,29 @@ class StylesheetHelper
         }
 
         return $string;
+    }
+
+
+
+    public static function replaceStylesEditorColors( $strContent )
+    {
+        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+        $arrColors      = \StringUtil::deserialize( \Config::get( $fieldPrefix . 'colors'), TRUE);
+
+        $add            = '#fff';
+
+        foreach( $arrColors as $arrColor)
+        {
+            if( count($arrColor) )
+            {
+                $varName    = $arrColor['variable'];
+
+                $strContent = preg_replace('/\/\*#' . $varName . '#\*\/' . $add . '/', '#' . $arrColor['color'], $strContent);
+                $strContent = self::replaceColorVariants($varName, $arrColor['color'], $strContent, $add);
+            }
+        }
+
+        return $strContent;
     }
 
 
@@ -1044,7 +1069,7 @@ class StylesheetHelper
                 );
 
                 $arrPageStyles[ $artBgName ] = array_merge($arrPageStyles[ $artBgName ], StylesheetHelper::getBackgroundStyles($objArticles->current()));
-
+//                echo "<pre>"; print_r( $arrPageStyles ); echo "</pre>";
 
                 if( $objArticles->addDivider )
                 {
@@ -1184,7 +1209,7 @@ class StylesheetHelper
         }
 //            }
 //        }
-
+//exit;
 //        $objHeader = \ArticleModel::findByAlias('ge_header_' . $objRootPage->alias);
         $objHeader = GlobalElementsHelper::getObject('header', $objRootPage->alias);
 
@@ -1242,6 +1267,15 @@ class StylesheetHelper
 
             foreach($arrPageStyles as $arrPageStyle)
             {
+                $bgColor = \StringUtil::deserialize($arrPageStyle['bgcolor'], TRUE);
+
+                if( $bgColor[0] == "" && $bgColor[2] )
+                {
+                    $bgColor[0] = $bgColor[2];
+
+                    $arrPageStyle['bgcolor'] = serialize($bgColor);
+                }
+
                 $arrStyles[] = $objStyleSheets->compileDefinition($arrPageStyle, true);
             }
 
@@ -1255,6 +1289,8 @@ class StylesheetHelper
                 foreach($arrStyles as $strStyle)
                 {
                     $strOnlyStyles = preg_replace('/#container .mod_article#([A-Za-z0-9\-_]{0,})\{([A-Za-z0-9\s\-\(\)\"\'\\,;.:\/_@]{0,})\}/', '$2', $strStyle);
+                    $strOnlyStyles = preg_replace('/(#|)header\{\}/', '', $strOnlyStyles);
+                    $strOnlyStyles = preg_replace('/(#|)footer\{\}/', '', $strOnlyStyles);
 
                     if( strlen(trim($strOnlyStyles)) )
                     {

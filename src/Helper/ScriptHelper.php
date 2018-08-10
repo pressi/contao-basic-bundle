@@ -79,7 +79,8 @@ class ScriptHelper
 
         if( !$hasAnimation )
         {
-            $objContentElements = \ContentModel::findBy(array("invisible=?", "type=?"), array("", "rsce_feature-box"));
+            $strTable           = \ContentModel::getTable();
+            $objContentElements = \ContentModel::findBy(array($strTable . ".invisible=?", $strTable . ".type=?"), array("", "rsce_feature-box"));
 
             if( $objContentElements )
             {

@@ -11,6 +11,7 @@ namespace IIDO\BasicBundle\Helper;
 
 
 use Contao\Controller;
+use MadeYourDay\RockSolidSlider\Module\Slider;
 
 
 /**
@@ -19,6 +20,18 @@ use Contao\Controller;
  */
 class RSCEHelper extends \Frontend
 {
+
+    public static function getNewTableConfig($label, $contentCategory = 'texts', $standardFields = array('cssID'), $types = array('content'))
+    {
+        return array
+        (
+            'label'             => self::renderLabel( $label ),
+            'types'             => $types,
+            'contentCategory'   => $contentCategory,
+            'standardFields'    => $standardFields,
+            'fields'            => array()
+        );
+    }
 
     /**
      * Get Imagefield Config
