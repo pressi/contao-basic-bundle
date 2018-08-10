@@ -102,6 +102,10 @@ class InsertTagsListener extends DefaultListener
                                 $return = '<div class="' . $strClass . $addClasses . '"' . $strAttributes . '><div class="' . $strClass . '-inside">' . $return . '</div></div>';
                             }
                         }
+                        else
+                        {
+                            $return = '';
+                        }
                         break;
 
 

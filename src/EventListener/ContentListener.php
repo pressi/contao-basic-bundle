@@ -499,6 +499,8 @@ class ContentListener extends DefaultListener
         $arrTopHeadlineClasses  = array();
         $arrSubHeadlineClasses  = array();
 
+        $arrContClasses         = array();
+
         $arrStyleHeadlineClasses    = array();
 
         $arrHeadline    = deserialize($objRow->headline, TRUE);
@@ -512,11 +514,15 @@ class ContentListener extends DefaultListener
         if( $objRow->addTopHeadline )
         {
             $arrHeadlineClasses[] = 'has-top-headline';
+
+            $arrContClasses[] = 'cont-has-top-headline';
         }
 
         if( $objRow->subHeadline )
         {
             $arrHeadlineClasses[] = 'has-sub-headline';
+
+            $arrContClasses[] = 'cont-has-sub-headline';
         }
 
         if( $objRow->headlineFloating )
@@ -615,7 +621,9 @@ class ContentListener extends DefaultListener
 
         if( $objRow->type === "headline" )
         {
-            $strContent = '<div class="ce_headline content-element ' . implode(" ", $objRow->classes) . (count($objRow->classes) ? ' ' : '') . 'block"><div class="element-inside">' . $strContent . '</div></div>';
+            $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
+
+            $strContent = '<div class="ce_headline content-element ' . implode(" ", $arrContClasses) . (count($arrContClasses) ? ' ' : '') . implode(" ", $objRow->classes) . (count($objRow->classes) ? ' ' : '') . $cssID[1] . (strlen($cssID[1]) ? ' ' : '') . 'block"><div class="element-inside">' . $strContent . '</div></div>';
         }
 
         return $strContent;
@@ -715,14 +723,30 @@ class ContentListener extends DefaultListener
 
         if( count($arrMatches[0]) )
         {
+            $renderLines = true;
+
+            if( preg_match('/no-text-lines/', $cssID[1]) )
+            {
+                $renderLines = false;
+            }
+
 //            $strTitle   = trim(preg_replace('/;/', '', $arrMatches[2][0]));
 //            $strContent = preg_replace('/title="' . preg_quote($arrMatches[2][0], '/') . '"/', 'title="' . $strTitle . '"', $strContent);
-            $strContent = preg_replace('/>' . preg_quote($arrMatches[2][0], '/') . '</', '>' . Helper::renderText($arrMatches[2][0], true). '<', $strContent);
+            $strContent = preg_replace('/>' . preg_quote($arrMatches[2][0], '/') . '</', '>' . Helper::renderText($arrMatches[2][0], $renderLines). '<', $strContent);
 //            $strContent = preg_replace('/title="([A-Za-z0-9\s\-;,.:\{\}<>="]{0,})" rel="/', 'title="' . $strTitle . '" rel="', $strContent);
         }
 
         $strContent = $this->addClassToContentElement( $strContent, $objRow, $arrClasses );
         $strContent = $this->removeClassFromContentElement( $strContent, $objRow, $arrRemoveClasses );
+
+        if( preg_match('/\{\{article_url::([0-9]{1,})\}\}/', $strContent, $arrLinkMatches) )
+        {
+            $objLinkArticle = \ArticleModel::findByPk( $arrLinkMatches[1] );
+
+            $newLink = '#' . $objLinkArticle->alias;
+
+            $strContent = preg_replace('/' . $arrLinkMatches[0] . '/', $newLink, $strContent);
+        }
 
         return $strContent;
     }
