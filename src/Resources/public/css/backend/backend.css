@@ -608,3 +608,7 @@ span.mobile-infos {
 span.mobile-infos strong {
     color: #919191;
 }
+
+.dataTables_wrapper {
+    width: 100%;
+}
