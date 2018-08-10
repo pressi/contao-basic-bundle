@@ -20,6 +20,7 @@ use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 
 use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -32,7 +33,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  *
  * @author Stephan Preßl <development@prestep.at>
  */
-class Plugin implements BundlePluginInterface, RoutingPluginInterface, ConfigPluginInterface
+class Plugin implements BundlePluginInterface, RoutingPluginInterface, ConfigPluginInterface, DependentPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -56,6 +57,19 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface, ConfigPlu
         return [
             BundleConfig::create(IIDOBasicBundle::class)
                 ->setLoadAfter($arrLoadAfter)
+        ];
+    }
+
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPackageDependencies()
+    {
+        return [
+            'contao/news-bundle',
+            'contao/calendar-bundle'
         ];
     }
 
