@@ -361,27 +361,32 @@ IIDO.Content = IIDO.Content || {};
     {
         setTimeout(function()
         {
-            $(".bg-parallax, .box-image .image_container").waypoint(function(direction)
-                {
-                    if(!$("body").is(".mobile,.ios,.android"))
+            var elements = $(".bg-parallax, .box-image .image_container");
+
+            if( elements.length )
+            {
+                elements.waypoint(function(direction)
                     {
-                        $.stellar({
-                            horizontalOffset: 0,
-                            verticalOffset: 0,
-                            horizontalScrolling: false,
-                            verticalScrolling: true,
-                            parallaxBackgrounds: true,
-                            positionProperty: "position",
-                            scrollProperty: "scroll",
-                            parallaxElements: true,
-                            hideDistantElements: false
-                        });
-                    }
-                },
-                {
-                    offset: '100%',
-                    triggerOnce: true
-                });
+                        if(!$("body").is(".mobile,.ios,.android"))
+                        {
+                            $.stellar({
+                                horizontalOffset: 0,
+                                verticalOffset: 0,
+                                horizontalScrolling: false,
+                                verticalScrolling: true,
+                                parallaxBackgrounds: true,
+                                positionProperty: "position",
+                                scrollProperty: "scroll",
+                                parallaxElements: true,
+                                hideDistantElements: false
+                            });
+                        }
+                    },
+                    {
+                        offset: '100%',
+                        triggerOnce: true
+                    });
+            }
         }, 500);
     };
 
@@ -389,17 +394,20 @@ IIDO.Content = IIDO.Content || {};
 
     content.initTagline = function()
     {
-        var tagline = document.querySelector( ".content-element.tagline" );
-
-        if( tagline )
+        if( !document.querySelector(".header-top-bar") )
         {
-            $tagline = tagline.querySelector(".element-inside");
+            var tagline = document.querySelector( ".content-element.tagline" );
 
-            IIDO.Content.resetTaglineStyles();
+            if( tagline )
+            {
+                $tagline = tagline.querySelector(".element-inside");
 
-            IIDO.Base.addEvent(window, "resize load", IIDO.Content.resetTaglineStyles);
-            IIDO.Base.addEvent(window, "scroll resize load", IIDO.Content.scrollTagline);
-            IIDO.Content.scrollTagline();
+                IIDO.Content.resetTaglineStyles();
+
+                IIDO.Base.addEvent(window, "resize load", IIDO.Content.resetTaglineStyles);
+                IIDO.Base.addEvent(window, "scroll resize load", IIDO.Content.scrollTagline);
+                IIDO.Content.scrollTagline();
+            }
         }
     };
 

@@ -21,9 +21,12 @@ IIDO.Page = IIDO.Page || {};
     page.init = function()
     {
         $wrapper    = $("#wrapper");
-        $navOffset  = $("header").height();
 
-        // this.initHeader();
+        $tagline    = $(".tagline-inside");
+        $header     = $("header");
+        $navOffset  = $header.height();
+
+        this.initHeader();
         this.initSearch();
         this.initMobileNavigation();
         this.initNavigation();
@@ -49,7 +52,8 @@ IIDO.Page = IIDO.Page || {};
 
         $("a.open-in-lightbox,a.open-page-in-lightbox").click( function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
 
-        $(document).keyup(function(e) {
+        $(document).keyup(function(e)
+        {
             if (e.keyCode === 27)
             {
                 var articles = $(".mod_article:not(.first).shown");
@@ -95,6 +99,200 @@ IIDO.Page = IIDO.Page || {};
 
                return false;
             });
+        }
+    };
+
+
+
+    page.initHeader = function()
+    {
+        if( !$header.length )
+        {
+            return;
+        }
+
+        this.initHeaderLogin();
+
+        if( $header.find(".header-top-bar") )
+        {
+            $headOptions.headerTopBar        = $header.find(".header-top-bar");
+            $headOptions.headerBar           = $header.find(".header-bar-inside");
+
+            $headOptions.originHeight        = 0;
+            $headOptions.originTopBarHeight  = 0;
+            $headOptions.originBarHeight     = 0;
+
+            $headOptions.minTopBarHeight     = 0;
+            $headOptions.minBarHeight        = 0;
+
+            this.headerUpdateValues();
+
+            IIDO.Base.addEvent(window, 'resize load', IIDO.Page.headerUpdateValues);
+            IIDO.Base.addEvent(window, 'scroll resize load', IIDO.Page.headerScroll);
+            this.headerScroll();
+        }
+    };
+
+
+
+    page.headerResetStyles = function()
+    {
+        $header.removeClass("is-fixed");
+        $wrapper.css("padding-top", "");
+
+        $headOptions.headerBar.css("height", "");
+
+        $headOptions.headerTopBar.css({overflow:'', height:''});
+
+        if( $tagline && $tagline.length )
+        {
+            $tagline.parent().css("overflow", "");
+            $tagline.css(
+                {
+                    "transform"         : "",
+                    "WebkitTransform"   : "",
+                    "opacity"           : ""
+                }
+            );
+        }
+    };
+
+
+
+    page.headerUpdateValues = function()
+    {
+        IIDO.Page.headerResetStyles();
+
+        $headOptions.originHeight       = $header.outerHeight();
+        $headOptions.originBarHeight    = $headOptions.headerBar.outerHeight();
+        $headOptions.originTopBarHeight = $headOptions.headerTopBar.outerHeight();
+
+        $headOptions.headerBar.css("height", 0);
+        $headOptions.headerTopBar.css("height", 0);
+
+        $headOptions.minBarHeight       = $headOptions.headerBar.outerHeight();
+        $headOptions.minTopBarHeight    = $headOptions.headerTopBar.outerHeight();
+
+        $headOptions.headerBar.css("height", "");
+        $headOptions.headerTopBar.css("height", "");
+    };
+
+
+
+    page.headerScroll = function()
+    {
+        if (IIDO.Base.getZoomLevel() > 1.01 || (window.matchMedia && window.matchMedia("(max-width: 900px)").matches))
+        {
+            IIDO.Page.headerResetStyles();
+            return;
+        }
+
+        var taglineHeight   = $tagline && $tagline.outerHeight(),
+            documentHeight  = window.innerHeight || document.documentElement.clientHeight,
+            offset          = window.pageYOffset || document.documentElement.scrollTop || 0,
+
+            nav             = $headOptions.headerBar,
+            bar             = $headOptions.headerTopBar;
+
+        // Only allow scroll positions inside the possible range
+        offset = Math.min(
+            document.documentElement.scrollHeight - documentHeight,
+            offset
+        );
+        offset = Math.max(0, offset);
+
+        $header.addClass('is-fixed');
+        $wrapper.css("padding-top", $headOptions.originHeight);
+
+        nav.css("height", Math.max($headOptions.minBarHeight, $headOptions.originBarHeight - offset) );
+
+        offset -= $headOptions.originBarHeight - Math.max($headOptions.minBarHeight, $headOptions.originBarHeight - offset);
+
+        if (offset > 0)
+        {
+            bar.css("overflow", "hidden");
+        }
+        else
+        {
+            bar.css("overflow", "");
+        }
+
+        bar.css("height", Math.max($headOptions.minTopBarHeight, $headOptions.originTopBarHeight - offset) );
+
+        offset -= $headOptions.originTopBarHeight - Math.max($headOptions.minTopBarHeight, $headOptions.originTopBarHeight - offset);
+
+        if ($tagline && $tagline.length )
+        {
+            if (
+                offset > 0
+                && offset < taglineHeight
+                && taglineHeight + $headOptions.originHeight < documentHeight
+            ) {
+                $tagline.parent().css("overflow", "hidden");
+
+                var transformStyle = "translate3d(0," + Math.round(Math.min(offset, taglineHeight) / 2) + "px,0)";
+
+                $tagline.css(
+                    {
+                        "transform"         : transformStyle,
+                        "WebkitTransform"   : transformStyle,
+                        "opacity"           : (taglineHeight - (offset / 1.5)) / taglineHeight
+                    }
+                );
+            }
+            else
+            {
+                $tagline.parent().css("overflow", "");
+
+                $tagline.css(
+                    {
+                        "transform"         : "",
+                        "WebkitTransform"   : "",
+                        "opacity"           : ""
+                    }
+                );
+            }
+        }
+    };
+
+
+
+    page.initHeaderLogin = function()
+    {
+        var headerLoginElements = $header.find(".header-login");
+
+        if( headerLoginElements && !headerLoginElements.hasClass("logout"))
+        {
+            var headline = headerLoginElements.find(".headline");
+
+            if( headline )
+            {
+                IIDO.Base.addEvent(headline[0], 'click', IIDO.Page.toggleHeaderLogin);
+
+                if( headerLoginElements.find(".error").length )
+                {
+                    headerLoginElements.addClass("is-open");
+                }
+            }
+        }
+    };
+
+
+
+    page.toggleHeaderLogin = function(e)
+    {
+        IIDO.Base.eventPreventDefault(e);
+        IIDO.Base.toggleElementClass($(this).parent().parent(), 'is-open');
+
+        var firstInput = $(this).parent().find("input[type=text]");
+
+        if( firstInput && $(this).parent().parent().hasClass('is-open') )
+        {
+            firstInput.focus();
+        }
+        else
+        {
+            firstInput.blur();
         }
     };
 

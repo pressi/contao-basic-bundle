@@ -13,7 +13,9 @@ IIDO.FullPage = IIDO.FullPage || {};
     var $afterRenderFuncs = [],
         $viewFuncs = [], $leaveFuncs = [],
         $viewAllFuncs = [], $leaveAllFuncs = [],
-        $leaveSlideFuncs = [], $leaveSlideAllFuncs = [];
+        $leaveSlideFuncs = [], $leaveSlideAllFuncs = [],
+
+        $return = false, $runAction = false;
 
 
     fullpage.addAfterRender = function(func)
@@ -161,6 +163,46 @@ IIDO.FullPage = IIDO.FullPage || {};
         {
             $afterRenderFuncs[ i ](index, anchorLink);
         }
-    }
+    };
+
+
+
+    fullpage.setReturn = function( returnVar )
+    {
+        $return = returnVar;
+    };
+
+
+
+    fullpage.getReturn = function()
+    {
+        return $return;
+    };
+
+
+
+    fullpage.goToSection = function( toSection, _callback )
+    {
+        $.fn.fullpage.moveTo( toSection );
+
+        if( _callback !== undefined && _callback !== "undefined" && _callback !== null )
+        {
+            _callback();
+        }
+    };
+
+
+
+    fullpage.setRunAction = function( runAction )
+    {
+        $runAction = runAction;
+    };
+
+
+
+    fullpage.getRunAction = function()
+    {
+        return $runAction;
+    };
 
 })(window, jQuery, IIDO.FullPage); var huhu;
