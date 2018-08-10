@@ -37,16 +37,11 @@ class ContentTable extends \Backend
                                 ->prepare("SELECT * FROM tl_module WHERE type=? OR type=? OR type=? OR type=?")
                                 ->execute('navigation', 'booknav', 'articlenav', 'customnav');
 
-        $objArticle     = \ArticleModel::findByPk( $activeRecord->pid );
-        $objPage        = \PageModel::findByPk( $objArticle->pid );
-        $objLayout      = BasicHelper::getPageLayout( $objPage );
-        $objTheme       = \ThemeModel::findByPk( $objLayout->pid );
-
         if( $objModules )
         {
             while( $objModules->next() )
             {
-                if( $objModules->pid === $objTheme->id )
+                if( $this->checkIfModuleIsInTheme( $objModules->pid, $activeRecord) )
                 {
                     $arrModules[ $objModules->id ] = $objModules->name;
                 }
@@ -55,6 +50,44 @@ class ContentTable extends \Backend
 
         return $arrModules;
     }
+
+
+
+    public function getLoginModule( $dc )
+    {
+        $activeRecord   = $dc->activeRecord;
+        $arrModules     = array();
+
+        $objModules     = \Database::getInstance()
+            ->prepare("SELECT * FROM tl_module WHERE type=?")
+            ->execute('login');
+
+        if( $objModules )
+        {
+            while( $objModules->next() )
+            {
+                if( $this->checkIfModuleIsInTheme( $objModules->pid, $activeRecord) )
+                {
+                    $arrModules[ $objModules->id ] = $objModules->name;
+                }
+            }
+        }
+
+        return $arrModules;
+    }
+
+
+
+    protected function checkIfModuleIsInTheme($modulePid, $record)
+    {
+        $objArticle     = \ArticleModel::findByPk( $record->pid );
+        $objPage        = \PageModel::findByPk( $objArticle->pid );
+        $objLayout      = BasicHelper::getPageLayout( $objPage );
+        $objTheme       = \ThemeModel::findByPk( $objLayout->pid );
+
+        return ($modulePid === $objTheme->id);
+    }
+
 
 
     public function parseHeadlineImagePostionField(\DC_Table $dc, $strLabel)
