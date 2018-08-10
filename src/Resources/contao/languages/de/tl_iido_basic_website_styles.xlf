@@ -33,6 +33,8 @@
                 <target>Overlay: Style</target>
             </trans-unit>
 
+
+
             <trans-unit id="tl_iido_basic_website_styles.colorPrimary.0">
                 <source>Primary Farbe (Hauptfarbe)</source>
                 <target>Primary Farbe  (Hauptfarbe)</target>
@@ -42,6 +44,18 @@
                 <source>Secondary Farbe (Zweitfarbe)</source>
                 <target>Secondary Farbe (Zweitfarbe)</target>
             </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.colorTertiary.0">
+                <source>Tertiary Farbe (Drittfarbe)</source>
+                <target>Tertiary Farbe (Drittfarbe)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.colorQuaternary.0">
+                <source>Quaternary Farbe (Viertfarbe)</source>
+                <target>Quaternary Farbe (Viertfarbe)</target>
+            </trans-unit>
+
+
 
             <trans-unit id="tl_iido_basic_website_styles.buttonColorPrimary.0">
                 <source>Primary: Farbe</source>
@@ -62,6 +76,7 @@
                 <source>Primary Hover: Schriftfarbe</source>
                 <target>Primary Hover: Schriftfarbe</target>
             </trans-unit>
+
 
             <trans-unit id="tl_iido_basic_website_styles.buttonColorSecondary.0">
                 <source>Secondary: Farbe</source>
@@ -84,10 +99,59 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_iido_basic_website_styles.buttonColorTertiary.0">
+                <source>Tertiary: Farbe</source>
+                <target>Tertiary: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonFontColorTertiary.0">
+                <source>Tertiary: Schriftfarbe</source>
+                <target>Tertiary: Schriftfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverColorTertiary.0">
+                <source>Tertiary Hover: Farbe</source>
+                <target>Tertiary Hover: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverFontColorTertiary.0">
+                <source>Tertiary Hover: Schriftfarbe</source>
+                <target>Tertiary Hover: Schriftfarbe</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonColorQuaternary.0">
+                <source>Quaternary: Farbe</source>
+                <target>Quaternary: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonFontColorQuaternary.0">
+                <source>Quaternary: Schriftfarbe</source>
+                <target>Quaternary: Schriftfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverColorQuaternary.0">
+                <source>Quaternary Hover: Farbe</source>
+                <target>Quaternary Hover: Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.buttonHoverFontColorQuaternary.0">
+                <source>Quaternary Hover: Schriftfarbe</source>
+                <target>Quaternary Hover: Schriftfarbe</target>
+            </trans-unit>
+
+
 
             <trans-unit id="tl_iido_basic_website_styles.headlineStyles.0">
                 <source>Überschrift Stile</source>
                 <target>Überschrift Stile</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_iido_basic_website_styles.formFieldStyle.0">
+                <source>Form field style</source>
+                <target>Formularfeld aussehen (Stil)</target>
             </trans-unit>
 
 
@@ -117,6 +181,11 @@
             <trans-unit id="tl_iido_basic_website_styles.headline_legend">
                 <source>headline-settings</source>
                 <target>Überschrift-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.form_legend">
+                <source>form-settings</source>
+                <target>Formular-Einstellungen</target>
             </trans-unit>
 
 
@@ -173,7 +242,7 @@
 
             <trans-unit id="tl_iido_basic_website_styles.fields.colors.color">
                 <source>color</source>
-                <target>Farbcode</target>
+                <target>Farbcode (ohne #)</target>
             </trans-unit>
             <trans-unit id="tl_iido_basic_website_styles.fields.colors.name">
                 <source>name</source>

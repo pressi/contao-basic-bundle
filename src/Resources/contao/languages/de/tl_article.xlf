@@ -425,7 +425,7 @@
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.headerTopBar">
                 <source>Header: top bar</source>
-                <target>Kopfzeile: Top Bar [topHeader]</target>
+                <target>Kopfzeile: Top Bar [topheader]</target>
             </trans-unit>
             <trans-unit id="tl_article.options.articleType.header">
                 <source>Header</source>

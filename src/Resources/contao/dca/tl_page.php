@@ -289,12 +289,17 @@ $GLOBALS['TL_DCA'][ $strTableName ]['fields']['pageStyles'] = array
     'sql'                   => "blob NULL",
     'fieldpalette'          => array
     (
+        'config' => array
+        (
+            'hidePublished' => true
+        ),
+
         'list'     => array
         (
             'label' => array
             (
 //                'fields' => array(),
-                'format' => 'Seiten-Styles (Überschreibt die Styles vom "Webseiten Style-Editor".',
+                'format' => 'Seiten-Styles (Überschreibt die Styles vom "Website Style-Editor".',
             ),
         ),
 

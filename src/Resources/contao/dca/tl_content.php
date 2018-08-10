@@ -101,6 +101,8 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_navigation', '{config_legend},navModule,navPages,navigationTpl;', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_weather', '{config_legend},addIcon,addSnow,addTemperature,snowUrl;', $strFileName);
 
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_login', '{config_legend},loginModuleId;{links_legend},registerPage,lostPasswordPage,logoutPage;', $strFileName);
+
 if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_categories') )
 {
     \IIDO\BasicBundle\Helper\DcaHelper::copyPaletteFromTable('newscategories', 'tl_module', 'newscategories', $strFileName);
@@ -773,8 +775,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
 
 
 
-//// Ticker
-//
+// Ticker
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['textBefore']			= $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['textBefore']['label']	= &$GLOBALS['TL_LANG']['tl_content']['textBefore'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['textBefore']['eval']['mandatory'] = false;
@@ -782,8 +784,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
 //$GLOBALS['TL_DCA']['tl_content']['fields']['textAfter']				= $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['textAfter']['label']	= &$GLOBALS['TL_LANG']['tl_content']['textAfter'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['textAfter']['eval']['mandatory'] = false;
-//
-//
+
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['tickerMode'] = array
 //(
 //	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['tickerMode'],
@@ -797,7 +799,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
 //	),
 //	'sql'                     => "varchar(50) NOT NULL default ''"
 //);
-//
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['tickerShowMode'] = array
 //(
 //	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['tickerShowMode'],
@@ -1119,3 +1121,12 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_metaFields', $strFileName, 'news_metaFields', 'tl_module');
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_template', $strFileName, 'news_template', 'tl_module');
+
+
+
+// LOGIN
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('loginModuleId', $strFileName, array(), '', false, '', false, false, '', array('options_callback' => array($strTableClass, 'getLoginModule'), 'sql' => "int(10) unsigned NOT NULL"));
+
+\IIDO\BasicBundle\Helper\DcaHelper::addPageField('logoutPage', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPageField('registerPage', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPageField('lostPasswordPage', $strFileName);
