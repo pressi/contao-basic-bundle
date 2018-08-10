@@ -98,6 +98,8 @@ $GLOBALS['TL_CTE']['module']['iido_detail']                 = $ns . '\ContentEle
 $GLOBALS['TL_CTE']['module']['iido_articleTeaser']          = $ns . '\ContentElement\ArticleTeaserElement';
 $GLOBALS['TL_CTE']['module']['iido_weather']                = $ns . '\ContentElement\WeatherElement';
 $GLOBALS['TL_CTE']['module']['iido_imprint']                = $ns . '\ContentElement\ImprintElement';
+
+$GLOBALS['TL_CTE']['module']['iido_login']                  = $ns . '\ContentElement\LoginElement';
 //$GLOBALS['TL_CTE']['module']['iido_navigation']          = $ns . '\FrontendModule\NavigationModule';
 
 
@@ -178,6 +180,8 @@ $GLOBALS['TL_HOOKS']['loadFormField'][]                     = array($listenerNam
 $GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerName . '.form', 'parseCustomizeWidget');
 
 $GLOBALS['TL_HOOKS']['parseArticles'][]                     = array($listenerName . '.news', 'parseCustomizeArticles');
+
+$GLOBALS['TL_HOOKS']['importUser'][]                        = array($listenerName . '.user', 'importCustomizeUser');
 
 
 

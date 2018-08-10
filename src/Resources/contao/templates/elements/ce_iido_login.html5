@@ -1,0 +1,21 @@
+<div class="<?= $this->class ?> header-login">
+    <? if( FE_USER_LOGGED_IN ): ?>
+        <a href="<?= $this->urls['logout'] ?>" class="logout"><?= $this->labels['logout'] ?></a>
+    <? else: ?>
+        <? if($this->headline): ?>
+            <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+        <? endif ?>
+
+        <div class="login-container">
+
+            {{insert_module::<?= $this->loginModuleId ?>}}
+
+            <? if( $this->registerPage || $this->lostPasswordPage ): ?>
+                <div class="links"><? if( $this->lostPasswordPage ): ?><a href="<?= $this->urls['lostPassword'] ?>"><?= $this->labels['lostPassword'] ?></a><? endif ?><? if( $this->registerPage ): ?><a href="<?= $this->urls['register'] ?>"><?= $this->labels['register'] ?></a><? endif ?></div>
+            <? endif ?>
+
+        </div>
+
+    <? endif ?>
+
+</div>
