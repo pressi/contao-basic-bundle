@@ -54,7 +54,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                             {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
                             {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
                         ],
-                    <? if( count($themeColors ) ): ?>
+                    <?php if( count($themeColors ) ): ?>
                     style_formats_merge: true,
                     style_formats:
                         [
@@ -62,12 +62,12 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                                 title: 'Farben',
                                 items:
                                 [
-                                    <? $i=0; foreach( $themeColors as $theme => $arrColors):
+                                    <?php $i=0; foreach( $themeColors as $theme => $arrColors):
                                     foreach($arrColors as $code => $color):
                                         $code = preg_replace('/&#35;/', '#', $code);
                                     ?>
                                         <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
-                                    <? $i++; endforeach; endforeach ?>
+                                    <?php $i++; endforeach; endforeach ?>
                                 ]
                             },
                             {
@@ -85,7 +85,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                                  ]
                             }
                         ],
-                    <? endif ?>
+                    <?php endif ?>
                     style_formats_autohide: true,
                     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks',
                     browser_spellcheck: true,
@@ -98,7 +98,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                 });
             }, 0);
         </script>
-    <? else: ?>
+    <?php else: ?>
 <script>window.tinymce || document.write('<script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>">\x3C/script>')</script>
 <script>
 setTimeout(function()
@@ -144,7 +144,7 @@ setTimeout(function()
         {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
         {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
     ],
-    <? if( count($themeColors) ): ?>
+    <?php if( count($themeColors) ): ?>
       style_formats_merge: true,
       style_formats:
       [
@@ -152,12 +152,12 @@ setTimeout(function()
               title : 'Farben',
               items :
                   [
-                      <? $i=0; foreach( $themeColors as $theme => $arrColors):
+                      <?php $i=0; foreach( $themeColors as $theme => $arrColors):
                       foreach($arrColors as $code => $color):
                       $code = preg_replace('/&#35;/', '#', $code);
                       ?>
                           <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
-                      <? $i++; endforeach; endforeach; ?>
+                      <?php $i++; endforeach; endforeach; ?>
                   ]
           },
           {
@@ -175,7 +175,7 @@ setTimeout(function()
                   ]
           }
       ],
-    <? endif ?>
+    <?php endif ?>
     style_formats_autohide: true,
     content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.css',
     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks visualchars',
@@ -185,7 +185,7 @@ setTimeout(function()
     paste_as_text: true,
     extended_valid_elements: 'div[itemscope=|itemtype],span[itemprop|class],q[cite|class|title],article,section,hgroup,figure,figcaption',
     menubar: 'file edit insert view format table',
-    toolbar: 'link unlink | image<? if(count($themeColors) ): ?> | styleselect<? endif ?> | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | undo redo | code'
+    toolbar: 'link unlink | image<?php if(count($themeColors) ): ?> | styleselect<?php endif ?> | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | undo redo | code'
   });
 }, 0);
 </script>

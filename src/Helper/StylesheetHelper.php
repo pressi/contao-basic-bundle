@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\Helper;
 
 //TODO: StylesheetHelper && StylesHelper zusammenführen?? Stylesheet helper nur für das händling von css dateien (wie script helper)
 use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\GlobalElementsHelper;
 
 
 class StylesheetHelper

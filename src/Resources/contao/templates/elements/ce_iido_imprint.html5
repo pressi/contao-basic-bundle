@@ -1,10 +1,10 @@
-<? $this->extend("block_searchable");
+<?php $this->extend("block_searchable");
 
 $this->class = trim($this->class . ' ce_text');
 ?>
 
-<? $this->block('content'); ?>
+<?php $this->block('content'); ?>
 
 <?= $this->content ?>
 
-<? $this->endblock(); ?>
+<?php $this->endblock(); ?>

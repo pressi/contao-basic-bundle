@@ -1,4 +1,4 @@
-<?
+<?php
 /*******************************************************************
  * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved

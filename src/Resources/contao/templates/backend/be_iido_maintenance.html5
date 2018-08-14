@@ -1,4 +1,4 @@
-<?
+<?php
 $objSessionBag = \System::getContainer()->get('session')->getBag('contao_backend');
 $arrStates = $objSessionBag->get("fieldset_states");
 
@@ -7,7 +7,7 @@ $arrStates = $objSessionBag->get("fieldset_states");
 
     <h2 class="sub_headline"><?= $this->headline ?></h2>
 
-    <? if($this->isActive): ?>
+    <?php if($this->isActive): ?>
 
         <div class="imprint-container">
 
@@ -17,7 +17,7 @@ $arrStates = $objSessionBag->get("fieldset_states");
                     <input type="hidden" name="FORM_SUBMIT" value="iido_maintenance_imprint">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
 
-                    <fieldset class="tl_tbox <? if($arrStates['iido_maintenance_imprint']['imprint_legend']): ?> collapsed<? endif ?>" id="pal_imprint_legend">
+                    <fieldset class="tl_tbox <?php if($arrStates['iido_maintenance_imprint']['imprint_legend']): ?> collapsed<?php endif; ?>" id="pal_imprint_legend">
                         <legend onclick="AjaxRequest.toggleFieldset(this, 'imprint_legend', 'iido_maintenance_imprint')">Impressums / Datenschutz-Einstellungen</legend>
 
                         <div class="long widget">
@@ -26,12 +26,12 @@ $arrStates = $objSessionBag->get("fieldset_states");
                             </div>
                         </div>
 
-                        <? foreach($this->texts as $text): ?>
+                        <?php foreach($this->texts as $text): ?>
                             <div class="widget clr">
                                 <h3><label for="ctrl_<?= $text['name'] ?>"><?= $text['label'] ?></label></h3>
                                 <textarea id="ctrl_<?= $text['name'] ?>" name="<?= $text['name'] ?>" class="tl_textarea"><?= $text['value'] ?></textarea>
                             </div>
-                        <? endforeach ?>
+                        <?php endforeach ?>
 
                     </fieldset>
                 </div>
@@ -45,7 +45,7 @@ $arrStates = $objSessionBag->get("fieldset_states");
 
         </div>
 
-    <? else: ?>
+    <?php else: ?>
 
         <div class="tl_submit_container">
             <a href="/contao/iido" class="tl_submit"><?= $this->label['openConnectTool'] ?></a>
@@ -53,6 +53,6 @@ $arrStates = $objSessionBag->get("fieldset_states");
             <a href="<?= \Controller::addToUrl('act=iido_maintenance') ?>" class="tl_submit"><?= $this->label['openImprintTool'] ?></a>
         </div>
 
-    <? endif ?>
+    <?php endif; ?>
 
 </div>

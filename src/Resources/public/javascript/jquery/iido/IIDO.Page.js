@@ -261,7 +261,7 @@ IIDO.Page = IIDO.Page || {};
     {
         var headerLoginElements = $header.find(".header-login");
 
-        if( headerLoginElements && !headerLoginElements.hasClass("logout"))
+        if( headerLoginElements.length && !headerLoginElements.hasClass("logout"))
         {
             var headline = headerLoginElements.find(".headline");
 

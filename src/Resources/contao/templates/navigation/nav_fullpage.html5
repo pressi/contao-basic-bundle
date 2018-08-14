@@ -1,4 +1,4 @@
-<?
+<?php
 global $objPage;
 
 $objElement = \ContentModel::findByPk( $this->pid );

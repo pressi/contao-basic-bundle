@@ -1,6 +1,6 @@
-<? $this->extend("block_searchable") ?>
+<?php $this->extend("block_searchable") ?>
 
-<? $this->block('content'); ?>
+<?php $this->block('content'); ?>
 
 <?php
 
@@ -45,4 +45,4 @@ echo $objSlider->generate();
 </div>
 <script>IIDO.Project.toggleDetails(<?= $this->id ?>, true);</script>
 
-<? $this->endblock(); ?>
+<?php $this->endblock(); ?>

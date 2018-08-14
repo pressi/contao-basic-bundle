@@ -1,4 +1,4 @@
-<?
+<?php
 global $objPage;
 
 $objRootPage = \PageModel::findByPk( $objPage->rootId );

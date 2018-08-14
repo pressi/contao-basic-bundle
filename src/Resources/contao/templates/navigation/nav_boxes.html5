@@ -13,7 +13,7 @@
         <?php if ($item['isActive']): ?>
             <li class="<?= $item['class'] ?>"<?= $item['listAttributes'] ?>>
 
-                <? if( $strItemImage ): ?>
+                <?php if( $strItemImage ): ?>
                 <div class="nav-item-inside">
                     <div class="nav-image bg-image bg-cover" style="background-image:url('<?= $strItemImage ?>');">
                         <?= $strItemImageTag ?>
@@ -24,11 +24,11 @@
                         </strong>
                     </div>
                 </div>
-                <? else: ?>
+                <?php else: ?>
                 <strong class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?>>
                     <span itemprop="name"><?= $item['navTitle']?:$item['link'] ?></span>
                 </strong>
-                <? endif ?>
+                <?php endif ?>
 
                 <?= $item['subitems'] ?>
             </li>
@@ -36,7 +36,7 @@
             <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?= $item['listAttributes'] ?>>
                 <a href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url">
 
-                    <? if( $strItemImage ): ?>
+                    <?php if( $strItemImage ): ?>
                     <div class="nav-item-inside">
                         <div class="nav-image bg-image bg-cover" style="background-image:url('<?= $strItemImage ?>');">
                             <?= $strItemImageTag ?>
@@ -45,9 +45,9 @@
                             <span itemprop="name"><?= $item['navTitle']?:$item['link'] ?></span>
                         </div>
                     </div>
-                    <? else: ?>
+                    <?php else: ?>
                         <span itemprop="name"><?= $item['navTitle']?:$item['link'] ?></span>
-                    <? endif ?>
+                    <?php endif ?>
 
                 </a>
 

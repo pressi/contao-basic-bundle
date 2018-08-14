@@ -1,15 +1,15 @@
-<? $this->extend("block_searchable") ?>
+<?php $this->extend("block_searchable") ?>
 
-<? $this->block('content'); ?>
+<?php $this->block('content'); ?>
 
     <div class="iido-files-filter-container">
 
         <ul class="filter-list filter-group" data-filter-group="files">
-            <? foreach($this->filters as $strFiler => $strFilterName): ?>
+            <?php foreach($this->filters as $strFiler => $strFilterName): ?>
                 <li class="filter-item">
                     <a href="javascript:void(0)" class="filter-btn" data-filter=".files-<?= $strFiler ?>"><?= $strFilterName ?></a>
                 </li>
-            <? endforeach; ?>
+            <?php endforeach; ?>
         </ul>
     </div>
 
@@ -17,4 +17,4 @@
 
     </script>
 
-<? $this->endblock(); ?>
+<?php $this->endblock(); ?>

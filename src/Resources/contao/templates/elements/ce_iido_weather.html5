@@ -1,4 +1,4 @@
-<? $this->extend("block_searchable");
+<?php $this->extend("block_searchable");
 
 if( !$this->addSnow || $this->snowDepth <= 0 )
 {
@@ -6,33 +6,33 @@ if( !$this->addSnow || $this->snowDepth <= 0 )
 }
 ?>
 
-<? $this->block('content'); ?>
+<?php $this->block('content'); ?>
 
-    <? if( $this->snowUrl ): ?>
+    <?php if( $this->snowUrl ): ?>
         <a href="<?= $this->snowUrl ?>" class="snow-url">
-    <? endif; ?>
+    <?php endif; ?>
 
-<? if( $this->addIcon ): ?>
+<?php if( $this->addIcon ): ?>
     <div class="weather-icon">
         <img src="<?= $this->imageSRC ?>" alt="<?= $this->iconName ?>" title="<?= $this->iconName ?>" width="40" height="40">
     </div>
-<? endif ?>
+<?php endif ?>
 
-<? if( $this->addSnow && $this->snowDepth > 0 ): ?>
+<?php if( $this->addSnow && $this->snowDepth > 0 ): ?>
     <div class="snow">
         <span class="depth"><?= $this->snowDepth ?></span><span class="unit"><?= $this->snowUnit ?></span>
         <span class="subline"><?= $this->snowSubline ?></span>
     </div>
-<? endif ?>
+<?php endif ?>
 
-<? if( $this->addTemperature ): ?>
+<?php if( $this->addTemperature ): ?>
     <div class="temperature">
         <span class="number"><?= $this->temperature ?></span><span class="condition">°</span>
     </div>
-<? endif ?>
+<?php endif ?>
 
-    <? if( $this->snowUrl ): ?>
+    <?php if( $this->snowUrl ): ?>
         </a>
-    <? endif; ?>
+    <?php endif; ?>
 
-<? $this->endblock(); ?>
+<?php $this->endblock(); ?>

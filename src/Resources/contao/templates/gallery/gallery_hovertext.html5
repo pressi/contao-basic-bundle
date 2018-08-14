@@ -33,19 +33,19 @@
             <?php if ($col->href): ?>
               <a href="<?= $col->href ?>"<?= $col->attributes ?><?php if ($col->linkTitle) echo ' title="' . $col->linkTitle . '"'; ?> itemprop="contentUrl">
                   <?php $this->insert('picture_default', $col->picture); ?>
-                  <? if( $pictureHover ): ?>
+                  <?php if( $pictureHover ): ?>
                       <div class="hover-image">
                         <?php $this->insert('picture_default', $pictureHover); ?>
                       </div>
-                  <? endif; ?>
+                  <?php endif; ?>
               </a>
             <?php else: ?>
               <?php $this->insert('picture_default', $col->picture); ?>
-                <? if( $pictureHover ): ?>
+                <?php if( $pictureHover ): ?>
                     <div class="hover-image">
                         <?php $this->insert('picture_default', $pictureHover); ?>
                     </div>
-                <? endif; ?>
+                <?php endif; ?>
             <?php endif; ?>
             <?php if ($col->caption): ?>
               <figcaption class="caption" itemprop="caption"><?= \IIDO\BasicBundle\Helper\ContentHelper::renderText($col->caption) ?></figcaption>

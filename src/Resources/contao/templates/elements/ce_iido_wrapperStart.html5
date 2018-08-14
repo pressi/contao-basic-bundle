@@ -1,7 +1,7 @@
-<div class="<?= $this->class ?> html-<?php if( $this->hasSeparator): ?>column has-separator<? else: ?>wrapper<? endif ?><?= $this->addClasses ?>"<?= $this->cssID ?>>
+<div class="<?= $this->class ?> html-<?php if( $this->hasSeparator): ?>column has-separator<?php else: ?>wrapper<?php endif ?><?= $this->addClasses ?>"<?= $this->cssID ?>>
     <?php if( $this->hasSeparator): ?>
         <div class="html-column-container<?= $this->colClasses ? ' ' . $this->colClasses : '' ?>">
             <div class="html-column-inside">
-    <? else: ?>
+    <?php else: ?>
         <div class="html-wrapper-inisde<?= $this->colClasses ? ' ' . $this->colClasses : '' ?>">
-    <? endif ?>
+    <?php endif ?>

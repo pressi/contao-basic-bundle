@@ -1,4 +1,4 @@
-<?
+<?php
 /*******************************************************************
  * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
@@ -12,7 +12,7 @@ namespace IIDO\BasicBundle\Maintenance;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
-use IIDO\BasicBundle\Helper\TwigHelper;
+//use IIDO\BasicBundle\Helper\TwigHelper;
 
 
 /**
@@ -20,6 +20,7 @@ use IIDO\BasicBundle\Helper\TwigHelper;
  */
 class WebsiteConfigMaintenance extends \Backend implements \executable
 {
+
 
     /**
      * Return true if the module is active
