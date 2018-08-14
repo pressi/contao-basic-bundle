@@ -971,11 +971,11 @@ class DcaHelper extends \Frontend
 
         $defaultEval = array
         (
-            'mandatory'         => true,
             'rgxp'              => 'url',
             'decodeEntities'    => true,
             'maxlength'         => 255,
-            'tl_class'          => ($replaceClasses ? $classes : 'w50' . (strlen($classes) ? ' ' . $classes : ''))
+            'dcaPicker'         => true,
+            'tl_class'          => ($replaceClasses ? $classes : 'w50 wizard' . (strlen($classes) ? ' ' . $classes : ''))
         );
 
         if( count($eval) )
@@ -991,6 +991,13 @@ class DcaHelper extends \Frontend
             'eval'                  => $defaultEval,
             'sql'                   => "varchar(" . ($defaultEval['maxlength']?:255) . ") NOT NULL default ''"
         );
+    }
+
+
+
+    public static function addLinkField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
+    {
+        self::addUrlField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
     }
 
 
