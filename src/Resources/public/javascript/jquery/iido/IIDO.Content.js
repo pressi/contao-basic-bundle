@@ -20,6 +20,7 @@ IIDO.Content = IIDO.Content || {};
         this.initCountdown();
         this.initAnimateBackgrounds();
         this.initTagline();
+        this.initHoverImage();
     };
 
 
@@ -445,6 +446,33 @@ IIDO.Content = IIDO.Content || {};
         $tagline.style.transform = $tagline.style.WebkitTransform = '';
         $tagline.style.opacity = '';
     };
+
+
+
+    content.initHoverImage = function()
+    {
+        var images = document.querySelectorAll("img.hover-image");
+
+        if( images.length )
+        {
+            for( var i=0; i<images.length; i++)
+            {
+                var image = images[ i ];
+
+                image.setAttribute("data-default-image", image.getAttribute("src"));
+
+                image.addEventListener("mouseenter", function()
+                {
+                    this.setAttribute("src", this.getAttribute("data-hover-image"));
+                });
+
+                image.addEventListener("mouseleave", function()
+                {
+                    this.setAttribute("src", this.getAttribute("data-default-image"));
+                });
+            }
+        }
+    }
 
 })(window, jQuery, IIDO.Content);
 

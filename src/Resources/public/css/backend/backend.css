@@ -402,15 +402,58 @@ body.popup #main .tl_formbody_submit {
 
     width: calc(50% - 16px);
     height: 5px;
-}span.grey,
- span.gray {
+}
+
+span.grey,
+span.gray {
      color: #999;
      padding-left: 3px;
- }
+}
 
 .tl_checkbox_wizard .sortable span.gray,
 .tl_checkbox_wizard .sortable span.grey {
     display: inline;
+}
+
+.list_view > .iido-message {
+    margin: 0 0 20px;
+}
+
+.iido-message-wrapper {
+    padding: 5px 18px 15px;
+}
+
+input.tl_text.has-addon {
+    width: 85%;
+
+    -webkit-border-radius : 2px 0 0 2px;
+    -moz-border-radius    : 2px 0 0 2px;
+    border-radius         : 2px 0 0 2px;
+}
+input.tl_text.has-addon + .addon {
+    display: inline-block;
+
+    width: 15%; height: 30px;
+
+    color: #333;
+    font-size: 18px;
+    text-align: center;
+    line-height: 28px;
+
+    border: 1px solid #aaa;
+    border-left: none;
+
+    background: #ececec;
+
+    vertical-align: middle;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+
+    -webkit-border-radius : 0 2px 2px 0;
+    -moz-border-radius    : 0 2px 2px 0;
+    border-radius         : 0 2px 2px 0;
 }
 
 #sub_iidoBasic_weatherIconsSet {

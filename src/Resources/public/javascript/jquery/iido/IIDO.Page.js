@@ -113,7 +113,7 @@ IIDO.Page = IIDO.Page || {};
 
         this.initHeaderLogin();
 
-        if( $header.find(".header-top-bar") )
+        if( $header.find(".header-top-bar").length )
         {
             $headOptions.headerTopBar        = $header.find(".header-top-bar");
             $headOptions.headerBar           = $header.find(".header-bar-inside");
@@ -2228,6 +2228,8 @@ IIDO.Page = IIDO.Page || {};
 
         setTimeout( function() { $searchForm.find("input.text").focus(); }, 500 );
 
+        document.body.classList.add("open-fullscreen-search");
+
         $("html").addClass("noscroll");
     };
 
@@ -2237,6 +2239,8 @@ IIDO.Page = IIDO.Page || {};
     {
         IIDO.Base.eventPreventDefault(event);
         $searchForm.removeClass("is-active");
+
+        document.body.classList.remove("open-fullscreen-search");
 
         $("html").removeClass("noscroll");
     };
