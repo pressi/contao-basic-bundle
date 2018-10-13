@@ -12,6 +12,7 @@
  * Fields
  */
 
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['link_title']    = 'text';
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['description']   = 'textarea';
 
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['imageText']     = 'text';

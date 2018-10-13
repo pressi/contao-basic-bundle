@@ -120,6 +120,11 @@
                 <target>Text Ausrichtung</target>
             </trans-unit>
 
+            <trans-unit id="MSC.aw_link_title">
+                <source>Link title</source>
+                <target>Link-Titel</target>
+            </trans-unit>
+
             <trans-unit id="MSC.aw_hoverTitle">
                 <source>Hover: Title</source>
                 <target>Hover: Titel</target>

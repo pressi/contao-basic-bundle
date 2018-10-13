@@ -50,6 +50,11 @@ $arrFields =
         $fieldPrefix . 'headlineStyles'
     ],
 
+    'rte_legend:hide' =>
+        [
+            $fieldPrefix . 'linkClasses'
+        ],
+
     'form_legend:hide' =>
     [
         $fieldPrefix . 'formFieldStyle'
@@ -275,6 +280,37 @@ IIDO\BasicBundle\Helper\DcaHelper::addNewField( $fieldPrefix . 'headlineStyles',
                 'cols'      => 3
             ),
         )
+    )
+));
+
+
+
+// RTE
+IIDO\BasicBundle\Helper\DcaHelper::addNewField( $fieldPrefix . 'linkClasses', $strFileName, "multiColumnWizard", "", array
+(
+    'columnFields' => array
+    (
+        'title'      => array
+        (
+            'label'     => &$GLOBALS['TL_LANG'][ $strFileName ]['fields']['linkClasses']['title'],
+            'inputType' => 'text',
+//            'save_callback' => array(array($tableClass, 'checkHeadlineStylesNameIfUnique')),
+            'eval'      => array
+            (
+                'style'         => 'width:200px;',
+                'decodeEntities'    => false
+            )
+        ),
+
+        'value'  => array
+        (
+            'label'     => &$GLOBALS['TL_LANG'][ $strFileName ]['fields']['linkClasses']['value'],
+            'inputType' => 'text',
+            'eval'      => array
+            (
+                'style'     => 'width:200px;'
+            )
+        ),
     )
 ));
 

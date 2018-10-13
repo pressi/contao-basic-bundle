@@ -100,6 +100,11 @@
                 <target>Velocity</target>
             </trans-unit>
 
+            <trans-unit id="tl_iido_basic_website_config.scriptNav.0">
+                <source>Navigation (One Page)</source>
+                <target>Navigation (One Page)</target>
+            </trans-unit>
+
 
 
             <trans-unit id="tl_iido_basic_website_config.enableSupportForm.0">

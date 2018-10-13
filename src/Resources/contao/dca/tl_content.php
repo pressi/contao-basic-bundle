@@ -1130,3 +1130,9 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('logoutPage', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('registerPage', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('lostPasswordPage', $strFileName);
+
+
+
+// FLIP
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField('frontImageSC', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField('backImageSRC', $strTable);

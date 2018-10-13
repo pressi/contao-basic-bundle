@@ -149,6 +149,13 @@
 
 
 
+            <trans-unit id="tl_iido_basic_website_styles.linkClasses.0">
+                <source>link classes</source>
+                <target>Link-Klassen</target>
+            </trans-unit>
+
+
+
             <trans-unit id="tl_iido_basic_website_styles.formFieldStyle.0">
                 <source>Form field style</source>
                 <target>Formularfeld aussehen (Stil)</target>
@@ -186,6 +193,11 @@
             <trans-unit id="tl_iido_basic_website_styles.form_legend">
                 <source>form-settings</source>
                 <target>Formular-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_basic_website_styles.rte_legend">
+                <source>ritch text editor (RTE - tinyMCE)-settings</source>
+                <target>Ritch Text Editor (RTE - tinyMCE)-Einstellungen</target>
             </trans-unit>
 
 
@@ -286,6 +298,17 @@
             <trans-unit id="tl_iido_basic_website_styles.fields.headlineStyles.floating">
                 <source>floating</source>
                 <target>Ausrichtung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_iido_basic_website_styles.fields.linkClasses.title">
+                <source>title</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.fields.linkClasses.value">
+                <source>classes</source>
+                <target>Klassen</target>
             </trans-unit>
 
 
