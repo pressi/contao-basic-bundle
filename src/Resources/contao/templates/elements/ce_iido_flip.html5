@@ -1,0 +1,29 @@
+<? $this->extend("block_searchable"); ?>
+
+<? $this->block('content');
+
+$arrImageSize = getimagesize(IIDO\BasicBundle\Helper\BasicHelper::getRootDir() . '/' . \IIDO\BasicBundle\Helper\ImageHelper::getImagePath($this->frontImageSC));
+
+$ratio      = ($arrImageSize[0] / $arrImageSize[1]);
+$imgHeight  = (840 / $ratio);
+
+?>
+
+    <div class="flip-container vertical only-toggler" id="flipContainer_<?= $this->id ?>" style="height:<?= $imgHeight ?>px;">
+        <div class="flip-front front"><?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag($this->frontImageSC) ?></div>
+        <div class="flip-back back"><?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag($this->backImageSRC) ?></div>
+    </div>
+
+    <div class="toggle-flip" onclick="document.getElementById('flipContainer_<?= $this->id ?>').classList.toggle('flip');">Flip</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function()
+    {
+        var flipCont    = document.getElementById( 'flipContainer_<?= $this->id ?>' ),
+            flipImage   = flipCont.querySelector("img");
+
+        flipCont.style.height = flipImage.offsetHeight + 'px';
+    });
+</script>
+
+<? $this->endblock(); ?>
