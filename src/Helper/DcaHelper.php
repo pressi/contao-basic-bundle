@@ -78,6 +78,156 @@ class DcaHelper extends \Frontend
 
 
 
+    public static function addSorting( $strTable, $mode, array $fields = array(), $headerFields = array(), $panelLayout = '', $childRecordCallback = array(), $childRecordClass = '' )
+    {
+        $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['mode'] = $mode;
+
+        if( count($fields) )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['fields'] = $fields;
+        }
+
+        if( count($headerFields) )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['headerFields'] = $headerFields;
+        }
+
+        if( count($headerFields) )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['headerFields'] = $headerFields;
+        }
+
+        if( $panelLayout )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['panelLayout'] = $panelLayout;
+        }
+
+        if( count($childRecordCallback) )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['child_record_callback'] = $childRecordCallback;
+        }
+
+        if( $childRecordClass )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['sorting']['child_record_class'] = $childRecordClass;
+        }
+    }
+
+
+
+    public static function addGlobalOperations( $strTable, $addAll = true, $arrOperations = array())
+    {
+        if( $addAll )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['global_operations']['all'] = array
+            (
+                'label'               => &$GLOBALS['TL_LANG']['MSC']['all'],
+                'href'                => 'act=select',
+                'class'               => 'header_edit_all',
+                'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
+            );
+        }
+
+        if( count($arrOperations) )
+        {
+            array_insert($GLOBALS['TL_DCA'][ $strTable ]['list']['global_operations'], 0, $arrOperations);
+        }
+    }
+
+
+
+    public static function addOperations( $strTable, $edit = true, $editHeader = false, $copy = true, $cut = true, $delete = true, $toggle = true, $feature = false, $show = true )
+    {
+        if( $edit )
+        {
+            if( $editHeader )
+            {
+                $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['edit'] = array
+                (
+                    'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['edit'],
+                    'href'                => 'table=tl_content',
+                    'icon'                => 'edit.svg'
+                );
+            }
+            else
+            {
+                $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['edit'] = array
+                (
+                    'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['edit'],
+                    'href'                => 'act=edit',
+                    'icon'                => 'edit.svg'
+                );
+            }
+
+        }
+
+        if( $editHeader )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['editheader'] = array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['editmeta'],
+                'href'                => 'act=edit',
+                'icon'                => 'header.svg'
+            );
+        }
+
+        if( $copy )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['copy'] = array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['copy'],
+                'href'                => 'act=paste&amp;mode=copy',
+                'icon'                => 'copy.svg'
+            );
+        }
+
+        if( $cut )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['cut'] = array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable]['cut'],
+                'href'                => 'act=paste&amp;mode=cut',
+                'icon'                => 'cut.svg'
+            );
+        }
+
+        if( $delete )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['delete'] = array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['delete'],
+                'href'                => 'act=delete',
+                'icon'                => 'delete.svg',
+                'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
+            );
+        }
+
+        if( $toggle )
+        {
+            $tableClass = BundleConfig::getTableClass( $strTable );
+
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['toggle'] = array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['toggle'],
+                'icon'                => 'visible.svg',
+                'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
+                'button_callback'     => array($tableClass, 'toggleIcon')
+            );
+        }
+
+        if( $show )
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['show'] = array
+            (
+                'label'               => &$GLOBALS['TL_LANG'][ $strTable]['show'],
+                'href'                => 'act=show',
+                'icon'                => 'show.svg'
+            );
+        }
+    }
+
+
+
     public static function addField($fieldName, $fieldType, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $defaultValue = '', $defaultConfig = array())
     {
         $arrFieldType   = explode("__", $fieldType);
@@ -276,7 +426,22 @@ class DcaHelper extends \Frontend
 
     public static function replacePaletteFields($strName, $oldFields, $newFields, $strTable)
     {
-        $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ] = preg_replace('/' . $oldFields . '/', $newFields, $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ]);
+        if( $strName === "ALL" )
+        {
+            foreach($GLOBALS['TL_DCA'][ $strTable ]['palettes'] as $strPalette => $strFields)
+            {
+                if( $strPalette === "__selector__" )
+                {
+                    continue;
+                }
+
+                $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ] = preg_replace('/' . $oldFields . '/', $newFields, $strFields);
+            }
+        }
+        else
+        {
+            $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ] = preg_replace('/' . $oldFields . '/', $newFields, $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ]);
+        }
     }
 
 
@@ -709,6 +874,8 @@ class DcaHelper extends \Frontend
             $defaultEval = array_merge($GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval'], $defaultEval);
         }
 
+        unset( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label'] );
+
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']            = self::renderFieldLabel($strTable, $langTable, $fieldName);
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']             = $defaultEval;
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['load_callback']    = array();
@@ -998,6 +1165,39 @@ class DcaHelper extends \Frontend
     public static function addLinkField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
     {
         self::addUrlField($fieldName, $strTable, $eval, $classes, $replaceClasses, $langTable);
+    }
+
+
+
+    public static function addBlobField( $fieldName, $strTable, $langTable = '', $eval = array(), $classes = '', $replaceClasses = false, array $defaultConfig = array(), $noSQL = false )
+    {
+        $arrConfig = array
+        (
+            'label' => self::renderFieldLabel($strTable, $langTable, $fieldName),
+            'sql'   => "blob NULL"
+        );
+
+        if( is_array($eval) && count($eval) )
+        {
+            $arrConfig['eval'] = $eval;
+        }
+
+        if( $classes )
+        {
+            $arrConfig['eval']['tl_class'] = $classes;
+        }
+
+        if( is_array($defaultConfig) && count($defaultConfig) )
+        {
+            $arrConfig = array_merge($arrConfig, $defaultConfig);
+        }
+
+        if( $noSQL )
+        {
+            unset( $arrConfig['sql'] );
+        }
+
+        $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = $arrConfig;
     }
 
 
@@ -1344,5 +1544,33 @@ class DcaHelper extends \Frontend
                 }
             }
         }
+    }
+
+
+
+    public static function getTableElement( $strTable )
+    {
+        if( \Input::get("act") === "edit" && \Input::get("table") === $strTable )
+        {
+            $strClass = \Model::getClassFromTable( $strTable );
+
+            return $strClass::findByPk( \Input::get("id") );
+        }
+
+        return false;
+    }
+
+
+
+    public static function addAddonTextField( $strName, $strTable, $strAddon, $eval = array() )
+    {
+        if( !$eval )
+        {
+            $eval = array();
+        }
+
+        $eval['addon'] = $strAddon;
+
+        self::addTextField($strName, $strTable, $eval);
     }
 }

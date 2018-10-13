@@ -197,10 +197,23 @@ class ImageHelper extends \Backend
 
 
 
-    public static function getImageTag( $imageSRC, $arrSize = array(), $addDefaultAttr = false )
+    public static function getImageTag( $imageSRC, $arrSize = array(), $addDefaultAttr = false, $defaultImageObject = '' )
     {
+        $assetImage = '';
+
+        if( preg_match('/assets\/images\//', $imageSRC) )
+        {
+            $assetImage = $imageSRC;
+
+            if( $defaultImageObject )
+            {
+                $imageSRC = $defaultImageObject;
+            }
+        }
+
         if( !$imageSRC instanceof \FilesModel )
         {
+            $imageSRC = str_replace('%20', ' ', $imageSRC);
             $objImage = \FilesModel::findByPk( $imageSRC );
         }
         else
@@ -215,10 +228,10 @@ class ImageHelper extends \Backend
 
             if( $addDefaultAttr )
             {
-                $attributes = 'data-default="' . $objImage->path . '"';
+                $attributes = 'data-default="' . ($assetImage?:$objImage->path) . '"';
             }
 
-            return \Image::getHtml( self::getImagePath( $imageSRC, $arrSize ), $arrMeta['alt'], $attributes );
+            return \Image::getHtml( $assetImage?:self::getImagePath( $objImage, $arrSize ), $arrMeta['alt'], $attributes );
         }
 
         return false;
@@ -228,13 +241,19 @@ class ImageHelper extends \Backend
 
     public static function getImagePath( $imageSRC, $arrSize = array() )
     {
-        if( !$imageSRC instanceof \FilesModel )
+        if( $imageSRC instanceof \FilesModel )
         {
-            $objImage = \FilesModel::findByPk( $imageSRC );
+            $objImage = $imageSRC;
         }
         else
         {
-            $objImage = $imageSRC;
+            $objImage = \FilesModel::findByPk( $imageSRC );
+        }
+
+        if( !$objImage )
+        {
+            $imageSRC = preg_replace('/%20/', ' ', $imageSRC);
+            $objImage = \FilesModel::findByPath( $imageSRC );
         }
 
         if( $objImage )

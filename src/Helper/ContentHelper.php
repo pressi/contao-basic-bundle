@@ -15,7 +15,9 @@ class ContentHelper
 
     public static function generateImageHoverTags( $strContent, $objRow )
     {
-        if( !preg_match('/image-hover-container/', $strContent) )
+        $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
+
+        if( !preg_match('/image-hover-container/', $strContent) && !preg_match('/no-plus/', $cssID[1]) )
         {
             $hoverTags = '<div class="image-hover-container"><div class="image-hover-inside"></div></div>';
 
@@ -34,7 +36,7 @@ class ContentHelper
 
 
 
-    public static function renderText( $strText, $renderLines = false )
+    public static function renderText( $strText, $renderLines = false, $addWrapper = false )
     {
         $strText = preg_replace(array('/&#40;/', '/&#41;/'), array('(', ')'), $strText);
 
@@ -64,6 +66,10 @@ class ContentHelper
 
             $arrText = explode($delimiter, $strText);
             $strText = '<span class="text-line">' . implode('</span><br><span class="text-line">', $arrText) . '</span>';
+        }
+        elseif( $addWrapper )
+        {
+            $strText = '<span class="text-line">' . $strText . '</span>';
         }
 
         return $strText;

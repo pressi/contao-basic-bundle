@@ -215,10 +215,13 @@ class RSCEHelper extends \Frontend
      * @param string|array $label
      * @param array        $arrOptions
      * @param bool         $includeBlank
+     * @param array        $eval
+     * @param string       $default
+     * @param string       $reference
      *
      * @return array
      */
-    public static function getSelectFieldConfig( $label, $arrOptions, $includeBlank = false, array $eval = array(), $default = '' )
+    public static function getSelectFieldConfig( $label, $arrOptions, $includeBlank = false, array $eval = array(), $default = '', $reference = '' )
     {
         $arrConfig = array
         (
@@ -237,6 +240,11 @@ class RSCEHelper extends \Frontend
         if( strlen($default) )
         {
             $arrConfig['default'] = $default;
+        }
+
+        if( $reference )
+        {
+            $arrConfig['reference'] = $reference;
         }
 
         return $arrConfig;
