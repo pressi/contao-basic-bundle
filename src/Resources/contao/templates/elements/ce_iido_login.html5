@@ -1,3 +1,9 @@
+<?php
+if( FE_USER_LOGGED_IN )
+{
+    $this->class = trim($this->class . ' logout' );
+}
+?>
 <div class="<?= $this->class ?> header-login">
     <?php if( FE_USER_LOGGED_IN ): ?>
         <a href="<?= $this->urls['logout'] ?>" class="logout"><?= $this->labels['logout'] ?></a>

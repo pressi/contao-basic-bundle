@@ -4,12 +4,15 @@ namespace Contao;
 
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
+use IIDO\BasicBundle\Helper\BackendHelper;
 
 
 if ($GLOBALS['TL_CONFIG']['useRTE']):
 
     $themeColors = ColorHelper::getThemeColors();
     $themeColors = array_merge($themeColors, ColorHelper::getCurrentWebsiteColors());
+
+    $strLinkClasses = BackendHelper::getLinkClasses();
 
 
     if( version_compare(BasicHelper::getContaoVersion(), '4.5', '<') ):
@@ -41,6 +44,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                     link_class_list:
                         [
                             {title: '--', value: ''},
+                            <?= $strLinkClasses ?>
                             {title: 'Button Primary', value: 'btn btn-primary'},
                             {title: 'Button Secondary', value: 'btn btn-secondary'},
                             {title: 'Button Tertiary', value: 'btn btn-tertiary'},
@@ -131,6 +135,7 @@ setTimeout(function()
     link_class_list:
     [
         {title: '--', value: ''},
+        <?= $strLinkClasses ?>
         {title: 'Button Primary', value: 'btn btn-primary'},
         {title: 'Button Secondary', value: 'btn btn-secondary'},
         {title: 'Button Tertiary', value: 'btn btn-tertiary'},

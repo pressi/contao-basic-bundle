@@ -65,8 +65,17 @@ if( $direction === "horizontal" )
 
           if( $objArticle )
           {
+              $url = '';
+
+              $objArticlePage = \PageModel::findByPk( $objArticle->pid );
+
+              if( $objArticlePage && $objArticlePage->id !== $objPage->id )
+              {
+                  $url = $objArticlePage->getFrontendUrl();
+              }
+
               $item['target']   = $item['target'] . ' data-article="' . $objArticle->alias . '"';
-              $item['href']     = '#' . $objArticle->alias;
+              $item['href']     = $url . '#' . $objArticle->alias;
           }
       }
 

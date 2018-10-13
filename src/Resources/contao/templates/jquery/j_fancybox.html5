@@ -74,6 +74,22 @@ $(function() {
 //					type		: 'outside' //$.fancybox.defaults.helpers.title.type
 //				}
 //			},
+            caption: function( instance, item )
+            {
+                var caption = $(this).data('caption') || '';
+
+                if ( !caption.length )
+                {
+                    caption = $(this).attr("title");
+                }
+
+                if( caption.indexOf('.jpg') !== -1 )
+                {
+                    caption = '';
+                }
+
+                return caption;
+            },
 
 			afterLoad : function()
 			{
