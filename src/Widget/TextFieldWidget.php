@@ -234,8 +234,19 @@ class TextFieldWidget extends \TextField
 
             if( $this->isMetaField )
             {
-                $strNewName = $this->metaPrefix . '[' . $this->metaLang . '][' . $this->metaField . ']';
+                $strNewName = $this->metaPrefix . '[' . $this->metaLang . '][' . $this->metaField . '][]';
                 $strField   = preg_replace('/name="' . $this->strField . '\[\]"/', 'name="' . $strNewName . '"', $strField);
+
+                $strField = preg_replace('/<input([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})id="ctrl_' . $this->strField . '_0"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})maxlength="([0-9]{1,})"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})>/', '<input$1id="ctrl_' . $this->strField . '_0"$2maxlength="6"$4>', $strField);
+                $strField = preg_replace('/<input([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})id="ctrl_' . $this->strField . '_1"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})maxlength="([0-9]{1,})"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})>/', '<input$1id="ctrl_' . $this->strField . '_1"$2maxlength="3"$4>', $strField);
+            }
+        }
+        else
+        {
+            if( $this->addon )
+            {
+                $strField = preg_replace('/class="tl_text/', 'class="tl_text has-addon', $strField);
+                $strField = $strField . '<div class="addon">' . $this->addon . '</div>';
             }
         }
 
