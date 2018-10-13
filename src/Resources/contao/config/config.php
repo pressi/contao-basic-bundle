@@ -106,7 +106,7 @@ $GLOBALS['TL_CTE']['module']['iido_login']                  = $ns . '\ContentEle
 $GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperStart']     = $ns . '\ContentElement\WrapperStartElement';
 $GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperSeparator'] = $ns . '\ContentElement\WrapperSeparatorElement';
 $GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperStop']      = $ns . '\ContentElement\WrapperStopElement';
-
+$GLOBALS['TL_CTE']['module']['iido_flip']                   = $ns . '\ContentElement\FlipElement';
 
 
 /**
