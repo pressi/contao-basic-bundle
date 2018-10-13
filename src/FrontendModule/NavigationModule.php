@@ -363,7 +363,7 @@ class NavigationModule extends \ModuleNavigation
 
                 $objTemplate->level = 'level_' . $level;
 
-                if( $objParentPage->id == $objPage->id && !$objPage->enableFullpage )
+                if( $objParentPage->id == $objPage->id && !$objPage->enableFullpage && !preg_match('/page-is-onepage/', $objPage->cssClass) )
                 {
                     $objTemplate->level = $objTemplate->level . ' article-menu';
                 }
@@ -534,7 +534,7 @@ class NavigationModule extends \ModuleNavigation
             }
         }
 
-        if( $objPage->enableFullpage || ($this->navigationTpl === "nav_fullpage" && $this->rootPage) ) // && count($this->getPageSiblings($objPage, true)) === 0
+        if( $objPage->enableFullpage || preg_match('/page-is-onepage/', $objPage->cssClass)) || ($this->navigationTpl === "nav_fullpage" && $this->rootPage) ) // && count($this->getPageSiblings($objPage, true)) === 0
         {
             $searchPageId = $objPage->id;
 
@@ -607,7 +607,7 @@ class NavigationModule extends \ModuleNavigation
             }
         }
 
-        if( $objParentPage->enableFullpage )
+        if( $objParentPage->enableFullpage || preg_match('/page-is-onepage/', $objParentPage->cssClass) )
         {
             $objParentPage->submenuNoPages  = true;
             $objParentPage->submenuSRC      = "articles";
@@ -632,7 +632,7 @@ class NavigationModule extends \ModuleNavigation
             $objTemplate->level .=' article-submenu';
         }
 
-        if( $objParentPage->submenuSRC == "articles" && !preg_match('/article-submenu/', $objTemplate->level) && $objPage->id == $objParentPage->id && !$objPage->enableFullpage )
+        if( $objParentPage->submenuSRC == "articles" && !preg_match('/article-submenu/', $objTemplate->level) && $objPage->id == $objParentPage->id && !$objPage->enableFullpage && !preg_match('/page-is-onepage/', $objPage->cssClass) )
         {
             if( !preg_match('/load-articles/', $this->cssID[1]) )
             {
@@ -964,7 +964,7 @@ class NavigationModule extends \ModuleNavigation
             $href           = $objParentPage->getFrontendUrl('/' . $langPartName . '/' . $objItem->alias);
             $strClass       = deserialize($objItem->cssID, true)[1] . ' article-link';
 
-            if( $objPage->enableFullpage )
+            if( $objPage->enableFullpage || preg_match('/page-is-onepage/', $objPage->cssClass) )
             {
                 $href = '#' . $objItem->alias;
             }
@@ -1067,7 +1067,7 @@ class NavigationModule extends \ModuleNavigation
             $arrItem['target'] = ' target="_blank"';
         }
 
-        if( $objPage->enableFullpage )
+        if( $objPage->enableFullpage || preg_match('/page-is-onepage/', $objPage->cssClass) )
         {
             $arrItem['listAttributes'] = ' data-menuanchor="' . $objItem->alias . '"';
         }
