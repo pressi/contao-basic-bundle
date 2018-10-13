@@ -21,7 +21,6 @@ use IIDO\BasicBundle\Helper\BasicHelper;
 class WebsiteConfigMaintenance extends \Backend implements \executable
 {
 
-
     /**
      * Return true if the module is active
      *
