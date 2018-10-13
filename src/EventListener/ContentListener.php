@@ -246,6 +246,14 @@ class ContentListener extends DefaultListener
                 $strBuffer = $this->renderGallery( $strBuffer, $objRow, $objElement );
                 break;
 
+            case "list":
+                $strBuffer = $this->renderList( $strBuffer, $objRow, $objElement );
+                break;
+
+            case "table":
+                $strBuffer = $this->renderTable( $strBuffer, $objRow, $objElement );
+                break;
+
             case "slick-slider":
                 $strBuffer = $this->renderSlickSliderImages( $strBuffer, $objRow, $objElement );
         }
@@ -487,6 +495,8 @@ class ContentListener extends DefaultListener
         {
             $strBuffer = $this->addAttributesToContentElement( $strBuffer, $objRow, $arrAttributes );
         }
+
+        $strBuffer = str_replace(['[R]'], ['<sup>&reg;</sup>'], $strBuffer);
 
         return $strBuffer;
     }
@@ -1005,6 +1015,81 @@ class ContentListener extends DefaultListener
 //        }
 
         return FALSE;
+    }
+
+
+
+    public function renderList( $strBuffer, $objRow, $objElement )
+    {
+        $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
+
+        if( preg_match('/row-list/', $cssID[1]) )
+        {
+            preg_match_all('/<li([A-Za-z0-9\s\-="]{0,})>([A-Za-z0-9\s\-\|,;.:_;\'\\\[\]\(\)°öäüÖÄÜß#\{\}!?&%€$\"\/]{0,})<\/li>/', $strBuffer, $arrList);
+
+            if( count($arrList[0]) )
+            {
+                foreach($arrList[0] as $key => $list)
+                {
+                    $listItem   = $arrList[0][ $key ];
+                    $listText   = $strText = trim($arrList[2][ $key ]);
+
+                    if( preg_match('/^W2\|/', $listText) )
+                    {
+                        $strText = preg_replace('/^W2\|/', '', $strText);
+
+                        if( preg_match('/class="/', $listItem) )
+                        {
+                            $newListItem = preg_replace('/class="/', 'class="w2 ', $listItem);
+                        }
+                        else
+                        {
+                            $newListItem = preg_replace('/<li/', '<li class="w2"', $listItem);
+                        }
+
+                        $strBuffer = preg_replace('/' . preg_quote($listItem, '/') . '/', $newListItem, $strBuffer);
+                    }
+
+                    $strText    = ContentHelper::renderText($strText, true);
+                    $strBuffer  = preg_replace('/' . preg_quote($listText, '/') . '/', $strText, $strBuffer);
+                }
+            }
+        }
+
+        return $strBuffer;
+    }
+
+
+
+    public function renderTable( $strBuffer, $objRow, $objElement )
+    {
+        $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
+
+        if( preg_match('/replace-row-option/', $cssID[1]) )
+        {
+            preg_match_all('/<td([A-Za-z0-9\s\-,;.:_\(\)\|="]{0,})>([A-Za-z0-9\s\-,;.:_\(\)\öäüÖÄÜß!?$%&+#"\'\/\\@€|]{0,})<\/td>/', $strBuffer, $arrCols);
+
+            if( count($arrCols[0]) )
+            {
+//                echo "<pre>"; print_r( $arrCols ); exit;
+                foreach($arrCols[2] as $key => $col)
+                {
+                    $colTag  = $arrCols[0][ $key ];
+                    $colAttr = $arrCols[1][ $key ];
+                    $colText = ContentHelper::renderText( $col );
+                    $arrText = explode("__", $colText);
+
+                    if( count($arrText) > 1 )
+                    {
+                        $colText = '<span>' . implode('</span><span>', $arrText) . '</span>';
+                    }
+//echo "<pre>"; print_r( $colText ); echo "<br>"; print_r( $key ); echo "<br>"; print_r( $colAttr); echo "<br>"; print_r( $colTag); exit;
+                    $strBuffer = preg_replace('/' . preg_quote($colTag, '/') . '/', '<td' . $colAttr . '>' . $colText . '</td>', $strBuffer);
+                }
+            }
+        }
+
+        return $strBuffer;
     }
 
 }

@@ -226,6 +226,10 @@ class InsertTagsListener extends DefaultListener
 //                        }
 //                        break;
 
+                    case "link_void":
+                        $return = 'javascript:void(0);';
+                        break;
+
                     case "link":
                     case "link_open":
                     case "link_begin":
