@@ -738,7 +738,7 @@ class ContentListener extends DefaultListener
         {
             $renderLines = true;
 
-            if( preg_match('/no-text-lines/', $cssID[1]) )
+            if( preg_match('/no-text-lines/', $cssID[1]) || preg_match('/no-lines/', $cssID[1]) )
             {
                 $renderLines = false;
             }
