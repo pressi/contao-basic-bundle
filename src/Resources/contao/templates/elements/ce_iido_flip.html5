@@ -17,12 +17,15 @@ $imgHeight  = (840 / $ratio);
     <div class="toggle-flip" onclick="toggleFlipContainer_<?= $this->id ?>();">Flip</div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function()
+    window.addEventListener("load", function()
     {
         var flipCont    = document.getElementById( 'flipContainer_<?= $this->id ?>' ),
             flipImage   = flipCont.querySelector("img");
 
-        flipCont.style.height = flipImage.offsetHeight + 'px';
+        if( flipImage.offsetHeight > 0 )
+        {
+            flipCont.style.height = flipImage.offsetHeight + 'px';
+        }
     });
 
     var toggleFlipContainer_<?= $this->id ?> = function()
