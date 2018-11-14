@@ -1255,6 +1255,28 @@
 
 
 
+			<trans-unit id="tl_content.options.gt_event.event">
+				<source>event</source>
+				<target>event</target>
+			</trans-unit>
+			<trans-unit id="tl_content.options.gt_event.pageview">
+				<source>pageview</source>
+				<target>pageview</target>
+			</trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.fbq_mode.track">
+                <source>track</source>
+                <target>track</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.fbq_mode.trackCustom">
+                <source>trackCustom</source>
+                <target>trackCustom</target>
+            </trans-unit>
+
+
+
 <!-- ### REFERENCE ########################################################################################################## -->
 
 			<trans-unit id="tl_content.reference.headlineImagePosition.top">

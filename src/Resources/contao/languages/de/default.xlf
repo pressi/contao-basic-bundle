@@ -144,8 +144,8 @@
             </trans-unit>
 
             <trans-unit id="MSC.aw_color">
-                <source>Farbe</source>
-                <target>Farbe</target>
+                <source>Farbe / Transparenz</source>
+                <target>Farbe / Transparenz</target>
             </trans-unit>
 
 
