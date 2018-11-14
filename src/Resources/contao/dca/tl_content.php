@@ -108,6 +108,9 @@ if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_c
     \IIDO\BasicBundle\Helper\DcaHelper::copyPaletteFromTable('newscategories', 'tl_module', 'newscategories', $strFileName);
 }
 
+//$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_flip']               = $defaultPaletteStart . '{config_legend},frontImageSC,backImageSRC;' . $defaultPaletteEnd;
+//$GLOBALS['TL_DCA']['tl_content']['palettes']['iido_tracking']           = $defaultPaletteStart . '{tfacebook_legend},enableFacebookPixelTracking;{tgoogle_legend},enableGoogleTracking;' . $defaultPaletteEnd;
+
 //$defaultPaletteStart    = '{type_legend},type,headline,subHeadline;';
 //$defaultPaletteEnd      = '{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space;{invisible_legend:hide},invisible,start,stop;';
 
@@ -218,6 +221,8 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addSnow", "snowDepth,snowUnit,snowSubline", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addTopHeadline", "topHeadline", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("enableFacebookPixelTracking", "fbq_mode,fbq_action,fbq_object", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("enableGoogleTracking", "gt_event,gt_category,gt_action,gt_label,gt_pageTitle,gt_page,gt_location", $strFileName);
 
 
 
@@ -1134,5 +1139,25 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 
 
 // FLIP
-\IIDO\BasicBundle\Helper\DcaHelper::addImageField('frontImageSC', $strTable);
-\IIDO\BasicBundle\Helper\DcaHelper::addImageField('backImageSRC', $strTable);
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField('frontImageSC', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField('backImageSRC', $strFileName);
+
+
+
+// TRACKING
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('enableFacebookPixelTracking', $strFileName, array(), '', false, true);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('fbq_mode', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('fbq_action', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('fbq_object', $strFileName);
+
+
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('enableGoogleTracking', $strFileName, array(), '', false, true);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('gt_event', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_category', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_action', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_label', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_pageTitle', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_page', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_location', $strFileName);
