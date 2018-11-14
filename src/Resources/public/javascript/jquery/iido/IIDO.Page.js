@@ -664,9 +664,18 @@ IIDO.Page = IIDO.Page || {};
             {
                 var article = $(articleTag);
 
+                if( article.css("display") !== "none")
+                {
+                    arrAnchors.push( article.attr("data-anchor") );
+                }
+                else
+                {
+                    article.remove();
+                }
+
                 /*/ if( !article.hasClass("hidden-area") )
                 // {*/
-                    arrAnchors.push( article.attr("data-anchor") );
+                // arrAnchors.push( article.attr("data-anchor") );
                 /*/ }*/
             });
 
@@ -959,11 +968,16 @@ IIDO.Page = IIDO.Page || {};
 
 
 
-    page.scrollTo = function( event, aTag, aOffset )
+    page.scrollTo = function( event, aTag, aOffset, animated )
     {
         if( event !== undefined && event !== "undefined" && event !== null )
         {
             event.preventDefault();
+        }
+
+        if( animated === undefined || animated === "undefined" || animated === null )
+        {
+            animated = true;
         }
 
         var isString = true;
@@ -1006,10 +1020,17 @@ IIDO.Page = IIDO.Page || {};
         }
         else
         {
-            $.smoothScroll({
+            var config = {
                 offset          : offset,
                 scrollTarget    : target
-            });
+            };
+
+            if( !animated )
+            {
+                config.speed = 0;
+            }
+            
+            $.smoothScroll( config );
         }
 
         /* $(".image-point.open").removeClass("open");*/
@@ -1968,7 +1989,7 @@ IIDO.Page = IIDO.Page || {};
 
             var listContainers = $mobileNav.find('li.submenu'), button, listItem;
 
-            $mobileNav.find("ul.level_1 > li > a,ul.level_2 > li > a").click( function() { if(!this.classList.contains("no-content")) { IIDO.Page.closeMobileNavigation(); } } );
+            $mobileNav.find("ul.level_1 > li > a,ul.level_2 > li > a").click( function() { if(!this.classList.contains("no-content") && !this.classList.contains("link-forward") && !this.classList.contains("link-toggler") ) { IIDO.Page.closeMobileNavigation(); } } );
 
             if( listContainers.length )
             {
