@@ -556,10 +556,12 @@ class ColorHelper
 
             case "brown":
                 $strText = 'Braun';
+                break;
 
             case "gray":
             case "grey":
                 $strText = 'Grau';
+                break;
         }
 
         if( $arrText[1] )
