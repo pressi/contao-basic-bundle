@@ -14,7 +14,7 @@ $imgHeight  = (840 / $ratio);
         <div class="flip-back back"><?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag($this->backImageSRC) ?></div>
     </div>
 
-    <div class="toggle-flip" onclick="document.getElementById('flipContainer_<?= $this->id ?>').classList.toggle('flip');">Flip</div>
+    <div class="toggle-flip" onclick="toggleFlipContainer_<?= $this->id ?>();">Flip</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function()
@@ -24,6 +24,11 @@ $imgHeight  = (840 / $ratio);
 
         flipCont.style.height = flipImage.offsetHeight + 'px';
     });
+
+    var toggleFlipContainer_<?= $this->id ?> = function()
+    {
+        document.getElementById('flipContainer_<?= $this->id ?>').classList.toggle('flip');
+    }
 </script>
 
 <? $this->endblock(); ?>
