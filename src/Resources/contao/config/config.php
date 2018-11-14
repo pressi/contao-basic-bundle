@@ -107,6 +107,7 @@ $GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperStart']     = $ns . '\ContentEle
 $GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperSeparator'] = $ns . '\ContentElement\WrapperSeparatorElement';
 $GLOBALS['TL_CTE']['iido_wrapper']['iido_wrapperStop']      = $ns . '\ContentElement\WrapperStopElement';
 $GLOBALS['TL_CTE']['module']['iido_flip']                   = $ns . '\ContentElement\FlipElement';
+$GLOBALS['TL_CTE']['tracking']['iido_tracking']             = $ns . '\ContentElement\TrackingElement';
 
 
 /**
