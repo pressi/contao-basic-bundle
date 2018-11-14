@@ -36,7 +36,10 @@ class ContentListener extends DefaultListener
         'iido_wrapperStop',
         'iido_wrapperSeparator',
 
-        'rocksolid_slider'
+        'rocksolid_slider',
+
+        'htmlOpen',
+        'htmlClose',
     );
 
 
@@ -729,7 +732,7 @@ class ContentListener extends DefaultListener
         }
 
 //        $strContent = Helper::renderText( $strContent, true);
-        preg_match_all('/<a([A-Za-z0-9\s\-="_,;.:\{\}\(\)\/]{0,})>([A-Za-z0-9\s\-,;\{\}:.!?\(\)]{0,})<\/a>/', $strContent, $arrMatches);
+        preg_match_all('/<a([A-Za-z0-9\s\-="_,;.:\{\}\(\)\/#!?]{0,})>([A-Za-z0-9\s\-,;\{\}:.!?\(\)]{0,})<\/a>/', $strContent, $arrMatches);
 
         if( count($arrMatches[0]) )
         {
