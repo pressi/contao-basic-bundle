@@ -459,11 +459,11 @@ class ContentListener extends DefaultListener
             }
         }
 
-        if( preg_match('/<h([1-6])([A-Za-z0-9\s\-=":;,._]{0,})>/', $strBuffer) )
-        {
+//        if( preg_match('/<h([1-6])([A-Za-z0-9\s\-=":;,._]{0,})>/', $strBuffer) )
+//        {
             //TODO: check if match class attribute!!
-            $strBuffer = preg_replace('/<h([1-6])([A-Za-z0-9\s\-=":;,._]{0,})>/', '<h$1 class="headline"$2>', $strBuffer);
-        }
+//            $strBuffer = preg_replace('/<h([1-6])([A-Za-z0-9\s\-=":;,._]{0,})>/', '<h$1 class="headline"$2>', $strBuffer);
+//        }
 
         $strBuffer = $this->renderHeadlines($strBuffer, $objRow);
         $strBuffer = $this->renderBox($strBuffer, $objRow, $objElement);
@@ -595,6 +595,38 @@ class ContentListener extends DefaultListener
 
         $strHeadline    = preg_replace(array('/;/'), array('<br>'), $headline);
 
+        if( count($arrHeadlineClasses) )
+        {
+            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@]{0,})<\/h([1-6])>/', $strContent, $arrHeadlineMatches);
+
+            if( count($arrHeadlineMatches[0]) )
+            {
+                foreach( $arrHeadlineMatches[0] as $headlineNum => $strFindHeadline)
+                {
+                    $findUnit = $arrHeadlineMatches[1][ $headlineNum ];
+
+                    if( preg_match('/class="/', $arrHeadlineMatches[2][ $headlineNum ]) )
+                    {
+                        $strNewHeadline = preg_replace('/<h' . $findUnit . '([A-Za-z0-9\s\-="_\(\)\{\}]{0,})class="/', '<h' . $findUnit . '$1class="headline ', $strFindHeadline);
+                    }
+                    else
+                    {
+                        $strNewHeadline = preg_replace('/<h' . $findUnit . '/', '<h' . $findUnit . ' class="headline ', $strFindHeadline);
+                    }
+
+                    $strContent = preg_replace('/' . preg_quote($strFindHeadline, '/') . '/', $strNewHeadline, $strContent);
+                }
+            }
+
+            $strContent = preg_replace('/<h([1-6]) class="' . $replaceClass . '/', '<h$1 class="' . $replaceClass . ' ' . implode(" ", $arrHeadlineClasses), $strContent);
+        }
+
+        if( count($arrStyleHeadlineClasses) )
+        {
+            $strUnit    = $arrHeadline['unit'];
+            $strContent = preg_replace('/<' . $strUnit . ' class="' . $replaceClass . '/', '<' . $strUnit . ' class="' . $replaceClass . ' ' . implode(" ", $arrStyleHeadlineClasses), $strContent);
+        }
+
         if( $objRow->type === "headline" )
         {
             $strContent = preg_replace('/<' . $unit . '([A-Za-z0-9\s\-_="\{\}]{0,})>([\s]{0,})' . preg_quote($headline, '/') . '<\/' . $unit . '>/', '<' . $unit . '$1>' . $strHeadline . '</' . $unit . '>', $strContent);
@@ -619,17 +651,6 @@ class ContentListener extends DefaultListener
         {
             $strContent = preg_replace('/class="headline([^\-])/', 'class="headline has-subline$1', $strContent, 1);
             $strContent = BasicHelper::replaceLastMatch('/class="headline([^\-])/', 'class="headline is-subline$1', 'class="headline$1', $strContent);
-        }
-
-        if( count($arrHeadlineClasses) )
-        {
-            $strContent = preg_replace('/<h([1-6]) class="' . $replaceClass . '/', '<h$1 class="' . $replaceClass . ' ' . implode(" ", $arrHeadlineClasses), $strContent);
-        }
-
-        if( count($arrStyleHeadlineClasses) )
-        {
-            $strUnit    = $arrHeadline['unit'];
-            $strContent = preg_replace('/<' . $strUnit . ' class="' . $replaceClass . '/', '<' . $strUnit . ' class="' . $replaceClass . ' ' . implode(" ", $arrStyleHeadlineClasses), $strContent);
         }
 
         if( $objRow->type === "headline" )
@@ -788,6 +809,15 @@ class ContentListener extends DefaultListener
             $strContent     = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strContent);
         }
 
+        if( $objRow->text )
+        {
+            $strText = '<div class="gallery-text">' . \StringUtil::encodeEmail( \StringUtil::toHtml5($objRow->text) ) . '</div>';
+
+            $strContent = preg_replace('/<\/ul>/', '</ul>' . $strText, $strContent);
+        }
+
+        $strContent = preg_replace(array('/<figure/', '/<\/figure>/'), array('<div class="gallery-item-inside"><figure', '</figure></div>'), $strContent);
+
         return $strContent;
     }
 
@@ -914,7 +944,7 @@ class ContentListener extends DefaultListener
                 $strType = $objAliasElement->type;
             }
 
-            if( (preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box" || $strType === "rsce_box" ) && !$GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] )
+            if( (preg_match('/column/', $cssID[1]) || preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box" || $strType === "rsce_box" ) && !$GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] && !preg_match('/column-box/', $cssID[1]) )
             {
                 $GLOBALS['IIDO']['BOXES']['OPEN'] = $GLOBALS['IIDO']['BOXES']['OPEN'] || FALSE;
 
@@ -945,7 +975,7 @@ class ContentListener extends DefaultListener
                     $strBuffer = '<div class="box-container clr-after' . $strBoxClass . '"><div class="box-cont-inside"><div class="box-cont-wrapper ' . $strClass . '">' . $strBuffer;
                 }
 
-                if( preg_match('/box-col/', $cssID[1]) ||  preg_match('/column/', $cssID[1]))
+                if( preg_match('/box-col/', $cssID[1]) || preg_match('/column/', $cssID[1]))
                 {
                     $strBuffer = $this->addClassToContentElement($strBuffer, $objRow, array('column'));
                 }

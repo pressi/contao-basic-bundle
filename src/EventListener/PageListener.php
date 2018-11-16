@@ -109,6 +109,11 @@ class PageListener extends DefaultListener
             ScriptHelper::addInternScript("fullpage");
         }
 
+        if( preg_match('/page-is-onepage/', $objPage->cssClass)  && $jsPrefix === "jquery" )
+        {
+            ScriptHelper::addScript("nav");
+        }
+
         if( $footerMode )
         {
             $GLOBALS['TL_CSS']['footer'] = $this->bundlePathPublic . '/css/footer.css||static';

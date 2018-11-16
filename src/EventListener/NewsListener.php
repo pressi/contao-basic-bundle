@@ -31,6 +31,13 @@ class NewsListener extends DefaultListener
         {
             $objTemplate->addPlus = true;
         }
+
+        if( $arrData['text'] )
+        {
+            $objTemplate->hasText = TRUE;
+
+            $objTemplate->strText = $arrData['text'];
+        }
     }
 
 }
