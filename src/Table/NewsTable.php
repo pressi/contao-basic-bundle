@@ -292,4 +292,52 @@ class NewsTable
 
 		return $arrCategories;
 	}
+
+
+
+    /**
+     * Extract the YouTube ID from an URL
+     *
+     * @param mixed          $varValue
+     * @param \DataContainer $dc
+     *
+     * @return mixed
+     */
+    public function extractYouTubeId($varValue, \DataContainer $dc)
+    {
+        if ($dc->activeRecord->singleSRC != $varValue)
+        {
+            $matches = array();
+
+            if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $varValue, $matches))
+            {
+                $varValue = $matches[1];
+            }
+        }
+
+        return $varValue;
+    }
+
+    /**
+     * Extract the Vimeo ID from an URL
+     *
+     * @param mixed          $varValue
+     * @param \DataContainer $dc
+     *
+     * @return mixed
+     */
+    public function extractVimeoId($varValue, \DataContainer $dc)
+    {
+        if ($dc->activeRecord->singleSRC != $varValue)
+        {
+            $matches = array();
+
+            if (preg_match('%vimeo\.com/(?:channels/(?:\w+/)?|groups/(?:[^/]+)/videos/|album/(?:\d+)/video/)?(\d+)(?:$|/|\?)%i', $varValue, $matches))
+            {
+                $varValue = $matches[1];
+            }
+        }
+
+        return $varValue;
+    }
 }

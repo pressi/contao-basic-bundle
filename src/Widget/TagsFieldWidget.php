@@ -44,12 +44,12 @@ class TagsFieldWidget extends \TextField
         $fieldName      = preg_replace('/^rsce_field_/', '', $strName);
         $filterMode     = 'Main';
 
-        $arrCols        = array('pid=?', 'invisible=?');
+        $arrCols        = array( \ContentModel::getTable() . '.pid=?', \ContentModel::getTable() .  '.invisible=?');
         $arrColsValue   = array($objElement->pid, '');
 
         if( $this->fieldType )
         {
-            $arrCols[]          = 'type=?';
+            $arrCols[]          = \ContentModel::getTable() . '.type=?';
             $arrColsValue[]     = $this->fieldType;
         }
 
