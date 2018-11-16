@@ -8,9 +8,8 @@
 //$GLOBALS['TL_CSS']['fancybox']        = $publicBundlePath . '/css/fancybox/' . $fancyboxVersion . '/jquery.fancybox.min.css||static';
 //$GLOBALS['TL_JAVASCRIPT']['fancybox'] = $publicBundlePath . '/javascript/jquery/fancybox/' . $fancyboxVersion . '/jquery.fancybox.min.js|static';
 
-\IIDO\BasicBundle\Helper\ScriptHelper::addScript( "fancybox", true);
-
-
+//\IIDO\BasicBundle\Helper\ScriptHelper::addScript( "fancybox", true);
+\IIDO\BasicBundle\Helper\ScriptHelper::insertScript( "fancybox", true);
 
 $titleCounter   = FALSE;
 $hideTitle      = FALSE;
@@ -26,26 +25,28 @@ $hideTitle      = FALSE;
 //}
 ?>
 <script>
+jQuery = window.jQuery || jQuery;
 //$.fancybox.defaults.tpl.closeBtn            = '<div title="Close" class="fancybox-item fancybox-close">schliessen</div>';
 <?php //if($titleType == "none"): ?>
 //$.fancybox.defaults.helpers.title           = null;
 <?php //else: ?>
 //$.fancybox.defaults.helpers.title.type      = '<?php //echo $titleType; ?>//';
 <?php //endif; ?>
-$.fancybox.defaults.padding                 = 0;
-$.fancybox.defaults.margin                  = 100;
-$.fancybox.defaults.loop                    = false;
-$.fancybox.defaults.autoSize                = false;
-$.fancybox.defaults.prevEffect              = 'none';
-$.fancybox.defaults.nextEffect              = 'none';
-$.fancybox.defaults.fullScreen              = false;
+jQuery.fancybox.defaults.padding                 = 0;
+jQuery.fancybox.defaults.margin                  = 100;
+jQuery.fancybox.defaults.loop                    = false;
+jQuery.fancybox.defaults.autoSize                = false;
+jQuery.fancybox.defaults.prevEffect              = 'none';
+jQuery.fancybox.defaults.nextEffect              = 'none';
+jQuery.fancybox.defaults.fullScreen              = false;
 //$.fancybox.defaults.touch.vertivcal         = true;
 
-$(function() {
+(function($) {
 
-	$("[rel=gallery]").fancybox();
+	$('[rel="gallery"]').fancybox();
 
-	$(document).on("click", "[data-lightbox]", function(e) {
+	$(document).on("click", "[data-lightbox]", function(e)
+    {
 		e.preventDefault();
 		var grp = $(this).data('lightbox'),
 			els = this;
@@ -104,5 +105,5 @@ $(function() {
 		});
 	});
 
-});
+})(jQuery);
 </script>
