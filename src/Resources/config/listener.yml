@@ -23,6 +23,7 @@ services:
 #            - { name: contao.hook, hook: replaceInsertTags, method: replaceCustomizeInsertTags}
         arguments:
             - "@contao.framework"
+        public: true
 
     iido_basic.listener.frontend_template:
         class: IIDO\BasicBundle\EventListener\FrontendTemplateListener
@@ -34,29 +35,35 @@ services:
         class: IIDO\BasicBundle\EventListener\BackendTemplateListener
         arguments:
             - "@contao.framework"
+        public: true
 
     iido_basic.listener.combiner:
         class: IIDO\BasicBundle\EventListener\CombinerListener
         arguments:
             - "@contao.framework"
+        public: true
 
     iido_basic.listener.ajax:
         class: IIDO\BasicBundle\Ajax\ManageAjax
+        public: true
 
     iido_basic.listener.form:
         class: IIDO\BasicBundle\EventListener\FormListener
         arguments:
             - "@contao.framework"
+        public: true
 
     iido_basic.listener.news:
         class: IIDO\BasicBundle\EventListener\NewsListener
         arguments:
             - "@contao.framework"
+        public: true
 
     iido_basic.listener.user:
         class: IIDO\BasicBundle\EventListener\UserListener
         arguments:
             - "@contao.framework"
+        public: true
 
 
 
