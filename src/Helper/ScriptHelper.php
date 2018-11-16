@@ -168,6 +168,11 @@ class ScriptHelper
 
         foreach($scriptName as $fileKey => $fileName)
         {
+            if( is_numeric($fileKey) )
+            {
+                $fileKey = $fileName;
+            }
+
             $filePathPublic = self::getScriptSource( $fileName, true, false );
 
             if( file_exists(BasicHelper::getRootDir( true ) . $filePathPublic) )
