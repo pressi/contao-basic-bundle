@@ -497,7 +497,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function copyFieldFromTable($fieldName, $strTable, $fromFieldName, $fromFieldTable, $overrideLang = false, $strClass = '')
+    public static function copyFieldFromTable($fieldName, $strTable, $fromFieldName, $fromFieldTable, $overrideLang = false, $strClass = '', array $defaultConfig = array())
     {
         if( !preg_match('/^tl_/', $fromFieldTable) )
         {
@@ -517,6 +517,14 @@ class DcaHelper extends \Frontend
         if( $strClass )
         {
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']['tl_class'] = $strClass;
+        }
+
+        if( count( $defaultConfig) )
+        {
+            foreach( $defaultConfig as $configKey => $configValue )
+            {
+                $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ][ $configKey ] = $configValue;
+            }
         }
     }
 

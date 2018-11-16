@@ -159,6 +159,33 @@ class ScriptHelper
 
 
 
+    public static function insertScript( $scriptName, $addStylesheet = false )
+    {
+        if( !is_array($scriptName) )
+        {
+            $scriptName = array( $scriptName );
+        }
+
+        foreach($scriptName as $fileKey => $fileName)
+        {
+            $filePathPublic = self::getScriptSource( $fileName, true, false );
+
+            if( file_exists(BasicHelper::getRootDir( true ) . $filePathPublic) )
+            {
+                $filePathPublicSRC = self::getScriptSource( $fileName, true, false, true );
+
+                echo '<script src=' . $filePathPublicSRC . '></script>';
+
+                if( $addStylesheet )
+                {
+                    StylesheetHelper::addStylesheet( $fileName );
+                }
+            }
+        }
+    }
+
+
+
     /**
      * Add intern script
      *
@@ -209,20 +236,21 @@ class ScriptHelper
      * @param string $scriptName
      * @param bool   $public
      * @param bool   $withoutFile
+     * @param bool   $publicWithoutWeb
      *
      * @return string
      */
-    public static function getScriptSource( $scriptName, $public = false, $withoutFile = false )
+    public static function getScriptSource( $scriptName, $public = false, $withoutFile = false, $publicWithoutWeb = false )
     {
         $strPath    = BundleConfig::getBundlePath() . self::$scriptPath;
         $subFolder  = 'lib';
 
-        if( !is_dir( $strPath . $subFolder . '/' . $scriptName) )
+        $folderVersion = self::getScriptVersion( $scriptName );
+
+        if( !is_dir( BasicHelper::getRootDir( true ) . $strPath . $subFolder . '/' . $scriptName . '/' . $folderVersion) )
         {
             $subFolder = self::getActiveJavascriptLibrary();
         }
-
-        $folderVersion = self::getScriptVersion( $scriptName );
 
         $arrFiles = scan( BasicHelper::getRootDir( true ) . $strPath . $subFolder . '/' . $scriptName . '/' . $folderVersion );
         $fileName = '';
@@ -236,7 +264,8 @@ class ScriptHelper
             }
         }
 
-        return BundleConfig::getBundlePath( $public ) . ($public ? self::$scriptPathPublic : self::$scriptPath) . $subFolder . '/' . $scriptName . '/' . $folderVersion . ($withoutFile ? '' : '/' . $fileName);
+        return BundleConfig::getBundlePath( $public, !$publicWithoutWeb ) . ($public ? self::$scriptPathPublic : self::$scriptPath) . $subFolder . '/' . $scriptName . '/' . $folderVersion . ($withoutFile ? '' : '/' . $fileName);
+//        return BundleConfig::getBundlePath( $public ) . ($public ? self::$scriptPathPublic : self::$scriptPath) . $subFolder . '/' . $scriptName . '/' . $folderVersion . ($withoutFile ? '' : '/' . $fileName);
     }
 
 
