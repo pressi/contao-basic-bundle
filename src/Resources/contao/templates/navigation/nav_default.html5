@@ -2,15 +2,30 @@
   <?php foreach ($this->items as $item):
       $noLink = false;
 
-  if( preg_match('/no-link/', $item['class']) )
-  {
-      $noLink = true;
-  }
+      if( preg_match('/no-link/', $item['class']) )
+      {
+          $noLink = true;
+      }
 
-  if( $item['navTitle'] )
-  {
-      $item['link'] = $item['navTitle'];
-  }
+      if( $item['navTitle'] )
+      {
+          $item['link'] = $item['navTitle'];
+      }
+
+      if( $item['href'] === '#' . $item['alias'] )
+      {
+          if( preg_match('/home/', $item['href']) )
+          {
+              $item['class'] = trim($item['class'] . ' active');
+          }
+
+          $item['href'] = '#article-' . $item['id'];
+      }
+
+      if( preg_match('/article-menu/', $this->level) )
+      {
+          $item['href'] = '#article-' . $item['id'];
+      }
 
       ?>
     <?php if ($item['isActive']): ?>
