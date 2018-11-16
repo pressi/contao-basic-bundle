@@ -54,8 +54,7 @@ if( count( $db->listTables() ) > 0 )
 
 if( $objArchive )
 {
-
-	if( $objArchive->hideContentElements )
+	if( $objArchive->hideContentElements || in_array($objArchive->newsTyps,  array("job")) )
 	{
 		unset( $GLOBALS['TL_DCA'][ $strFileName ]['list']['operations']['edit'] );
 	}
@@ -96,18 +95,43 @@ foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
 
 	if( $objArchive )
 	{
-		if( $objArchive->hideContentElements )
+		if( $objArchive->hideContentElements || in_array($objArchive->newsTyps, array("job", "pressReport")) )
 		{
 			$fields = str_replace('teaser;', 'teaser;{text_legend},text;', $fields);
 		}
+
+        if( $objArchive->newsTyps === "job" )
+        {
+            $fields = preg_replace('/text;/', 'text;{addText_legend},contactPerson,contactLink,contactLinkTitle;', $fields);
+        }
+        elseif( $objArchive->newsTyps === "pressReport" )
+        {
+            $fields = preg_replace('/text;/', 'text;{blockquotes_legend},blockquotes;', $fields);
+        }
 	}
 
-    $fields     = str_replace('addImage;', 'addImage;{gallery_legend},addGallery;{video_legend},addVideo;', $fields);
-	$fields     = preg_replace('/{image_legend}/', '{table_legend},addTable;{image_legend}', $fields);
+    $fields = str_replace('addImage;', 'addImage;{gallery_legend},addGallery;{video_legend},addVideo;', $fields);
+    $fields = preg_replace('/{image_legend}/', '{table_legend},addTable;{image_legend}', $fields);
 
 
 	$GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = $fields;
 }
+
+
+//if( $objArchive && $objArchive->newsTyps === "job" )
+//{
+//    foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
+//    {
+//        if( $palette == "__selector__" )
+//        {
+//            continue;
+//        }
+//
+//        $fields = str_replace('teaser;', 'teaser;{text_legend},text;', $fields);;
+//
+//        $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = $fields;
+//    }
+//}
 
 
 
@@ -116,10 +140,15 @@ foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
  */
 
 $GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addTable']					= 'tableitems,tableFirstColBold';
-$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addGallery']			    = 'multiSRC,sortBy,metaIgnore,gal_size,gal_imagemargin,gal_perRow,gal_fullsize,gal_perPage,gal_numberOfItems,galleryTpl,customTpl' . (($enableCarouFredSel) ? ',useCarouFredSel' : '');
+$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addGallery']			        = 'multiSRC,sortBy,metaIgnore,gal_size,gal_imagemargin,gal_perRow,gal_fullsize,gal_perPage,gal_numberOfItems,galleryTpl,customTpl' . (($enableCarouFredSel) ? ',useCarouFredSel' : '');
 $GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['useCarouFredSel']			= 'carouFredSelConfig,useCarouFredSelThumbnails';
 $GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['useCarouFredSelThumbnails']	= 'cfsThumbnailSize,cfsThumbnailsPosition,cfsThumbnailsAlign,cfsThumbnailsWidth,cfsThumbnailsHeight';
-$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addVideo']					= 'youtube';
+
+$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addVideo']					= 'videoMode';
+
+$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['videoMode_youtube']			= 'youtube';
+$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['videoMode_vimeo']			= 'vimeo';
+$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['videoMode_player']			= 'playerSRC,posterSRC,playerSize,autoplay';
 
 
 
@@ -216,7 +245,6 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['tableFirstColBold'] = array
 
 
 // -- CarouFredSel
-
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['useCarouFredSel'] = array
 (
 	'label'					=> &$GLOBALS['TL_LANG'][ $strFileName ]['useCarouFredSel'],
@@ -258,8 +286,67 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['useCarouFredSelThumbnails'] = arra
 
 
 // -- VIDEO
-
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addVideo']             = $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addImage'];
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addVideo']['label']    = &$GLOBALS['TL_LANG'][ $strFileName ]['addVideo'];
 
-$GLOBALS['TL_DCA'][ $strFileName ]['fields']['youtube']              = $GLOBALS['TL_DCA']['tl_content']['fields']['youtube'];
+//$GLOBALS['TL_DCA'][ $strFileName ]['fields']['youtube']              = $GLOBALS['TL_DCA']['tl_content']['fields']['youtube'];
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('youtube', $strFileName, 'youtube', 'tl_content', false, '', array('save_callback'=>array($strFileClass, 'extractYouTubeId')));
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('vimeo', $strFileName, 'vimeo', 'tl_content', false, '', array('save_callback'=>array($strFileClass, 'extractVimeoId')));
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('videoMode', $strFileName, array('includeBlankOption'=>true,'mandatory'=>true), '', false, '', false,true);
+
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('playerSRC', $strFileName, 'playerSRC', 'tl_content');
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('posterSRC', $strFileName, 'posterSRC', 'tl_content');
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('playerSize', $strFileName, 'playerSize', 'tl_content');
+\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('autoplay', $strFileName, 'autoplay', 'tl_content');
+
+
+
+// - ADD TEXT
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField( 'contactPerson', $strFileName, array(), '', false, true);
+
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['contactLink'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['contactLink'],
+    'exclude'                 => true,
+    'search'                  => true,
+    'inputType'               => 'text',
+    'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>255, 'dcaPicker'=>true, 'tl_class'=>'clr w50 wizard'),
+    'sql'                     => "varchar(255) NOT NULL default ''"
+);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('contactLinkTitle', $strFileName );
+
+
+
+// - BLOCKQUOTE
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['blockquotes'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG'][ $strFileName ]['blockquotes'],
+    'exclude'                 => true,
+    'inputType'               => 'multiColumnWizard',
+    'eval'                    => array
+    (
+        'tl_class'          => 'clr',
+        'columnFields'      => array
+        (
+            'blockquote' =>
+                [
+                    'label'     => array('Zitat / Text'),
+                    'exclude'   => true,
+                    'inputType' => 'textarea',
+                    'eval'      => [ 'style' => 'width:600px' ],
+                ],
+
+            'author' =>
+                [
+                    'label'     => array('Author / Quelle'),
+                    'exclude'   => true,
+                    'inputType' => 'text',
+                    'eval'      => [ 'style' => 'width:250px' ],
+                ]
+        )
+    ),
+    'sql'                     => "blob NULL"
+);

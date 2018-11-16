@@ -150,6 +150,13 @@
 
 
 
+            <trans-unit id="MSC.more">
+                <source>Mehr</source>
+                <target>Mehr</target>
+            </trans-unit>
+
+
+
 <!-- ### POSITIONS ########################################################################################################## -->
 
             <trans-unit id="RSCE.positions.left_top">

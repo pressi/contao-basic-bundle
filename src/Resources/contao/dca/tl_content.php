@@ -174,6 +174,11 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
         {
             $strFields = preg_replace('/{template_legend/', '{text_legend},text;{template_legend', $strFields);
         }
+
+        if( $strPalette === "youtube" )
+        {
+            $strFields = str_replace(',autoplay', ',autoplay;{text_legend},text;', $strFields);
+        }
     }
 
     $strFields = preg_replace('/{expert_legend/', '{position_legend},position,positionMargin,positionFixed;{expert_legend', $strFields);
@@ -256,7 +261,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['subpalettes'] as $strSubpalette => $st
  * Fields
  */
 
-if( $objContent && $act === "edit" && $objContent->type === "gallery" )
+if( $objContent && $act === "edit" && ($objContent->type === "gallery" || $objContent->type === "youtube") )
 {
     $GLOBALS['TL_DCA'][ $strFileName ]['fields']['text']['eval']['mandatory'] = false;
 }

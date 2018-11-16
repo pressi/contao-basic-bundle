@@ -3,7 +3,6 @@
     <file datatype="php" original="src/Resources/contao/languages/en/tl_news.php" source-language="en" target-language="de">
         <body>
 
-
             <trans-unit id="tl_news.addGallery.0">
                 <source>hotel</source>
                 <target>Galerie unten hinzufügen</target>
@@ -86,38 +85,70 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_news.addVideo.0">
+                <source>add video</source>
+                <target>Video hinzufügen</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_news.videoMode.0">
+                <source>video mode</source>
+                <target>Video Modus</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
-
             <trans-unit id="tl_news.addInfo_legend">
-                <source>hotel</source>
+                <source>additional / overview settings</source>
                 <target>Zusatzinfos / Übersicht - Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_news.icons_legend">
-                <source>hotel</source>
+                <source>icons settings</source>
                 <target>Icons - Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_news.table_legend">
-                <source>hotel</source>
+                <source>table settings</source>
                 <target>Tabellen - Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_news.imageSlider_legend">
-                <source>hotel</source>
+                <source>image slider settings</source>
                 <target>Bild-Slider - Einstellungen</target>
             </trans-unit>
 
             <trans-unit id="tl_news.gallery_legend">
-                <source>hotel</source>
+                <source>gallery settings</source>
                 <target>Galerie - Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_news.video_legend">
+                <source>video settings</source>
+                <target>Video - Einstellungen</target>
+            </trans-unit>
+
+
 
 <!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_news.options.videoMode.youtube">
+                <source>youtube</source>
+                <target>YouTube</target>
+            </trans-unit>
+            <trans-unit id="tl_news.options.videoMode.vimeo">
+                <source>vimeo</source>
+                <target>Vimeo</target>
+            </trans-unit>
+            <trans-unit id="tl_news.options.videoMode.player">
+                <source>video player</source>
+                <target>Video-Player</target>
+            </trans-unit>
+
+
+
 <!-- ### REFERENCE ########################################################################################################## -->
 
 

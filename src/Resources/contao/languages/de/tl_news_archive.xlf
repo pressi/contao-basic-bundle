@@ -11,6 +11,14 @@
 <!-- ### OPTIONS ############################################################################################################ -->
 
 
+            <trans-unit id="tl_news_archive.options.newsTyps.job">
+                <source>Job</source>
+                <target>Job</target>
+            </trans-unit>
+            <trans-unit id="tl_news_archive.options.newsTyps.pressReport">
+                <source>Press report</source>
+                <target>Presse</target>
+            </trans-unit>
             <trans-unit id="tl_news_archive.options.newsTyps.hotel">
                 <source>hotel</source>
                 <target>Hotel</target>
