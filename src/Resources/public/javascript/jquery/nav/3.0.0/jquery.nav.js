@@ -144,7 +144,7 @@
 			var $parent = $link.parent();
 			var newLoc = '#' + self.getHash($link);
 
-			if(!$parent.hasClass(self.config.currentClass)) {
+			// if(!$parent.hasClass(self.config.currentClass)) {
 				//Start callback
 				if(self.config.begin) {
 					self.config.begin();
@@ -171,7 +171,7 @@
 						self.config.end();
 					}
 				});
-			}
+			// }
 
 			e.preventDefault();
 		},
