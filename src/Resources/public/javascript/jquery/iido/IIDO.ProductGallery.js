@@ -45,30 +45,50 @@ IIDO.ProductGallery = IIDO.ProductGallery || {};
 
     productGallery.next = function()
     {
+        var bigger = false;
+
         $activeIndex++;
 
         if( $activeIndex >= $maxIndex )
         {
+            if( $activeIndex > $maxIndex )
+            {
+                bigger = true;
+            }
+
             $activeIndex = $maxIndex;
         }
 
-        this.updateCounter();
-        this.loadGalleryItem();
+        if( !bigger )
+        {
+            this.updateCounter();
+            this.loadGalleryItem();
+        }
     };
 
 
 
     productGallery.prev = function()
     {
+        var smaller = false;
+
         $activeIndex--;
 
         if( $activeIndex <= 1 )
         {
+            if( $activeIndex < 1 )
+            {
+                smaller = true;
+            }
+
             $activeIndex = 1;
         }
 
-        this.updateCounter();
-        this.loadGalleryItem();
+        if( !smaller )
+        {
+            this.updateCounter();
+            this.loadGalleryItem();
+        }
     };
 
 
@@ -105,6 +125,10 @@ IIDO.ProductGallery = IIDO.ProductGallery || {};
         }
 
         // newItem.querySelector(".ctable-cell").innerHTML = strContent;
+
+        $container.querySelector(".product-infos .title").innerHTML = product.title;
+        $container.querySelector(".product-infos .description").innerHTML = product.description;
+
         newItem.innerHTML = strContent;
 
         eval( product.sliderScript );
