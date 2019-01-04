@@ -79,4 +79,18 @@ IIDO.Base = IIDO.Base || {};
         return siblings;
     };
 
+
+
+    base.getStyle = function( elem, property )
+    {
+        var propValue = elem.style[ property ];
+
+        if( propValue === undefined || propValue === "undefined" || propValue === null || propValue === '' )
+        {
+            propValue = window.getComputedStyle(elem, null).getPropertyValue( property );
+        }
+
+        return propValue;
+    };
+
 })(window, jQuery, IIDO.Base);

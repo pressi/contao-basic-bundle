@@ -38,6 +38,8 @@ IIDO.Page = IIDO.Page || {};
         this.initLinks();
         this.initShowArticles();
         this.initSticky();
+        // this.initArticles();
+        this.initArticleContainers();
 
         if( $(document.body).hasClass("url-change") )
         {
@@ -442,6 +444,51 @@ IIDO.Page = IIDO.Page || {};
 
 
 
+    page.initArticleContainers = function()
+    {
+        var artContPosBottom = document.querySelector(".mod_article.ce-pos-bottom ");
+
+        if( artContPosBottom )
+        {
+            var pitLane     = document.getElementById("pitLane"),
+                footerCont  = document.getElementById("footer"),
+
+                padBottom   = 0;
+
+            if( pitLane )
+            {
+                padBottom = (padBottom + parseInt( pitLane.offsetHeight ));
+            }
+
+            if( footerCont )
+            {
+                padBottom = (padBottom + parseInt( footerCont.offsetHeight ));
+            }
+
+            if( padBottom > 0 )
+            {
+                var mainCont = document.getElementById("main");
+
+                if( mainCont )
+                {
+                    var mainPadBottom = parseInt( IIDO.Base.getStyle(mainCont, "padding-bottom") );
+
+                    if( mainPadBottom > 0 )
+                    {
+                        padBottom = (padBottom - mainPadBottom);
+                    }
+                }
+
+                if( padBottom > 0 )
+                {
+                    artContPosBottom.style.paddingBottom = padBottom + 'px';
+                }
+            }
+        }
+    };
+
+
+
     page.initNavigation = function()
     {
         if( document.body.classList.contains("page-is-onepage") )
@@ -454,6 +501,24 @@ IIDO.Page = IIDO.Page || {};
                     currentClass: 'active'
                 });
             }
+        }
+
+        var navContLeftOutsideOpen  = document.querySelector(".open-left-side-navigation"),
+            navContLeftOutside      = document.querySelector("header.nav-cont-left-outside");
+
+        if( navContLeftOutsideOpen && navContLeftOutside )
+        {
+            navContLeftOutsideOpen.addEventListener("click", function()
+            {
+                if( document.body.classList.contains("open-navigation") )
+                {
+                    document.body.classList.remove("open-navigation");
+                }
+                else
+                {
+                    document.body.classList.add("open-navigation");
+                }
+            });
         }
 
         // var articleMenu     = $("ul.article-menu");
