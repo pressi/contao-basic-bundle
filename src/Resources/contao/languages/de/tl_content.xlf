@@ -421,6 +421,17 @@
 
 
 
+            <trans-unit id="tl_content.hideOnMobile.0">
+                <source>hide on mobile</source>
+                <target>Auf Mobilgeräten verbergen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.showOnMobile.0">
+                <source>show on mobile</source>
+                <target>Nur auf Mobilgeräten anzeigen</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
 			<trans-unit id="tl_content.intern_legend">
