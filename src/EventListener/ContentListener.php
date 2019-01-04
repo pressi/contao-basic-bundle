@@ -611,7 +611,7 @@ class ContentListener extends DefaultListener
                     }
                     else
                     {
-                        $strNewHeadline = preg_replace('/<h' . $findUnit . '/', '<h' . $findUnit . ' class="headline ', $strFindHeadline);
+                        $strNewHeadline = preg_replace('/<h' . $findUnit . '/', '<h' . $findUnit . ' class="headline"', $strFindHeadline);
                     }
 
                     $strContent = preg_replace('/' . preg_quote($strFindHeadline, '/') . '/', $strNewHeadline, $strContent);
@@ -790,6 +790,13 @@ class ContentListener extends DefaultListener
     protected function renderGallery( $strContent, $objRow, $objElement )
     {
         $strContent = preg_replace('/<a/', '<a class="no-barba"', $strContent);
+        $cssID      = \StringUtil::deserialize($objRow->cssID, TRUE);
+        $addTitle   = false;
+
+        if( preg_match('/title-hover/', $cssID[1]) )
+        {
+            $addTitle = true;
+        }
 
         if( $objRow->fullsize )
         {
@@ -806,6 +813,13 @@ class ContentListener extends DefaultListener
             $strImageClass  = ($arrImage['meta']['cssClass'] ? ' ' : '') . $arrImage['meta']['cssClass'];
 
             $newImageFigure = preg_replace('/class="image_container/', 'class="image_container' . $strImageClass, $strImageFigure);
+
+            if( $addTitle )
+            {
+                $hoverTitle     = $arrImage['meta']['hoverTitle']?:$arrImage['meta']['title'];
+                $newImageFigure = preg_replace('/<\/figure>/', '<div class="hover-title-cont"><div class="htc-inside">' . $hoverTitle . '</div></div></figure>', $newImageFigure);
+            }
+
             $strContent     = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strContent);
         }
 

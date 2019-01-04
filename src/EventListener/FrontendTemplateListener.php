@@ -308,7 +308,7 @@ class FrontendTemplateListener extends DefaultListener
 
             if( $objPage->removeLeft )
             { //TODO: check DIV tags!
-                $strBuffer = preg_replace('/<aside id="left"([A-Za-z0-9öäüÖÄÜß\s\-:\/\\.,;:_>="\n<\{\}]{0,})<\/aside>/', '', $strBuffer);
+                $strBuffer = preg_replace('/<aside id="left"([A-Za-z0-9öäüÖÄÜß\s\-,:.;_\/\\="\n\>\<\{\}]{0,})<\/aside>/', '', $strBuffer);
             }
 
             if( preg_match('/<footer/', $strBuffer) && PageHelper::hasBodyClass("homepage", $strBuffer) )
@@ -431,6 +431,11 @@ class FrontendTemplateListener extends DefaultListener
 //            {
 //                $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="pitLane">([\s\n]{0,})<div class="inside">([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_\n\{\}<>]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
 //            }
+
+            if( preg_match('/nav-cont-left-outside/', $strBuffer) )
+            {
+                $strBuffer = preg_replace('/<\/body>/', '<div class="open-left-side-navigation"><div class="olsn-inside"></div></div></body>', $strBuffer);
+            }
 
         }
 

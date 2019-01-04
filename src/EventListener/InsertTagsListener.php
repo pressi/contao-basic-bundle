@@ -267,10 +267,53 @@ class InsertTagsListener extends DefaultListener
                         {
                             case "title":
                                 $return = $objPage->pageTitle?:$objPage->title?:$objPage->alt_pagename;
+
+                                if( $arrSplit[3] )
+                                {
+                                    $level = -1;
+
+                                    if( preg_match('/level-/', $arrSplit[3]) )
+                                    {
+                                        $level = (int) preg_replace('/level-/', '', $arrSplit[3]);
+                                    }
+
+                                    if( $level >= 0 )
+                                    {
+                                        if( count($objPage->trail) > ($level + 1) )
+                                        {
+                                            $objLevelPage = \PageModel::findByPk( $objPage->trail[ $level ] );
+                                            $return = $objLevelPage->pageTitle?:$objLevelPage->alt_pagename?:$objLevelPage->title;
+                                        }
+                                    }
+                                }
                                 break;
 
                             case "subtitle":
                                 $return = $objPage->subtitle?:'&nbsp;';
+                                break;
+
+                            case "navtitle":
+                                $return = $objPage->navTitle?:$objPage->pageTitle?:$objPage->title?:$objPage->alt_pagename;
+
+                                if( $arrSplit[3] )
+                                {
+                                    $level = -1;
+
+                                    if( preg_match('/level-/', $arrSplit[3]) )
+                                    {
+                                        $level = (int) preg_replace('/level-/', '', $arrSplit[3]);
+                                    }
+
+                                    if( $level >= 0 )
+                                    {
+                                        if( count($objPage->trail) > ($level + 1) )
+                                        {
+                                            $objLevelPage = \PageModel::findByPk( $objPage->trail[ $level ] );
+                                            $return = $objLevelPage->navTitle?:$objLevelPage->pageTitle?:$objLevelPage->alt_pagename?:$objLevelPage->title;
+                                        }
+                                    }
+                                }
+
                                 break;
                         }
                         break;
