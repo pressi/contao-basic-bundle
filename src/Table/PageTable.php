@@ -149,7 +149,7 @@ class PageTable extends \Backend
 
     /**
      * Automatically create an article in the main column of a new page
-     * @param DataContainer
+     * @param \DataContainer
      */
     public function generateExtraArticle(\DataContainer $dc)
     {
@@ -299,7 +299,11 @@ class PageTable extends \Backend
             $subTitle = '<span class="subtitle ' . $row['subtitlePosition'] . '">' . trim( strlen(trim($row['navSubtitle']))?$row['navSubtitle']:$row['subtitle'] ) . '</span>';
 
             $label = (($row['subtitlePosition'] == "before") ? $subTitle : '') . $label . (($row['subtitlePosition'] == "after") ? $subTitle : '');
+        }
 
+        if( strlen($row['navTitle']) )
+        {
+            $label = $row['navTitle'] . ' <span class="grey">(' . $label . ')</span>';
         }
 
         return \Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);

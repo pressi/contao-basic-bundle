@@ -751,10 +751,11 @@ class StylesheetHelper
 
     public static function getBackgroundStyles($objArticle, $onlyOwnStyles = false, $returnAsArray = true, $writeInFile = false, $selector = '')
     {
+        $addBackgroundImage = $objArticle->addBackgroundImage;
         $arrOwnStyles       = array();
         $arrBackgroundSize  = deserialize($objArticle->bgSize, true);
 
-        if( is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
+        if( $addBackgroundImage && is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
         {
             $bgSize = $arrBackgroundSize[2];
 
@@ -767,7 +768,7 @@ class StylesheetHelper
             $arrOwnStyles[] = '-webkit-background-size:' . $bgSize . ';-moz-background-size:' . $bgSize . ';-o-background-size:' . $bgSize . ';background-size:' . $bgSize . ';';
         }
 
-        if( $objArticle->bgAttachment )
+        if( $addBackgroundImage && $objArticle->bgAttachment )
         {
             $arrOwnStyles[] = 'background-attachment:' . $objArticle->bgAttachment . ';';
         }
@@ -780,11 +781,15 @@ class StylesheetHelper
         $rootDir    = dirname(\System::getContainer()->getParameter('kernel.root_dir'));
 
         $strImage   = '';
-        $objImage   = \FilesModel::findByUuid( $objArticle->bgImage );
 
-        if( $objImage && file_exists($rootDir . '/' . $objImage->path) )
+        if( $addBackgroundImage )
         {
-            $strImage = $objImage->path;
+            $objImage   = \FilesModel::findByUuid( $objArticle->bgImage );
+
+            if( $objImage && file_exists($rootDir . '/' . $objImage->path) )
+            {
+                $strImage = $objImage->path;
+            }
         }
 
         $arrStyles = array
@@ -792,10 +797,10 @@ class StylesheetHelper
             'background'        => TRUE,
             'bgcolor'           => $objArticle->bgColor,
             'bgimage'           => $strImage,
-            'bgrepeat'          => $objArticle->bgRepeat,
-            'bgposition'        => $objArticle->bgPosition,
-            'gradientAngle'     => $objArticle->gradientAngle,
-            'gradientColors'    => $objArticle->gradientColors
+            'bgrepeat'          => $addBackgroundImage ? $objArticle->bgRepeat          : '',
+            'bgposition'        => $addBackgroundImage ? $objArticle->bgPosition        : '',
+            'gradientAngle'     => $addBackgroundImage ? $objArticle->gradientAngle     : '',
+            'gradientColors'    => $addBackgroundImage ? $objArticle->gradientColors    : ''
         );
 
         if( count($arrOwnStyles) )
