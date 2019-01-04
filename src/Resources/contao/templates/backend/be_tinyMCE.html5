@@ -43,8 +43,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                     file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
                     link_class_list:
                         [
-                            {title: '--', value: ''},
-                            <?= $strLinkClasses ?>
+                            {title: '--', value: ''},<?= $strLinkClasses ?>
                             {title: 'Button Primary', value: 'btn btn-primary'},
                             {title: 'Button Secondary', value: 'btn btn-secondary'},
                             {title: 'Button Tertiary', value: 'btn btn-tertiary'},
@@ -134,8 +133,7 @@ setTimeout(function()
     file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
     link_class_list:
     [
-        {title: '--', value: ''},
-        <?= $strLinkClasses ?>
+        {title: '--', value: ''},<?= $strLinkClasses ?>
         {title: 'Button Primary', value: 'btn btn-primary'},
         {title: 'Button Secondary', value: 'btn btn-secondary'},
         {title: 'Button Tertiary', value: 'btn btn-tertiary'},

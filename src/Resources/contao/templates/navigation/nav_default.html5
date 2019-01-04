@@ -1,4 +1,16 @@
+<?
+    $levelID    = (int) preg_replace('/level_/', '', $this->level);
+    $objNavPage = false;
+
+    if( $levelID > 1 )
+    {
+        $objNavPage = \PageModel::findByPk( $this->pid );
+    }
+?>
 <ul class="<?= $this->level ?>">
+    <? if( $objNavPage ): ?>
+    <li class="nav-title"><?= $objNavPage->alt_pagename?:$objNavPage->title ?></li>
+    <? endif ?>
   <?php foreach ($this->items as $item):
       $noLink = false;
 
