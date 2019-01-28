@@ -1,11 +1,18 @@
 <?php
 /*******************************************************************
- * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2019 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
  * www.iido.at <development@iido.at>
  *******************************************************************/
+
+$strTableName   = \IIDO\BasicBundle\Config\BundleConfig::getTableName( __FILE__ );
+$objTable       = new \IIDO\BasicBundle\Dca\Table( $strTableName );
+
+$tableListener = $objTable->getTableListener();
+
+
 
 $db             = \Database::getInstance();
 
@@ -13,7 +20,6 @@ $do             = \Input::get("do");
 $act            = \Input::get("act");
 $id             = \Input::get("id");
 
-$strTableName   = \IIDO\BasicBundle\Config\BundleConfig::getTableName( __FILE__ );
 $strTableClass  = \IIDO\BasicBundle\Config\BundleConfig::getTableClass( $strTableName );
 
 $objCurrentPage = null;
@@ -46,8 +52,11 @@ if($act === "edit" && $do === "page" && is_numeric($id))
  * Config
  */
 
-$GLOBALS['TL_DCA'][ $strTableName ]['config']['oncreate_version_callback'][]  = array($strTableClass, 'checkThemeStylesheet');
-$GLOBALS['TL_DCA'][ $strTableName ]['config']['onsubmit_callback'][]          = array($strTableClass, 'generateExtraArticle');
+//$GLOBALS['TL_DCA'][ $strTableName ]['config']['oncreate_version_callback'][]  = array($strTableClass, 'checkThemeStylesheet');
+//$GLOBALS['TL_DCA'][ $strTableName ]['config']['onsubmit_callback'][]          = array($strTableClass, 'generateExtraArticle');
+
+$objTable->addTableConfig('oncreate_version_callback', array($tableListener, 'checkThemeStylesheet'));
+$objTable->addTableConfig('onsubmit_callback', array($tableListener, 'generateExtraArticle'));
 
 
 
@@ -55,7 +64,8 @@ $GLOBALS['TL_DCA'][ $strTableName ]['config']['onsubmit_callback'][]          = 
  * List
  */
 
-$GLOBALS['TL_DCA'][ $strTableName ]['list']['label']['label_callback']        = array($strTableClass, 'pageLabel');
+//$GLOBALS['TL_DCA'][ $strTableName ]['list']['label']['label_callback']        = array($strTableClass, 'pageLabel');
+$objTable->updateLabelConfig('label_callback', array($tableListener, 'pageLabel'));
 
 
 
@@ -74,80 +84,127 @@ $GLOBALS['TL_DCA'][ $strTableName ]['list']['label']['label_callback']        = 
  * Palettes
  */
 
-$GLOBALS['TL_DCA'][ $strTableName ]['palettes']['regular_redirect']           = $GLOBALS['TL_DCA'][ $strTableName ]['palettes']['regular'];
+//$GLOBALS['TL_DCA'][ $strTableName ]['palettes']['regular_redirect']           = $GLOBALS['TL_DCA'][ $strTableName ]['palettes']['regular'];
+$objTable->copyPalette('regular_redirect', 'regular');
 
 
 
-$pageTableFields = '';
+$backLinkFields   = ',subPagesHasBacklink';
 
-foreach($GLOBALS['TL_DCA'][ $strTableName ]['palettes'] as $strPalette => $strFields)
+if($objParentPage !== null && $objParentPage->subPagesHasBacklink)
 {
-    if( $strPalette === "__selector__" )
-    {
-        continue;
-    }
-
-    $pageTableFields  = ',type,alt_pagename,subtitle,navTitle,navSubtitle,subtitlePosition';
-    $backLinkFields   = ',subPagesHasBacklink';
-
-
-    if($objParentPage != null && $objParentPage->subPagesHasBacklink)
-    {
-        $backLinkFields .= ',thisPageHasNoBacklink';
-    }
-
-    $backLinkFields .= ',subPagesHasRequestLink';
-
-    if($objParentPage != null && $objParentPage->subPagesHasRequestLink)
-    {
-        $backLinkFields .= ',thisPageHasNoRequestLink';
-    }
-
-
-    if( $objCurrentPage->type !== "root" )
-    {
-        $strFields      = str_replace(',guests', ',guests' . $backLinkFields, $strFields);
-
-        $strFields      = str_replace(',type', $pageTableFields, $strFields);
-
-        if( $objCurrentPage->type == "regular_redirect" )
-        {
-            $strFields      = str_replace("{meta_legend", "{redirect_legend},jumpTo,redirectTimeout;{meta_legend", $strFields);
-        }
-
-        $strFields      = str_replace(',hide', '', $strFields);
-        $strFields      = str_replace(',guests', '', $strFields);
-        $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight,addPageLoader', $strFields);
-
-        $strFields      = str_replace('{meta_legend', '{page_legend},enableFullpage;{meta_legend', $strFields);
-        $strFields      = str_replace('{meta_legend', '{navigation_legend},hide,hideTitle,guests,openPageInLightbox,submenuNoPages,overviewImage,pageColor,overviewText;{meta_legend', $strFields);
-
-        if( \Config::get("folderUrl") )
-        {
-//            $strFields = str_replace(',guests', ',guests,excludeFromFolderUrl', $strFields);
-            $strFields      = str_replace(',alias', ',alias,excludeFromFolderUrl', $strFields);
-
-            $strFields      = str_replace(',type', '', $strFields);
-            $strFields      = str_replace(',title', ',title,type', $strFields);
-        }
-
-
-    }
-    else
-    {
-        $strFields  = str_replace('{global_legend', '{analytics_legend},googleAnalyticsId;{global_legend', $strFields);
-        $strFields  = str_replace('{publish_legend', '{expert_legend},cssClass;{publish_legend', $strFields);
-//        $strFields  = str_replace('{cache_legend', '{design_legend},pageStyles;{cache_legend', $strFields);
-        $strFields  = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend', $strFields);
-    }
-
-    if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
-    {
-        $strFields = str_replace(',addPageLoader', ',removePageLoader', $strFields);
-    }
-
-    $GLOBALS['TL_DCA'][ $strTableName ]['palettes'][ $strPalette ] = $strFields;
+    $backLinkFields .= ',thisPageHasNoBacklink';
 }
+
+$backLinkFields .= ',subPagesHasRequestLink';
+
+if($objParentPage !== null && $objParentPage->subPagesHasRequestLink)
+{
+    $backLinkFields .= ',thisPageHasNoRequestLink';
+}
+
+
+$objTable->replacePaletteFields('all', ',type', ',type,alt_pagename,subtitle,navTitle,navSubtitle,subtitlePosition', ['root']);
+$objTable->replacePaletteFields('all', ',guests', ',guests' . $backLinkFields, ['root']);
+
+if( $objCurrentPage->type === "regular_redirect" )
+{
+    $objTable->replacePaletteFields('all', '{meta_legend', '{redirect_legend},jumpTo,redirectTimeout;{meta_legend', ['root']);
+}
+
+$objTable->replacePaletteFields('all', ',hide', '', ['root']);
+$objTable->replacePaletteFields('all', ',guests', '', ['root']);
+$objTable->replacePaletteFields('all', ',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight,addPageLoader', ['root']);
+
+$objTable->replacePaletteFields('all', '{meta_legend', '{page_legend},enableFullpage;{meta_legend', ['root']);
+$objTable->replacePaletteFields('all', '{meta_legend', '{navigation_legend},hide,hideTitle,guests,openPageInLightbox,submenuNoPages,overviewImage,pageColor,overviewText;{meta_legend', ['root']);
+
+if( \Config::get("folderUrl") )
+{
+    $objTable->replacePaletteFields('all', ',alias', ',alias,excludeFromFolderUrl', ['root']);
+    $objTable->replacePaletteFields('all', ',type', '', ['root']);
+    $objTable->replacePaletteFields('all', ',title', ',title,type', ['root']);
+}
+
+$objTable->replacePaletteFields('root', '{global_legend', '{analytics_legend},googleAnalyticsId;{global_legend');
+$objTable->replacePaletteFields('root', '{publish_legend', '{expert_legend},cssClass;{publish_legend');
+$objTable->replacePaletteFields('root', '{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend');
+
+if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
+{
+    $objTable->replacePaletteFields('all', ',addPageLoader', ',removePageLoader', ['root']);
+}
+
+
+//$pageTableFields = '';
+
+//foreach($GLOBALS['TL_DCA'][ $strTableName ]['palettes'] as $strPalette => $strFields)
+//{
+//    if( $strPalette === "__selector__" )
+//    {
+//        continue;
+//    }
+
+//    $pageTableFields  = ',type,alt_pagename,subtitle,navTitle,navSubtitle,subtitlePosition';
+//    $backLinkFields   = ',subPagesHasBacklink';
+
+
+//    if($objParentPage != null && $objParentPage->subPagesHasBacklink)
+//    {
+//        $backLinkFields .= ',thisPageHasNoBacklink';
+//    }
+//
+//    $backLinkFields .= ',subPagesHasRequestLink';
+//
+//    if($objParentPage != null && $objParentPage->subPagesHasRequestLink)
+//    {
+//        $backLinkFields .= ',thisPageHasNoRequestLink';
+//    }
+
+
+//    if( $objCurrentPage->type !== "root" )
+//    {
+//        $strFields      = str_replace(',guests', ',guests' . $backLinkFields, $strFields);
+
+//        $strFields      = str_replace(',type', $pageTableFields, $strFields);
+
+//        if( $objCurrentPage->type == "regular_redirect" )
+//        {
+//            $strFields      = str_replace("{meta_legend", "{redirect_legend},jumpTo,redirectTimeout;{meta_legend", $strFields);
+//        }
+
+//        $strFields      = str_replace(',hide', '', $strFields);
+//        $strFields      = str_replace(',guests', '', $strFields);
+//        $strFields      = str_replace(',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight,addPageLoader', $strFields);
+
+//        $strFields      = str_replace('{meta_legend', '{page_legend},enableFullpage;{meta_legend', $strFields);
+//        $strFields      = str_replace('{meta_legend', '{navigation_legend},hide,hideTitle,guests,openPageInLightbox,submenuNoPages,overviewImage,pageColor,overviewText;{meta_legend', $strFields);
+
+//        if( \Config::get("folderUrl") )
+//        {
+//-            $strFields = str_replace(',guests', ',guests,excludeFromFolderUrl', $strFields);
+//            $strFields      = str_replace(',alias', ',alias,excludeFromFolderUrl', $strFields);
+
+//            $strFields      = str_replace(',type', '', $strFields);
+//            $strFields      = str_replace(',title', ',title,type', $strFields);
+//        }
+//    }
+//    else
+//    {
+//        $strFields  = str_replace('{global_legend', '{analytics_legend},googleAnalyticsId;{global_legend', $strFields);
+//        $strFields  = str_replace('{publish_legend', '{expert_legend},cssClass;{publish_legend', $strFields);
+
+//-        $strFields  = str_replace('{cache_legend', '{design_legend},pageStyles;{cache_legend', $strFields);
+//        $strFields  = str_replace('{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend', $strFields);
+//    }
+
+//    if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
+//    {
+//        $strFields = str_replace(',addPageLoader', ',removePageLoader', $strFields);
+//    }
+
+//    $GLOBALS['TL_DCA'][ $strTableName ]['palettes'][ $strPalette ] = $strFields;
+//}
 
 
 
@@ -201,6 +258,9 @@ $GLOBALS['TL_DCA'][ $strTableName ]['fields']['hide']['eval']['tl_class']    = t
 \IIDO\BasicBundle\Helper\DcaHelper::addField('thisPageHasNoBacklink', 'checkbox', $strTableName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField('subPagesHasRequestLink', 'checkbox__selector', $strTableName, array('submitOnChange'=>TRUE), 'clr');
 
+\IIDO\BasicBundle\Helper\DcaHelper::addField('pageHasSubmenu', 'checkbox', $strTableName, array(), 'clr');
+\IIDO\BasicBundle\Helper\DcaHelper::addField('subPagesHasSubmenu', 'checkbox', $strTableName);
+
 $GLOBALS['TL_DCA'][ $strTableName ]['fields']['requestLinkPage']                      = $GLOBALS['TL_DCA'][ $strTableName ]['fields']['jumpTo'];
 $GLOBALS['TL_DCA'][ $strTableName ]['fields']['requestLinkPage']['label']             = &$GLOBALS['TL_LANG'][ $strTableName ]['requestLinkPage'];
 
@@ -228,56 +288,98 @@ $GLOBALS['TL_DCA'][ $strTableName ]['fields']['requestLinkPage']['label']       
 \IIDO\BasicBundle\Helper\DcaHelper::addField('overviewText', 'textarea__rte', $strTableName);
 
 
-$GLOBALS['TL_DCA'][ $strTableName ]['fields']['pageColor']                    = array
-(
-    'label'                 => &$GLOBALS['TL_LANG'][ $strTableName ]['pageColor'],
-    'inputType'             => 'text',
-    'eval'                  => array
-    (
-        'maxlength'             => 6,
-        'multiple'              => TRUE,
-        'size'                  => 2,
-        'colorpicker'           => TRUE,
-        'isHexColor'            => TRUE,
-        'decodeEntities'        => TRUE,
-        'tl_class'              => 'w50 wizard'
-    ),
-    'sql'                   => "varchar(64) NOT NULL default ''"
-);
+//$GLOBALS['TL_DCA'][ $strTableName ]['fields']['pageColor']                    = array
+//(
+//    'label'                 => &$GLOBALS['TL_LANG'][ $strTableName ]['pageColor'],
+//    'inputType'             => 'text',
+//    'eval'                  => array
+//    (
+//        'maxlength'             => 6,
+//        'multiple'              => TRUE,
+//        'size'                  => 2,
+//        'colorpicker'           => TRUE,
+//        'isHexColor'            => TRUE,
+//        'decodeEntities'        => TRUE,
+//        'tl_class'              => 'w50 wizard'
+//    ),
+//    'sql'                   => "varchar(64) NOT NULL default ''"
+//);
 
-$GLOBALS['TL_DCA'][ $strTableName ]['fields']['redirectTimeout'] = array
-(
-    'label'                 => &$GLOBALS['TL_LANG'][ $strTableName ]['redirectTimeout'],
-    'default'               => 0,
-    'exclude'               => true,
-    'inputType'             => 'text',
-    'eval'                  => array
-    (
-        'rgxp'                  => 'natural',
-        'tl_class'              => 'w50'
-    ),
-    'sql'                   => "smallint(5) unsigned NOT NULL default '0'"
-);
-
-
-\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNoPages', 'checkbox__selector', $strTableName);
-\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuSRC', 'select', $strTableName, array('maxlength'=>255,'submitOnChange'=>TRUE));
+//$GLOBALS['TL_DCA'][ $strTableName ]['fields']['redirectTimeout'] = array
+//(
+//    'label'                 => &$GLOBALS['TL_LANG'][ $strTableName ]['redirectTimeout'],
+//    'default'               => 0,
+//    'exclude'               => true,
+//    'inputType'             => 'text',
+//    'eval'                  => array
+//    (
+//        'rgxp'                  => 'natural',
+//        'tl_class'              => 'w50'
+//    ),
+//    'sql'                   => "smallint(5) unsigned NOT NULL default '0'"
+//);
 
 
-$arrFieldConfig = array
-(
-    'foreignKey'              => 'tl_news_archive.title',
-    'sql'                     => "int(10) unsigned NOT NULL default '0'",
-    'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
-);
-\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNewsArchive', 'select', $strTableName, array(), "o50", false, "", $arrFieldConfig);
-\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuPageOrder', 'select', $strTableName, array('maxlength'=>255));
-
-\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('addPageLoader', $strTableName);
-\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('removePageLoader', $strTableName);
+//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNoPages', 'checkbox__selector', $strTableName);
+//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuSRC', 'select', $strTableName, array('maxlength'=>255,'submitOnChange'=>TRUE));
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField("googleAnalyticsId", $strTableName);
+//$arrFieldConfig = array
+//(
+//    'foreignKey'              => 'tl_news_archive.title',
+//    'sql'                     => "int(10) unsigned NOT NULL default '0'",
+//    'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
+//);
+//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNewsArchive', 'select', $strTableName, array(), "o50", false, "", $arrFieldConfig);
+//\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuPageOrder', 'select', $strTableName, array('maxlength'=>255));
+
+//\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('addPageLoader', $strTableName);
+//\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('removePageLoader', $strTableName);
+
+
+//\IIDO\BasicBundle\Helper\DcaHelper::addTextField("googleAnalyticsId", $strTableName);
+
+
+\IIDO\BasicBundle\Dca\Field::create('pageColor', 'colorpicker')->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('redirectTimeout', 'text')
+    ->addEval('rgxp', 'natural')
+    ->addSQL("smallint(5) unsigned NOT NULL default '0'")
+    ->addDefault(0)
+    ->addToTable( $objTable );
+
+
+\IIDO\BasicBundle\Dca\Field::create('submenuNoPages', 'checkbox')
+    ->setSelector(true)
+    ->addToTable( $objTable );
+
+
+\IIDO\BasicBundle\Dca\Field::create('submenuSRC', 'select')
+    ->addEval('maxlength', 255)
+    ->setSelector(true)
+    ->addToTable( $objTable );
+
+
+$objSubmenuNewsArchiveField = \IIDO\BasicBundle\Dca\Field::create('submenuNewsArchive', 'select')
+    ->addEval('tl_class', 'o50')
+    ->addSQL("int(10) unsigned NOT NULL default '0'");
+
+$objSubmenuNewsArchiveField->foreignKey = 'tl_news_archive.title';
+$objSubmenuNewsArchiveField->relation   = array('type'=>'hasOne', 'load'=>'lazy');
+$objSubmenuNewsArchiveField->addToTable( $objTable );
+
+
+\IIDO\BasicBundle\Dca\Field::create('submenuPageOrder', 'select')
+    ->addEval('maxlength',255)
+    ->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('addPageLoader', 'checkbox')->addToTable( $objTable );
+\IIDO\BasicBundle\Dca\Field::create('removePageLoader', 'checkbox')->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('googleAnalyticsId')->addToTable( $objTable );
+
+$objTable->updateDca();
+
 
 //$GLOBALS['TL_DCA'][ $strTableName ]['fields']['pageStyles'] = array
 //(

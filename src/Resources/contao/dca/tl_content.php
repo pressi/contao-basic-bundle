@@ -96,7 +96,7 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStop', '', $strFileName);
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintAdd_legend},imprintMitglied,imprintBerufsrecht,imprintBehoerde,imprintBeruf,imprintCountry,imprintObjectOfTheCompany,imprintVATnumber;{imprintBigAdd_legend},imprintCompanyWording,imprintManagingDirector,imprintSection,imprintOccupationalGroup,imprintCompanyRegister,imprintFirmengericht,imprintAddText;{imprintFields_legend},imprintText,privacyPolicyText;{imprintImageCopyright_legend},imprintImageCopyrights;', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{template_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{newsTemplate_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName);
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_navigation', '{config_legend},navModule,navPages,navigationTpl;', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_weather', '{config_legend},addIcon,addSnow,addTemperature,snowUrl;', $strFileName);
@@ -1067,12 +1067,12 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['snowUrl']['eval']['tl_class'] = trim
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintObjectOfTheCompany', $strFileName, array('maxlength'=>100));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintVATnumber', $strFileName, array('maxlength'=>12));
 
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyWording', $strFileName,array('maxlength'=>100));
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintManagingDirector', $strFileName,array('maxlength'=>100));
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintSection', $strFileName,array('maxlength'=>100));
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintOccupationalGroup', $strFileName,array('maxlength'=>100));
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyRegister', $strFileName,array('maxlength'=>100));
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintFirmengericht', $strFileName,array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyWording', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintManagingDirector', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintSection', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintOccupationalGroup', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintCompanyRegister', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('imprintFirmengericht', $strFileName, array('maxlength'=>100));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField('imprintAddText', $strFileName, array(), '', false, true);
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
@@ -1159,10 +1159,10 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('enableGoogleTracking', $strFileName, array(), '', false, true);
 
-\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('gt_event', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_category', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_action', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_label', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_pageTitle', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_page', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_location', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('gt_event', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_category', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_action', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_label', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_pageTitle', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_page', $strFileName, array('maxlength'=>100));
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_location', $strFileName, array('maxlength'=>100));

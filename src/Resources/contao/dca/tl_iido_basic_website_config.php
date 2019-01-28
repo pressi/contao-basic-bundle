@@ -57,6 +57,7 @@ $arrFields =
         $fieldPrefix . 'scriptVelocity',
 
         $fieldPrefix . 'scriptNav',
+        $fieldPrefix . 'scriptPickdate',
     ],
 
     'support_legend' =>
@@ -135,6 +136,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields'][$fieldPrefix . 'weatherExplanation'
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField($fieldPrefix . 'scriptVelocity', $strFileName, array(), '', false, '', false, false,'', array('options_callback'=>array($tableClass, 'getScriptVersion')));
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField($fieldPrefix . 'scriptNav', $strFileName, array(), '', false, '', false, false,'', array('options_callback'=>array($tableClass, 'getScriptVersion')));
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField($fieldPrefix . 'scriptPickdate', $strFileName, array(), '', false, '', false, false,'', array('options_callback'=>array($tableClass, 'getScriptVersion')));
 
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields'][$fieldPrefix . 'scriptExplanation'] = array
