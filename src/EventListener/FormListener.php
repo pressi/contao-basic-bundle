@@ -74,14 +74,14 @@ class FormListener
                 {
                     $strBuffer = preg_replace_callback('/<label([A-Za-z0-9\s\-_="\{\}:]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"([A-Za-z0-9\s\-_="\{\}:]{0,})>/', 'self::replaceLabel', $strBuffer, -1, $count);
 
-                    if( !$isRadio )
+                    if( !$isRadio && !preg_match('/class="control/', $strBuffer) )
                     {
                         $strBuffer = preg_replace('/<\/label>/', '</label><div class="control">' . ($isSelect ? '<div class="select">' : ''), $strBuffer, -1, $count);
-                    }
 
-                    if( $count )
-                    {
-                        $strBuffer = $strBuffer . '</div>' . ($isSelect ? '</div>' : '');
+                        if( $count )
+                        {
+                            $strBuffer = $strBuffer . '</div>' . ($isSelect ? '</div>' : '');
+                        }
                     }
 
                     if( preg_match('/<input([A-Za-z0-9\s\-_="\{\}:,.;]{0,})class="([A-Za-z0-9\s\-_\{\}:]{0,})"/', $strBuffer, $arrInputMatches) )

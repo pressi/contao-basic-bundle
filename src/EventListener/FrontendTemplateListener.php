@@ -418,23 +418,28 @@ class FrontendTemplateListener extends DefaultListener
             }
 
             // Remove empty canvasTop && pitLane
-//            $objCanvasTop = \ArticleModel::findByAlias("ge_canvas-top_" . $objRootPage->alias);
+            $objCanvasTop = \ArticleModel::findByAlias("ge_canvas-top_" . $objRootPage->alias);
 
-//            if( !$objCanvasTop )
-//            {
-//                $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="canvasTop">([\s\n]{0,})<div class="inside">([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_\n\{\}<>]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
-//            }
-
-//            $objPitLane = \ArticleModel::findByAlias("ge_pitlane_" . $objRootPage->alias);
-
-//            if( !$objPitLane )
-//            {
-//                $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="pitLane">([\s\n]{0,})<div class="inside">([A-Za-z0-9öäüÖÄÜß\s="\-:\/\\.,;:_\n\{\}<>]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
-//            }
-
-            if( preg_match('/nav-cont-left-outside/', $strBuffer) )
+            if( !$objCanvasTop )
             {
-                $strBuffer = preg_replace('/<\/body>/', '<div class="open-left-side-navigation"><div class="olsn-inside"></div></div></body>', $strBuffer);
+                $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="canvasTop">([\s\n]{0,})<div class="inside">([A-Za-z0-9\s\n\-:_\{\}]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
+            }
+
+            $objPitLane = \ArticleModel::findByAlias("ge_pitlane_" . $objRootPage->alias);
+
+            if( !$objPitLane )
+            {
+                $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="pitLane">([\s\n]{0,})<div class="inside">([A-Za-z0-9\s\n\-:_\{\}]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
+            }
+
+            if( preg_match('/id="footer"/', $strBuffer) )
+            {
+                $strBuffer = preg_replace('/<footer([A-Za-z0-9\s\-,;.:_=\'öäüÖÄÜß?!"\(\)\{\}]{0,})>([\s\n]{0,})<div class="inside">/', '<footer$1><div class="inside"><div class="footer-container"><div class="footer-container-inside">', $strBuffer, -1, $foReCo);
+
+                if( $foReCo )
+                {
+                    $strBuffer = preg_replace('/<\/footer>/', '</div></div></footer>', $strBuffer);
+                }
             }
 
         }

@@ -40,6 +40,8 @@ class ContentListener extends DefaultListener
 
         'htmlOpen',
         'htmlClose',
+
+        'dlh_googlemaps'
     );
 
 
@@ -590,8 +592,8 @@ class ContentListener extends DefaultListener
             $strSubClass = $strSubClass . " " . implode(" ", $arrSubHeadlineClasses);
         }
 
-        $topHeadline    = ($objRow->addTopHeadline  ? '<div class="top-headline' . $strTopClass . '">' . $objRow->topHeadline . '</div>' : '');
-        $subHeadline    = ($objRow->subHeadline     ? '<div class="sub-headline' . $strSubClass . '">' . $objRow->subHeadline . '</div>' : '');
+        $topHeadline    = ($objRow->addTopHeadline  ? '<div class="top-headline' . $strTopClass . '"><span class="th-inside">' . $objRow->topHeadline . '</span></div>' : '');
+        $subHeadline    = ($objRow->subHeadline     ? '<div class="sub-headline' . $strSubClass . '"><span class="sh-inside">' . $objRow->subHeadline . '</span></div>' : '');
 
         $strHeadline    = preg_replace(array('/;/'), array('<br>'), $headline);
 
@@ -613,6 +615,9 @@ class ContentListener extends DefaultListener
                     {
                         $strNewHeadline = preg_replace('/<h' . $findUnit . '/', '<h' . $findUnit . ' class="headline"', $strFindHeadline);
                     }
+
+                    $strNewHeadline = preg_replace('/' . preg_quote($arrHeadlineMatches[3][ $headlineNum ], '/') . '/', preg_replace('/;/', '<br>', $arrHeadlineMatches[3][ $headlineNum ]), $strNewHeadline);
+
 
                     $strContent = preg_replace('/' . preg_quote($strFindHeadline, '/') . '/', $strNewHeadline, $strContent);
                 }
