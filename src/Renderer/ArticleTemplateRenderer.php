@@ -589,6 +589,27 @@ class ArticleTemplateRenderer
             }
         }
 
+        if( $objParentPage->subPagesHasSubmenu || $objPage->pageHasSubmenu )
+        {
+            $strSubmenu     = '';
+            $objSubPages    = \PageModel::findPublishedByPid( $objPage->id, array('order'=>'sorting') );
+
+            if( $objSubPages && $objSubPages->count() )
+            {
+                $strSubmenu = '<div class="ce_submenu animate-box auto-insert-from-parent-page" data-animate="fadeInRight" data-animate-offset="" data-animate-trigger-once="true"><ul class="level_1">';
+
+                while( $objSubPages->next() )
+                {
+                    $strSubmenu .= '<li><a href="' . $objSubPages->current()->getFrontendUrl() . '">' . $objSubPages->title . '</a></li>';
+                }
+
+                $strSubmenu .= '</ul></div>';
+            }
+
+
+            $strContent = preg_replace('/<\/div>([\s\n]{0,})<\/div>$/', $strSubmenu . '</div></div>', $strContent);
+        }
+
         return $strContent;
     }
 }
