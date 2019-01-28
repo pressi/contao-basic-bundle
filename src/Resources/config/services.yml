@@ -14,12 +14,24 @@ services:
             - "@database_connection"
             - "%kernel.root_dir%"
             - "%kernel.logs_dir%"
+        public: true
 
 
     contao.connect_tool_user:
         class: IIDO\BasicBundle\ConnectToolUser
         arguments:
             - "@session"
+        public: true
+
+
+    iido.basic.table.default:
+        class: IIDO\BasicBundle\Table\DefaultTable
+        public: true
+        arguments:
+            - "@contao.framework"
+            - "@security.token_storage"
+            - "@session"
+            - "doctrine.orm.entity_manager"
 
 #    contao.connect_tool_twig_extension:
 #        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension

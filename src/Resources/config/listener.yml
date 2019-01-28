@@ -1,4 +1,12 @@
 services:
+    iido_basic.listener.insert_tags:
+        class: IIDO\BasicBundle\Listener\InsertTagsListener
+        tags:
+            - { name: contao.hook, hook: replaceInsertTags, method: replaceCustomizeInsertTags}
+        arguments:
+        - "@contao.framework"
+        public: true
+
     iido_basic.listener.system:
         class: IIDO\BasicBundle\EventListener\SystemListener
         arguments:
@@ -13,14 +21,6 @@ services:
 
     iido_basic.listener.page:
         class: IIDO\BasicBundle\EventListener\PageListener
-        arguments:
-            - "@contao.framework"
-        public: true
-
-    iido_basic.listener.insert_tags:
-        class: IIDO\BasicBundle\EventListener\InsertTagsListener
-#        tags:
-#            - { name: contao.hook, hook: replaceInsertTags, method: replaceCustomizeInsertTags}
         arguments:
             - "@contao.framework"
         public: true
@@ -69,6 +69,7 @@ services:
 
     iido_basic.table.all:
         class: IIDO\BasicBundle\Table\AllTables
+        public: true
 
 
     iido_basic.twig_extension:
