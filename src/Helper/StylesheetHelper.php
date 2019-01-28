@@ -864,7 +864,50 @@ class StylesheetHelper
 
 
 
-    public static function getStylesheetSource( $scriptName, $public = false )
+    public static function addThemeStyle( $stylesheetName, $stylesheets)
+    {
+        $arrStyleSheets = $stylesheets;
+
+        if( !is_array($arrStyleSheets) )
+        {
+            $arrStyleSheets = explode(",", $stylesheets);
+        }
+
+        if( !is_array($stylesheetName) )
+        {
+            $stylesheetName = array( $stylesheetName );
+        }
+
+        foreach($stylesheetName as $fileKey => $fileName)
+        {
+            if( is_numeric( $fileKey ) )
+            {
+                $fileKey = $fileName;
+            }
+
+            $filePath       = self::getStylesheetSource( $fileName, true, true );
+            $filePathIntern = self::getStylesheetSource( $fileName, false, true );
+
+            foreach($arrStyleSheets as $styleSheet)
+            {
+                $styleSheetKey = preg_replace('/.css$/', '', $styleSheet);
+
+                if( !preg_match('/.css$/', $styleSheet) )
+                {
+                    $styleSheet = $styleSheet . '.css';
+                }
+
+                if( file_exists( BasicHelper::getRootDir( true ) . $filePathIntern . '/theme/' . $styleSheet ) )
+                {
+                    $GLOBALS['TL_CSS'][ $fileKey . '-' . $styleSheetKey ] = $filePath . '/theme/' . $styleSheet . self::getStylesheetMode();
+                }
+            }
+        }
+    }
+
+
+
+    public static function getStylesheetSource( $scriptName, $public = false, $withoutFile = false )
     {
         $strPath        = BundleConfig::getBundlePath() . self::$stylesheetPath;
         $folderVersion  = ScriptHelper::getScriptVersion( $scriptName );
@@ -881,7 +924,7 @@ class StylesheetHelper
             }
         }
 
-        return BundleConfig::getBundlePath( $public ) . ($public ? self::$stylesheetPathPublic : self::$stylesheetPath) . $scriptName . '/' . $folderVersion . '/' . $fileName;
+        return BundleConfig::getBundlePath( $public ) . ($public ? self::$stylesheetPathPublic : self::$stylesheetPath) . $scriptName . '/' . $folderVersion . ($withoutFile ? '' : '/' . $fileName);
     }
 
 
@@ -922,6 +965,7 @@ class StylesheetHelper
             'animate.css',
             'hamburgers.css',
             'hamburgers.min.css',
+            'icons.css',
             'core.css',
             'buttons.css',
             'form.css',

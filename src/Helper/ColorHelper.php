@@ -190,7 +190,7 @@ class ColorHelper
      */
     public static function compileColor($color, $blnWriteToFile=false, $vars=array())
     {
-        if( preg_match('/^#/', $color) )
+        if( !is_array($color) && preg_match('/^#/', $color) )
         {
             return $color;
         }

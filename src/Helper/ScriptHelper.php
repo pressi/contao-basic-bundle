@@ -127,8 +127,9 @@ class ScriptHelper
      *
      * @param string|array $scriptName
      * @param bool         $addStylesheet
+     * @param bool         $includeAdd
      */
-    public static function addScript( $scriptName, $addStylesheet = false )
+    public static function addScript( $scriptName, $addStylesheet = false, $includeAdd = false )
     {
         if( !is_array($scriptName) )
         {
@@ -142,16 +143,89 @@ class ScriptHelper
                 $fileKey = $fileName;
             }
 
-//            $filePath       = self::getScriptSource( $fileName, true );
+            $filePath       = self::getScriptSource( $fileName, false, true );
             $filePathIntern = self::getScriptSource( $fileName );
 
             if( file_exists(BasicHelper::getRootDir( true ) . $filePathIntern) )
             {
+                $arrAddAfter = array();
+
+                if( $includeAdd )
+                {
+                    if( is_dir( BasicHelper::getRootDir( true ) . $filePath . '/add' ) )
+                    {
+
+                        $arrFiles = scan( BasicHelper::getRootDir( true ) . $filePath . '/add' );
+
+                        if( is_array($arrFiles) && count($arrFiles) )
+                        {
+                            foreach($arrFiles as $strFile )
+                            {
+                                $fileParts = explode("-", $strFile);
+
+                                if( preg_match('/^b/', $strFile) )
+                                {
+                                    $num = preg_replace('/^b/', '', $fileParts[0]);
+
+                                    $GLOBALS['TL_JAVASCRIPT'][ $fileKey . '-before-' . $num] = $filePath . '/add/' . $strFile . self::getScriptMode();
+                                }
+                                elseif( preg_match('/^a/', $strFile) )
+                                {
+                                    $arrAddAfter[] = $strFile;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 $GLOBALS['TL_JAVASCRIPT'][ $fileKey ] = $filePathIntern . self::getScriptMode();
+
+                if( $includeAdd && count($arrAddAfter) )
+                {
+                    foreach($arrAddAfter as $strFile )
+                    {
+                        $fileParts  = explode("-", $strFile);
+                        $num        = preg_replace('/^a/', '', $fileParts[0]);
+
+                        $GLOBALS['TL_JAVASCRIPT'][ $fileKey . '-after-' . $num] = $filePath . '/add/' . $strFile . self::getScriptMode();
+                    }
+                }
 
                 if( $addStylesheet )
                 {
                     StylesheetHelper::addStylesheet( $fileName );
+                }
+            }
+        }
+    }
+
+
+
+    public static function addTranslateScript( $scriptName, $language )
+    {
+        if( !is_array($scriptName) )
+        {
+            $scriptName = array( $scriptName );
+        }
+
+        foreach($scriptName as $fileKey => $fileName)
+        {
+            if( is_numeric($fileKey) )
+            {
+                $fileKey = $fileName;
+            }
+
+            $filePath       = self::getScriptSource( $fileName, false, true );
+
+            if( is_dir(BasicHelper::getRootDir( true ) . $filePath . '/translate') )
+            {
+                if( file_exists(BasicHelper::getRootDir( true ) . $filePath . '/translate/' . $language . '.js') )
+                {
+                    $GLOBALS['TL_JAVASCRIPT'][ $fileKey . '-trans-' . $language] = $filePath . '/translate/' . $language . '.js' . self::getScriptMode();
+                }
+                elseif( file_exists(BasicHelper::getRootDir( true ) . $filePath . '/translate/' . $language . '_' . strtoupper($language) . '.js') )
+                {
+                    $GLOBALS['TL_JAVASCRIPT'][ $fileKey . '-trans-' . $language] = $filePath . '/translate/' . $language . '_' . strtoupper($language) . '.js' . self::getScriptMode();
                 }
             }
         }

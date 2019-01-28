@@ -33,7 +33,7 @@ class DcaHelper extends \Frontend
      * @param boolean $isFile
      * @param boolean $addPublished
      */
-    public static function createNewTable( $strTable, $isFile = false, $addPublished = false )
+    public static function createNewTable( $strTable, $isFile = false, $addPublished = false, $withoutSQL = false )
     {
         $GLOBALS['TL_DCA'][ $strTable ] = array
         (
@@ -61,18 +61,21 @@ class DcaHelper extends \Frontend
             $GLOBALS['TL_DCA'][ $strTable ]['config']['switchToEdit']       = true;
             $GLOBALS['TL_DCA'][ $strTable ]['config']['enableVersioning']   = true;
 
-            $GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['id']    = 'primary';
+            if( !$withoutSQL )
+            {
+                $GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['id']    = 'primary';
 
-            $GLOBALS['TL_DCA'][ $strTable ]['fields'] = array
-            (
-                'id'        => array( 'sql' => "int(10) unsigned NOT NULL auto_increment" ),
-                'tstamp'    => array( 'sql' => "int(10) unsigned NOT NULL default '0'" )
-            );
+                $GLOBALS['TL_DCA'][ $strTable ]['fields'] = array
+                (
+                    'id'        => array( 'sql' => "int(10) unsigned NOT NULL auto_increment" ),
+                    'tstamp'    => array( 'sql' => "int(10) unsigned NOT NULL default '0'" )
+                );
+            }
         }
 
         if( $addPublished )
         {
-            self::addPublishedFieldsToTable($strTable, 'default', '', 'after', true);
+            self::addPublishedFieldsToTable($strTable, 'default', '', 'after', true, $withoutSQL);
         }
     }
 
@@ -144,8 +147,8 @@ class DcaHelper extends \Frontend
             {
                 $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['edit'] = array
                 (
-                    'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['edit'],
-                    'href'                => 'table=tl_content',
+                    'label'               => self::renderDefaultLangLabel( $strTable, 'edit'),
+                    'href'                => 'table=' . is_string($edit) ?  $edit : 'tl_content',
                     'icon'                => 'edit.svg'
                 );
             }
@@ -153,7 +156,7 @@ class DcaHelper extends \Frontend
             {
                 $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['edit'] = array
                 (
-                    'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['edit'],
+                    'label'               => self::renderDefaultLangLabel( $strTable, 'edit'),
                     'href'                => 'act=edit',
                     'icon'                => 'edit.svg'
                 );
@@ -165,7 +168,7 @@ class DcaHelper extends \Frontend
         {
             $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['editheader'] = array
             (
-                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['editmeta'],
+                'label'               => self::renderDefaultLangLabel( $strTable, 'editmeta'),
                 'href'                => 'act=edit',
                 'icon'                => 'header.svg'
             );
@@ -175,7 +178,7 @@ class DcaHelper extends \Frontend
         {
             $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['copy'] = array
             (
-                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['copy'],
+                'label'               => self::renderDefaultLangLabel( $strTable, 'copy'),
                 'href'                => 'act=paste&amp;mode=copy',
                 'icon'                => 'copy.svg'
             );
@@ -185,7 +188,7 @@ class DcaHelper extends \Frontend
         {
             $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['cut'] = array
             (
-                'label'               => &$GLOBALS['TL_LANG'][ $strTable]['cut'],
+                'label'               => self::renderDefaultLangLabel( $strTable, 'cut'),
                 'href'                => 'act=paste&amp;mode=cut',
                 'icon'                => 'cut.svg'
             );
@@ -195,7 +198,7 @@ class DcaHelper extends \Frontend
         {
             $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['delete'] = array
             (
-                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['delete'],
+                'label'               => self::renderDefaultLangLabel( $strTable, 'delete'),
                 'href'                => 'act=delete',
                 'icon'                => 'delete.svg',
                 'attributes'          => 'onclick="if(!confirm(\'' . $GLOBALS['TL_LANG']['MSC']['deleteConfirm'] . '\'))return false;Backend.getScrollOffset()"'
@@ -206,9 +209,14 @@ class DcaHelper extends \Frontend
         {
             $tableClass = BundleConfig::getTableClass( $strTable );
 
+            if( !$tableClass || is_string($toggle) )
+            {
+                $tableClass = $toggle;
+            }
+
             $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['toggle'] = array
             (
-                'label'               => &$GLOBALS['TL_LANG'][ $strTable ]['toggle'],
+                'label'               => self::renderDefaultLangLabel( $strTable, 'toggle'),
                 'icon'                => 'visible.svg',
                 'attributes'          => 'onclick="Backend.getScrollOffset();return AjaxRequest.toggleVisibility(this,%s)"',
                 'button_callback'     => array($tableClass, 'toggleIcon')
@@ -219,7 +227,7 @@ class DcaHelper extends \Frontend
         {
             $GLOBALS['TL_DCA'][ $strTable ]['list']['operations']['show'] = array
             (
-                'label'               => &$GLOBALS['TL_LANG'][ $strTable]['show'],
+                'label'               => self::renderDefaultLangLabel( $strTable, 'show'),
                 'href'                => 'act=show',
                 'icon'                => 'show.svg'
             );
@@ -635,7 +643,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function addTextField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '', $defaultConfig = array())
+    public static function addTextField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '', $defaultConfig = array(), $withoutSQL = false)
     {
         $langTable = self::renderLangTable( $langTable );
 
@@ -671,6 +679,11 @@ class DcaHelper extends \Frontend
             {
                 $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ][ $configKey ] = $configValue;
             }
+        }
+
+        if( $withoutSQL )
+        {
+            unset( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['sql'] );
         }
     }
 
@@ -892,7 +905,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function addTextareaField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $useRTE = false, $langTable = '')
+    public static function addTextareaField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $useRTE = false, $langTable = '', $withoutSQL = false)
     {
         $langTable = self::renderLangTable( $langTable );
 
@@ -941,6 +954,11 @@ class DcaHelper extends \Frontend
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['label']    = self::renderFieldLabel($strTable, $langTable, $fieldName);
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['eval']     = $defaultEval;
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['sql']      = $useRTE ? "mediumtext NULL" : "text NULL";
+
+        if( $withoutSQL )
+        {
+            unset( $GLOBALS[ $strTable ]['fields'][ $fieldName ]['sql'] );
+        }
     }
 
 
@@ -1210,7 +1228,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function addAliasField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '')
+    public static function addAliasField($fieldName, $strTable, $eval = array(), $classes = '', $replaceClasses = false, $langTable = '', $callbackClass = '', $withoutSQL = false)
     {
         $langTable = self::renderLangTable( $langTable );
 
@@ -1234,17 +1252,22 @@ class DcaHelper extends \Frontend
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
         (
-            'label'                   => self::renderFieldLabel('tl_article', '', 'alias'), //&$GLOBALS['TL_LANG']['tl_article']['alias'],
+            'label'                   => self::renderFieldLabel('tl_article', '', 'alias'),
             'exclude'                 => true,
             'inputType'               => 'text',
             'search'                  => true,
             'eval'                    => $defaultEval,
             'save_callback'           => array
             (
-                array(AllTables::class, 'generateAlias')
+                array($callbackClass?:AllTables::class, 'generateAlias')
             ),
             'sql'                     => "varchar(" . ($defaultEval['maxlength']?:128) . ") COLLATE utf8mb4_bin NOT NULL default ''"
         );
+
+        if( $withoutSQL )
+        {
+            unset( $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['sql'] );
+        }
     }
 
 
@@ -1291,11 +1314,15 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function addPublishedFieldsToTable( $strTable, $toPalette = '', $replaceLegend = '', $replacePosition = 'after', $addToList = false )
+    public static function addPublishedFieldsToTable( $strTable, $toPalette = '', $replaceLegend = '', $replacePosition = 'after', $addToList = false, $withoutSQL = false )
     {
         \Controller::loadLanguageFile( $strTable );
 
-        $strLegend = '{publish_legend},published,start,stop;';
+        $strLegend = '{publish_legend},published';
+
+        $GLOBALS['TL_DCA'][ $strTable ]['palettes']['__selector__'][] = 'published';
+        $GLOBALS['TL_DCA'][ $strTable ]['subpalettes']['published'] = 'start,stop';
+
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields']['published'] = array
         (
@@ -1306,7 +1333,8 @@ class DcaHelper extends \Frontend
             'inputType'               => 'checkbox',
             'eval'                    => array
             (
-                'doNotCopy'         => true
+                'doNotCopy'         => true,
+                'submitOnChange'    => true
             ),
             'sql'                     => "char(1) NOT NULL default ''"
         );
@@ -1339,15 +1367,24 @@ class DcaHelper extends \Frontend
             'sql'                     => "varchar(10) NOT NULL default ''"
         );
 
-        $strKeys = 'start,stop,published';
-
-        if( isset($GLOBALS['TL_DCA'][ $strTable ]['fields']['pid']) )
+        if( $withoutSQL )
         {
-            unset($GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['pid']);
-            $strKeys = 'pid,' .$strKeys;
+            unset( $GLOBALS['TL_DCA'][ $strTable ]['fields']['published']['sql'] );
+            unset( $GLOBALS['TL_DCA'][ $strTable ]['fields']['published']['start'] );
+            unset( $GLOBALS['TL_DCA'][ $strTable ]['fields']['published']['stop'] );
         }
+        else
+        {
+            $strKeys = 'start,stop,published';
 
-        $GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys'][ $strKeys ] = 'index';
+            if( isset($GLOBALS['TL_DCA'][ $strTable ]['fields']['pid']) )
+            {
+                unset($GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys']['pid']);
+                $strKeys = 'pid,' .$strKeys;
+            }
+
+            $GLOBALS['TL_DCA'][ $strTable ]['config']['sql']['keys'][ $strKeys ] = 'index';
+        }
 
         self::renderTableLegend( $strTable, $strLegend, $toPalette, $replaceLegend, $replacePosition);
 
@@ -1498,6 +1535,20 @@ class DcaHelper extends \Frontend
         $fieldName = preg_replace('/^iido([A-Za-z0-9]{0,})_/', '', $fieldName);
 
         return $GLOBALS['TL_LANG'][ $langTable?:$strTable ][ $fieldName ];
+    }
+
+
+
+    protected static function renderDefaultLangLabel( $strTable, $fieldName )
+    {
+        $strLabel = $GLOBALS['TL_LANG'][ $strTable ][ $fieldName ];
+
+        if( !$strLabel )
+        {
+            $strLabel = $GLOBALS['TL_LANG']['DEF'][ $fieldName ];
+        }
+
+        return $strLabel;
     }
 
 

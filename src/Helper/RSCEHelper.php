@@ -75,7 +75,7 @@ class RSCEHelper extends \Frontend
             (
                 'multiple'          => true,
                 'fieldType'         => 'checkbox',
-//                'orderField'        => $orderFieldName,
+                'orderField'        => $orderFieldName,
                 'files'             => true,
                 'isGallery'         => true,
                 'extensions'        => \Config::get('validImageTypes'),
@@ -1010,6 +1010,41 @@ class RSCEHelper extends \Frontend
         }
 
         return (string) $pageNum;
+    }
+
+
+
+    public static function getSortedImages( $object, $imageFieldName = 'multiSRC', $orderFieldName = 'orderSRC')
+    {
+        $images = deserialize($object->$imageFieldName);
+        $tmp    = deserialize($object->$orderFieldName);
+
+        if (!empty($tmp) && is_array($tmp))
+        {
+            // Remove all values
+            $order = array_map(function(){}, array_flip($tmp));
+
+            // Move the matching elements to their position in $order
+            foreach ($images as $k => $v)
+            {
+                if (array_key_exists($v, $order))
+                {
+                    $order[$v] = $v;
+                    unset($images[$k]);
+                }
+            }
+
+            // Append the left-over images at the end
+            if (!empty($images))
+            {
+                $order = array_merge($order, array_values($images));
+            }
+
+            // Remove empty (unreplaced) entries
+            $images = array_values(array_filter($order));
+        }
+
+        return $images;
     }
 
 }
