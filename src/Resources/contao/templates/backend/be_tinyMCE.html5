@@ -76,7 +76,7 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                             {
                                 title: 'Microdata',
                                 items:
-                                 [
+                                [
                                      {title: 'Adresse', block: 'div', attributes: {itemprop: 'address', itemscope: '', itemtype: 'http://shema.org/PostalAddress'}, wrapper: true},
                                      {title: 'Straße', inline: 'span', attributes: {itemprop: 'streetAddress'}, wrapper: true},
                                      {title: 'Postleitzahl', inline: 'span', attributes: {itemprop: 'postalCode'}, wrapper: true},
@@ -85,7 +85,15 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                                      {title: 'Faxnummer', inline: 'span', attributes: {itemprop: 'faxNumber'}, wrapper: true},
                                      {title: 'E-Mail', inline: 'span', attributes: {itemprop: 'email'}, wrapper: true},
                                      {title: 'Internetadresse', inline: 'span', attributes: {itemprop: 'url'}, wrapper: true}
-                                 ]
+                                ]
+                            },
+                            {
+                                title: 'Elemente',
+                                items:
+                                [
+                                    {title: 'Trenner', inline: 'span', classes: 'span-divider'},
+                                    {title: 'Heller / Light', inline: 'span', classes: 'span-light'}
+                                ]
                             }
                         ],
                     <?php endif ?>
@@ -175,6 +183,14 @@ setTimeout(function()
                       {title: 'Faxnummer', inline: 'span', attributes: {itemprop: 'faxNumber'}, wrapper: true},
                       {title: 'E-Mail', inline: 'span', attributes: {itemprop: 'email'}, wrapper: true},
                       {title: 'Internetadresse', inline: 'span', attributes: {itemprop: 'url'}, wrapper: true}
+                  ]
+          },
+          {
+              title: 'Elemente',
+              items:
+                  [
+                      {title: 'Trenner', inline: 'span', classes: 'span-divider'},
+                      {title: 'Heller / Light', inline: 'span', classes: 'span-light'}
                   ]
           }
       ],

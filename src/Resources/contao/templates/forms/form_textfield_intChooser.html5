@@ -1,0 +1,40 @@
+<?php
+$this->class = trim($this->class . ' widget-int-chooser');
+?>
+<?php $this->extend('form_row'); ?>
+
+<?php $this->block('label'); ?>
+  <?php if ($this->label): ?>
+    <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
+      <?php if ($this->mandatory): ?>
+        <span class="invisible"><?= $this->mandatoryField ?> </span><?= $this->label ?><span class="mandatory">*</span>
+      <?php else: ?>
+        <?= $this->label ?>
+      <?php endif; ?>
+    </label>
+  <?php endif; ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
+  <?php if ($this->hasErrors()): ?>
+    <p class="error"><?= $this->getErrorAsString() ?></p>
+  <?php endif; ?>
+
+<div class="field has-addons">
+    <div class="control">
+        <a class="button is-static addon-minus">
+            -
+        </a>
+    </div>
+
+    <div class="control">
+        <input type="text" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="text<?php if ($this->hideInput) echo ' password'; ?><?php if ($this->class) echo ' ' . $this->class; ?>" value="<?= StringUtil::specialchars($this->value) ?>"<?= $this->getAttributes() ?>>
+    </div>
+
+    <div class="control">
+        <a class="button is-static addon-plus">
+            +
+        </a>
+    </div>
+</div>
+<?php $this->endblock(); ?>

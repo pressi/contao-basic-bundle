@@ -6,8 +6,25 @@
     {
         $objNavPage = \PageModel::findByPk( $this->pid );
     }
+
+    $strLevelClasses = '';
+
+    foreach ($this->items as $i)
+    {
+        if( $i['isActive'] )
+        {
+            $strLevelClasses .= ' item-is-active';
+            break;
+        }
+
+        if( preg_match('/trail/', $i['class']) )
+        {
+            $strLevelClasses .= ' item-is-trail';
+            break;
+        }
+    }
 ?>
-<ul class="<?= $this->level ?>">
+<ul class="<?= $this->level ?><?= $strLevelClasses ?>">
     <? if( $objNavPage ): ?>
     <li class="nav-title"><?= $objNavPage->alt_pagename?:$objNavPage->title ?></li>
     <? endif ?>
