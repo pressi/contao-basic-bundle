@@ -1,0 +1,117 @@
+<?php $this->extend('form_row'); ?>
+
+<?php $this->block('label'); ?>
+<?php if ($this->label): ?>
+    <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
+        <?php if ($this->mandatory): ?>
+            <span class="invisible"><?= $this->mandatoryField ?> </span><?= $this->label ?><span class="mandatory">*</span>
+        <?php else: ?>
+            <?= $this->label ?>
+        <?php endif; ?>
+    </label>
+<?php endif; ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
+<?php if ($this->hasErrors()): ?>
+    <p class="error"><?= $this->getErrorAsString() ?></p>
+<?php endif; ?>
+
+<input type="<?= $this->type ?>" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="text<?php if ($this->hideInput) echo ' password'; ?><?php if ($this->class) echo ' ' . $this->class; ?>" value="<?= specialchars($this->value) ?>"<?= $this->getAttributes() ?>>
+<? if(TL_MODE === "FE"): ?>
+<script type="text/javascript">
+
+    jQuery(document).ready(function()
+    {
+        var currentDate = new Date();
+        currentDate.setDate( currentDate.getDate() + 1 );
+
+        jQuery('#ctrl_<?= $this->id ?>').pickadate({
+            firstDay: 1,
+            formatSubmit: 'dd.mm.yyyy',
+            format: 'dd.mm.yyyy',
+            selectYears: true,
+            selectMonths: true,
+            today: '',
+            min: currentDate //new Date(<?= date("Y") ?>, <?= date("m") ?>, <?= date("d") ?>),
+            // disable: [
+            //     [2019,1,20],
+            //     [2019,1,21]
+            // ] // Disable Dates
+            // ,disable: [
+            //     1,4,7
+            // ] // Disable days of the week
+            // ,disable [
+            //     { from: [2019,1,20], to: [2019,2,2] }
+            // ]
+            <?php if( $this->name === "arrival" ): ?>
+            ,onSet: function(thingSet)
+            {
+                var depatureInput = document.querySelector('input[name="depature"]');
+
+                if( depatureInput )
+                {
+                    var picker = $(depatureInput).pickadate("picker"),
+
+                        depatureInputSubmit = document.querySelector('input[name="depature_submit"]');
+
+                    if( thingSet.select )
+                    {
+                        var date = new Date(thingSet.select);
+                        date.setDate( date.getDate() + 1 );
+
+                        picker.set("min", date);
+
+                        var oldDate     = new Date(),
+                            arrOldDate  = depatureInput.value.split(".");
+
+                        oldDate.setFullYear(arrOldDate[2], parseInt(arrOldDate[1]) - 1, parseInt(arrOldDate[0]));
+
+
+                        var strOldDate  = oldDate.getTime() + "",
+                            strDate     = date.getTime() + "";
+
+                        strOldDate  = parseInt( strOldDate.substring(0, (strOldDate.length - 3)) );
+                        strDate     = parseInt( strDate.substring(0, (strDate.length - 3)) );
+
+                        if( strOldDate < strDate )
+                        {
+                            var day     = date.getDate(),
+                                month   = (date.getMonth() + 1);
+
+                            if( month < 10 )
+                            {
+                                month = '0' + month;
+                            }
+
+                            if( day < 10 )
+                            {
+                                day = '0' + day;
+                            }
+
+                            depatureInput.value = day + '.' + month + '.' + date.getFullYear();
+                            depatureInputSubmit.value = day + '.' + month + '.' + date.getFullYear();
+                        }
+                    }
+                    else
+                    {
+                        var curdate = new Date();
+                        curdate.setDate( curdate.getDate() + 1 );
+
+                        picker.set("min", curdate);
+                    }
+                }
+            }
+            <?php endif; ?>
+        })
+    });
+
+    // jQuery.extend( jQuery.fn.pickatime.defaults, {
+    //     clear: 'Löschen'
+    // });
+
+    //http://amsul.ca/pickadate.js/date/
+
+</script>
+<? endif ?>
+<?php $this->endblock(); ?>
