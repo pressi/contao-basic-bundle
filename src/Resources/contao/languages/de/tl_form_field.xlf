@@ -70,6 +70,91 @@
                 <target>Ein ein- oder mehrzeiliges Drop-Down-Menü mit Daten aus der Datenbank.</target>
             </trans-unit>
 
+
+            <trans-unit id="FFL.pickdate.0">
+                <source>Date Picker</source>
+                <target>Datumsauswahl</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_form_field.dateDirection_ref.all">
+                <source>Alle Daten erlaubt</source>
+                <target>Alle Daten erlaubt</target>
+            </trans-unit>
+            <trans-unit id="tl_form_field.dateDirection_ref.ltToday">
+                <source>Nur Datum in der Vergangenheit (exkl. Heute)</source>
+                <target>Nur Datum in der Vergangenheit (exkl. Heute)</target>
+            </trans-unit>
+            <trans-unit id="tl_form_field.dateDirection_ref.leToday">
+                <source>Nur Datum in der Vergangenheit (inkl. Heute)</source>
+                <target>Nur Datum in der Vergangenheit (inkl. Heute)</target>
+            </trans-unit>
+            <trans-unit id="tl_form_field.dateDirection_ref.geToday">
+                <source>Nur Datum in der Zukunft (inkl. Heute)</source>
+                <target>Nur Datum in der Zukunft (inkl. Heute)</target>
+            </trans-unit>
+            <trans-unit id="tl_form_field.dateDirection_ref.gtToday">
+                <source>Nur Datum in der Zukunft (exkl. Heute)</source>
+                <target>Nur Datum in der Zukunft (exkl. Heute)</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_form_field.dateFormat.0">
+                <source>Datumsformat</source>
+                <target>Datumsformat</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateDirection.0">
+                <source>Datumsrichtung</source>
+                <target>Datumsrichtung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateParseValue.0">
+                <source>Standard-Wert konvertieren</source>
+                <target>Standard-Wert konvertieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateIncludeCSS.0">
+                <source>CSS-Datei einbinden</source>
+                <target>CSS-Datei einbinden</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateIncludeCSSTheme.0">
+                <source>jQuery UI Theme</source>
+                <target>jQuery UI Theme</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateImage.0">
+                <source>Kalender-Icon anzeigen</source>
+                <target>Kalender-Icon anzeigen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateImageSRC.0">
+                <source>Eigenes Icon</source>
+                <target>Eigenes Icon</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateDisabledWeekdays.0">
+                <source>Nicht erlaubte Wochentage</source>
+                <target>Nicht erlaubte Wochentage</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateDisabledDays.0">
+                <source>Nicht erlaubte Tage</source>
+                <target>Nicht erlaubte Tage</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateDisabledDaysDate.0">
+                <source>Datum</source>
+                <target>Datum</target>
+            </trans-unit>
+
+            <trans-unit id="tl_form_field.dateDisabledDaysActive.0">
+                <source>Aktiviert</source>
+                <target>Aktiviert</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

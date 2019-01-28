@@ -211,6 +211,126 @@
             </trans-unit>
 
 
+
+<!-- ### DEFAULTS FIELDS ######################################################################################################## -->
+
+
+            <trans-unit id="DEF.new.0">
+                <source>New item</source>
+                <target>Neues Item</target>
+            </trans-unit>
+            <trans-unit id="DEF.new.1">
+                <source>Create a new item</source>
+                <target>Ein neues Item erstellen</target>
+            </trans-unit>
+
+            <trans-unit id="DEF.edit.0">
+                <source>Edit item</source>
+                <target>Item bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="DEF.edit.1">
+                <source>Edit item ID %s</source>
+                <target>Item ID %s bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.show.0">
+                <source>Item details</source>
+                <target>Item Details</target>
+            </trans-unit>
+            <trans-unit id="DEF.show.1">
+                <source>Show the details of item ID %s</source>
+                <target>Die Details des Items ID %s anzeigen</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.copy.0">
+                <source>Duplicate item</source>
+                <target>Item duplizieren</target>
+            </trans-unit>
+            <trans-unit id="DEF.copy.1">
+                <source>Duplicate item ID %s</source>
+                <target>Item ID %s duplizieren</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.cut.0">
+                <source>Move item</source>
+                <target>Item verschieben</target>
+            </trans-unit>
+            <trans-unit id="DEF.cut.1">
+                <source>Move item ID %s</source>
+                <target>Item ID %s verschieben</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.delete.0">
+                <source>Delete item</source>
+                <target>Item löschen</target>
+            </trans-unit>
+            <trans-unit id="DEF.delete.1">
+                <source>Delete item ID %s</source>
+                <target>Item ID %s löschen</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.toggle.0">
+                <source>Publish/unpublish item</source>
+                <target>Item veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+            <trans-unit id="DEF.toggle.1">
+                <source>Publish/unpublish item ID %s</source>
+                <target>Item ID %s veröffentlichen/unveröffentlichen</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.feature.0">
+                <source>Feature/unfeature item</source>
+                <target>Item hervorheben/zurücksetzen</target>
+            </trans-unit>
+            <trans-unit id="DEF.feature.1">
+                <source>Feature/unfeature item ID %s</source>
+                <target>Item ID %s hervorheben/zurücksetzen</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.editheader.0">
+                <source>Edit archive</source>
+                <target>Item-Einstellungen bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="DEF.editheader.1">
+                <source>Edit the item settings</source>
+                <target>Die Item-Einstellungen bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.editmeta.0">
+                <source>Edit item settings</source>
+                <target>Item-Einstellungen bearbeiten</target>
+            </trans-unit>
+            <trans-unit id="DEF.editmeta.1">
+                <source>Edit the item settings</source>
+                <target>Die Item-Einstellungen bearbeiten</target>
+            </trans-unit>
+
+
+            <trans-unit id="DEF.pasteafter.0">
+                <source>Paste into this item</source>
+                <target>In dieses Item einfügen</target>
+            </trans-unit>
+            <trans-unit id="DEF.pasteafter.1">
+                <source>Paste after item ID %s</source>
+                <target>Nach diesem Item ID %s einfügen</target>
+            </trans-unit>
+
+
+
+
+            <trans-unit id="DEF.published.0">
+                <source>PUBLISHED</source>
+                <target>PUBLISHED</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
