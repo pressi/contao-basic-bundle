@@ -13,6 +13,8 @@ IIDO.Form = IIDO.Form || {};
 
     form.init = function()
     {
+        this.initInputIntegerChooser();
+
         var lbForms = document.querySelectorAll(".open-form-in-lightbox");
 
         if( lbForms.length )
@@ -105,9 +107,46 @@ IIDO.Form = IIDO.Form || {};
         return true;
     };
 
+
+
+    form.initInputIntegerChooser = function()
+    {
+        var intChoosers = document.querySelectorAll('div.widget.widget-int-chooser');
+
+        if( intChoosers.length )
+        {
+            for( var i=0; i<intChoosers.length; i++ )
+            {
+                var intChooser  = intChoosers[ i ],
+                    intPlus     = intChooser.querySelector('.control > .button.is-static.addon-plus'),
+                    intMinus    = intChooser.querySelector('.control > .button.is-static.addon-minus');
+
+                intPlus.addEventListener('click', function()
+                {
+                    var textInput = this.parentNode.previousElementSibling.querySelector("input.text");
+
+                    textInput.value = (parseInt( textInput.value ) + 1);
+                });
+
+                intMinus.addEventListener('click', function()
+                {
+                    var textInput   = this.parentNode.nextElementSibling.querySelector("input.text"),
+                        inputValue  = (parseInt( textInput.value ) - 1);
+
+                    if( inputValue < 0 )
+                    {
+                        inputValue = 0;
+                    }
+
+                    textInput.value = inputValue;
+                });
+            }
+        }
+    }
+
 })(window, jQuery, IIDO.Form);
 
 document.addEventListener("DOMContentLoaded", function()
 {
     IIDO.Form.init();
-})
+});

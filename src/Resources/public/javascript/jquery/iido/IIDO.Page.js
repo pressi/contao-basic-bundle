@@ -20,9 +20,9 @@ IIDO.Page = IIDO.Page || {};
 
     page.init = function()
     {
-        $wrapper    = $("#wrapper");
+        $wrapper    = $('#wrapper');
 
-        $tagline    = $(".tagline-inside");
+        $tagline    = $('.tagline-inside');
         $header     = $("header");
         $navOffset  = $header.height();
 
@@ -33,13 +33,14 @@ IIDO.Page = IIDO.Page || {};
         this.initOnePage();
         this.initFullPage();
         this.initPageFade();
-        /* this.initFooter(); */
+        this.initFooter();
         this.initMobile();
         this.initLinks();
         this.initShowArticles();
         this.initSticky();
         // this.initArticles();
         this.initArticleContainers();
+        this.initPageScroll();
 
         if( $(document.body).hasClass("url-change") )
         {
@@ -101,6 +102,27 @@ IIDO.Page = IIDO.Page || {};
 
                return false;
             });
+        }
+    };
+
+
+
+    page.initFooter = function()
+    {
+        var footer          = document.getElementById('footer'),
+            wrapper         = document.getElementById('wrapper'),
+            winHeight       = window.innerHeight,
+            footerHeight    = footer.offsetHeight;
+
+        if( (winHeight - footerHeight) <= parseInt(wrapper.offsetHeight) )
+        {
+            wrapper.classList.add("has-shadow");
+            footer.classList.remove("has-shadow");
+        }
+        else
+        {
+            wrapper.classList.remove("has-shadow");
+            footer.classList.add("has-shadow");
         }
     };
 
@@ -267,7 +289,7 @@ IIDO.Page = IIDO.Page || {};
         {
             var headline = headerLoginElements.find(".headline");
 
-            if( headline )
+            if( headline && headline.length )
             {
                 IIDO.Base.addEvent(headline[0], 'click', IIDO.Page.toggleHeaderLogin);
 
@@ -370,6 +392,23 @@ IIDO.Page = IIDO.Page || {};
                         }
                     }
                 })
+            }
+        });
+    };
+
+
+
+    page.initPageScroll = function()
+    {
+        window.addEventListener("scroll", function()
+        {
+            if( IIDO.Base.getBodyScrollTop() >= 50 )
+            {
+                document.body.classList.add("scrolled");
+            }
+            else
+            {
+                document.body.classList.remove("scrolled");
             }
         });
     };
@@ -510,13 +549,22 @@ IIDO.Page = IIDO.Page || {};
         {
             navContLeftOutsideOpen.addEventListener("click", function()
             {
-                if( document.body.classList.contains("open-navigation") )
+                // if( document.body.classList.contains("open-navigation") )
+                // {
+                //     document.body.classList.remove("open-navigation");
+                // }
+                // else
+                // {
+                //     document.body.classList.add("open-navigation");
+                // }
+
+                if( document.body.classList.contains("hide-navigation") )
                 {
-                    document.body.classList.remove("open-navigation");
+                    document.body.classList.remove("hide-navigation");
                 }
                 else
                 {
-                    document.body.classList.add("open-navigation");
+                    document.body.classList.add("hide-navigation");
                 }
             });
         }
@@ -2309,7 +2357,7 @@ IIDO.Page = IIDO.Page || {};
 
         if( $searchForm.length )
         {
-            var searchLinks = $("a.open-fullscreen-search");
+            var searchLinks = $("a.open-fullscreen-search,.ce_hyperlink.open-fullscreen-search a");
 
             if( searchLinks.length )
             {
