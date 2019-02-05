@@ -561,10 +561,12 @@ IIDO.Page = IIDO.Page || {};
                 if( document.body.classList.contains("hide-navigation") )
                 {
                     document.body.classList.remove("hide-navigation");
+                    Cookies.set('hideNavigation', 'FALSE');
                 }
                 else
                 {
                     document.body.classList.add("hide-navigation");
+                    Cookies.set('hideNavigation', 'TRUE');
                 }
             });
         }
