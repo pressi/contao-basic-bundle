@@ -136,6 +136,17 @@ class PageHelper
         }
 
         $arrBodyClasses = array_merge($arrBodyClasses, $arrClasses);
+
+//        if( \Input::get("devMode") === "YES" )
+//        {
+//            echo "<pre>"; print_r( $_COOKIE ); echo "<br>"; print_r( $arrBodyClasses ); exit;
+//        }
+
+        if( in_array('hide-navigation', $arrBodyClasses) && (isset($_COOKIE['hideNavigation']) && $_COOKIE['hideNavigation'] === "FALSE") )
+        {
+            unset( $arrBodyClasses[ array_search('hide-navigation', $arrBodyClasses) ] );
+        }
+
         $arrBodyClasses = array_values($arrBodyClasses);
         $arrBodyClasses = array_unique($arrBodyClasses);
 
