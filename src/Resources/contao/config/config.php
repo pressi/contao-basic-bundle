@@ -169,7 +169,7 @@ $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerNam
 $GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.backend_template', 'outputCustomizeBackendTemplate');
 $GLOBALS['TL_HOOKS']['parseBackendTemplate'][]              = array($listenerName . '.backend_template', 'parseCustomizeBackendTemplate');
 
-//$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
 
 $GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.ajax', 'parseAjaxRequest');
 //$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.ajax', 'parseAjaxRequest');

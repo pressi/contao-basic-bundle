@@ -442,6 +442,11 @@ class FrontendTemplateListener extends DefaultListener
                 }
             }
 
+            if( preg_match('/nav-cont-left-outside/', $strBuffer) )
+            {
+                $strBuffer = preg_replace('/<\/body>/', '<div class="open-left-side-navigation"><div class="olsn-inside"></div></div></body>', $strBuffer);
+            }
+
         }
 
         return $strBuffer;

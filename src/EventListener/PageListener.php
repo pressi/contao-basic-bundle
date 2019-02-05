@@ -66,6 +66,16 @@ class PageListener extends DefaultListener
             return;
         }
 
+        if( preg_match('/hide-navigation/', $objPage->cssClass) && (isset($_COOKIE['hideNavigation']) && $_COOKIE['hideNavigation'] === "FALSE") )
+        {
+            $objPage->cssClass = preg_replace('/( |)hide-navigation/', '', $objPage->cssClass);
+        }
+
+        if( !preg_match('/hide-navigation/', $objPage->cssClass) && (isset($_COOKIE['hideNavigation']) && $_COOKIE['hideNavigation'] === "TRUE") )
+        {
+            $objPage->cssClass = trim($objPage->cssClass . ' hide-navigation');
+        }
+
         BasicHelper::replaceOtherDefaultScripts();
         BasicHelper::checkForUniqueScripts();
 

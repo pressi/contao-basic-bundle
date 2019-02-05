@@ -599,11 +599,11 @@ class ContentListener extends DefaultListener
 
         if( count($arrHeadlineClasses) )
         {
-            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@]{0,})<\/h([1-6])>/', $strContent, $arrHeadlineMatches);
+            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@éèáàóòúùüâûêôñãõ]{0,})<\/h([1-6])>/', $strContent, $arrHeadlineMatches);
 
             if( count($arrHeadlineMatches[0]) )
             {
-                foreach( $arrHeadlineMatches[0] as $headlineNum => $strFindHeadline)
+                foreach( $arrHeadlineMatches[0] as $headlineNum => $strFindHeadline )
                 {
                     $findUnit = $arrHeadlineMatches[1][ $headlineNum ];
 
