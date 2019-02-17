@@ -15,6 +15,7 @@ use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
 use IIDO\BasicBundle\Helper\ContentHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
+use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
 
 
 /**
@@ -398,7 +399,23 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    $strStyles .= " " . $prefix . "-top:" . $arrPosMargin['top'] . (($useUnit)?$unit:'') . ";";
+                    if( preg_match('/(transY|tansX)/', $arrPosMargin['top']) )
+                    {
+                        $transKey = 'Y';
+
+                        if( preg_match('/transX/', $arrPosMargin['top']) )
+                        {
+                            $transKey = 'X';
+                        }
+
+                        $transValue = preg_replace('/^(transX|transY)/', '', $arrPosMargin['top']);
+
+                        $strStyles .= " transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ");";
+                    }
+                    else
+                    {
+                        $strStyles .= " " . $prefix . "-top:" . $arrPosMargin['top'] . (($useUnit)?$unit:'') . ";";
+                    }
 
                     $useUnit    = true;
                 }
@@ -491,6 +508,17 @@ class ContentListener extends DefaultListener
             }
         }
 
+        if( preg_match('/box/', $cssID[1]) && $objRow->addImage )
+        {
+            $strBuffer = preg_replace('/<p/', '<div class="text-container"><p', $strBuffer, 1, $count);
+
+            if( $count )
+            {
+//                $strBuffer = preg_replace('~<\/p>(?!<\/p>)~', '</p></div>', $strBuffer);
+                $strBuffer = $strBuffer . '</div>';
+            }
+        }
+
         if( count($arrElementClasses) )
         {
             $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrElementClasses );
@@ -502,6 +530,7 @@ class ContentListener extends DefaultListener
         }
 
         $strBuffer = str_replace(['[R]'], ['<sup>&reg;</sup>'], $strBuffer);
+        $strBuffer = preg_replace(['/\|([A-Za-zöäüÖÄÜß0-9]{1,})\|/'], ['<strong>$1</strong>'], $strBuffer);
 
         return $strBuffer;
     }
@@ -510,6 +539,8 @@ class ContentListener extends DefaultListener
 
     protected function renderHeadlines( $strContent, $objRow )
     {
+        global $objPage;
+
         $arrHeadlineClasses     = array();
         $arrTopHeadlineClasses  = array();
         $arrSubHeadlineClasses  = array();
@@ -517,6 +548,7 @@ class ContentListener extends DefaultListener
         $arrContClasses         = array();
 
         $arrStyleHeadlineClasses    = array();
+        $arrElementClasses          = array();
 
         $arrHeadline    = deserialize($objRow->headline, TRUE);
         $unit           = $arrHeadline['unit'];
@@ -551,34 +583,52 @@ class ContentListener extends DefaultListener
 
         if( $objRow->headlineStyles )
         {
-            $arrConfig = \StringUtil::deserialize( \Config::get( BundleConfig::getTableFieldPrefix() . 'headlineStyles' ), TRUE );
+//            $arrConfig = \StringUtil::deserialize( \Config::get( BundleConfig::getTableFieldPrefix() . 'headlineStyles' ), TRUE );
+
+            $arrConfig = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineStyle' );
 
             if( count($arrConfig) )
             {
-                foreach($arrConfig as $arrHeadlineConfig)
+                $arrStyle = $arrConfig[ ($objRow->headlineStyles - 1) ];
+
+                if( $arrStyle['tagClasses'] )
                 {
-                    if( $objRow->headlineStyles === $arrHeadlineConfig['id'] )
+                    $arrTagClasses      = explode(" ", $arrStyle['classes']);
+                    $arrElementClasses  = explode(" ", $arrStyle['tagClasses']);
+
+                    foreach($arrTagClasses as $arrTagClass)
                     {
-                        if( $arrHeadlineConfig['tagClasses'] )
+                        if( !in_array($arrTagClass, $arrStyleHeadlineClasses) )
                         {
-                            $arrTagClasses      = explode(" ", $arrHeadlineConfig['tagClasses']);
-                            $arrElementClasses  = explode(" ", $arrHeadlineConfig['elementClasses']);
-
-                            foreach($arrTagClasses as $arrTagClass)
-                            {
-                                if( !in_array($arrTagClass, $arrStyleHeadlineClasses) )
-                                {
-                                    $arrStyleHeadlineClasses[] = $arrTagClass;
-                                }
-                            }
-
-                            if( count($arrElementClasses) )
-                            {
-                                $strContent = $this->addClassToContentElement($strContent, $objRow, $arrElementClasses);
-                            }
+                            $arrStyleHeadlineClasses[] = $arrTagClass;
                         }
                     }
                 }
+
+//                foreach($arrConfig as $arrHeadlineConfig)
+//                {
+//                    if( $objRow->headlineStyles === $arrHeadlineConfig['id'] )
+//                    {
+//                        if( $arrHeadlineConfig['tagClasses'] )
+//                        {
+//                            $arrTagClasses      = explode(" ", $arrHeadlineConfig['tagClasses']);
+//                            $arrElementClasses  = explode(" ", $arrHeadlineConfig['elementClasses']);
+//
+//                            foreach($arrTagClasses as $arrTagClass)
+//                            {
+//                                if( !in_array($arrTagClass, $arrStyleHeadlineClasses) )
+//                                {
+//                                    $arrStyleHeadlineClasses[] = $arrTagClass;
+//                                }
+//                            }
+//
+//                            if( count($arrElementClasses) )
+//                            {
+//                                $strContent = $this->addClassToContentElement($strContent, $objRow, $arrElementClasses);
+//                            }
+//                        }
+//                    }
+//                }
             }
         }
 
@@ -663,6 +713,11 @@ class ContentListener extends DefaultListener
             $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
 
             $strContent = '<div class="ce_headline content-element ' . implode(" ", $arrContClasses) . (count($arrContClasses) ? ' ' : '') . implode(" ", $objRow->classes) . (count($objRow->classes) ? ' ' : '') . $cssID[1] . (strlen($cssID[1]) ? ' ' : '') . 'block"><div class="element-inside">' . $strContent . '</div></div>';
+        }
+
+        if( count($arrElementClasses) )
+        {
+            $strContent = $this->addClassToContentElement($strContent, $objRow, $arrElementClasses);
         }
 
         return $strContent;
@@ -856,7 +911,6 @@ class ContentListener extends DefaultListener
 
     protected function addClassToContentElement( $strContent, $objRow, array $arrClasses )
     {
-
         if( count($arrClasses) )
         {
             $elementClass       = $this->getElementClass( $objRow );
@@ -963,7 +1017,7 @@ class ContentListener extends DefaultListener
                 $strType = $objAliasElement->type;
             }
 
-            if( (preg_match('/column/', $cssID[1]) || preg_match('/box-item/', $cssID[1]) || $objRow->type === "rsce_box" || $strType === "rsce_box" ) && !$GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] && !preg_match('/column-box/', $cssID[1]) )
+            if( (preg_match('/ column/', $cssID[1]) || preg_match('/ box-item/', $cssID[1]) || $objRow->type === "rsce_box" || $strType === "rsce_box" ) && !$GLOBALS['IIDO']['BOXES']['OPEN_WRAPPER'] && !preg_match('/column-box/', $cssID[1]) )
             {
                 $GLOBALS['IIDO']['BOXES']['OPEN'] = $GLOBALS['IIDO']['BOXES']['OPEN'] || FALSE;
 
