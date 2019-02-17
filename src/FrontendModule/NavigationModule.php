@@ -882,7 +882,7 @@ class NavigationModule extends \ModuleNavigation
         $strTarget      = '';
         $strClass       = '';
 
-        if( $type == "page" )
+        if( $type === "page" )
         {
             $trail      = in_array($objItem->id, $objPage->trail);
 
@@ -907,6 +907,11 @@ class NavigationModule extends \ModuleNavigation
                     else
                     {
                         $objNext = \PageModel::findFirstPublishedRegularByPid($objItem->id);
+
+                        if( $objNext->type === "forward" && !$objNext->jumpTo )
+                        {
+                            $objNext = \PageModel::findFirstPublishedRegularByPid($objNext->id);
+                        }
                     }
 
                     // Hide the link if the target page is invisible
@@ -1094,7 +1099,7 @@ class NavigationModule extends \ModuleNavigation
                 $arrItem[ $varName ] = $varValue;
             }
         }
-
+//echo "<pre>"; print_r( $arrItem ); echo "</pre>";
         return $arrItem;
     }
 
