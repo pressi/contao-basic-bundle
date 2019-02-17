@@ -82,6 +82,8 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('navigation_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
     ->addLegend('animation_legend', 'expert_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
     ->addLegend('divider_legend', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
+    ->addLegend('inside_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+
 
 
     ->addField(array('fullHeight', 'fullWidth'), 'dimensions_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
@@ -98,6 +100,8 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addField('addAnimation', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
 
     ->addField('addDivider', 'divider_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+
+    ->addField(array('padding'), 'inside_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
 
 
     ->applyToPalette('default', $strFileName);
@@ -233,7 +237,8 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['videoSRC'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("hideInMenu", $strFileName, array(), "clr no-clr-after");
 \IIDO\BasicBundle\Helper\DcaHelper::copyField("navSubTitle", $strFileName, 'navTitle');
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField("submenuSRC", $strFileName, array('includeBlankOption'=>true),'', false, '', false, true, 'page');
-\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('submenuNewsArchive', $strFileName, 'submenuNewsArchive', 'page');
+//\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('submenuNewsArchive', $strFileName, 'submenuNewsArchive', 'page');
+\IIDO\BasicBundle\Helper\DcaHelper::addField('submenuNewsArchive', 'select', $strFileName, array(), "o50", false, "", $arrFieldConfig);
 
 \IIDO\BasicBundle\Helper\DcaHelper::addImageField("overviewImage", $strFileName);
 
@@ -289,3 +294,8 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['videoSRC'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField("addDivider", $strFileName, array(), 'clr no-clr-after', false, true);
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField("dividerStyle", $strFileName);
+
+
+
+// Inside Legend
+\IIDO\BasicBundle\Helper\DcaHelper::addField('padding', 'trbl__units', $strFileName);

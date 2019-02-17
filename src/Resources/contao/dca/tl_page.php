@@ -8,7 +8,7 @@
  *******************************************************************/
 
 $strTableName   = \IIDO\BasicBundle\Config\BundleConfig::getTableName( __FILE__ );
-$objTable       = new \IIDO\BasicBundle\Dca\Table( $strTableName );
+$objTable       = new \IIDO\BasicBundle\Dca\ExistTable( $strTableName );
 
 $tableListener = $objTable->getTableListener();
 
@@ -55,8 +55,10 @@ if($act === "edit" && $do === "page" && is_numeric($id))
 //$GLOBALS['TL_DCA'][ $strTableName ]['config']['oncreate_version_callback'][]  = array($strTableClass, 'checkThemeStylesheet');
 //$GLOBALS['TL_DCA'][ $strTableName ]['config']['onsubmit_callback'][]          = array($strTableClass, 'generateExtraArticle');
 
-$objTable->addTableConfig('oncreate_version_callback', array($tableListener, 'checkThemeStylesheet'));
-$objTable->addTableConfig('onsubmit_callback', array($tableListener, 'generateExtraArticle'));
+//$objTable->addTableConfig('oncreate_version_callback', array($tableListener, 'checkThemeStylesheet'));
+//$objTable->addTableConfig('onsubmit_callback', array($tableListener, 'generateExtraArticle'));
+$objTable->addTableConfig('oncreate_version_callback', array($strTableClass, 'checkThemeStylesheet'));
+$objTable->addTableConfig('onsubmit_callback', array($strTableClass, 'generateExtraArticle'));
 
 
 
@@ -65,7 +67,8 @@ $objTable->addTableConfig('onsubmit_callback', array($tableListener, 'generateEx
  */
 
 //$GLOBALS['TL_DCA'][ $strTableName ]['list']['label']['label_callback']        = array($strTableClass, 'pageLabel');
-$objTable->updateLabelConfig('label_callback', array($tableListener, 'pageLabel'));
+//$objTable->updateLabelConfig('label_callback', array($tableListener, 'pageLabel'));
+$objTable->updateLabelConfig('label_callback', array($strTableClass, 'pageLabel'));
 
 
 
@@ -85,7 +88,7 @@ $objTable->updateLabelConfig('label_callback', array($tableListener, 'pageLabel'
  */
 
 //$GLOBALS['TL_DCA'][ $strTableName ]['palettes']['regular_redirect']           = $GLOBALS['TL_DCA'][ $strTableName ]['palettes']['regular'];
-$objTable->copyPalette('regular_redirect', 'regular');
+$objTable->copyPalette('regular', 'regular_redirect');
 
 
 
@@ -104,26 +107,23 @@ if($objParentPage !== null && $objParentPage->subPagesHasRequestLink)
 }
 
 
-$objTable->replacePaletteFields('all', ',type', ',type,alt_pagename,subtitle,navTitle,navSubtitle,subtitlePosition', ['root']);
-$objTable->replacePaletteFields('all', ',guests', ',guests' . $backLinkFields, ['root']);
+$objTable->replacePaletteFields('all', ',type', ',type,alt_pagename,subtitle,navTitle,navSubtitle,subtitlePosition', ['root', 'default']);
+$objTable->replacePaletteFields('all', ',guests', ',guests' . $backLinkFields, ['root', 'default']);
 
-if( $objCurrentPage->type === "regular_redirect" )
-{
-    $objTable->replacePaletteFields('all', '{meta_legend', '{redirect_legend},jumpTo,redirectTimeout;{meta_legend', ['root']);
-}
+$objTable->replacePaletteFields('regular_redirect', '{meta_legend', '{redirect_legend},jumpTo,redirectTimeout;{meta_legend');
 
-$objTable->replacePaletteFields('all', ',hide', '', ['root']);
-$objTable->replacePaletteFields('all', ',guests', '', ['root']);
-$objTable->replacePaletteFields('all', ',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight,addPageLoader', ['root']);
+$objTable->replacePaletteFields('all', ',hide', '', ['root', 'default']);
+$objTable->replacePaletteFields('all', ',guests', '', ['root', 'default']);
+$objTable->replacePaletteFields('all', ',includeLayout', ',includeLayout,removeHeader,removeFooter,removeLeft,removeRight,addPageLoader', ['root', 'default']);
 
-$objTable->replacePaletteFields('all', '{meta_legend', '{page_legend},enableFullpage;{meta_legend', ['root']);
-$objTable->replacePaletteFields('all', '{meta_legend', '{navigation_legend},hide,hideTitle,guests,openPageInLightbox,submenuNoPages,overviewImage,pageColor,overviewText;{meta_legend', ['root']);
+$objTable->replacePaletteFields('all', '{meta_legend', '{page_legend},enableFullpage;{meta_legend', ['root', 'default']);
+$objTable->replacePaletteFields('all', '{meta_legend', '{navigation_legend},hide,hideTitle,guests,openPageInLightbox,submenuNoPages,overviewImage,pageColor,overviewText;{meta_legend', ['root', 'default']);
 
 if( \Config::get("folderUrl") )
 {
-    $objTable->replacePaletteFields('all', ',alias', ',alias,excludeFromFolderUrl', ['root']);
-    $objTable->replacePaletteFields('all', ',type', '', ['root']);
-    $objTable->replacePaletteFields('all', ',title', ',title,type', ['root']);
+    $objTable->replacePaletteFields('all', ',alias', ',alias,excludeFromFolderUrl', ['root', 'default']);
+    $objTable->replacePaletteFields('all', ',type', '', ['root', 'default']);
+    $objTable->replacePaletteFields('all', ',title', ',title,type', ['root', 'default']);
 }
 
 $objTable->replacePaletteFields('root', '{global_legend', '{analytics_legend},googleAnalyticsId;{global_legend');
@@ -132,9 +132,8 @@ $objTable->replacePaletteFields('root', '{cache_legend', '{additional_legend},en
 
 if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
 {
-    $objTable->replacePaletteFields('all', ',addPageLoader', ',removePageLoader', ['root']);
+    $objTable->replacePaletteFields('all', ',addPageLoader', ',removePageLoader', ['root', 'default']);
 }
-
 
 //$pageTableFields = '';
 
