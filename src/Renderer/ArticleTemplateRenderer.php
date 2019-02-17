@@ -422,7 +422,32 @@ class ArticleTemplateRenderer
                 $divOverlay = '<div class="bg-container-overlay"></div>';
             }
 
-            $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3>' . $divOverlay . '<div class="article-inside">' . $divTableStart, $strContent, -1, $count);
+            $strArticleInsideStyles = '';
+            $padding = \StringUtil::deserialize($objArticle->padding, TRUE);
+
+            if( $padding['top'] )
+            {
+                $strArticleInsideStyles .= 'padding-top:' . $padding['top'] . $padding['unit'];
+            }
+            if( $padding['right'] )
+            {
+                $strArticleInsideStyles .= 'padding-right:' . $padding['right'] . $padding['unit'];
+            }
+            if( $padding['bottom'] )
+            {
+                $strArticleInsideStyles .= 'padding-bottom:' . $padding['bottom'] . $padding['unit'];
+            }
+            if( $padding['left'] )
+            {
+                $strArticleInsideStyles .= 'padding-left:' . $padding['left'] . $padding['unit'];
+            }
+
+            if( strlen($strArticleInsideStyles) )
+            {
+                $strArticleInsideStyles = ' style="' . $strArticleInsideStyles . '"';
+            }
+
+            $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3>' . $divOverlay . '<div class="article-inside"' . $strArticleInsideStyles . '>' . $divTableStart, $strContent, -1, $count);
 
             if( $count > 0 )
             {
