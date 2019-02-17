@@ -4,7 +4,7 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags, method: replaceCustomizeInsertTags}
         arguments:
-        - "@contao.framework"
+            - "@contao.framework"
         public: true
 
     iido_basic.listener.system:
