@@ -57,6 +57,24 @@ class RSCEHelper extends \Frontend
 
 
 
+    public static function getVideoFieldConfig( $label )
+    {
+        return array
+        (
+            'label'         => self::renderLabel( $label ),
+            'inputType'     => 'fileTree',
+            'eval'          => array
+            (
+                'multiple'          => true,
+                'files'             => true,
+                'fieldType'         => 'checkbox',
+                'tl_class'          => 'clr w50 hauto',
+            )
+        );
+    }
+
+
+
     /**
      * Get MultiSRC (Image Gallery) Config
      *

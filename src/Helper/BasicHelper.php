@@ -258,7 +258,7 @@ class BasicHelper extends \Frontend
      *
      * @return string
      */
-    public static function renderVideoTag( $videoSRC, $posterSRC, array $arrParams = array('autoplay', 'loop', 'preload="none"') )
+    public static function renderVideoTag( $videoSRC, $posterSRC = '', array $arrParams = array('autoplay', 'loop', 'preload="none"') )
     {
         $poster = '';
 

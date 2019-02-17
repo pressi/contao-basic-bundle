@@ -465,33 +465,89 @@ class ColorHelper
 
         $parentLabel    = 'Standardfarben';
         $arrColors      = array();
-        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+//        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+//
+//
+//        $primary = self::compileColor( \Config::get( $fieldPrefix . 'colorPrimary' ) );
+//
+//        if( $primary && $primary !== "transparent" )
+//        {
+//            $arrColors[ $parentLabel ][ $primary ] = 'Primary - Hauptfarbe';
+//        }
+//
+//
+//        $secondary = self::compileColor( \Config::get( $fieldPrefix . 'colorSecondary' ) );
+//
+//        if( $secondary && $secondary !== "transparent" )
+//        {
+//            $arrColors[ $parentLabel ][ $secondary ] = 'Secondary - Zweitfarbe';
+//        }
+//
+//
+//
+//        $colors = \StringUtil::deserialize( \Config::get( $fieldPrefix . 'colors' ), TRUE );
+//
+//        if( count($colors) && $colors[0]['color'] )
+//        {
+//            foreach($colors as $arrColor)
+//            {
+//                $arrColors[ $parentLabel ][ '#' . $arrColor['color'] ] = $arrColor['name']; //TODO: check root page
+//            }
+//        }
 
-
-        $primary = self::compileColor( \Config::get( $fieldPrefix . 'colorPrimary' ) );
-
-        if( $primary && $primary !== "transparent" )
+        if( \Input::get("do") === "article" )
         {
-            $arrColors[ $parentLabel ][ $primary ] = 'Primary - Hauptfarbe';
-        }
+            $strTable = \Input::get("table");
 
-
-        $secondary = self::compileColor( \Config::get( $fieldPrefix . 'colorSecondary' ) );
-
-        if( $secondary && $secondary !== "transparent" )
-        {
-            $arrColors[ $parentLabel ][ $secondary ] = 'Secondary - Zweitfarbe';
-        }
-
-
-
-        $colors = \StringUtil::deserialize( \Config::get( $fieldPrefix . 'colors' ), TRUE );
-
-        if( count($colors) && $colors[0]['color'] )
-        {
-            foreach($colors as $arrColor)
+            switch( $strTable )
             {
-                $arrColors[ $parentLabel ][ '#' . $arrColor['color'] ] = $arrColor['name']; //TODO: check root page
+                case "tl_content":
+                    $objElement = \ContentModel::findByPk( \Input::get("id") );
+
+                    if( $objElement )
+                    {
+                        $objArticle = \ArticleModel::findByPk( $objElement->pid );
+                    }
+                    break;
+
+                default:
+                    $objArticle = \ArticleModel::findByPk( \Input::get("id") );
+                    break;
+            }
+
+            $objCurrentPage = \PageModel::findByPk( $objArticle->pid );
+            $objCurrentPage = $objCurrentPage->loadDetails();
+
+
+            $primary = WebsiteStylesHelper::getConfigFieldValue( $objCurrentPage->rootAlias, 'colorPrimary');
+
+            if( $primary && $primary !== "transparent" )
+            {
+                $arrColors[ $parentLabel ][ $primary ] = 'Primary - Hauptfarbe';
+            }
+
+            $secondary = WebsiteStylesHelper::getConfigFieldValue( $objCurrentPage->rootAlias, 'colorSecondary');
+
+            if( $secondary && $secondary !== "transparent" )
+            {
+                $arrColors[ $parentLabel ][ $secondary ] = 'Secondary - Zweitfarbe';
+            }
+
+            $arrCustomColors = WebsiteStylesHelper::getConfigFieldValue( $objCurrentPage->rootAlias, 'customColor');
+
+            if( count($arrCustomColors) )
+            {
+                foreach($arrCustomColors as $arrColor)
+                {
+                    $strColor = $arrColor['color'];
+
+                    if( preg_match('/^#/', $strColor) )
+                    {
+                        $strColor = '#' . $strColor;
+                    }
+
+                    $arrColors[ $parentLabel ][ $strColor ] = $arrColor['name'];
+                }
             }
         }
 

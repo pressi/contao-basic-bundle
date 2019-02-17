@@ -948,6 +948,7 @@ class StylesheetHelper
         $cssPathStd     = $cssPath . 'frontend/iido/';
         $cssPathMaster  = 'files/master/css/';
         $cssPathCustom  = 'files/' . $rootAlias . '/css/';
+        $scssPathCustom = 'files/' . $rootAlias . '/scss/';
 
         $arrFiles       = array
         (
@@ -1023,6 +1024,29 @@ class StylesheetHelper
             if( file_exists($rootDir . '/' . $cssPathCustom  . $strFile) )
             {
                 $GLOBALS['TL_USER_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
+            }
+        }
+
+        $arrScssFiles = array();
+
+        foreach($arrCustomFiles as $strFile)
+        {
+            $strFile = preg_replace('/.css$/', '.scss', $strFile);
+
+
+            if( file_exists($rootDir . '/' . $scssPathCustom  . $strFile) )
+            {
+                $arrScssFiles[ $strFile ] = $scssPathCustom . $strFile . '||static';
+            }
+        }
+
+        if( count($arrScssFiles) )
+        {
+            $GLOBALS['TL_USER_CSS'][ 'custom_scss_functions'] =  $scssPathCustom . 'config/functions.scss||static';
+
+            foreach($arrScssFiles as $strFileName => $strFilePath)
+            {
+                $GLOBALS['TL_USER_CSS'][ 'custom_scss_' . $strFileName] =  $strFilePath;
             }
         }
 

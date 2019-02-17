@@ -856,7 +856,7 @@ class DcaHelper extends \Frontend
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['default'] = $defaultValue;
         }
 
-        if( count( $defaultConfig) )
+        if( is_array($defaultConfig) && count( $defaultConfig) )
         {
             foreach( $defaultConfig as $configKey => $configValue )
             {
