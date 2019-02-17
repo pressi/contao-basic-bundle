@@ -217,7 +217,7 @@
 
             <trans-unit id="DEF.new.0">
                 <source>New item</source>
-                <target>Neues Item</target>
+                <target>Neue#LABEL#</target>
             </trans-unit>
             <trans-unit id="DEF.new.1">
                 <source>Create a new item</source>
@@ -329,6 +329,209 @@
             <trans-unit id="DEF.published.0">
                 <source>PUBLISHED</source>
                 <target>PUBLISHED</target>
+            </trans-unit>
+
+            <trans-unit id="DEF.protected.0">
+                <source>protected</source>
+                <target>Item schützen</target>
+            </trans-unit>
+
+            <trans-unit id="DEF.title.0">
+                <source>title</source>
+                <target>Titel</target>
+            </trans-unit>
+
+            <trans-unit id="DEF.jumpTo.0">
+                <source>jump to page</source>
+                <target>Weiterleitungsseite</target>
+            </trans-unit>
+
+
+
+
+            <trans-unit id="DEF.protected_legend">
+                <source>protected</source>
+                <target>Zugrifsschutz</target>
+            </trans-unit>
+
+            <trans-unit id="DEF.title_legend">
+                <source>title settungs</source>
+                <target>Titel Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="DEF.title-jumpto_legend">
+                <source>title and jump to</source>
+                <target>Titel und Weiterleitung</target>
+            </trans-unit>
+
+
+
+<!-- ### IIDO ELEMENTS ###################################################################################################### -->
+
+            <trans-unit id="IIDO.WebsiteStyles.field.websiteWidth">
+                <source>Website-Breite</source>
+                <target>Website-Breite</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.websiteContentWidth">
+                <source>Website-Inhaltsbreite</source>
+                <target>Website-Inhaltsbreite</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.customColor">
+                <source>Farben</source>
+                <target>Farben</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.customColor_color">
+                <source>Farbcode (ohne #)</source>
+                <target>Farbcode (ohne #)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.customColor_name">
+                <source>Name / Bezeichnung</source>
+                <target>Name / Bezeichnung</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.primaryColor">
+                <source>Primary Farbe (Hauptfarbe)</source>
+                <target>Primary Farbe (Hauptfarbe)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.secondaryColor">
+                <source>Secondary Farbe (Zweitfarbe)</source>
+                <target>Secondary Farbe (Zweitfarbe)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.tertiaryColor">
+                <source>Tertiary Farbe (Drtittfarbe)</source>
+                <target>Tertiary Farbe (Drtittfarbe)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.quaternaryColor">
+                <source>Quaternary Farbe (Viertfarbe)</source>
+                <target>Quaternary Farbe (Viertfarbe)</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.headlineStyle">
+                <source>Überschrift Stile</source>
+                <target>Überschrift Stile</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.headlineStyle_color">
+                <source>Farbe (ohne #)</source>
+                <target>Farbe (ohne #)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.headlineStyle_classes">
+                <source>Überschrift-Tag Klassen</source>
+                <target>Überschrift-Tag Klassen</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.headlineStyle_tagClasses">
+                <source>Inhaltselement Klassen</source>
+                <target>Inhaltselement Klassen</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.headlineStyle_size">
+                <source>Größe</source>
+                <target>Größe</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.headlineStyle_align">
+                <source>Ausrichtung</source>
+                <target>Ausrichtung</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.headlineStyle_name">
+                <source>Name / Interne Bezeichnung</source>
+                <target>Name / Interne Bezeichnung</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.rte">
+                <source>Link-Klassen</source>
+                <target>Link-Klassen</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.rte_title">
+                <source>Titel</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.rte_classes">
+                <source>Klassen</source>
+                <target>Klassen</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.formInputMode">
+                <source>Formularfeld aussehen (Stil)</source>
+                <target>Formularfeld aussehen (Stil)</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.btnPrimaryColor">
+                <source>Primary: Farbe</source>
+                <target>Primary: Farbe</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.btnPrimaryTextColor">
+                <source>Primary: Schriftfarbe</source>
+                <target>Primary: Schriftfarbe</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.btnPrimaryColorHover">
+                <source>Primary: Hover-Farbe</source>
+                <target>Primary: Hover-Farbe</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.btnPrimaryTextColorHover">
+                <source>Primary: Hover-Schriftfarbe</source>
+                <target>Primary: Hover-Schriftfarbe</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.overlayBackground">
+                <source>Overlay: Hintergrundfarbe</source>
+                <target>Overlay: Hintergrundfarbe</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.overlayStyle">
+                <source>Overlay: Style</source>
+                <target>Overlay: Style</target>
+            </trans-unit>
+
+
+
+<!-- ### IIDO OPTIONS ####################################################################################################### -->
+
+            <trans-unit id="IIDO.WebsiteStyles.options_overlayStyle.spinner1">
+                <source>spinner1</source>
+                <target>Style 1 (Kreise pulsierend)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_overlayStyle.spinner2">
+                <source>spinner1</source>
+                <target>Style 2 (gepunkteter Kreis drehend)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_overlayStyle.spinner3">
+                <source>spinner1</source>
+                <target>Style 3 (Quadrat drehend)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_overlayStyle.spinner4">
+                <source>spinner1</source>
+                <target>Style 4 (2 Kreise drehend)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_overlayStyle.spinner5">
+                <source>spinner1</source>
+                <target>Style 5 (2 Quadrate drehend)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_overlayStyle.spinner6">
+                <source>spinner1</source>
+                <target>Style 6 (Rechtecke in einer Reihe, springend)</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_overlayStyle.spinner7">
+                <source>spinner1</source>
+                <target>Style 7 (Kreise in einer Reihe, springend)</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.options_formInputMode.round">
+                <source>round</source>
+                <target>Abgerundete Ecken</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_formInputMode.rounded">
+                <source>round</source>
+                <target>Runde Ecken</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.options_formInputMode.not-round">
+                <source>not round</source>
+                <target>Keine abgerundeten Ecken</target>
             </trans-unit>
 
         </body>
