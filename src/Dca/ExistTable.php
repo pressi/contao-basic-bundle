@@ -18,7 +18,8 @@ class ExistTable extends Table
 
     public function __construct($tableName, $withoutSQL = FALSE)
     {
-
+        $this->strTable     = $tableName;
+        $this->withoutSQL   = $withoutSQL;
     }
 
 }

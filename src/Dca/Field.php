@@ -38,6 +38,7 @@ class Field
         'checkbox'      => "char(1) NOT NULL default ''",
         'select'        => "varchar(##MAXLENGTH##) NOT NULL default ''",
         'fileTree'      => "binary(16) NULL",
+        'pageTree'      => "int(10) unsigned NOT NULL default '0'",
         'imageSize'     => "varchar(64) NOT NULL default ''",
         'trbl'          => "varchar(128) NOT NULL default ''",
 
@@ -212,7 +213,12 @@ class Field
 
 
 
-    public function createDca( $strTable = '' )
+    /**
+     * @param string $strTable
+     *
+     * @throws \Exception
+     */
+    public function createDca($strTable = '' )
     {
         if( $strTable )
         {
@@ -375,6 +381,17 @@ class Field
 
 
 
+    protected function setDefaultPageTreeFieldConfig()
+    {
+        $this->addConfig('foreignKey', 'tl_page.title');
+        $this->addConfig('relation', array('type'=>'hasOne', 'load'=>'eager'));
+
+        $this->addEval('fieldType', 'radio');
+        $this->addEval('tl_class', 'clr');
+    }
+
+
+
     protected function setDefaultTextareaFieldConfig()
     {
         Controller::loadDataContainer('tl_content');
@@ -476,11 +493,11 @@ class Field
 
 
     /**
-     * @param \IIDO\BasicBundle\Dca\Table $objTable
+     * @param \IIDO\BasicBundle\Dca\Table|\IIDO\BasicBundle\Dca\ExistTable $objTable
      *
      * @return \IIDO\BasicBundle\Dca\Field
      */
-    public function addFieldToTable( Table $objTable )
+    public function addFieldToTable( $objTable )
     {
         $objTable->addFields( [ $this ] );
 
@@ -489,11 +506,11 @@ class Field
 
 
     /**
-     * @param \IIDO\BasicBundle\Dca\Table $objTable
+     * @param \IIDO\BasicBundle\Dca\Table|\IIDO\BasicBundle\Dca\ExistTable $objTable
      *
      * @return \IIDO\BasicBundle\Dca\Field
      */
-    public function addToTable( Table $objTable )
+    public function addToTable( $objTable )
     {
         return $this->addFieldToTable( $objTable );
     }
@@ -521,6 +538,15 @@ class Field
             $this->isSelector = false;
             $this->addEval('submitOnChange', false);
         }
+
+        return $this;
+    }
+
+
+
+    public function addToSearch( $addToSearch )
+    {
+        $this->search = $addToSearch;
 
         return $this;
     }

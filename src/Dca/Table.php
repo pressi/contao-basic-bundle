@@ -14,6 +14,7 @@ namespace IIDO\BasicBundle\Dca;
 
 
 use Contao\Controller;
+use IIDO\BasicBundle\Helper\BasicHelper;
 
 
 /**
@@ -159,6 +160,7 @@ class Table
     protected $arrPalettes              = array();
     protected $arrSubpalettes           = array();
     protected $arrFields                = array();
+    protected $arrButtonsLabels         = array();
 
     protected $arrConfig                = array();
     protected $arrOverrideTableConfig   = array();
@@ -249,6 +251,47 @@ class Table
      */
     public function createDca()
     {
+        if( count($this->arrButtonsLabels) )
+        {
+            $strLang            = $GLOBALS['TL_LANGUAGE'];
+            $arrButtonLabels    = $this->arrButtonsLabels[ $strLang ];
+
+            $strName            = $arrButtonLabels['name'];
+
+            unset( $arrButtonLabels['name'] );
+
+            if( is_array($arrButtonLabels) && count($arrButtonLabels) )
+            {
+                foreach( $arrButtonLabels as $key => $label )
+                {
+                    $strLabelName = $strName;
+
+                    switch( $key )
+                    {
+                        case "new":
+                            $strLabelName = $label . ' ' . $strName;
+
+//                        $value[0] = preg_replace('/#LABEL#/', $strLabelName, $value[0]);
+                            break;
+                    }
+
+                    $GLOBALS['TL_LANG'][ $this->strTable ][ $key ][0] = preg_replace('/#LABEL#/', $strLabelName, $GLOBALS['TL_LANG'][ $this->strTable ][ $key ][0]);
+                }
+            }
+        }
+
+//        $arrLabelName   = ['name'=>'Item','new'=>'s'];
+
+//        if( is_array($GLOBALS['TL_LANG']['DEF']) && isset($GLOBALS['TL_LANG']['DEF']) && count($GLOBALS['TL_LANG']['DEF']) )
+//        {
+//            foreach( $GLOBALS['TL_LANG']['DEF'] as $key => $value )
+//            {
+////                $GLOBALS['TL_LANG'][ $this->strTable ][ $key ] = $value;
+//            }
+//        }
+
+
+
         $GLOBALS['TL_DCA'][ $this->strTable ] = array
         (
             'config'        => array
@@ -562,14 +605,22 @@ class Table
                             'icon'  => 'edit.svg'
                         );
 
-                        if( in_array('editHeader', $this->arrOperations) )
+                        if( in_array('editHeader', $this->arrOperations) || in_array('editheader', $this->arrOperations) )
                         {
-                            $arrEdit['href'] = 'table=' . ((isset($arrParts[1]) && is_string($arrParts[1])) ?  $arrParts[1] : 'tl_content');
+                            $ctable = '';
+
+                            if( is_array($GLOBALS['TL_DCA'][ $this->strTable ]['config']['ctable']) && count($GLOBALS['TL_DCA'][ $this->strTable ]['config']['ctable']) )
+                            {
+                                $ctable = trim($GLOBALS['TL_DCA'][ $this->strTable ]['config']['ctable'][0]);
+                            }
+
+                            $arrEdit['href'] = 'table=' . (strlen($ctable)? $ctable : ((isset($arrParts[1]) && is_string($arrParts[1])) ?  $arrParts[1] : 'tl_content'));
                         }
 
                         $GLOBALS['TL_DCA'][ $this->strTable ]['list']['operations']['edit'] = $arrEdit;
                         break;
 
+                    case "editheader":
                     case "editHeader":
                         $GLOBALS['TL_DCA'][ $this->strTable ]['list']['operations']['editheader'] = array
                         (
@@ -931,7 +982,20 @@ class Table
 
         if( count($this->arrSelectors) )
         {
-            $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__'] = $this->arrSelectors;
+            if( !isset($GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__']) || !count($GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__']) )
+            {
+                $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__'] = $this->arrSelectors;
+            }
+            else
+            {
+                foreach( $this->arrSelectors as $selector )
+                {
+                    if( !in_array($selector, $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__']) )
+                    {
+                        $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__'][] = $selector;
+                    }
+                }
+            }
         }
     }
 
@@ -1034,13 +1098,13 @@ class Table
 
 
 
-    public function replacePaletteFields( $palettes, $replacedField, $replaceFields, $exceptions = array())
+    public function replacePaletteFields( $palettes, $replacedField, $replaceFields, $excludes = array())
     {
         if( $palettes === "all" )
         {
             foreach( $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'] as $palette => $fields)
             {
-                if( $palette === "__selector__" )
+                if( $palette === "__selector__" || in_array($palette, $excludes) )
                 {
                     continue;
                 }
@@ -1055,9 +1119,15 @@ class Table
                 $palettes = array($palettes);
             }
 
+            if( !is_array($excludes) )
+            {
+                $excludes = array($excludes);
+            }
+
+
             foreach($palettes as $palette)
             {
-                if( in_array($palette, $exceptions) )
+                if( in_array($palette, $excludes) || !isset($GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $palette ]) || !in_array($palette, $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']) )
                 {
                     continue;
                 }
@@ -1136,6 +1206,16 @@ class Table
 //        'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 //        'sql'                     => "varchar(12) NOT NULL default ''"
 //    ),
+    }
+
+
+
+    public function addTableButtonsLabel( $arrLabels, $strLang )
+    {
+        foreach($arrLabels as $labelKey => $strLabel)
+        {
+            $this->arrButtonsLabels[ $strLang ][ $labelKey ] = $strLabel;
+        }
     }
 
 }
