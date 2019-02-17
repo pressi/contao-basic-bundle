@@ -37,8 +37,18 @@ class TextFieldWidget extends \TextField
     {
         $strField = parent::generate();
 
+        if( !$this->strField )
+        {
+            $this->strField = $this->id;
+        }
+
         if( $this->colorpicker && !preg_match('/fillColor/', $this->strField) )
         {
+            if( $this->fieldAddon )
+            {
+                $strField = preg_replace('/name="' . $this->strField . '/', 'name="'. $this->fieldAddon . '[' . $this->strField . ']', $strField);
+            }
+
             if( !preg_match('/<img/', $strField) )
             {
                 $strColorKey = $this->multiple ? $this->strField . '_0' : $this->strField;
@@ -64,6 +74,8 @@ class TextFieldWidget extends \TextField
 
             $strField       =  $colorPreview . preg_replace('/class="tl_text_field/', 'class="tl_text_field color-picker', $strField);
             $strField       = preg_replace('/\$\("ctrl_' . $this->strField . '_0"\).value = color.hex.replace\("#", ""\);/', '$("ctrl_' . $this->strField . '_0").value = color.hex.replace("#", "");var strColor = color.hex, strField = $("ctrl_' . $this->strField . '_1"); if(strField.value){strColor=\'rgba(\' + color.rgb[0] + \',\' + color.rgb[1] + \',\' + color.rgb[2] + \',\' + (strField.value/100) + \')\'}$("colorPreview_' . $this->strField . '").setStyle("background", strColor);', $strField);
+
+            $this->id       = preg_replace(array('/\[/', '/\]/'), array('', ''), $this->id);
 
             $strFunction    = ' var fn_' . $this->id . ' = function( el, mode )
             {
