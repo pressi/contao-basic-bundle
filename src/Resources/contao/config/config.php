@@ -38,7 +38,8 @@ array_insert($GLOBALS['BE_MOD']['system'], 2, array
 
     $prefix . 'WebsiteStyles' => array
     (
-        'tables'    => array($tablePrefix . 'website_styles')
+//        'tables'    => array($tablePrefix . 'website_styles'),
+        'callback'  => $ns . '\BackendModule\WebsiteStylesModule'
     )
 ));
 
@@ -169,7 +170,7 @@ $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerNam
 $GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.backend_template', 'outputCustomizeBackendTemplate');
 $GLOBALS['TL_HOOKS']['parseBackendTemplate'][]              = array($listenerName . '.backend_template', 'parseCustomizeBackendTemplate');
 
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
+//$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
 
 $GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.ajax', 'parseAjaxRequest');
 //$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.ajax', 'parseAjaxRequest');
@@ -184,6 +185,14 @@ $GLOBALS['TL_HOOKS']['parseWidget'][]                       = array($listenerNam
 $GLOBALS['TL_HOOKS']['parseArticles'][]                     = array($listenerName . '.news', 'parseCustomizeArticles');
 
 $GLOBALS['TL_HOOKS']['importUser'][]                        = array($listenerName . '.user', 'importCustomizeUser');
+
+
+
+if( version_compare(\IIDO\BasicBundle\Helper\BasicHelper::getContaoVersion(), '4.4.', '>=')
+&& version_compare(\IIDO\BasicBundle\Helper\BasicHelper::getContaoVersion(), '4.6.', '<') )
+{
+    $GLOBALS['TL_HOOKS']['replaceInsertTags'][]     = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags');
+}
 
 
 
@@ -209,6 +218,7 @@ $GLOBALS['TL_PTY']['regular_redirect'] = $ns . '\Page\RegularRedirectPage';
  */
 
 //$GLOBALS['TL_MODELS']['tl_iido_placeholder']        = $ns . '\Model\PlaceholderModel';
+//$GLOBALS['TL_MODELS']['tl_iido_basic_website_styles']     = $ns . '\Model\WebsiteStyleModel';
 
 
 
