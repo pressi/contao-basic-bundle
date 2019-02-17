@@ -2,7 +2,6 @@
 $imageInside        = false;
 $containerOutside   = true;
 $arrHoverContainers = array();
-
 ?>
 <ul class="<?= $this->level ?>">
     <?php $i=0; foreach ($this->items as $item):

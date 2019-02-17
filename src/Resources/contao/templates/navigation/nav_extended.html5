@@ -78,7 +78,7 @@ $arrHoverContainers = array();
                 $item['target'] = $item['target'] . ' data-article="' . $objArticle->alias . '"';
             }
         }
-
+//echo "<pre>"; print_r( $item['href']); echo " ==> "; print_r( $item['link'] ); echo " ==> "; print_r( $item['alias'] ); echo "</pre>";
         ?>
         <?php if ($item['isActive']): ?>
             <li class="<?= $item['class'] ?>"<?= $item['listAttributes'] ?>>
@@ -94,12 +94,16 @@ $arrHoverContainers = array();
             </li>
         <?php else: ?>
             <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?= $item['listAttributes'] ?>>
-                <a data-alias="<?= $item['alias'] ?>" href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url">
+    <?php if(!$item['hideTitle']): ?>
+                <a data-alias="<?= $item['alias'] ?>" href="<?= $item['href'] ? $item['href'] : './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url">
+    <?php endif; ?>
                     <?= $imageContainer ?>
                     <?php if($subtitle && $subtitlePos === "before"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?>
                     <?php if(!$item['hideTitle']): ?><span itemprop="name"><?= $item['link'] ?></span><?php endif ?>
                     <?php if($subtitle && $subtitlePos === "after"): ?><span class="subtitle"><?= $subtitle ?></span><?php endif; ?>
+        <?php if(!$item['hideTitle']): ?>
                 </a>
+        <?php endif; ?>
                 <?= $hoverContainer ?>
 
                 <?= $item['subitems'] ?>
