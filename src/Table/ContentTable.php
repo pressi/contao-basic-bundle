@@ -12,6 +12,8 @@ namespace IIDO\BasicBundle\Table;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
+use IIDO\BasicBundle\Helper\ContentHelper;
+use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
 
 
 /**
@@ -357,6 +359,74 @@ class ContentTable extends \Backend
             $addContentTitle .= ' <span class="mobile-infos"><strong>Nur</strong> am Handy anzeigen</span>';
         }
 
+        $rsce_data  = json_decode($arrRow['rsce_data'], TRUE);
+        $isRSCEelement = false;
+
+        if( count($rsce_data) )
+        {
+            if( $rsce_data['position_margin'] )
+            {
+                $isRSCEelement = true;
+                $arrRow['positionMargin'] = $rsce_data['position_margin'];
+            }
+        }
+
+        if( $arrRow['position'] || ($isRSCEelement) )
+        {
+            $posTrbl    = '';
+
+            if( !$isRSCEelement )
+            {
+                $pos        = 'Absolute';
+
+                if( $arrRow['positionFixed'] )
+                {
+                    $pos = 'Fixed';
+                }
+
+                $pos .= ' (' . $arrRow['position'] . ')';
+
+                $posTrbl    .= ' - ';
+            }
+
+            $posMargin = \StringUtil::deserialize( $arrRow['positionMargin'], TRUE );
+
+            if( $posMargin['top'] )
+            {
+                $posValue = $posMargin['top'];
+
+                $posTrbl .= '<span><strong>O</strong>: ' . $posValue . '</span>';
+            }
+
+            if( $posMargin['right'] )
+            {
+                $posValue = $posMargin['right'];
+
+                $posTrbl .= '<span><strong>R</strong>: ' . $posValue . '</span>';
+            }
+
+            if( $posMargin['bottom'] )
+            {
+                $posValue = $posMargin['bottom'];
+
+                $posTrbl .= '<span><strong>U</strong>: ' . $posValue . '</span>';
+            }
+
+            if( $posMargin['left'] )
+            {
+                $posValue = $posMargin['left'];
+
+                $posTrbl .= '<span><strong>L</strong>: ' . $posValue . '</span>';
+            }
+
+            if( strlen( $posTrbl ) )
+            {
+                $posTrbl .= '<span>(' . $posMargin['unit'] . ')</span>';
+
+                $addContentTitle .= '<span class="pos-infos">Pos.: ' .  $pos . $posTrbl . '</span>';
+            }
+        }
+
         $strContent = preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/', '<div class="cte_type$1">$2' . $addContentTitle . '</div>', $strContent);
 
         return $strContent;
@@ -586,26 +656,54 @@ class ContentTable extends \Backend
 
     public static function loadHeadlineStyles( $dc )
     {
-        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+        $arrOptions = array();
+        $objElement = \ContentModel::findByPk( \Input::get("id") );
 
-        $arrOptions     = array();
-        $arrStyles      = \StringUtil::deserialize( \Config::get($fieldPrefix . 'headlineStyles'), TRUE);
-
-        if( count($arrStyles) )
+        if( $objElement )
         {
-            foreach($arrStyles as $arrStyle)
+            $objArticle = \ArticleModel::findByPk( $objElement->pid );
+
+            if( $objArticle )
             {
-                if( strlen(trim($arrStyle['name'])) )
+                $objPage = \PageModel::findByPk( $objArticle->pid );
+
+                if( $objPage )
                 {
-                    $arrOptions[ $arrStyle['id'] ] = $arrStyle['name'];
+                    $objPage = $objPage->loadDetails();
+
+                    $arrStyles = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineStyle' );
+
+                    if( count($arrStyles) )
+                    {
+                        foreach( $arrStyles as $styleKey => $arrStyle )
+                        {
+                            $arrOptions[ ($styleKey + 1) ] = $arrStyle['name'];
+                        }
+                    }
                 }
             }
         }
 
-//        if( count($arrOptions) )
+//        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+//
+//        $arrOptions     = array();
+//        $arrStyles      = \StringUtil::deserialize( \Config::get($fieldPrefix . 'headlineStyles'), TRUE);
+//
+//        if( count($arrStyles) )
 //        {
-//            $arrOptions = array_merge(array(''=>'-'), $arrOptions);
+//            foreach($arrStyles as $arrStyle)
+//            {
+//                if( strlen(trim($arrStyle['name'])) )
+//                {
+//                    $arrOptions[ $arrStyle['id'] ] = $arrStyle['name'];
+//                }
+//            }
 //        }
+//
+////        if( count($arrOptions) )
+////        {
+////            $arrOptions = array_merge(array(''=>'-'), $arrOptions);
+////        }
 
         return $arrOptions;
     }
