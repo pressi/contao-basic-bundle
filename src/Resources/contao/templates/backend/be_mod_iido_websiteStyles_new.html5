@@ -1,0 +1,40 @@
+<div class="config-contao-container backend-container">
+
+    <div id="tl_buttons">
+        <a href="<?= \Controller::addToUrl('', true, ['mode']) ?>" class="header_back" title="" accesskey="n" onclick="Backend.getScrollOffset()">Zurück</a>
+    </div>
+
+    <form action="<?= \Environment::get('request') ?>" class="tl_form tl_edit_form" method="post">
+        <div class="tl_formbody_edit">
+            <input type="hidden" name="FORM_SUBMIT" value="tl_iido_basic_website_styles_new">
+            <input type="hidden" name="REQUEST_TOKEN" value="<?= REQUEST_TOKEN ?>">
+
+            <fieldset id="pal_scripts_legend" class="tl_box">
+                <legend onclick="AjaxRequest.toggleFieldset(this, 'page_legend', 'tl_iido_basic_website_styles_edit')">Seitenbaum-Einstellungen</legend>
+
+<!--                <div class="long widget"><div id="ctrl_iidoBasic_scriptExplanation" class="be_explanation tl_info">-->
+<!--                        <div><strong>jquery</strong> =&gt; jQuery Bibliothek wird benötigt // <strong>lib</strong> =&gt; keine JS-Bibliothek wird benötigt // <strong>mootools</strong> =&gt; Mootools-Bibliothek wird benötigt</div>    </div>-->
+<!--                </div>-->
+
+                <div class="w50 clr widget">
+                    <h3><label>Seitenbaum (Hauptsprache)</label></h3>
+                    <select name="rootPage" id="ctrl_rootPage" class="tl_select" onfocus="Backend.getScrollOffset()"><?= $this->rootPageOptions ?></select>
+                </div>
+<!--                <div class="w50 widget">-->
+<!--                    <h3><label>LazyLoad (Bilder nachladen)</label></h3>-->
+<!--                    <select name="iidoBasic_scriptLazyload" id="ctrl_iidoBasic_scriptLazyload" class="tl_select" onfocus="Backend.getScrollOffset()"><option value="1.9.7" selected="">1.9.7 (jquery)</option></select>-->
+<!--                </div>-->
+
+            </fieldset>
+        </div>
+
+        <div class="tl_formbody_submit">
+            <div class="tl_submit_container">
+                <button type="submit" name="save" id="save" class="tl_submit" accesskey="s">Erstellen</button>
+<!--                <button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">Speichern und schließen</button>-->
+            </div>
+        </div>
+
+    </form>
+
+</div>

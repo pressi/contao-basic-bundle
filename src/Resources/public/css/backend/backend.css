@@ -271,7 +271,7 @@ body.popup #main .tl_formbody_submit {
 }
 
 .tl_modulewizard tbody tr td.field-size > .tl_text_unit {
-    width: calc(79% - 30px);
+    width: calc(79% - 32px);
 }
 
 .tl_modulewizard tbody tr td.field-size > select {
@@ -665,4 +665,12 @@ span.mobile-infos strong {
 }
 .tl_content.wrapper_stop {
     border-top: none;
+}
+
+span.pos-infos {
+    margin-left: 50px;
+}
+
+span.pos-infos > span {
+    padding-right: 8px;
 }

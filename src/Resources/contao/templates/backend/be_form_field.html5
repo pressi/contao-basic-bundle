@@ -1,0 +1,129 @@
+<h3><label><?= $this->label ?></label></h3>
+<? if( $this->type === "text" ): ?>
+    <input type="text" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="tl_text" value="" maxlength="255" onfocus="Backend.getScrollOffset()">
+<? elseif( $this->type === "unit"):
+    $objWidget = new $GLOBALS['BE_FFL']['inputUnit']();
+
+    $strUnit = preg_split('/(\d+)/', $this->value,-1, PREG_SPLIT_NO_EMPTY );
+
+    $this->value = array('value'=>preg_replace('/' . $strUnit[0] . '$/', '', $this->value), 'unit'=>$strUnit[0]);
+
+
+    $objWidget->id      = preg_replace(array('/^field\[/', '/\]\[/', '/\]$/'), array('', '_', ''), trim($this->name));
+    $objWidget->name    = $this->name;
+    $objWidget->value   = $this->value;
+    $objWidget->label   = $this->label;
+
+    $arrUnits = array();
+    foreach($GLOBALS['TL_CSS_UNITS'] as $unit)
+    {
+        $arrUnits[] = array('value'=>$unit,'label'=>$unit);
+    }
+
+    $objWidget->options = $arrUnits;
+
+    $objWidget->includeBlankOption  = TRUE;
+    $objWidget->rgxp                = 'digit_auto_inherit';
+    $objWidget->maxlength           = 20;
+//echo "<pre>";print_r( $objWidget ); exit;
+    echo $objWidget->generate();
+    ?>
+<? elseif( $this->type === "color"):
+    $objWidget = new $GLOBALS['BE_FFL']['text']();
+
+    if( preg_match('/#/', $this->value) )
+    {
+        $this->value = array(preg_replace('/#/', '', $this->value), '', '');
+    }
+
+    $objWidget->id      = preg_replace(array('/^field\[/', '/\]\[/', '/\]$/'), array('', '_', ''), trim($this->name));
+//    $objWidget->field   = $objWidget->id;
+    $objWidget->name    = $this->name;
+    $objWidget->value   = $this->value;
+    $objWidget->label   = $this->label;
+
+    $objWidget->maxlength       = 64;
+    $objWidget->multiple        = TRUE;
+    $objWidget->size            = 2;
+    $objWidget->colorpicker     = TRUE;
+    $objWidget->isHexColor      = TRUE;
+    $objWidget->decodeEntities  = TRUE;
+//echo "<pre>"; print_r( $objWidget ); exit;
+    echo $objWidget->generate();
+    ?>
+<? elseif( $this->type === "multiColumnWizard"):
+
+    $arrValue       = $arrColumnFields = array();
+    $countFields    = count($this->legendConfig['fields']);
+
+
+    foreach( $this->legendConfig['fields'] as $field )
+    {
+        $arrFieldParts   = explode("-", $field);
+        $fieldName      = $arrFieldParts[0];
+        $fieldType      = $arrFieldParts[1]?:'text';
+        $fieldValue     = '';
+        $fieldLabel     = '';
+
+//        foreach($this->value as $value)
+//        {
+//            if( $value['name'] === $fieldName )
+//            {
+//                $fieldValue = $value['value'];
+//                $fieldLabel = $value['label'];
+//            }
+//        }
+
+//        if( preg_match('/#/', $fieldValue) )
+//        {
+//            $fieldValue = array(preg_replace('/#/', '', $fieldValue), '', '');
+//        }
+
+//        $arrValue[ $fieldName ] = $fieldValue;
+
+        $arrFieldConfig = array
+        (
+            'label'     => $fieldLabel,
+            'exclude'   => true,
+            'inputType' => $fieldType
+//            'eval'      => array('style'=>'width:200px')
+        );
+
+        $arrUnits = array();
+        foreach($GLOBALS['TL_CSS_UNITS'] as $unit)
+        {
+            $arrUnits[] = array('value'=>$unit,'label'=>$unit);
+        }
+
+        if( $fieldType === "color" )
+        {
+            $arrFieldConfig['inputType'] = 'text';
+
+//            $arrFieldConfig['eval'] = array('style'=>'width:200px','maxlength'=>64,'multiple'=>true,'size'=>2,'colorpicker'=>true,'isHexColor'=>true,'decodeEntities'=>true);
+            $arrFieldConfig['eval'] = array('maxlength'=>64,'multiple'=>true,'size'=>2,'colorpicker'=>true,'isHexColor'=>true,'decodeEntities'=>true);
+        }
+        elseif( $fieldType === "unit" )
+        {
+            $arrFieldConfig['inputType'] = 'inputUnit';
+            $arrFieldConfig['options'] = $GLOBALS['TL_CSS_UNITS'];
+        }
+
+        $arrColumnFields[] = $arrFieldConfig;
+    }
+
+
+
+echo "<pre>"; print_r( $arrValue ); exit;
+    $objWidget = new $GLOBALS['BE_FFL']['multiColumnWizard']();
+
+    $objWidget->name    = $strName = 'field[' . $this->legendConfig['name'] . ']';
+    $objWidget->value   = $arrValue;
+    $objWidget->label   = $this->label;
+
+    $objWidget->columnFields = $arrColumnFields;
+
+//    echo "<pre>"; print_r( $arrColumnFields ); exit;
+
+    echo $objWidget->generate();
+    ?>
+<? endif ?>
