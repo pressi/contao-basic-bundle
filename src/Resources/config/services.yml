@@ -32,6 +32,43 @@ services:
             - "@security.token_storage"
             - "@session"
             - "doctrine.orm.entity_manager"
+            - "@iido.basic.permission_checker"
+
+
+    iido.basic.manager:
+        class: IIDO\BasicBundle\Manager\BasicManager
+
+    iido.basic.permission_checker:
+        class: IIDO\BasicBundle\Permission\PermissionChecker
+        public: false
+        arguments:
+            - "@database_connection"
+            - "@security.token_storage"
+
+    iido.basic.criteria_builder:
+        class: IIDO\BasicBundle\Criteria\CriteriaBuilder
+        arguments:
+            - "@database_connection"
+            - "@iido.basic.manager"
+
+    iido.basic.categories.picker:
+        class: IIDO\BasicBundle\Picker\GlobalCategoriesPickerProvider
+        public: false
+        arguments:
+            - "@knp_menu.factory"
+            - "@router"
+        calls:
+            - [setTokenStorage, ["@security.token_storage"]]
+            - [setPermissionChecker, ["@iido.basic.permission_checker"]]
+        tags:
+            - { name: contao.picker_provider, priority: 132 }
+
+
+    iido.basic.configs.global_categories:
+        class: IIDO\BasicBundle\WebsiteConfig\GlobalCategoriesConfig
+
+    iido.basic.configs.script_settings:
+        class: IIDO\BasicBundle\WebsiteConfig\ScriptSettingsConfig
 
 #    contao.connect_tool_twig_extension:
 #        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension

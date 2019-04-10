@@ -1,6 +1,6 @@
 <?php
 /*******************************************************************
- * (c) 2018 Stephan Preßl, www.prestep.at <development@prestep.at>
+ * (c) 2019 Stephan Preßl, www.prestep.at <development@prestep.at>
  * All rights reserved
  * Modification, distribution or any other action on or with
  * this file is permitted unless explicitly granted by IIDO
@@ -21,6 +21,35 @@ $ns = $namespace . '\\' . $subNamespace;
 
 
 /**
+ * Website configs
+ */
+
+$GLOBALS['IIDO']['CONFIGS']['global_categories'] = array
+(
+    'name'      => 'Globale Kategorien',
+    'class'     => 'iido.basic.configs.global_categories',
+    'table'     => 'tl_iido_global_category'
+);
+$GLOBALS['IIDO']['CONFIGS']['script_settings'] = array
+(
+    'name'      => 'Script Einstellungen',
+    'class'     => 'iido.basic.configs.script_settings',
+    'table'     => 'tl_iido_basic_scriptSettings'
+);
+
+
+
+/**
+ * Global categories
+ */
+
+$GLOBALS['IIDO']['GLOBAL_CATEGORIES']['ENABLE']['tl_files']             = 'Dateiverwaltung';
+$GLOBALS['IIDO']['GLOBAL_CATEGORIES']['ENABLE']['tl_news']              = 'Nachrichten';
+$GLOBALS['IIDO']['GLOBAL_CATEGORIES']['ENABLE']['tl_calendar_events']   = 'Events';
+
+
+
+/**
  * Backend modules
  */
 
@@ -31,14 +60,19 @@ $ns = $namespace . '\\' . $subNamespace;
 
 array_insert($GLOBALS['BE_MOD']['system'], 2, array
 (
+//    $prefix . 'WebsiteConfigOld' => array
+//    (
+//        'tables'    => array($tablePrefix . 'website_config')
+//    ),
+
     $prefix . 'WebsiteConfig' => array
     (
-        'tables'    => array($tablePrefix . 'website_config')
+        'tables'    => \IIDO\BasicBundle\Helper\BasicHelper::getWebsiteConfigTables(),
+        'callback'  => $ns . '\BackendModule\WebsiteConfigModule'
     ),
 
     $prefix . 'WebsiteStyles' => array
     (
-//        'tables'    => array($tablePrefix . 'website_styles'),
         'callback'  => $ns . '\BackendModule\WebsiteStylesModule'
     )
 ));
@@ -111,6 +145,7 @@ $GLOBALS['TL_CTE']['module']['iido_flip']                   = $ns . '\ContentEle
 $GLOBALS['TL_CTE']['tracking']['iido_tracking']             = $ns . '\ContentElement\TrackingElement';
 
 
+
 /**
  * Front end modules
  */
@@ -131,6 +166,9 @@ $GLOBALS['BE_FFL']['text']              = $ns . '\Widget\TextFieldWidget';
 $GLOBALS['BE_FFL']['iidoTag']           = $ns . '\Widget\TagsFieldWidget';
 $GLOBALS['BE_FFL']['explanation']       = $ns . '\Widget\ExplanationWidget';
 $GLOBALS['BE_FFL']['listWizard']        = $ns . '\Widget\ListWizardWidget';
+$GLOBALS['BE_FFL']['pageTree']          = $ns . '\Widget\PageTreeWidget';
+
+$GLOBALS['BE_FFL']['globalCategoriesPicker'] = $ns . '\Widget\GlobalCategoriesPickerWidget';
 
 
 
@@ -170,9 +208,11 @@ $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerNam
 $GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.backend_template', 'outputCustomizeBackendTemplate');
 $GLOBALS['TL_HOOKS']['parseBackendTemplate'][]              = array($listenerName . '.backend_template', 'parseCustomizeBackendTemplate');
 
-//$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
 
-$GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.ajax', 'parseAjaxRequest');
+$GLOBALS['TL_HOOKS']['executePreActions'][]                 = array($listenerName . '.ajax', 'onExecutePreActions');
+$GLOBALS['TL_HOOKS']['executePostActions'][]                = array($listenerName . '.ajax', 'onExecutePostActions');
+//$GLOBALS['TL_HOOKS']['simpleAjaxFrontend'][]                = array($listenerName . '.ajax', 'parseAjaxRequest');
 //$GLOBALS['TL_HOOKS']['simpleAjax'][]                        = array($listenerName . '.ajax', 'parseAjaxRequest');
 
 $GLOBALS['TL_HOOKS']['getCombinedFile'][]                   = array($listenerName . '.combiner', 'getCustomizeCombinedFile');
@@ -186,13 +226,12 @@ $GLOBALS['TL_HOOKS']['parseArticles'][]                     = array($listenerNam
 
 $GLOBALS['TL_HOOKS']['importUser'][]                        = array($listenerName . '.user', 'importCustomizeUser');
 
+$GLOBALS['TL_HOOKS']['loadDataContainer'][]                 = array($listenerName . '.dca', 'onLoadDataContainer');
 
-
-if( version_compare(\IIDO\BasicBundle\Helper\BasicHelper::getContaoVersion(), '4.4.', '>=')
-&& version_compare(\IIDO\BasicBundle\Helper\BasicHelper::getContaoVersion(), '4.6.', '<') )
-{
-    $GLOBALS['TL_HOOKS']['replaceInsertTags'][]     = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags');
-}
+//if( TL_MODE === "BE" )
+//{
+//    $GLOBALS['TL_HOOKS']['sqlGetFromFile'][]        = [$listenerName . '.dca', 'addGlobalCategoryFieldsToTable'];
+//}
 
 
 
@@ -202,6 +241,12 @@ if( version_compare(\IIDO\BasicBundle\Helper\BasicHelper::getContaoVersion(), '4
 
 //$GLOBALS['TL_PERMISSIONS'][] = 'placeholders';
 //$GLOBALS['TL_PERMISSIONS'][] = 'placeholderp';
+
+$GLOBALS['TL_PERMISSIONS'][] = 'globalcategories';
+$GLOBALS['TL_PERMISSIONS'][] = 'globalcategories_default';
+$GLOBALS['TL_PERMISSIONS'][] = 'globalcategories_roots';
+
+$GLOBALS['TL_PERMISSIONS'][] = 'iidoWebsiteConfigs';
 
 
 
@@ -219,6 +264,7 @@ $GLOBALS['TL_PTY']['regular_redirect'] = $ns . '\Page\RegularRedirectPage';
 
 //$GLOBALS['TL_MODELS']['tl_iido_placeholder']        = $ns . '\Model\PlaceholderModel';
 //$GLOBALS['TL_MODELS']['tl_iido_basic_website_styles']     = $ns . '\Model\WebsiteStyleModel';
+$GLOBALS['TL_MODELS']['tl_iido_global_category']            = $ns . '\Model\GlobalCategoryModel';
 
 
 

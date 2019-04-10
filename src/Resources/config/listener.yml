@@ -4,7 +4,7 @@ services:
         tags:
             - { name: contao.hook, hook: replaceInsertTags, method: replaceCustomizeInsertTags}
         arguments:
-            - "@contao.framework"
+        - "@contao.framework"
         public: true
 
     iido_basic.listener.system:
@@ -44,7 +44,10 @@ services:
         public: true
 
     iido_basic.listener.ajax:
-        class: IIDO\BasicBundle\Ajax\ManageAjax
+        class: IIDO\BasicBundle\EventListener\AjaxListener
+        arguments:
+            - "@contao.framework"
+            - "@monolog.logger.contao"
         public: true
 
     iido_basic.listener.form:
@@ -65,10 +68,24 @@ services:
             - "@contao.framework"
         public: true
 
+    iido_basic.listener.dca:
+        class: IIDO\BasicBundle\EventListener\DcaListener
+        arguments:
+            - "@contao.framework"
+        public: true
+
 
 
     iido_basic.table.all:
         class: IIDO\BasicBundle\Table\AllTables
+        public: true
+
+    iido_basic.table.global_category:
+        class: IIDO\BasicBundle\Table\GlobalCategoryTable
+        arguments:
+            - "@contao.framework"
+            - "@database_connection"
+            - "@iido.basic.permission_checker"
         public: true
 
 
