@@ -1,12 +1,19 @@
 <ul class="<?= $this->level ?>">
     <?php foreach ($this->items as $item):
 
-        $strItemImage   = \IIDO\BasicBundle\Helper\ImageHelper::getImagePath( $item['overviewImage'], $item['overviewSize']?:array() );
-        $strItemImageTag = \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $item['overviewImage'], $item['overviewSize']?:array() );
+        $strItemImage       = \IIDO\BasicBundle\Helper\ImageHelper::getImagePath( $item['overviewImage'], $item['overviewSize']?:array() );
+        $strItemImageTag    = \IIDO\BasicBundle\Helper\ImageHelper::getImageTag( $item['overviewImage'], $item['overviewSize']?:array() );
+
+        $item['noLink'] = false;
 
         if( !$strItemImage )
         {
             $item['class'] = trim($item['class'] . ' no-image');
+        }
+
+        if( $this->level === 'level_1' )
+        {
+            $item['noLink'] = true;
         }
 
         ?>
@@ -34,7 +41,11 @@
             </li>
         <?php else: ?>
             <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?= $item['listAttributes'] ?>>
-                <a href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url">
+                <? if($item['noLink']): ?>
+                    <strong title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?>>
+                <? else: ?>
+                    <a href="<?= $item['href'] ?: './' ?>" title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url">
+                <? endif ?>
 
                     <?php if( $strItemImage ): ?>
                     <div class="nav-item-inside">
@@ -49,7 +60,11 @@
                         <span itemprop="name"><?= $item['navTitle']?:$item['link'] ?></span>
                     <?php endif ?>
 
-                </a>
+                <? if($item['noLink']): ?>
+                    </strong>
+                <? else: ?>
+                    </a>
+                <? endif ?>
 
                 <?= $item['subitems'] ?></li>
         <?php endif; ?>

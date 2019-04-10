@@ -56,11 +56,16 @@
           $item['href'] = '#article-' . $item['id'];
       }
 
+      if( $item['openPageInLightbox'] )
+      {
+          $item['linkClass'] = trim($item['linkClass'] . ' open-page-in-lightbox lb-animation');
+      }
+
       ?>
     <?php if ($item['isActive']): ?>
       <li class="<?= $item['class'] ?>"<?= $item['listAttributes'] ?>><strong class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?>><span itemprop="name"><?= $item['link'] ?></span></strong><?= $item['subitems'] ?></li>
     <?php else: ?>
-      <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?= $item['listAttributes'] ?>><<? if($noLink): ?>strong<? else: ?>a href="<?= $item['href'] ?: './' ?>"<? endif ?> title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></<? if($noLink): ?>strong<? else: ?>a<? endif ?>><?= $item['subitems'] ?></li>
+      <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?= $item['listAttributes'] ?>><<? if($noLink): ?>strong<? else: ?>a href="<?= $item['href'] ?: './' ?>"<? endif ?> title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class'] || $item['linkClass']) echo ' class="' . trim($item['class'] . ' ' . $item['linkClass']) . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></<? if($noLink): ?>strong<? else: ?>a<? endif ?>><?= $item['subitems'] ?></li>
     <?php endif; ?>
   <?php endforeach; ?>
 </ul>

@@ -1,0 +1,62 @@
+<div class="config-contao-container backend-container">
+
+    <? if( $this->detailView ): ?>
+        <? if( !$this->noBackLink ): ?>
+        <div id="tl_buttons">
+            <a href="<?= \Controller::addToUrl('', true, ['mode', 'id']) ?>" class="header_back" title="" accesskey="b" onclick="Backend.getScrollOffset()">Zurück</a>
+        </div>
+        <? endif ?>
+
+        <?= $this->content ?>
+    <? else: ?>
+
+        <div class="backend-list">
+
+            <? foreach($this->configurations as $alias => $configuration):
+                $configuration = (object) $configuration;
+
+                if( !$this->User->isAdmin && !$this->User->hasAccess( $alias, 'iidoWebsiteConfigs' ))
+                {
+                    continue;
+                }
+            ?>
+                <div class="backend-list-item">
+                    <div class="icon"<?= $configuration->icon ?>></div>
+                    <div class="title"><?= $configuration->name?:$configuration->title ?></div>
+
+                    <div class="actions">
+                        <div class="btn-group dropdown">
+                            <a class="btn btn-light" href="<?= \Controller::addToUrl('config=' . $alias . '&table=' . $configuration->table) ?>">Verwalten</a>
+
+                            <? if( count($configuration->actions) ): ?>
+                            <a class="btn btn-light dropdown-toggle dropdown-toggle-split" role="button" id="dropdownMenuButton_<?= $alias ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+                                <span class="sr-only">Aktionen</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="dropdownMenuButton_<?= $alias ?>" x-placement="bottom-end">
+    <!--                            <a class="dropdown-item" href="--><?//= \Controller::addToUrl('mode=edit&id=' . $style->id) ?><!--">Bearbeiten</a>-->
+    <!--                            <div class="dropdown-divider"></div>-->
+                                <a class="dropdown-item color-red text-danger" href="<?= \Controller::addToUrl('mode=delete&id=' . $alias) ?>">Löschen</a>
+                            </div>
+                            <? endif ?>
+                        </div>
+                    </div>
+                </div>
+            <? endforeach ?>
+
+        </div>
+
+        <script src="assets/jquery/js/jquery.min.js"></script>
+        <script src="bundles/iidobasic/javascript/backend/libs/popper.min.js"></script>
+        <script src="bundles/iidobasic/javascript/backend/libs/util.js"></script>
+        <script src="bundles/iidobasic/javascript/backend/libs/dropdown.js"></script>
+        <script src="bundles/iidobasic/javascript/backend/libs/collapse.js"></script>
+        <script>
+            jQuery.noConflict();
+
+            jQuery(document).ready( function()
+            {
+                jQuery('.dropdown-toggle').dropdown();
+            });
+        </script>
+    <? endif ?>
+</div>
