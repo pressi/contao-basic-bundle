@@ -12,7 +12,8 @@ span.subtitle.after {
 
 .widget:not(.w50) {
     clear: both;
-    width: 96%;
+    /*width: 96%;*/
+    width: calc(100% - 30px);
 }
 
 .wizard .color-picker .tl_text_2 {
@@ -32,6 +33,10 @@ span.subtitle.after {
 
 .wizard .color-select + img {
     margin-top: 7px;
+}
+
+.widget > div.be_explanation {
+    font-size: 14px;
 }
 
 .color-preview {
@@ -145,6 +150,24 @@ fieldset.rsce_list {
     width: 82% !important;
 }
 
+.tl_metawizard .meta-widget.widget-link input.tl_text {
+    width: calc(82% - 22px) !important;
+}
+
+.tl_metawizard .meta-widget.widget-link input.tl_text + a {
+    display: inline-block;
+
+    padding: 6px 0 0 2px;
+
+    width: 22px; height: 30px;
+
+    text-align: center;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+}
+
 .tl_metawizard .color-preview {
     width: 4%;
 }
@@ -193,6 +216,22 @@ fieldset.rsce_list {
 .tl_metawizard .widget-hoverTitle,
 .tl_metawizard .widget-categories {
     padding: 20px 0 0;
+}
+
+.tl_metawizard .widget-global-category {
+    padding: 15px 0 10px;
+}
+
+.tl_metawizard .widget-global-category label + div {
+    float: left;
+}
+
+.tl_metawizard .widget-global-category .selector_container > ul {
+    padding-bottom: 4px;
+}
+
+.tl_metawizard .widget-global-category .selector_container > ul > li {
+    padding: 0;
 }
 
 .ha,
@@ -673,4 +712,68 @@ span.pos-infos {
 
 span.pos-infos > span {
     padding-right: 8px;
+}
+
+
+/**
+ * backend list
+ */
+
+.backend-list {
+    padding: 20px;
+}
+
+.backend-list .backend-list-item {
+    position: relative;
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin: 15px 0;
+}
+.backend-list .backend-list-item.has-icon {
+    padding-left: 110px;
+}
+.backend-list .backend-list-item:after {
+    content: '';
+    display: table;
+    float: none;
+    clear: both;
+}
+
+.backend-list .backend-list-item > * {
+    float: left;
+
+    line-height: 38px;
+    vertical-align: middle;
+
+    margin-left: 35px;
+}
+.backend-list .backend-list-item > *:first-child,
+.backend-list .backend-list-item > *.icon:first-child + * {
+    margin: 0;
+}
+
+/*.backend-list .backend-list-item > .icon {*/
+    /*opacity: 0.85;*/
+/*}*/
+
+.backend-list .backend-list-item > .name,
+.backend-list .backend-list-item > .title {
+    font-size: 18px;
+}
+
+.backend-list .backend-list-item > .actions {
+    float: right;
+}
+.backend-list .backend-list-item > .actions .dropdown {
+    display: block !important;
+}
+
+.tl_content_left > span.item-title {
+    display: inline-block;
+    width: 300px;
+}
+
+.tl_content_left > span.tl_info {
+    padding-top: 6px;
+    padding-bottom: 6px;
 }

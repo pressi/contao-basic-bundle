@@ -530,17 +530,18 @@ IIDO.Page = IIDO.Page || {};
 
     page.initNavigation = function()
     {
-        if( document.body.classList.contains("page-is-onepage") )
-        {
+        // if( document.body.classList.contains("page-is-onepage") )
+        // {
             var onepageNav = document.querySelector(".nav-onepage");
 
             if( onepageNav )
             {
                 $(onepageNav).find("ul.level_1").onePageNav({
-                    currentClass: 'active'
+                    currentClass: 'active',
+                    filter: ':not(.extern-link):not(.external-link):not(.subitem):not(.subitem-link)'
                 });
             }
-        }
+        // }
 
         var navContLeftOutsideOpen  = document.querySelector(".open-left-side-navigation"),
             navContLeftOutside      = document.querySelector("header.nav-cont-left-outside");
@@ -1107,7 +1108,7 @@ IIDO.Page = IIDO.Page || {};
             animated = true;
         }
 
-        var isString = true;
+        var isString = false;
 
         if( typeof aTag === "string" )
         {
@@ -1263,6 +1264,25 @@ IIDO.Page = IIDO.Page || {};
         if( el.hasClass("event-link") )
         {
             slideClassName = "event-page page-lightbox";
+        }
+
+        if( el.hasClass("lb-animation") )
+        {
+            slideClassName += ' has-animation';
+
+            options.opts.margin = 0;
+
+            options.opts.afterLoad = function(instance, current) {
+                current.$slide[0].classList.add("animation-completed");
+
+                var insideElem  = $(current.$slide[0]).find(".inside"),
+                    animation   = 'zoomInLeft';
+
+                insideElem.addClass('animated ' + animation).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function()
+                {
+                    insideElem.removeClass('animated ' + animation);
+                });
+            };
         }
 
         if( openType === "ajax" )
@@ -2334,7 +2354,7 @@ IIDO.Page = IIDO.Page || {};
                             stickyOffset = parseInt( style.marginTop );
                         }
 
-                        return -(stickyOffset);
+                        return (stickyOffset);
                     }
                 };
 
