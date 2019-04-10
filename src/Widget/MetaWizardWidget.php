@@ -10,6 +10,9 @@
 namespace IIDO\BasicBundle\Widget;
 
 
+use IIDO\BasicBundle\Model\GlobalCategoryModel;
+
+
 /**
  * Provide methods to handle file meta information.
  *
@@ -304,6 +307,114 @@ class MetaWizardWidget extends \MetaWizard
 
                         $strField = $strField . $wizard . $strSelectField;
                     }
+                    elseif( $attributes === "link" )
+                    {
+                        $arrData = array
+                        (
+                            'label'     => array('', ''),
+                            'inputType' => 'text',
+                            'eval'      => array
+                            (
+                                'rgxp'=>'url',
+                                'decodeEntities'=>true,
+                                'maxlength'=>255,
+                                'dcaPicker'=>true,
+                                'tl_class'=>'w50 wizard'
+                            )
+                        );
+
+                        $strInputName   = $field . '_' . $count;
+                        $varValue       = $meta[ $field ];
+                        $arrValue       = \StringUtil::deserialize($varValue, true);
+
+                        $strClass   = $GLOBALS['BE_FFL']['text'];
+
+                        $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strInputName, 'tl_files', $this));
+
+                        $objWidget->id              = $field . '_' . $count;
+
+                        $objWidget->rgxp            = 'url';
+                        $objWidget->decodeEntities  = TRUE;
+                        $objWidget->maxlength       = 255;
+                        $objWidget->dcaPicker       = TRUE;
+
+//                        $objWidget->class           = 'w50 wizard';
+
+                        $objWidget->isMetaField     = TRUE;
+                        $objWidget->metaPrefix      = $this->strId;
+                        $objWidget->metaLang        = $lang;
+                        $objWidget->metaField       = $field;
+
+                        $strField   = $objWidget->generate();
+
+                        $wizard = \Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], 'tl_files', $field, $strInputName);
+
+                        $strField = $strField . $wizard;
+
+                    }
+                    elseif( preg_match('/globalCategoriesPicker/', $attributes) )
+                    {
+                        $arrAttr    = explode('_', $attributes);
+                        $objGC      = GlobalCategoryModel::findByPk( $arrAttr[1] );
+
+                        if( $objGC->subCategoriesArePages )
+                        {
+                            $arrData = array
+                            (
+                                'label'             => [$objGC->title, ''],
+                                'inputType'         => 'pageTree',
+                                'eval'              => array('fieldType'=>'checkbox','multiple'=>true, 'tl_class'=>'w50 hauto')
+                            );
+
+                            if( $objGC->subPagesRoot )
+                            {
+                                $arrData['eval']['rootNodes'] = [$objGC->subPagesRoot];
+                            }
+
+                            $strInputName   = $field . '_' . $lang;
+                            $varValue       = \StringUtil::trimsplit(',', $meta[ $field ]);
+
+                            $GLOBALS['TL_DCA']['tl_files' ]['fields'][ $strInputName ] = $arrData;
+
+                            $strClass   = $GLOBALS['BE_FFL'][ 'pageTree' ];
+                            $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strInputName, 'tl_files', $this));
+
+                            $objWidget->id              = $field . '_' . $lang;
+
+                            $objWidget->isMetaField     = TRUE;
+                            $objWidget->metaPrefix      = $this->strId;
+                            $objWidget->metaLang        = $lang;
+                            $objWidget->metaField       = $field;
+
+                            $strField   = $objWidget->generate();
+                        }
+                        else
+                        {
+                            $arrData = array
+                            (
+                                'label'             => array('', ''),
+                                'foreignKey'        => 'tl_iido_global_category.title',
+                                'inputType'         => $arrAttr[0],
+                                'eval'              => array('fieldType'=>'checkbox','rootNodes'=>[$arrAttr[1]], 'tl_class'=>'w50 hauto'),
+                                'options_callback'  => array('iido_basic.table.global_category', 'onCategoriesOptionsCallback'),
+                            );
+
+                            $strInputName   = $field . '_' . $lang;
+                            $varValue       = \StringUtil::trimsplit(',', $meta[ $field ]);
+
+                            $strClass   = $GLOBALS['BE_FFL'][ $arrAttr[0] ];
+                            $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strInputName, 'tl_files', $this));
+
+                            $objWidget->id              = $field . '_' . $lang;
+
+                            $objWidget->isMetaField     = TRUE;
+                            $objWidget->metaPrefix      = $this->strId;
+                            $objWidget->metaLang        = $lang;
+                            $objWidget->metaField       = $field;
+
+                            $strField   = $objWidget->generate();
+                        }
+                    }
                     else
                     {
                         $arrAttributes  = explode("_", $attributes);
@@ -329,7 +440,14 @@ class MetaWizardWidget extends \MetaWizard
 
                     $strField = preg_replace('/<h3><\/h3>/', '', $strField);
 
-                    $return .= '<div class="meta-widget widget-' . $field . '"><label for="ctrl_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label> ' . $strField . '</div>';
+                    $wType = $field;
+
+                    if( preg_match('/globalCategoriesPicker/', $attributes) )
+                    {
+                        $wType = 'global-category';
+                    }
+
+                    $return .= '<div class="meta-widget widget-' . $wType . '"><label for="ctrl_' . $field . '_' . $count . '">' . $GLOBALS['TL_LANG']['MSC']['aw_' . $field] . '</label> ' . $strField . '</div>';
                 }
 
                 $return .= '

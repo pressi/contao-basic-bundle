@@ -260,6 +260,12 @@ class TextFieldWidget extends \TextField
                 $strField = preg_replace('/class="tl_text/', 'class="tl_text has-addon', $strField);
                 $strField = $strField . '<div class="addon">' . $this->addon . '</div>';
             }
+
+            if( $this->isMetaField )
+            {
+                $strNewName = $this->metaPrefix . '[' . $this->metaLang . '][' . $this->metaField . ']';
+                $strField   = preg_replace('/name="' . $this->strField . '"/', 'name="' . $strNewName . '"', $strField);
+            }
         }
 
         return $strField;
