@@ -18,7 +18,7 @@ use IIDO\BasicBundle\Helper\PageHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\StylesheetHelper;
 use IIDO\BasicBundle\Helper\BasicHelper;
-
+use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
 use IIDO\BasicBundle\Renderer\MobileRenderer;
 use IIDO\BasicBundle\Renderer\SearchRenderer;
 
@@ -345,11 +345,11 @@ class PageListener extends DefaultListener
 
             if( !$objPage->removePageLoader && ($objPage->addPageLoader || PageHelper::checkIfParentPagesHasPageLoader( $objPage )) )
             {
-                $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
-                $pageLoaderColor    = ColorHelper::compileColor( \StringUtil::deserialize(\Config::get($tableFieldPrefix . 'pageLoaderBackgroundColor'), TRUE)  );
+//                $tableFieldPrefix   = BundleConfig::getTableFieldPrefix();
+                $pageLoaderColor    = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'overlayBackground' ); //ColorHelper::compileColor( \StringUtil::deserialize(\Config::get($tableFieldPrefix . 'pageLoaderBackgroundColor'), TRUE)  );
 
                 $loaderTag      = '<div id="fakeLoader"></div>';
-                $loaderScript   = '<script type="text/javascript">$("#fakeLoader").fakeLoader({timeToHide:1600,zIndex:"9999",spinner:"' . (\Config::get($tableFieldPrefix . 'pageLoaderStyle') ?: "spinner1") . '",bgColor:"' . (($pageLoaderColor !== "transparent") ? $pageLoaderColor : '#545454')  . '"})</script>';
+                $loaderScript   = '<script type="text/javascript">$("#fakeLoader").fakeLoader({timeToHide:1600,zIndex:"9999",spinner:"' . (WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'overlayStyle' ) ?: "spinner1") . '",bgColor:"' . (($pageLoaderColor !== "transparent") ? $pageLoaderColor : '#545454')  . '"})</script>';
 
                 $strBuffer = preg_replace('/<\/body>/',  $loaderTag . $loaderScript . '</body>', $strBuffer);
             }

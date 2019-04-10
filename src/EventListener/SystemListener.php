@@ -66,6 +66,12 @@ class SystemListener extends DefaultListener
             $GLOBALS['TL_CSS'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/css/backend/backend.css||static';
         }
 
+        if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/css/backend/dropdown.css') )
+        {
+            $GLOBALS['TL_CSS'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/css/backend/dropdown.css||static';
+        }
+
+
         if( file_exists($rootDir . '/' . $this->bundlePathPublic . '/javascript/backend/IIDO.Backend.js') )
         {
             $GLOBALS['TL_JAVASCRIPT'][] = preg_replace('/^web\//', '', $this->bundlePathPublic) . '/javascript/backend/IIDO.Backend.js|static';

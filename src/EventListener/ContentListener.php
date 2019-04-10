@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
+use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
 use IIDO\BasicBundle\Helper\ContentHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
@@ -367,8 +368,9 @@ class ContentListener extends DefaultListener
 //        $arrClasses     = array();
         $arrAttributes  = array();
 
-        if( $objRow->position )
+        if( $objRow->position && TL_MODE === "FE" ) //TODO: auslagern in helper class, auch für rsce und sonstiges!!
         {
+            //TODO: merge rendered position with position function in content helper #80
             $strStyles = '';
 
             $arrElementClasses[] = 'pos-' . ($objRow->positionFixed ? 'fixed' : 'abs');
@@ -428,6 +430,11 @@ class ContentListener extends DefaultListener
                     }
 
                     if( preg_match('/' . $unit . '$/', $arrPosMargin['right']) )
+                    {
+                        $useUnit = false;
+                    }
+
+                    if( preg_match('/calc/', $arrPosMargin['right']) )
                     {
                         $useUnit = false;
                     }
@@ -529,8 +536,15 @@ class ContentListener extends DefaultListener
             $strBuffer = $this->addAttributesToContentElement( $strBuffer, $objRow, $arrAttributes );
         }
 
-        $strBuffer = str_replace(['[R]'], ['<sup>&reg;</sup>'], $strBuffer);
-        $strBuffer = preg_replace(['/\|([A-Za-zöäüÖÄÜß0-9]{1,})\|/'], ['<strong>$1</strong>'], $strBuffer);
+        $strBuffer  = str_replace(['[R]'], ['<sup>&reg;</sup>'], $strBuffer);
+//        $strBuffer = preg_replace(['/\|([A-Za-zöäüÖÄÜß0-9]{1,})\|/'], ['<strong>$1</strong>'], $strBuffer);
+        $strBuffer  = preg_replace('/\|([^\|]+)\|/', '<strong>$1</strong>', $strBuffer);
+
+//        $strBuffer  = preg_replace('/<figcaption()>(.+)<\/figcaption>/','<figcaption$1>' . preg_replace('/;/', '<br>', '$2') . '</figcaption>', $strBuffer);
+        $strBuffer  = preg_replace_callback('/<figcaption([A-Za-z0-9\s\-="]{0,})>(.+)<\/figcaption>/', function( $matches )
+        {
+            return '<figcaption' . $matches[1] . '>' . preg_replace('/;/', '<br>', $matches[2]) . '</figcaption>';
+        }, $strBuffer);
 
         return $strBuffer;
     }
@@ -589,7 +603,16 @@ class ContentListener extends DefaultListener
 
             if( count($arrConfig) )
             {
-                $arrStyle = $arrConfig[ ($objRow->headlineStyles - 1) ];
+                $arrStyle = array();
+
+                foreach($arrConfig as $arrHSConfig )
+                {
+                    if( $arrHSConfig['internID'] === $objRow->headlineStyles )
+                    {
+                        $arrStyle = $arrHSConfig;
+                        break;
+                    }
+                }
 
                 if( $arrStyle['tagClasses'] )
                 {
@@ -705,7 +728,7 @@ class ContentListener extends DefaultListener
         if( preg_match('/<\/h([1-6]{1})>([\s\n]{0,})<h([1-6]{1})/', trim($strContent)) )
         {
             $strContent = preg_replace('/class="headline([^\-])/', 'class="headline has-subline$1', $strContent, 1);
-            $strContent = BasicHelper::replaceLastMatch('/class="headline([^\-])/', 'class="headline is-subline$1', 'class="headline$1', $strContent);
+            $strContent = BasicHelper::replaceLastMatch('/class="sub-headline([^\-])/', 'class="subline is-subline$1', 'class="headline$1', $strContent);
         }
 
         if( $objRow->type === "headline" )
@@ -733,6 +756,37 @@ class ContentListener extends DefaultListener
 
         if( $objRootPage->enableLazyLoad || $objPage->enableLazyLoad )
         {
+        }
+
+        $objImage = \FilesModel::findByUuid( $objRow->singleSRC );
+
+        if( $objImage && $objImage->extension === "svg" )
+        {
+            $imageColor = ColorHelper::compileColor( $objRow->imageColor );
+
+            if( $imageColor && $imageColor !== "transparent" )
+            {
+                $strContent = preg_replace_callback('/<img([A-Za-z0-9\s\-="\/.:,;_]{0,})src="([A-Za-z0-9\s\-\/.:,;_%]{0,})"([A-Za-z0-9\s\-="\/.:,;_]{0,})>/', function( $matches )
+                {
+                    $width  = preg_replace('/([A-Za-z0-9\s\-="]{0,})width="([0-9]{1,})"([A-Za-z0-9\s\-="]{0,})/', '$2', $matches[3]);
+                    $height = preg_replace('/([A-Za-z0-9\s\-="]{0,})height="([0-9]{1,})"([A-Za-z0-9\s\-="]{0,})/', '$2', $matches[3]);
+
+                    if( !$width )
+                    {
+                        $width  = preg_replace('/([A-Za-z0-9\s\-="]{0,})width="([0-9]{1,})"([A-Za-z0-9\s\-="]{0,})/', '$2', $matches[1]);
+                    }
+
+                    if( !$height )
+                    {
+                        $height = preg_replace('/([A-Za-z0-9\s\-="]{0,})height="([0-9]{1,})"([A-Za-z0-9\s\-="]{0,})/', '$2', $matches[1]);
+                    }
+
+                    return '<div class="img-replaced is-svg" style="-webkit-mask:url(##IMAGEPATH##);mask:url(##IMAGEPATH##);width:' . $width . 'px;height:' . $height . 'px;background-color:##IMAGEBACKGROUND##;"></div>';
+                }, $strContent);
+
+                $strContent = preg_replace('/##IMAGEPATH##/', preg_replace('/ /', '%20', $objImage->path), $strContent);
+                $strContent = preg_replace('/##IMAGEBACKGROUND##/', $imageColor, $strContent);
+            }
         }
 
         return $strContent;
@@ -981,6 +1035,11 @@ class ContentListener extends DefaultListener
         {
             $objAliasElement    = \ContentModel::findByPk ( $objRow->cteAlias );
             $elementClass       = 'ce_' . $objAliasElement->type;
+        }
+
+        if( preg_match('/^rsce_/', $elementClass) )
+        {
+            $elementClass = 'ce_' . $elementClass;
         }
 
 //        if( $elementClass === "ce_iido_navigation" )
