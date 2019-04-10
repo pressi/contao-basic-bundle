@@ -24,30 +24,47 @@ class Field
     protected $name;
 
 
-    protected $type = 'text';
+    protected $type         = 'text';
+
+    protected $noType       = false;
+    protected $includeLabel = false;
 
 
-    protected $withoutSQL = false;
+    protected $withoutSQL   = false;
 
 
-    protected $arrSQL = array
+    protected $arrSQL       = array
     (
-        'alias'         => "varchar(##MAXLENGTH##) COLLATE utf8mb4_bin NOT NULL default ''",
+//        'alias'         => "varchar(##MAXLENGTH##) COLLATE utf8mb4_bin NOT NULL default ''",
+        'alias'         => ['type'=>'binary', 'length'=>128, 'default'=>''],
+
         'text'          => "varchar(##MAXLENGTH##) NOT NULL default ''",
         'textarea'      => "mediumtext NULL",
         'checkbox'      => "char(1) NOT NULL default ''",
-        'select'        => "varchar(##MAXLENGTH##) NOT NULL default ''",
+        'select'        => "varchar(##MAXLENGTH##) NOT NULL default '##DEFAULT##'",
         'fileTree'      => "binary(16) NULL",
         'pageTree'      => "int(10) unsigned NOT NULL default '0'",
         'imageSize'     => "varchar(64) NOT NULL default ''",
         'trbl'          => "varchar(128) NOT NULL default ''",
+        'radioTable'    => "varchar(12) NOT NULL default ''",
 
-        'colorpicker'   => "varchar(64) NOT NULL default ''"
+        'unit'          => "varchar(64) NOT NULL default ''",
+        'inputUnit'     => "varchar(64) NOT NULL default ''",
+        'headline'      => "varchar(255) NOT NULL default ''",
+
+        'color'         => "varchar(64) NOT NULL default ''",
+        'colorpicker'   => "varchar(64) NOT NULL default ''",
+
+        'checkboxWizard'    => "blob NULL",
+        'multiColumnWizard' => "blob NULL",
+        'multiColumnEditor' => "blob NULL"
     );
 
-    protected $arrConfig = array();
 
-    protected $arrEval  = array
+    protected $arrConfig        = array();
+    protected $arrRemovedConfig = array();
+
+    protected $arrEval      = array
     (
         'tl_class'  => 'w50'
     );
@@ -55,11 +72,17 @@ class Field
     protected $strTable;
     protected $strLangTable;
 
-    protected $fieldPrefix = 'iido([A-Za-z0-9]{0,})_';
+    protected $fieldPrefix  = 'iido([A-Za-z0-9]{0,})_';
 
-    protected $dontUseRTE = false;
+    protected $dontUseRTE   = false;
 
-    protected $isSelector = false;
+    protected $isSelector   = false;
+
+    protected $addedToSelector  = false;
+    protected $selector         = '';
+
+    protected $subpalettePosition       = '';
+    protected $subpaletteReplaceField   = '';
 
 
     /**
@@ -125,6 +148,20 @@ class Field
     public function addConfig( $name, $value )
     {
         $this->arrConfig[ $name ] = $value;
+
+        return $this;
+    }
+
+
+
+    public function removeConfig( $name )
+    {
+        unset( $this->arrConfig[ $name ] );
+
+        if( !in_array($name, $this->arrRemovedConfig) )
+        {
+            $this->arrRemovedConfig[] = $name;
+        }
 
         return $this;
     }
@@ -198,6 +235,14 @@ class Field
 
 
 
+
+    public function getDefault()
+    {
+        return $this->arrConfig['default'];
+    }
+
+
+
     public function getName()
     {
         return $this->name;
@@ -266,14 +311,46 @@ class Field
             'eval'          => $this->arrEval,
         );
 
+        if( $this->noType )
+        {
+            if( !$this->includeLabel )
+            {
+                unset( $arrFieldConfig['label'] );
+            }
+            unset( $arrFieldConfig['inputType'] );
+            unset( $arrFieldConfig['exclude'] );
+            unset( $arrFieldConfig['eval'] );
+        }
+
         foreach($this->arrConfig as $key => $value)
         {
             $arrFieldConfig[ $key ] = $value;
         }
 
+        if( $this->type === "select" && !isset($arrFieldConfig['options']) && isset($GLOBALS['TL_LANG'][ $this->strTable ]['options'][ $this->name ]) && count($GLOBALS['TL_LANG'][ $this->strTable ]['options'][ $this->name ]) )
+        {
+            $arrFieldConfig['options'] = $GLOBALS['TL_LANG'][ $this->strTable ]['options'][ $this->name ];
+        }
+
+
         if( !$this->withoutSQL )
         {
-            $arrFieldConfig['sql'] = str_replace('##MAXLENGTH##', $this->getEval('maxlength'), $this->arrSQL[ $SQLType ]?:$this->arrSQL[ $this->type ]);
+            $strSQL = $this->arrSQL[ $SQLType ]?:$this->arrSQL[ $this->type ];
+
+            if( $this->type === "checkbox" && $this->arrEval['multiple'] )
+            {
+                $arrFieldConfig['sql']      = "blob NULL";
+//                $arrFieldConfig['relation'] = array('type'=>'hasMany', 'load'=>'lazy');
+            }
+            else
+            {
+                if( $strSQL )
+                {
+                    $strSQL = str_replace('##MAXLENGTH##', $this->getEval('maxlength'), $strSQL);
+
+                    $arrFieldConfig['sql'] = str_replace('##DEFAULT##', $this->getDefault(), $strSQL);
+                }
+            }
         }
 
         $GLOBALS['TL_DCA'][ $this->strTable ]['fields'][ $this->name ] = $arrFieldConfig;
@@ -292,6 +369,13 @@ class Field
         {
             $this->addEval('decodeEntities', true);
         }
+    }
+
+
+
+    protected function setDefaultCheckboxFieldConfig()
+    {
+        $this->addEval('tl_class', 'w50 m12');
     }
 
 
@@ -315,6 +399,13 @@ class Field
         {
             $this->addEval('maxlength', 32);
         }
+    }
+
+
+
+    protected function setDefaultColorFieldConfig()
+    {
+        $this->setDefaultColorpickerFieldConfig();
     }
 
 
@@ -347,11 +438,55 @@ class Field
 
 
 
+    protected function setDefaultInputUnitFieldConfig()
+    {
+        $this->setDefaultUnitFieldConfig();
+    }
+
+
+
+    protected function setDefaultUnitFieldConfig()
+    {
+        $this->type = 'inputUnit';
+
+        $this->addEval('includeBlankOption', true);
+        $this->addEval('maxlength', 20);
+        $this->addEval('tl_class', 'w50');
+        $this->addEval('rgxp', 'digit_auto_inherit');
+
+        $this->addConfig('options', $GLOBALS['TL_CSS_UNITS']);
+    }
+
+
+
+    protected function setDefaultHeadlineFieldConfig()
+    {
+        $this->type = 'inputUnit';
+
+        $this->addEval('maxlength', 200);
+        $this->addEval('tl_class', 'w50 clr');
+
+        $this->addConfig('options', ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']);
+    }
+
+
+
     protected function setDefaultFileTreeFieldConfig()
     {
-        $this->addEval('fileType', 'radio');
-        $this->addEval('filesOnly', true);
-        $this->addEval('extensions', \Config::get('validImageTypes'));
+        if( !$this->issetEval('fileType') )
+        {
+            $this->addEval('fileType', 'radio');
+        }
+
+        if( !$this->issetEval('filesOnly') )
+        {
+            $this->addEval('filesOnly', true);
+        }
+
+        if( !$this->issetEval('extensions') || !$this->getEval('extensions') )
+        {
+            $this->addEval('extensions', \Config::get('validImageTypes'));
+        }
     }
 
 
@@ -384,7 +519,11 @@ class Field
     protected function setDefaultPageTreeFieldConfig()
     {
         $this->addConfig('foreignKey', 'tl_page.title');
-        $this->addConfig('relation', array('type'=>'hasOne', 'load'=>'eager'));
+
+        if( !in_array('relation', $this->arrRemovedConfig) && !key_exists('relation', $this->arrConfig) )
+        {
+            $this->addConfig('relation', array('type'=>'hasOne', 'load'=>'eager'));
+        }
 
         $this->addEval('fieldType', 'radio');
         $this->addEval('tl_class', 'clr');
@@ -433,6 +572,17 @@ class Field
             $this->addEval('decodeEntities', true);
             $this->addEval('style', 'height:60px');
         }
+    }
+
+
+
+    protected function setDefaultExplanationFieldConfig()
+    {
+        $this->type = 'explanation';
+
+        $this->addEval('text', '');
+        $this->addEval('class', 'tl_info');
+        $this->addEval('tl_class', 'long');
     }
 
 
@@ -512,6 +662,11 @@ class Field
      */
     public function addToTable( $objTable )
     {
+        if( $this->isAddedToSelector() )
+        {
+            $objTable->addFieldToSubpalette($this->getName(), $this->selector, $this->subpalettePosition, $this->subpaletteReplaceField);
+        }
+
         return $this->addFieldToTable( $objTable );
     }
 
@@ -549,6 +704,58 @@ class Field
         $this->search = $addToSearch;
 
         return $this;
+    }
+
+
+
+    public function addOptions( $arrOptions )
+    {
+        $this->arrConfig['options'] = $arrOptions;
+
+        return $this;
+    }
+
+
+
+    public function setNoType( $setNoType )
+    {
+        $this->noType = $setNoType;
+
+        return $this;
+    }
+
+
+
+    public function addToSelector( $strSelector, $position = 'end', $replaceField = '' )
+    {
+        $this->addedToSelector  = true;
+        $this->selector         = $strSelector;
+
+        $this->subpalettePosition       = $position;
+        $this->subpaletteReplaceField   = $replaceField;
+
+        return $this;
+    }
+
+
+
+    public function addToSubpalette( $strSubpalette, $position = 'end', $replaceField = '' )
+    {
+        return $this->addToSelector( $strSubpalette, $position, $replaceField );
+    }
+
+
+
+    public function isAddedToSelector()
+    {
+        return $this->addedToSelector;
+    }
+
+
+
+    public function getSelector()
+    {
+        return $this->selector;
     }
 
 }
