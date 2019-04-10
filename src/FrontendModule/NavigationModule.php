@@ -479,7 +479,7 @@ class NavigationModule extends \ModuleNavigation
         /* @var \PageModel $objPage */
         global $objPage;
 
-        $arrItems       = array();
+//        $arrItems       = array();
         $arrNavPages    = \StringUtil::deserialize( $this->navPagesOrder, TRUE );
         $useCustomNav   = FALSE;
 
@@ -612,6 +612,7 @@ class NavigationModule extends \ModuleNavigation
                 }
             }
         }
+//        if( $pid === 35 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $objParentPage ); echo "</pre>";}
 
         $cssID = \StringUtil::deserialize($this->cssID, TRUE);
         $isOnePageNavigation = (preg_match('/page-is-onepage/', $objPage->cssClass) && preg_match('/nav-onepage/', $cssID));
@@ -663,13 +664,17 @@ class NavigationModule extends \ModuleNavigation
                 case "news":
                     $arrItems = $this->getNewsPages( $objParentPage, $level, $host, $language );
                     break;
+
+                default:
+                    $arrItems = $this->getHookPages( $objParentPage->submenuSRC, $objParentPage, $level, $host, $language);
+                    break;
             }
         }
 
         if( !$objParentPage->submenuNoPages || ($objParentPage->submenuNoPages && $objParentPage->submenuPageCombination) )
         {
             $objPages = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $pid, $this->showHidden );
-
+//            if( $pid === 35 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $objPages ); echo "</pre>";}
             if( $objPages )
             {
                 while( $objPages->next() )
@@ -693,7 +698,9 @@ class NavigationModule extends \ModuleNavigation
                         // Check whether there will be subpages
                         if( (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objItem->id || in_array($objPage->id, $this->Database->getChildRecords($objItem->id, 'tl_page'))))) )
                         {
+//                            if( $pid === 34 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $objItem ); echo "</pre>";}
                             $subitems = $this->getPages($objItem->id, $level, $host, $language);
+//                            if( $pid === 34 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $subitems ); echo "</pre>";}
                         }
 
                         $arrItem    = $this->setItemRow($objPages->row(), $objItem, "page", $subitems);
@@ -716,6 +723,10 @@ class NavigationModule extends \ModuleNavigation
                 case "news":
                     $arrItems = array_merge($arrItems, $this->getNewsPages( $objParentPage, $level, $host, $language ) );
                     break;
+
+                default:
+                    $arrItems = array_merge($arrItems, $this->getHookPages( $objParentPage->submenuSRC, $objParentPage, $level, $host, $language) );
+                    break;
             }
         }
 
@@ -735,7 +746,6 @@ class NavigationModule extends \ModuleNavigation
 //                return '';
 //            }
 //        }
-
 
         // Add classes first and last
         if (!empty($arrItems))
@@ -860,6 +870,24 @@ class NavigationModule extends \ModuleNavigation
 
 
 
+    protected function getHookPages( $strMode, $objParentPage, $level, $host = null, $language = null)
+    {
+        $arrItems = array();
+
+        if (isset($GLOBALS['TL_HOOKS']['generateSubmenuNotPages']) && \is_array($GLOBALS['TL_HOOKS']['generateSubmenuNotPages']))
+        {
+            foreach ($GLOBALS['TL_HOOKS']['generateSubmenuNotPages'] as $callback)
+            {
+                $this->import($callback[0]);
+                $arrItems = $this->{$callback[0]}->{$callback[1]}($strMode, $objParentPage, $level, $host, $language);
+            }
+        }
+
+        return $arrItems;
+    }
+
+
+
 //    protected function getSubPages( $objItem )
 //    {
 //        echo "<pre>"; print_r( $arrItem ); exit;
@@ -906,11 +934,11 @@ class NavigationModule extends \ModuleNavigation
                     }
                     else
                     {
-                        $objNext = \PageModel::findFirstPublishedRegularByPid($objItem->id);
+                        $objNext = \PageModel::findFirstPublishedByPid($objItem->id);
 
                         if( $objNext->type === "forward" && !$objNext->jumpTo )
                         {
-                            $objNext = \PageModel::findFirstPublishedRegularByPid($objNext->id);
+                            $objNext = \PageModel::findFirstPublishedByPid($objNext->id);
                         }
                     }
 
@@ -1062,7 +1090,6 @@ class NavigationModule extends \ModuleNavigation
 //                $strTarget = ' data-href=""';
             }
         }
-
 
         $arrItem['isActive']        = $isActive;
         $arrItem['isTrail']         = $isTrail;

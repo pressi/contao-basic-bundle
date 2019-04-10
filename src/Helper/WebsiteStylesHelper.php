@@ -78,6 +78,7 @@ class WebsiteStylesHelper
                     {
                         $openWizard         = true;
                         $configFieldName    = $legendParts[1];
+                        $arrInternIDs       = array();
                         $configFields       = explode(",", $legendParts[2]);
 
                         $rowName            = '$' . $configFieldName;
@@ -100,6 +101,21 @@ class WebsiteStylesHelper
 
                                 $arrMcFieldPart = explode("-", $configFields[ $num ]);
                                 $fieldType = $arrMcFieldPart[1]?:'';
+
+                                if( $fieldKey === 'internID' )
+                                {
+                                    if( $fieldValue )
+                                    {
+                                        $arrInternIDs[] = $fieldValue;
+                                    }
+                                    else
+                                    {
+                                        $newID = 'hs' . (count($arrInternIDs) + 1);
+
+                                        $arrInternIDs[] = $newID;
+                                        $fieldValue = $newID;
+                                    }
+                                }
 
                                 $putRow =  $rowName . $subrow . '_' . $fieldKey . ': ' . self::renderFieldValue($fieldValue, $fieldType) . ';' . (($arrMcFieldPart[1]) ? ' //' . $arrMcFieldPart[1] : '');
 //                                echo "<pre>"; print_r( $putRow ); exit;
@@ -131,6 +147,7 @@ class WebsiteStylesHelper
                     continue;
                 }
 
+                $arrInternIDs   = array();
                 $arrField       = explode(':', $fileRow);
                 $arrRowParts    = explode("//", $arrField[1]);
 
@@ -276,14 +293,14 @@ class WebsiteStylesHelper
                 $newVarRows[ $varRNum ] = '$headlineStylesTagClasses: (' . implode('_tagClasses, ', $arrHL) . '_tagClasses);';
                 $varRNum++;
 
-                $newVarRows[ $varRNum ] = '$headlineStylesColors: (' . implode('_color, ', $arrHL) . '_color);';
-                $varRNum++;
+//                $newVarRows[ $varRNum ] = '$headlineStylesColors: (' . implode('_color, ', $arrHL) . '_color);';
+//                $varRNum++;
 
-                $newVarRows[ $varRNum ] = '$headlineStylesSizes: (' . implode('_size, ', $arrHL) . '_size);';
-                $varRNum++;
+//                $newVarRows[ $varRNum ] = '$headlineStylesSizes: (' . implode('_size, ', $arrHL) . '_size);';
+//                $varRNum++;
 
-                $newVarRows[ $varRNum ] = '$headlineStylesAligns: (' . implode('_align, ', $arrHL) . '_align);';
-                $varRNum++;
+//                $newVarRows[ $varRNum ] = '$headlineStylesAligns: (' . implode('_align, ', $arrHL) . '_align);';
+//                $varRNum++;
             }
 
             $newVarRows[ $varRNum ] = '';

@@ -427,19 +427,19 @@ class ArticleTemplateRenderer
 
             if( $padding['top'] )
             {
-                $strArticleInsideStyles .= 'padding-top:' . $padding['top'] . $padding['unit'];
+                $strArticleInsideStyles .= 'padding-top:' . $padding['top'] . $padding['unit'] . ';';
             }
             if( $padding['right'] )
             {
-                $strArticleInsideStyles .= 'padding-right:' . $padding['right'] . $padding['unit'];
+                $strArticleInsideStyles .= 'padding-right:' . $padding['right'] . $padding['unit'] . ';';
             }
             if( $padding['bottom'] )
             {
-                $strArticleInsideStyles .= 'padding-bottom:' . $padding['bottom'] . $padding['unit'];
+                $strArticleInsideStyles .= 'padding-bottom:' . $padding['bottom'] . $padding['unit'] . ';';
             }
             if( $padding['left'] )
             {
-                $strArticleInsideStyles .= 'padding-left:' . $padding['left'] . $padding['unit'];
+                $strArticleInsideStyles .= 'padding-left:' . $padding['left'] . $padding['unit'] . ';';
             }
 
             if( strlen($strArticleInsideStyles) )
