@@ -63,7 +63,6 @@ class WebsiteStylesModule extends \BackendModule
 //        \Controller::loadLanguageFile("default");
 
         $GLOBALS['TL_CSS'][] = 'bundles/iidobasic/css/backend/website-styles.css||static';
-        $GLOBALS['TL_CSS'][] = 'bundles/iidobasic/css/backend/dropdown.css||static';
 
         switch( \Input::get("mode") )
         {
@@ -198,6 +197,13 @@ class WebsiteStylesModule extends \BackendModule
                                 $arrFieldEval['maxlength'] = 20;
                             }
 
+
+                            if( $fieldName === "internID" )
+                            {
+                                $arrFieldEval['readonly'] = true;
+                                $arrFieldEval['style'] = 'width: 45px';
+                            }
+
                             $arrFieldConfig = array
                             (
                                 'name'      => $fieldName,
@@ -233,7 +239,7 @@ class WebsiteStylesModule extends \BackendModule
                                 'name'      => $fileRowParts[1],
                                 'label'     => $this->getFormFieldLabel($fileRowParts[1]),
                                 'inputType' => 'multiColumnWizard',
-                                'eval'      => array('columnFields'=>$arrFields)
+                                'eval'      => array('dragAndDrop'=>true,'columnFields'=>$arrFields,'buttons'=>array('copy'=>false))
                             );
                         }
 
@@ -602,6 +608,11 @@ class WebsiteStylesModule extends \BackendModule
 
     protected function getFormFieldLabel( $labelKey, $subLabelKey = '' )
     {
+        if( $subLabelKey === "internID" )
+        {
+            return 'ID';
+        }
+
         $strLang = $GLOBALS['TL_LANG']['IIDO']['WebsiteStyles']['field'][ $labelKey . ($subLabelKey ? '_' . $subLabelKey : '') ];
         return $strLang ?: $labelKey;
     }
