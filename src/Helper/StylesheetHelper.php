@@ -742,6 +742,26 @@ class StylesheetHelper
                     $arrStyles['own']     = $arrStyles['own'] . 'z-index:900;';
                 }
             }
+
+            if( $mode === "header" || $mode === "footer" )
+            {
+                $arrPadding = \StringUtil::deserialize( $objData->padding, TRUE);
+
+                if( $arrPadding['top'] || $arrPadding['right'] || $arrPadding['bottom'] || $arrPadding['left'] )
+                {
+                    $headerStyles = $arrStyles;
+
+                    $arrStyles = array();
+
+                    $arrStyles[] = $headerStyles;
+                    $arrStyles[] = array
+                    (
+                        'selector'  => $mode . ' .inside',
+                        'alignment' => true,
+                        'padding'   => $objData->padding
+                    );
+                }
+            }
         }
 
         return $arrStyles;
@@ -1310,7 +1330,13 @@ class StylesheetHelper
                 $createFile     = TRUE;
             }
 
-            $arrPageStyles[ 'header_' . $objHeader->id ] = $arrHeaderStyles;
+            if( is_array($arrHeaderStyles) && !isset($arrHeaderStyles['selector']) )
+            {
+                foreach($arrHeaderStyles as $num => $arrHeadStyle )
+                {
+                    $arrPageStyles[ 'header_' . $objHeader->id  . '_' . $num ] = $arrHeadStyle;
+                }
+            }
         }
 
 

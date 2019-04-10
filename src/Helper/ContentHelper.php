@@ -76,11 +76,13 @@ class ContentHelper
     }
 
 
-
+    //TODO: merge position function with rendered position in content listerner #371
     public static function renderPosition( $objClass )
     {
         $strClass       = "";
         $strStyles      = "";
+        $arrUnits       = $GLOBALS['TL_CSS_UNITS'];
+        $strUnits       = implode("|", $arrUnits);
 
         if( $objClass->position )
         {
@@ -95,22 +97,54 @@ class ContentHelper
 
             if( $arrPosMargin['top'] )
             {
-                $strStyles .= " margin-top:" . $arrPosMargin['top'] . $unit . ";";
+                $posTop     = $arrPosMargin['top'];
+                $unitTop    = $unit;
+
+                if( preg_match('/(' . $strUnits . ')$/', $posTop) )
+                {
+                    $unitTop = '';
+                }
+
+                $strStyles .= "margin-top:" . $posTop . $unitTop . ";";
             }
 
             if( $arrPosMargin['right'] )
             {
-                $strStyles .= " margin-right:" . $arrPosMargin['right'] . $unit . ";";
+                $posRight   = $arrPosMargin['right'];
+                $unitRight  = $unit;
+
+                if( preg_match('/(' . $strUnits . ')$/', $posRight) )
+                {
+                    $unitRight = '';
+                }
+
+                $strStyles .= "margin-right:" . $posRight. $unitRight . ";";
             }
 
             if( $arrPosMargin['bottom'] )
             {
-                $strStyles .= " margin-bottom:" . $arrPosMargin['bottom'] . $unit . ";";
+                $posBottom  = $arrPosMargin['bottom'];
+                $unitBottom = $unit;
+
+                if( preg_match('/(' . $strUnits . ')$/', $posBottom) )
+                {
+                    $unitBottom = '';
+                }
+
+                $strStyles .= "margin-bottom:" . $posBottom . $unitBottom . ";";
             }
 
             if( $arrPosMargin['left'] )
             {
-                $strStyles .= " margin-left:" . $arrPosMargin['left'] . $unit . ";";
+                $posLeft    = $arrPosMargin['left'];
+                $unitLeft   = $unit;
+
+                if( preg_match('/(' . $strUnits . ')$/', $posLeft) )
+                {
+                    $unitLeft = '';
+                }
+
+                $strStyles .= "margin-left:" . $posLeft . $unitLeft . ";";
             }
         }
 

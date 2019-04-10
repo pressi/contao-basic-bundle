@@ -17,7 +17,6 @@ use IIDO\BasicBundle\Config\BundleConfig;
  * Class Helper
  *
  * @package IIDO\BasicBundle
- * @TODO: überarbeiten!! funktioniert nicht!!
  */
 class BackendHelper
 {

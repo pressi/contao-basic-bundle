@@ -518,36 +518,56 @@ class ColorHelper
             $objCurrentPage = \PageModel::findByPk( $objArticle->pid );
             $objCurrentPage = $objCurrentPage->loadDetails();
 
+            $arrColors      = self::getRootColors( $objCurrentPage->rootAlias, $parentLabel, $arrColors );
+        }
+        else
+        {
+            $objRootPages = \PageModel::findPublishedRootPages();
 
-            $primary = WebsiteStylesHelper::getConfigFieldValue( $objCurrentPage->rootAlias, 'colorPrimary');
-
-            if( $primary && $primary !== "transparent" )
+            if( $objRootPages )
             {
-                $arrColors[ $parentLabel ][ $primary ] = 'Primary - Hauptfarbe';
-            }
-
-            $secondary = WebsiteStylesHelper::getConfigFieldValue( $objCurrentPage->rootAlias, 'colorSecondary');
-
-            if( $secondary && $secondary !== "transparent" )
-            {
-                $arrColors[ $parentLabel ][ $secondary ] = 'Secondary - Zweitfarbe';
-            }
-
-            $arrCustomColors = WebsiteStylesHelper::getConfigFieldValue( $objCurrentPage->rootAlias, 'customColor');
-
-            if( count($arrCustomColors) )
-            {
-                foreach($arrCustomColors as $arrColor)
+                while( $objRootPages->next() )
                 {
-                    $strColor = $arrColor['color'];
-
-                    if( preg_match('/^#/', $strColor) )
-                    {
-                        $strColor = '#' . $strColor;
-                    }
-
-                    $arrColors[ $parentLabel ][ $strColor ] = $arrColor['name'];
+                    $arrColors = self::getRootColors( $objRootPages->alias, $objRootPages->title, $arrColors );
                 }
+            }
+        }
+
+        return $arrColors;
+    }
+
+
+
+    protected static function getRootColors( $rootAlias, $rootTitle, $arrColors )
+    {
+        $primary = WebsiteStylesHelper::getConfigFieldValue( $rootAlias, 'colorPrimary');
+
+        if( $primary && $primary !== "transparent" )
+        {
+            $arrColors[ $rootTitle ][ $primary ] = 'Primary - Hauptfarbe';
+        }
+
+        $secondary = WebsiteStylesHelper::getConfigFieldValue( $rootAlias, 'colorSecondary');
+
+        if( $secondary && $secondary !== "transparent" )
+        {
+            $arrColors[ $rootTitle ][ $secondary ] = 'Secondary - Zweitfarbe';
+        }
+
+        $arrCustomColors = WebsiteStylesHelper::getConfigFieldValue( $rootAlias, 'customColor');
+
+        if( count($arrCustomColors) )
+        {
+            foreach($arrCustomColors as $arrColor)
+            {
+                $strColor = $arrColor['color'];
+
+                if( !preg_match('/^#/', $strColor) )
+                {
+                    $strColor = '#' . $strColor;
+                }
+
+                $arrColors[ $rootTitle ][ $strColor ] = $arrColor['name'];
             }
         }
 

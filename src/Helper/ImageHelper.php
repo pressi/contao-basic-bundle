@@ -10,6 +10,10 @@
 namespace IIDO\BasicBundle\Helper;
 
 
+use Postyou\ContaoWebPBundle\Util\WebPHelper;
+use PRESTEP\ProductsBundle\Config\BundleConfig;
+
+
 /**
  * Description
  *
@@ -197,7 +201,7 @@ class ImageHelper extends \Backend
 
 
 
-    public static function getImageTag( $imageSRC, $arrSize = array(), $addDefaultAttr = false, $defaultImageObject = '' )
+    public static function getImageTag( $imageSRC, $arrSize = array(), $addDefaultAttr = false, $defaultImageObject = '', $strAttributes = '' )
     {
         $assetImage = '';
 
@@ -224,14 +228,25 @@ class ImageHelper extends \Backend
         if( $objImage )
         {
             $arrMeta    = \Frontend::getMetaData($objImage->meta, BasicHelper::getLanguage());
-            $attributes = '';
+            $attributes = $strAttributes;
 
             if( $addDefaultAttr )
             {
-                $attributes = 'data-default="' . ($assetImage?:$objImage->path) . '"';
+                $attributes .= ' data-default="' . ($assetImage?:$objImage->path) . '"';
             }
 
-            return \Image::getHtml( $assetImage?:self::getImagePath( $objImage, $arrSize ), $arrMeta['alt'], $attributes );
+            $script = '';
+
+            list($imagePath, $srcImagePath) = $assetImage ? array($assetImage, '') : self::getImagePath( $objImage, $arrSize, true );
+
+            if( $srcImagePath )
+            {
+                $attributes .= 'srcset="' . $srcImagePath . '"';
+
+                $script = '<script>window.respimage&&window.respimage({elements:[document.images[document.images.length-1]]})</script>';
+            }
+
+            return \Image::getHtml( $imagePath, $arrMeta['alt'], trim($attributes) ) . $script;
         }
 
         return false;
@@ -239,7 +254,7 @@ class ImageHelper extends \Backend
 
 
 
-    public static function getImagePath( $imageSRC, $arrSize = array() )
+    public static function getImagePath( $imageSRC, $arrSize = array(), $returnArray = false )
     {
         if( $imageSRC instanceof \FilesModel )
         {
@@ -265,13 +280,29 @@ class ImageHelper extends \Backend
 
                 $src = $objFactory->create( BasicHelper::getRootDir( true ) . $objImage->path, $arrSize )->getUrl( BasicHelper::getRootDir() );
 
-                return $src;
+                return $returnArray ? array(self::convertImage( $src ), $src) : self::convertImage( $src );
             }
 
-            return $objImage->path;
+            return $returnArray ? array(self::convertImage( $objImage->path ), $objImage->path) : $objImage->path;
         }
 
-        return false;
+        return $returnArray ? array(false, '') : false;
+    }
+
+
+
+    protected static function convertImage( $imagePath )
+    {
+        if( BundleConfig::isActiveBundle('postyou/contao-webp-bundle') )
+        {
+
+            if( \Config::get('useWebP') && WebPHelper::hasWebPSupport() )
+            {
+                $imagePath = WebPHelper::getWebPImage( $imagePath );
+            }
+        }
+
+        return $imagePath;
     }
 
 

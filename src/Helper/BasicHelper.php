@@ -786,8 +786,9 @@ class BasicHelper extends \Frontend
 
                 /** @var \Module $objModule */
                 $objModule = new $strClass($objModule, $strColumn);
-                $objModule->id = $navModuleID;
-                $objModule->cssID = ''; //$cssID; //array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
+
+                $objModule->id      = $navModuleID;
+                $objModule->cssID   = ''; //$cssID; //array($cssID[0], $strClasses?:$cssID[1]?:'nav-main');
 
                 if( $objClass->showHidden || preg_match('/show-hidden/', $cssID[1]) )
                 {
@@ -1139,5 +1140,19 @@ class BasicHelper extends \Frontend
         }
 
         return $rootAlias;
+    }
+
+
+
+    public static function getWebsiteConfigTables()
+    {
+        $arrTables = array();
+
+        foreach( $GLOBALS['IIDO']['CONFIGS'] as $config )
+        {
+            $arrTables[] = $config['table'];
+        }
+
+        return $arrTables;
     }
 }
