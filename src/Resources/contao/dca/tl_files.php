@@ -12,6 +12,11 @@
  * Fields
  */
 
+$GLOBALS['TL_DCA']['tl_files']['config']['onsubmit_callback'][] = array('IIDO\BasicBundle\Table\FilesTable', 'onSubmitCallback');
+$GLOBALS['TL_DCA']['tl_files']['config']['onload_callback'][]   = array('IIDO\BasicBundle\Table\FilesTable', 'onLoadCallback');
+
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['link']          = 'link';
+
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['link_title']    = 'text';
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['description']   = 'textarea';
 
@@ -28,3 +33,22 @@ $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['cssClass
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['categories']    = 'iidoTag';
 
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['color']         = 'color';
+
+
+
+$objGloablCategories = \IIDO\BasicBundle\Model\GlobalCategoryModel::findPublishedByPid(0);
+
+if( $objGloablCategories )
+{
+    while( $objGloablCategories->next() )
+    {
+        $arrEnableIn = \StringUtil::deserialize( $objGloablCategories->enableCategoriesIn, TRUE );
+
+        if( is_array($arrEnableIn) && in_array('tl_files', $arrEnableIn) )
+        {
+            $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['gc_' . $objGloablCategories->alias] = 'globalCategoriesPicker_' . $objGloablCategories->id;
+
+            $GLOBALS['TL_LANG']['MSC']['aw_gc_' . $objGloablCategories->alias ] = $objGloablCategories->title;
+        }
+    }
+}

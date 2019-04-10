@@ -16,6 +16,7 @@ $objArticle         = FALSE;
 $objParentPage      = FALSE;
 
 $db                 = \Database::getInstance();
+$do                 = \Input::get("do");
 $act                = \Input::get("act");
 $id                 = \Input::get("id");
 $table              = \Input::get("table");
@@ -125,7 +126,7 @@ if( $objParentPage && ($objParentPage->enableFullpage || $articleCounter > 1) )
 }
 
 
-if( $objArticle && ($objArticle->articleType === "header" || $objArticle->articleType === "headerTopBar" || $objArticle->articleType === "footer") )
+if($do === "article" && $objArticle && ($objArticle->articleType === "header" || $objArticle->articleType === "headerTopBar" || $objArticle->articleType === "footer") )
 {
     $arrRemove = array
     (

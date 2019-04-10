@@ -355,6 +355,8 @@ $GLOBALS['TL_DCA'][ $strTableName ]['fields']['requestLinkPage']['label']       
 
 \IIDO\BasicBundle\Dca\Field::create('submenuSRC', 'select')
     ->addEval('maxlength', 255)
+    ->addEval('mandatory', true)
+    ->addEval('includeBlankOption', true)
     ->setSelector(true)
     ->addToTable( $objTable );
 
@@ -378,7 +380,7 @@ $objSubmenuNewsArchiveField->addToTable( $objTable );
 \IIDO\BasicBundle\Dca\Field::create('googleAnalyticsId')->addToTable( $objTable );
 
 $objTable->updateDca();
-
+//echo "<pre>"; print_r( $GLOBALS['TL_DCA'][ $strTableName ] ); exit;
 
 //$GLOBALS['TL_DCA'][ $strTableName ]['fields']['pageStyles'] = array
 //(

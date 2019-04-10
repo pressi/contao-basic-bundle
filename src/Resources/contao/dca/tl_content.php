@@ -132,6 +132,21 @@ if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_c
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['boxStart']                        = $defaultPaletteStart . '{box_legend},boxWidth,boxHeight,boxBackgroundColor;{slider_legend},sliderDelay,sliderSpeed,sliderStartSlide,sliderContinuous;' . $defaultPaletteEnd;
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['boxStop']                         = $GLOBALS['TL_DCA']['tl_content']['palettes']['sliderStop'];
 
+$isSVG = FALSE;
+
+if( $objContent && $objContent->singleSRC )
+{
+    $objImage = \FilesModel::findByUuid( $objContent->singleSRC );
+
+    if( $objImage )
+    {
+        if( $objImage->extension === "svg" )
+        {
+            $isSVG = TRUE;
+        }
+    }
+}
+
 
 foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strFields)
 {
@@ -178,6 +193,11 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
         if( $strPalette === "youtube" )
         {
             $strFields = str_replace(',autoplay', ',autoplay;{text_legend},text;', $strFields);
+        }
+
+        if( $objContent && $isSVG )
+        {
+            $strFields = preg_replace('/,size/', ',size,imageColor', $strFields);
         }
     }
 
@@ -1166,3 +1186,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_pageTitle', $strFileName, array('maxlength'=>100));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_page', $strFileName, array('maxlength'=>100));
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('gt_location', $strFileName, array('maxlength'=>100));
+
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['singleSRC']['eval']['submitOnChange'] = true;
+\IIDO\BasicBundle\Helper\DcaHelper::addColorField('imageColor', $strFileName);

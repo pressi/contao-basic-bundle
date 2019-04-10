@@ -328,7 +328,7 @@
 
             <trans-unit id="DEF.published.0">
                 <source>PUBLISHED</source>
-                <target>PUBLISHED</target>
+                <target>Item veröffentlichen</target>
             </trans-unit>
 
             <trans-unit id="DEF.protected.0">
@@ -485,6 +485,24 @@
             <trans-unit id="IIDO.WebsiteStyles.field.overlayStyle">
                 <source>Overlay: Style</source>
                 <target>Overlay: Style</target>
+            </trans-unit>
+
+
+            <trans-unit id="IIDO.WebsiteStyles.field.variable">
+                <source>CSS-Variablen</source>
+                <target>CSS-Variablen</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.variable_name">
+                <source>Name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.variable_value">
+                <source>Wert</source>
+                <target>Wert</target>
+            </trans-unit>
+            <trans-unit id="IIDO.WebsiteStyles.field.variable_quoteLess">
+                <source>Ohne Hochkomma (')</source>
+                <target>Ohne Hochkomma (')</target>
             </trans-unit>
 
 

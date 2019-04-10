@@ -312,6 +312,21 @@
             </trans-unit>
 
 
+
+            <trans-unit id="tl_iido_basic_website_styles.fields.variable.name">
+                <source>name</source>
+                <target>Name</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.fields.variable.value">
+                <source>value</source>
+                <target>Wert</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_basic_website_styles.fields.variable.quoteLess">
+                <source>quote less</source>
+                <target>Ohne Hochkomma (')</target>
+            </trans-unit>
+
+
         </body>
     </file>
 </xliff>

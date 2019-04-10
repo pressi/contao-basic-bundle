@@ -23,6 +23,11 @@
                 <target>Navigations Untertitel</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.padding.0">
+                <source>Padding</source>
+                <target>Padding</target>
+            </trans-unit>
+
             <trans-unit id="tl_article.isFixed.0">
                 <source>is fixed</source>
                 <target>Fixiert</target>
