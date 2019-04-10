@@ -675,9 +675,9 @@ class ContentTable extends \Backend
 
                     if( count($arrStyles) )
                     {
-                        foreach( $arrStyles as $styleKey => $arrStyle )
+                        foreach( $arrStyles as $arrStyle )
                         {
-                            $arrOptions[ ($styleKey + 1) ] = $arrStyle['name'];
+                            $arrOptions[ $arrStyle['internID'] ] = $arrStyle['name'];
                         }
                     }
                 }
