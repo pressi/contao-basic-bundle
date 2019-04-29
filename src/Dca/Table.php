@@ -217,6 +217,13 @@ class Table
 
 
 
+    public function getTableName()
+    {
+        return $this->strTable;
+    }
+
+
+
     public function setBundle( $bundleClass )
     {
         $this->bundle = $bundleClass;
@@ -430,7 +437,7 @@ class Table
         {
             $this->addPublishedFieldsToTable();
         }
-//if( $this->strTable === "tl_iido_global_category" )
+//if( $this->strTable === "tl_content" )
 //{
 //    echo "<pre>";
 //    print_r( $GLOBALS['TL_DCA'][ $this->strTable ] );
@@ -470,6 +477,13 @@ class Table
 
         $this->addFieldsToTable();
         $this->addSelectorsToTable();
+
+//        if( $this->strTable === "tl_content" )
+//        {
+//            echo "<pre>";
+//            print_r( $GLOBALS['TL_DCA'][ $this->strTable ] );
+//            exit;
+//        }
     }
 
 
@@ -505,6 +519,18 @@ class Table
                 $GLOBALS['TL_DCA'][ $this->strTable ]['config'][ $key ] = $value;
             }
         }
+    }
+
+
+
+    public function addPidField()
+    {
+        $arrPID = array
+        (
+            'sql' => "int(10) unsigned NOT NULL default '0'"
+        );
+
+        $this->arrFields['pid'] = $arrPID;
     }
 
 
@@ -948,7 +974,16 @@ class Table
 
     public function copyPalette( $from, $to )
     {
-        $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $to ] = $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $from ];
+        $strPalette = $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $from ];
+
+        if( !$strPalette )
+        {
+            $this->arrPalettes[ $to ] = $this->arrPalettes[ $from ];
+        }
+        else
+        {
+            $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $to ] = $strPalette;
+        }
     }
 
 
@@ -1749,6 +1784,45 @@ class Table
         }
 
         $this->arrSubpalettes[ $strSubpalette ] = preg_replace('/^,/', '', $this->arrSubpalettes[ $strSubpalette ]);
+    }
+
+
+
+    public function getField( $strName )
+    {
+        return $this->arrFields[ $strName ]?:$GLOBALS['TL_DCA'][ $this->getTableName() ]['fields'][ $strName ];
+    }
+
+
+
+    public function overrideField( $strName, $objField )
+    {
+        $this->arrFields[ $strName ] = $objField;
+    }
+
+
+
+    public function fieldExists( $strName )
+    {
+        $exists = false;
+
+        if( isset($this->arrFields[ $strName ]) && key_exists($strName, $this->arrFields) && $this->arrFields[ $strName ] )
+        {
+            $exists = true;
+        }
+
+        if( !$exists )
+        {
+            $arrFields  = $GLOBALS['TL_DCA'][ $this->getTableName() ]['fields'];
+            $arrField   = $arrFields[ $strName ];
+
+            if( $arrField && isset($arrFields[ $strName ]) && key_exists($strName, $arrFields) )
+            {
+                $exists = true;
+            }
+        }
+
+        return $exists;
     }
 
 }

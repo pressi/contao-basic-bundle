@@ -295,12 +295,37 @@ class ImageHelper extends \Backend
     {
         if( BundleConfig::isActiveBundle('postyou/contao-webp-bundle') )
         {
-
             if( \Config::get('useWebP') && WebPHelper::hasWebPSupport() )
             {
+                if( !preg_match('/^assets\//', $imagePath) )
+                {
+                    self::copyImageToWebPPath( $imagePath );
+                }
+
                 $imagePath = WebPHelper::getWebPImage( $imagePath );
             }
         }
+
+        return $imagePath;
+    }
+
+
+
+    public static function copyImageToWebPPath( $imagePath )
+    {
+        $realIimagePath = $imagePath;
+
+        $arrPath    = explode("/", $imagePath);
+        $imageName  = array_pop( $arrPath );
+
+        $imagePath  = 'assets/images/webp/' . $imageName;
+
+        if( !is_dir( TL_ROOT . '/assets/images/webp') )
+        {
+            mkdir( TL_ROOT . '/assets/images/webp' );
+        }
+
+        copy( $realIimagePath, $imagePath );
 
         return $imagePath;
     }

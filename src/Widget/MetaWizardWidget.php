@@ -415,6 +415,47 @@ class MetaWizardWidget extends \MetaWizard
                             $strField   = $objWidget->generate();
                         }
                     }
+                    elseif( preg_match('/picker$/i', $attributes) )
+                    {
+                        $strInputName   = $field . '_' . $lang;
+                        $varValue       = \StringUtil::trimsplit(',', $meta[ $field ]);
+
+                        $GLOBALS['TL_DCA']['tl_files']['fields'][ $field ]['label'][0]      = $GLOBALS['TL_LANG']['MSC']['aw_' . $field];
+                        $GLOBALS['TL_DCA']['tl_files']['fields'][ $strInputName ]['label']  = array($GLOBALS['TL_LANG']['MSC']['aw_' . $field], '');
+
+                        $strClass   = $GLOBALS['BE_FFL'][ $attributes ];
+                        $objWidget  = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA']['tl_files']['fields'][ $field ], $strInputName, $varValue, $strInputName, 'tl_files', $this));
+
+                        $objWidget->id              = $field . '_' . $lang;
+
+                        $objWidget->isMetaField     = TRUE;
+                        $objWidget->metaPrefix      = $this->strId;
+                        $objWidget->metaLang        = $lang;
+                        $objWidget->metaField       = $field;
+
+                        $strField   = $objWidget->generate();
+                    }
+                    elseif( $attributes === "selectConfig" || $attributes === "select" )
+                    {
+                        $strInputName   = $field . '_' . $lang;
+                        $varValue       = $meta[ $field ]; //\StringUtil::trimsplit(',', $meta[ $field ]);
+
+                        $arrData = ($attributes === 'selectConfig' ? $GLOBALS['TL_DCA']['tl_files']['fields'][ $field ] : array());
+
+                        $strClass   = $GLOBALS['BE_FFL'][ 'select' ];
+                        $objWidget  = new $strClass($strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strInputName, 'tl_files', $this));
+
+                        $objWidget->id              = $field . '_' . $lang;
+
+                        $objWidget->isMetaField     = TRUE;
+                        $objWidget->metaPrefix      = $this->strId;
+                        $objWidget->metaLang        = $lang;
+                        $objWidget->metaField       = $field;
+
+                        $strField   = $objWidget->generate();
+
+                        $strField = preg_replace('/name="' . $strInputName . '/', 'name="' . $this->strId . '[' . $lang . '][' . $field . ']', $strField);
+                    }
                     else
                     {
                         $arrAttributes  = explode("_", $attributes);

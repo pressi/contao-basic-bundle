@@ -84,6 +84,8 @@ class Field
     protected $subpalettePosition       = '';
     protected $subpaletteReplaceField   = '';
 
+    protected $objTable     = null;
+
 
     /**
      * Default Table Listener
@@ -106,7 +108,15 @@ class Field
             $this->strTable = $strTable;
         }
 
-        if( $strType === 'textarea')
+        if( $strType === 'textarea' )
+        {
+            $this->addEval('tl_class', 'clr', true);
+        }
+        elseif( $strType === 'image' )
+        {
+            $this->type = 'fileTree';
+        }
+        elseif( $strType === 'multiColumnEditor' )
         {
             $this->addEval('tl_class', 'clr', true);
         }
@@ -119,6 +129,54 @@ class Field
     public static function create( $strName, $strType =  'text', $withoutSQL = false, $strTable = '' )
     {
         return new static($strName, $strType, $withoutSQL, $strTable);
+    }
+
+
+
+    public static function update( $strName, $objTable )
+    {
+        $objField = $objTable->getField( $strName );
+//echo "<pre>";
+//print_r( $objTable );
+//echo "<br>";
+//print_r( $strName);
+//echo "<br>";
+//print_r( $objField );
+//exit;
+        if( is_array($objField) )
+        {
+            $arrField = $objField;
+            $objField = self::create( $strName, $objField['inputType'], !isset($objField['sql']), $objTable->getTableName() );
+
+            if( isset($arrField['eval']) && is_array($arrField['eval']) && count($arrField['eval']) )
+            {
+                foreach( $arrField['eval'] as $key => $value )
+                {
+                    $objField->addEval( $key, $value );
+                }
+            }
+
+            foreach($arrField as $strKey => $strValue )
+            {
+                if( in_array($strKey, ['label', 'inputType', 'exclude', 'eval', 'sql']) )
+                {
+                    continue;
+                }
+
+                $objField->addConfig( $strKey, $strValue );
+            }
+
+            $objField->setTable( $objTable );
+        }
+
+        return $objField;
+    }
+
+
+
+    public function setTable( $objTable )
+    {
+        $this->objTable = $objTable;
     }
 
 
@@ -471,6 +529,13 @@ class Field
 
 
 
+//    protected function setDefaultMultiColumnEditorFieldConfig()
+//    {
+//        $this->addEval('tl_class', 'clr', true);
+//    }
+
+
+
     protected function setDefaultFileTreeFieldConfig()
     {
         if( !$this->issetEval('fileType') )
@@ -758,4 +823,10 @@ class Field
         return $this->selector;
     }
 
+
+
+    public function updateField()
+    {
+        $this->objTable->overrideField( $this->name, $this );
+    }
 }

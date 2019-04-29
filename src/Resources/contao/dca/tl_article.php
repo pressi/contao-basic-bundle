@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['list']['operations']['edit']['button_callbac
 Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('dimensions_legend', 'layout_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
     ->addLegend('design_legend', 'dimensions_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addLegend('navigation_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
+    ->addLegend('navigation_legend', 'title_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
     ->addLegend('animation_legend', 'expert_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
     ->addLegend('divider_legend', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
     ->addLegend('inside_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)

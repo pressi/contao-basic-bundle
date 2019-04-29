@@ -46,7 +46,11 @@ if( $objGloablCategories )
 
         if( is_array($arrEnableIn) && in_array('tl_files', $arrEnableIn) )
         {
-            $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['gc_' . $objGloablCategories->alias] = 'globalCategoriesPicker_' . $objGloablCategories->id;
+            array_insert($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'], 0, array
+            (
+                'gc_' . $objGloablCategories->alias => 'globalCategoriesPicker_' . $objGloablCategories->id
+            ));
+
 
             $GLOBALS['TL_LANG']['MSC']['aw_gc_' . $objGloablCategories->alias ] = $objGloablCategories->title;
         }

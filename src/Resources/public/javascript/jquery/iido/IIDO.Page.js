@@ -400,11 +400,34 @@ IIDO.Page = IIDO.Page || {};
 
     page.initPageScroll = function()
     {
+        var navMainRight = document.querySelector('.nav-main.nav-right');
+
+        if( IIDO.Base.getBodyScrollTop() >= 50 )
+        {
+            document.body.classList.add("scrolled");
+
+            if( navMainRight )
+            {
+                navMainRight.classList.remove("open");
+                document.body.classList.remove("open-right-navigation");
+            }
+        }
+        else
+        {
+            document.body.classList.remove("scrolled");
+        }
+
         window.addEventListener("scroll", function()
         {
             if( IIDO.Base.getBodyScrollTop() >= 50 )
             {
                 document.body.classList.add("scrolled");
+
+                if( navMainRight )
+                {
+                    navMainRight.classList.remove("open");
+                    document.body.classList.remove("open-right-navigation");
+                }
             }
             else
             {
@@ -1169,7 +1192,7 @@ IIDO.Page = IIDO.Page || {};
             {
                 config.speed = 0;
             }
-            
+
             $.smoothScroll( config );
         }
 

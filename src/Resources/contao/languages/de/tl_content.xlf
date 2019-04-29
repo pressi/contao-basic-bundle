@@ -619,6 +619,10 @@
 				<source>width 1</source>
 				<target>Breite 1 (25%)</target>
 			</trans-unit>
+            <trans-unit id="tl_content.options.boxWidth.w33">
+                <source>width 33</source>
+                <target>Breite 1/3 (33%)</target>
+            </trans-unit>
 			<trans-unit id="tl_content.options.boxWidth.w2">
 				<source>width 2</source>
 				<target>Breite 2 (50%)</target>
@@ -631,24 +635,28 @@
 				<source>width 4</source>
 				<target>Breite 4 (100%)</target>
 			</trans-unit>
-            <trans-unit id="tl_content.options.boxWidth.w33">
-                <source>width 33</source>
-                <target>Breite 33 (33%)</target>
-            </trans-unit>
 
 
 			<trans-unit id="tl_content.options.boxHeight.ha">
 				<source>height auto</source>
 				<target>Höhe Automatisch</target>
 			</trans-unit>
-			<trans-unit id="tl_content.options.boxHeight.h1">
-				<source>height 1</source>
-				<target>Höhe 1 (150px)</target>
-			</trans-unit>
-			<trans-unit id="tl_content.options.boxHeight.h2">
-				<source>height 2</source>
-				<target>Höhe 2 (190px)</target>
-			</trans-unit>
+            <trans-unit id="tl_content.options.boxHeight.h1x1">
+                <source>height 1x1</source>
+                <target>Höhe 1x1 (Höhe = Breite)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxHeight.h1x2">
+                <source>height 1x1</source>
+                <target>Höhe 1x2 (Höhe = 2xBreite)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxHeight.h1">
+                <source>height 1</source>
+                <target>Höhe 1 (min. 150px)</target>
+            </trans-unit>
+<!--			<trans-unit id="tl_content.options.boxHeight.h2">-->
+<!--				<source>height 2</source>-->
+<!--				<target>Höhe 2 (190px)</target>-->
+<!--			</trans-unit>-->
 			<!--<trans-unit id="tl_content.options.boxHeight.h3">-->
 				<!--<source>height 3</source>-->
 				<!--<target>Höhe 3 (570px)</target>-->

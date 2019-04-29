@@ -16,6 +16,7 @@ use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\ContentHelper as Helper;
 use IIDO\BasicBundle\Helper\ContentHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
+use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
 
 
@@ -241,6 +242,7 @@ class ContentListener extends DefaultListener
                 $strBuffer      = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strBuffer);
             }
         }
+
 
 
         switch( $objRow->type )
@@ -526,8 +528,22 @@ class ContentListener extends DefaultListener
             }
         }
 
-        if( count($arrElementClasses) )
+        list($strBoxBuffer, $arrBoxElementClasses, $arrBoxAttributes) = $this->renderBoxElement( $strBuffer, $objRow );
+
+        if( count($arrBoxElementClasses) )
         {
+            $arrElementClasses = array_merge($arrElementClasses, $arrBoxElementClasses);
+        }
+
+        if( count($arrBoxAttributes) )
+        {
+            $arrAttributes = array_merge($arrAttributes, $arrBoxAttributes);
+        }
+
+        $strBuffer = $strBoxBuffer;
+
+        if( count($arrElementClasses) )
+        {;
             $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrElementClasses );
         }
 
@@ -547,6 +563,212 @@ class ContentListener extends DefaultListener
         }, $strBuffer);
 
         return $strBuffer;
+    }
+
+
+
+    protected function renderBoxElement( $strBuffer, $objRow )
+    {
+        $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
+
+        $GLOBALS['IIDO']['BOXES']['OPEN_CONT']      = $GLOBALS['IIDO']['BOXES']['OPEN_CONT'] || FALSE;
+        $GLOBALS['IIDO']['BOXES']['MASONRY']        = $GLOBALS['IIDO']['BOXES']['MASONRY'] || FALSE;
+        $GLOBALS['IIDO']['BOXES']['MASONRY_ID']     = $GLOBALS['IIDO']['BOXES']['MASONRY_ID']?:0 || 0;
+//        $GLOBALS['IIDO']['BOXES']['BOX_CONT_WIDTH'] = $GLOBALS['IIDO']['BOXES']['BOX_CONT_WIDTH'] || 0;
+
+        $arrElementClasses  = array();
+        $arrAttributes      = array();
+
+        if( $objRow->elementIsBox )
+        {
+            if( !$GLOBALS['IIDO']['BOXES']['OPEN_CONT'] )
+            {
+                $GLOBALS['IIDO']['BOXES']['OPEN_CONT'] = TRUE;
+
+                $addClasses = '';
+                $addID      = '';
+
+                if( preg_match('/sort-masonry/', $cssID[1]) )
+                {
+                    $addClasses .= ' sort-masonry';
+                    $addID      = ' id="sortBoxes_' . $objRow->id . '"';
+
+                    $GLOBALS['IIDO']['BOXES']['MASONRY'] = TRUE;
+                    $GLOBALS['IIDO']['BOXES']['MASONRY_ID'] = $objRow->id;
+                }
+
+                $strBuffer = '<div class="box-element-container no-gap' . $addClasses . '"' . $addID . '><div class="bec-inside">' . $strBuffer;
+            }
+
+            $arrElementClasses[] = 'box-element';
+
+            switch( $objRow->boxWidth )
+            {
+                case "w1":
+                    $arrElementClasses[] = 'w25';
+                    break;
+
+                case "w2":
+                    $arrElementClasses[] = 'w50';
+                    break;
+
+                case "w3":
+                    $arrElementClasses[] = 'w75';
+                    break;
+
+                case "w4":
+                    $arrElementClasses[] = 'w100';
+                    break;
+
+                default:
+                    $arrElementClasses[] = $objRow->boxWidth;
+                    break;
+            }
+
+            switch( $objRow->boxHeight )
+            {
+                case "ha":
+                    $arrElementClasses[] = 'hauto';
+                    break;
+
+                case "h1":
+                    $arrElementClasses[] = 'hone';
+                    break;
+
+                case "h2":
+                    $arrElementClasses[] = 'htwo';
+                    break;
+
+                case "h1x1":
+                case "h1_1":
+                case "1_1":
+                case "1x1":
+                    $arrElementClasses[] = 'h100';
+                    break;
+
+                case "h1x2":
+                case "h1_2":
+                case "1_2":
+                case "1x2":
+                    $arrElementClasses[] = 'h200';
+                    break;
+
+                default:
+                    $arrElementClasses[] = $objRow->boxHeight;
+                    break;
+            }
+
+            if( $objRow->boxWidth )
+            {
+                $arrElementClasses[] = 'has-width';
+            }
+
+            if( $objRow->boxHeight )
+            {
+                $arrElementClasses[] = 'has-height';
+            }
+
+            $bgColor = ColorHelper::compileColor( $objRow->boxBackgroundColor, TRUE );
+
+            if( $bgColor !== "transparent" && !$objRow->boxLink )
+            {
+                $arrAttributes['style'][] = 'background:' . $bgColor . ';';
+            }
+
+            $strIcon        = '';
+            $strOpenLink    = '';
+
+            if( $objRow->boxIcon )
+            {
+                $objImage = \FilesModel::findByPk( $objRow->boxIcon );
+
+                if( $objImage )
+                {
+                    $strIcon = '<div class="icon-tag" style="background-image:url(' . $objImage->path . ');"></div>';
+
+                    $arrElementClasses[] = 'has-icon';
+                }
+            }
+
+            if( $objRow->boxLink )
+            {
+                $arrElementClasses[] = 'has-link';
+
+                $styles = '';
+
+                if( $bgColor !== "transparent" )
+                {
+                    $styles = ' style="background:' . $bgColor . ';"';
+                }
+
+                $strOpenLink = '<a href="' . $objRow->boxLink . '"' . $styles . '>';
+            }
+
+            $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-=",;.:_\/\(\)\{\}]{0,})class="element-inside([A-Za-z\s\-_\{\}]{0,})"([A-Za-z0-9\s\-=",;.:_\/\(\)\{\}]{0,})>/',  '<div$1class="element-inside$2"$3>' . $strOpenLink . '<div class="element-box-inside">' . $strIcon, $strBuffer, -1, $count);
+
+            if( $count )
+            {
+                $strCloseLink = '';
+
+                if( $objRow->boxLink )
+                {
+                    $strCloseLink = '</a>';
+                }
+
+                $strBuffer = $strBuffer . '</div>' . $strCloseLink;
+            }
+            else
+            {
+                $strBuffer = preg_replace('/<\/div>$/', '</a></div>', trim($strBuffer));
+            }
+
+            $strContentTable    = \ContentModel::getTable();
+            $objNextElement     = \ContentModel::findOneBy(array($strContentTable . '.pid=?', $strContentTable . '.invisible=?', $strContentTable . '.elementIsBox=?', $strContentTable . '.sorting>?'), array($objRow->pid, '', '1', $objRow->sorting));
+
+            if( !$objNextElement )
+            {
+                $GLOBALS['IIDO']['BOXES']['OPEN_CONT'] = FALSE;
+
+                $strBuffer = $strBuffer . '</div></div>';
+
+                if( $GLOBALS['IIDO']['BOXES']['MASONRY'] )
+                {
+                    ScriptHelper::addScript('masonry');
+
+                    $strBuffer = $strBuffer . $this->getMasonryScript( 'sortBoxes_', $GLOBALS['IIDO']['BOXES']['MASONRY_ID'], ' > .bec-inside' );
+                }
+            }
+        }
+        else
+        {
+            if( $GLOBALS['IIDO']['BOXES']['OPEN_CONT'] )
+            {
+                $GLOBALS['IIDO']['BOXES']['OPEN_CONT'] = FALSE;
+
+                $strBuffer = '</div></div>' . $strBuffer;
+
+                if( $GLOBALS['IIDO']['BOXES']['MASONRY'] )
+                {
+                    ScriptHelper::addScript('masonry');
+
+                    $strBuffer = $strBuffer . $this->getMasonryScript( 'sortBoxes_', $GLOBALS['IIDO']['BOXES']['MASONRY_ID'], ' > .bec-inside' );
+                }
+            }
+        }
+
+        return [$strBuffer, $arrElementClasses, $arrAttributes];
+    }
+
+
+
+    protected function getMasonryScript( $strID, $intID, $strSelector = '' )
+    {
+        return '<script>
+$("#' . $strID . $intID . $strSelector . '").masonry({
+    itemSelector: ".box-element",
+    percentPosition : true
+});
+</script>';
     }
 
 
@@ -824,9 +1046,19 @@ class ContentListener extends DefaultListener
                         break;
 
                     case "icon":
+                        $strLinkText    = $objRow->titleText?:$objRow->url;
+                        $iconColor      = ColorHelper::compileColor( $objRow->buttonAddonIconColor );
+                        $iconBackground = (($iconColor !== "transparent") ? 'background:' . $iconColor . ';' : '');
+                        $strIconPath    = ImageHelper::renderImagePath( \FilesModel::findByPk( $objRow->buttonAddonIcon )->path );
+                        $strIcon        = '<i class="icon icon-mask" style="mask-image:url(' . $strIconPath . ');-webkit-mask-image:url(' . $strIconPath . ');' . $iconBackground . '"></i>';
+
 //                        $arrClasses[] = 'icon-' . $objRow->buttonAddonIcon;
-                        $strContent = preg_replace('/<a/', '<a data-icon="' . $objRow->buttonAddonIcon . '"', $strContent);
+//                        $strContent = preg_replace('/<a/', '<a data-icon="' . $objRow->buttonAddonIcon . '"', $strContent);
                         $strContent = preg_replace('/class="hyperlink_txt/', 'class="hyperlink_txt icon-link', $strContent);
+                        $strContent = preg_replace('/' . preg_quote($strLinkText, '/') . '([\s]{0,})<\/a>/', $strIcon . '</a>', $strContent);
+
+//                        echo "<pre>"; print_r( $objRow );
+//                        echo "<br>"; print_r( $strContent ); exit;
                         break;
                 }
             }
@@ -970,7 +1202,7 @@ class ContentListener extends DefaultListener
             $elementClass       = $this->getElementClass( $objRow );
             $elementClassNew    = preg_replace('/(\s{2,})/', ' ', $elementClass);
 
-            $newElementClasses  = preg_replace('/(\s{2,})/', '', ' ' . implode(' ', $arrClasses));
+            $newElementClasses  = preg_replace('/(\s{2,})/', ' ', ' ' . implode(' ', $arrClasses));
 
             $strContent     = preg_replace('/class="' . $elementClass . '/', 'class="' . trim($elementClassNew) . $newElementClasses, $strContent);
         }
@@ -1001,7 +1233,12 @@ class ContentListener extends DefaultListener
 
         foreach($arrAttributes as $attributeName => $attributeValue)
         {
-            $strAttributes .= $attributeName . '="' . $attributeValue . '"';
+            if( !is_array($attributeValue) )
+            {
+                $attributeValue = array($attributeValue);
+            }
+
+            $strAttributes .= $attributeName . '="' . implode("", $attributeValue) . '"';
         }
 
         $elementClass   = $this->getElementClass( $objRow );
@@ -1046,6 +1283,11 @@ class ContentListener extends DefaultListener
 //        {
 //            $elementClass = 'mod_navigation';
 //        }
+
+        if( $objRow->type === "newslist" )
+        {
+            $elementClass = preg_replace('/^ce_/', 'mod_', $elementClass);
+        }
 
         return $elementClass;
     }

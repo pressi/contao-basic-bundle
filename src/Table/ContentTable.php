@@ -305,7 +305,13 @@ class ContentTable extends \Backend
 
         if( $arrRow['elementIsBox'] )
         {
-            $addContentTitle = "Box-Element " . str_replace('w', '', $arrRow['boxWidth']) . "x" . str_replace('h', '', $arrRow['boxHeight']);
+//            $addContentTitle = "Box-Element " . str_replace('w', '', $arrRow['boxWidth']) . "x" . str_replace('h', '', $arrRow['boxHeight']);
+            $addContentTitle = "Box-Element > " . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxWidth'][ $arrRow['boxWidth'] ];
+
+            if( $arrRow['boxHeight'] )
+            {
+                $addContentTitle .= ' x ' . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxHeight'][ $arrRow['boxHeight'] ];
+            }
         }
 
         if( strlen($addContentTitle) )
@@ -342,6 +348,11 @@ class ContentTable extends \Backend
             $newsConfig .= (strlen($newsConfig) ? ' / ' : '') . 'Anzeige: ' . $GLOBALS['TL_LANG']['tl_module'][ $arrRow['news_featured'] ];
 
             $strContent = preg_replace('/<div([A-Za-z0-9\s\-=":;,._]{0,})class="tl_gray([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-=":;,.]{0,})>([A-Za-z0-9\s\-#;,:._]{0,})<\/div>/', '<div$1class="tl_gray$2"$3>$4<br>' . $newsConfig . '</div>', $strContent);
+        }
+
+        if( $arrRow['type'] === 'hyperlink' && $arrRow['showAsButton'] )
+        {
+            $addContentTitle .= ' - Button';
         }
 
         if( $arrRow['internName'] )
@@ -706,5 +717,26 @@ class ContentTable extends \Backend
 ////        }
 
         return $arrOptions;
+    }
+
+
+
+    /**
+     * Return all content element templates as array
+     *
+     * @param \DataContainer $dc
+     *
+     * @return array
+     */
+    public function getElementTemplates(\DataContainer $dc)
+    {
+        $arrTemplates = $this->getTemplateGroup('ce_' . $dc->activeRecord->type);
+
+        if( !$arrTemplates || !count($arrTemplates) )
+        {
+            $arrTemplates = $this->getTemplateGroup('mod_' . $dc->activeRecord->type);
+        }
+
+        return $arrTemplates;
     }
 }

@@ -204,6 +204,8 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
     $strFields = preg_replace('/{expert_legend/', '{position_legend},position,positionMargin,positionFixed;{expert_legend', $strFields);
     $strFields = preg_replace('/,invisible/', ',invisible,hideOnMobile,showOnMobile', $strFields);
 
+    $strFields = preg_replace('/{invisible_legend/', '{box_legend},elementIsBox;{invisible_legend', $strFields);
+
     $GLOBALS['TL_DCA']['tl_content']['palettes'][ $strPalette ] = '{intern_legend:hide},internName;' . $strFields;
 }
 
@@ -219,7 +221,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('showAsButton', 'buttonStyle,buttonType,buttonAddon,buttonLinkMode', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('buttonAddon_arrow', 'buttonAddonPosition,buttonAddonArrow', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('buttonAddon_icon', 'buttonAddonPosition,buttonAddonIcon', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('buttonAddon_icon', 'buttonAddonPosition,buttonAddonIcon,buttonAddonIconColor', $strFileName);
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['showAsButton']         = 'buttonStyle,buttonType,buttonAddon,buttonLinkMode';
 
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_arrow']     = 'buttonAddonPosition,buttonAddonArrow';
@@ -228,6 +230,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 
 
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxWidth,boxHeight,boxLink,boxLinkText,boxBackgroundColor";
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxWidth,boxHeight,boxBackgroundColor,boxIcon,boxLink";
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['usedTime']             = "tickerTime";
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addOrnament']          = 'ornamentLight,onlyOrnament,ornament,addOrnamentLinie';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['bgOnOtherColumn']      = 'bgToArticle';
@@ -379,7 +382,13 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['floating']['eval']['submitOnChange']
 //	),
 //	'sql'					=> "varchar(32) NOT NULL default ''"
 //);
-//
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('elementIsBox', $strFileName, [], '', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('boxWidth', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('boxHeight', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addColorField('boxBackgroundColor', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addImageField('boxIcon', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addLinkField('boxLink', $strFileName);
+
 //$GLOBALS['TL_DCA']['tl_content']['fields']['boxHeight']						= $GLOBALS['TL_DCA']['tl_content']['fields']['boxWidth'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['boxHeight']['label'] 			= $GLOBALS['TL_LANG']['tl_content']['iidoCustomize']['boxHeight'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['boxHeight']['options']			= $GLOBALS['TL_LANG']['tl_content']['options']['boxHeight'];
@@ -418,6 +427,8 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['addImageBorder'] = array
 	),
 	'sql'					=> "char(1) NOT NULL default ''"
 );
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['customTpl']['options_callback'] = array($strTableClass, 'getElementTemplates');
 
 
 //$GLOBALS['TL_DCA']['tl_content']['fields']['skipFirst'] = $GLOBALS['TL_DCA']['tl_module']['fields']['skipFirst'];
@@ -788,19 +799,22 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddonPosition", "select", $strFileName);
 
 
-$GLOBALS['TL_DCA']['tl_content']['fields']['buttonAddonIcon'] = array
-(
-    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['buttonAddonIcon'],
-    'exclude'                 => true,
-    'inputType'               => 'rocksolid_icon_picker',
-    'eval'                    => array
-    (
-        'tl_class'              => 'w50 hauto',
-        'iconFont'              => 'files/master/fonts/icomoon.svg',
-    ),
-    'sql'                     => "varchar(255) NOT NULL default ''"
-);
+//$GLOBALS['TL_DCA'][ $strFileName ]['fields']['buttonAddonIcon'] = array
+//(
+//    'label'                   => &$GLOBALS['TL_LANG'][ $strFileName ]['buttonAddonIcon'],
+//    'exclude'                 => true,
+////    'inputType'               => 'rocksolid_icon_picker',
+//    'inputType'               => 'rocksolid_icon_picker',
+//    'eval'                    => array
+//    (
+//        'tl_class'              => 'w50 hauto',
+//        'iconFont'              => 'files/master/fonts/icomoon.svg',
+//    ),
+//    'sql'                     => "varchar(255) NOT NULL default ''"
+//);
 
+\IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddonIcon", "image", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddonIconColor", "color", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddonArrow", "select", $strFileName);
 
 

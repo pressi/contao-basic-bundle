@@ -52,7 +52,7 @@ $objTable->addOperations('edit,copy,copyChilds,cut,delete,show,toggle');
  * Table palettes
  */
 
-$objTable->addPalette('default', '{title_legend},title,alias,frontendTitle,cssClass;{enable_legend},enableCategoriesIn;{details_legend:hide},description,singleSRC;{additional_legend},subCategoriesArePages;{modules_legend:hide},hideInList,hideInReader,excludeInRelated;{redirect_legend:hide},jumpTo;{language_legend},master;');
+$objTable->addPalette('default', '{title_legend},title,alias,frontendTitle,cssClass;{details_legend:hide},description,singleSRC;{icon_legend},icon;{color_legend},color,color2;{enable_legend},enableCategoriesIn;{additional_legend},subCategoriesArePages;{modules_legend:hide},hideInList,hideInReader,excludeInRelated;{redirect_legend:hide},jumpTo;{language_legend},master;');
 
 
 
@@ -106,6 +106,16 @@ $objSubpalette1 = \IIDO\BasicBundle\Dca\Field::create('subCategoriesArePages', '
 \IIDO\BasicBundle\Dca\Field::create('enableCategoriesIn', 'checkbox')
     ->addEval("multiple", TRUE)
     ->addOptions( $GLOBALS['IIDO']['GLOBAL_CATEGORIES']['ENABLE'] )
+    ->addToTable( $objTable );
+
+
+\IIDO\BasicBundle\Dca\Field::create('color', 'color')
+    ->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('color2', 'color')
+    ->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('icon', 'image')
     ->addToTable( $objTable );
 
 

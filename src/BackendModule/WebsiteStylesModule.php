@@ -63,6 +63,7 @@ class WebsiteStylesModule extends \BackendModule
 //        \Controller::loadLanguageFile("default");
 
         $GLOBALS['TL_CSS'][] = 'bundles/iidobasic/css/backend/website-styles.css||static';
+        $GLOBALS['TL_CSS'][] = 'bundles/iidobasic/css/backend/dropdown.css||static';
 
         switch( \Input::get("mode") )
         {

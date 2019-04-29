@@ -55,6 +55,26 @@
                 <target>Ende</target>
             </trans-unit>
 
+            <trans-unit id="CTE.iido_login.0">
+                <source>Login</source>
+                <target>Login</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_flip.0">
+                <source>Flip-Element</source>
+                <target>Flip-Element</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.tracking">
+                <source>Tracking</source>
+                <target>Tracking</target>
+            </trans-unit>
+
+            <trans-unit id="CTE.iido_tracking.0">
+                <source>Tracking-Element</source>
+                <target>Tracking-Element</target>
+            </trans-unit>
+
 
 
             <trans-unit id="CTE.news">

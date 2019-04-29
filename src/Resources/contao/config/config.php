@@ -208,7 +208,7 @@ $GLOBALS['TL_HOOKS']['parseFrontendTemplate'][]             = array($listenerNam
 $GLOBALS['TL_HOOKS']['outputBackendTemplate'][]             = array($listenerName . '.backend_template', 'outputCustomizeBackendTemplate');
 $GLOBALS['TL_HOOKS']['parseBackendTemplate'][]              = array($listenerName . '.backend_template', 'parseCustomizeBackendTemplate');
 
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
+//$GLOBALS['TL_HOOKS']['replaceInsertTags'][]                 = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags'); // IN SERVICE!!
 
 $GLOBALS['TL_HOOKS']['executePreActions'][]                 = array($listenerName . '.ajax', 'onExecutePreActions');
 $GLOBALS['TL_HOOKS']['executePostActions'][]                = array($listenerName . '.ajax', 'onExecutePostActions');
@@ -227,6 +227,13 @@ $GLOBALS['TL_HOOKS']['parseArticles'][]                     = array($listenerNam
 $GLOBALS['TL_HOOKS']['importUser'][]                        = array($listenerName . '.user', 'importCustomizeUser');
 
 $GLOBALS['TL_HOOKS']['loadDataContainer'][]                 = array($listenerName . '.dca', 'onLoadDataContainer');
+
+
+if( version_compare(\IIDO\BasicBundle\Helper\BasicHelper::getContaoVersion(), '4.4.', '>=')
+&& version_compare(\IIDO\BasicBundle\Helper\BasicHelper::getContaoVersion(), '4.6.', '<') )
+{
+    $GLOBALS['TL_HOOKS']['replaceInsertTags'][]     = array($listenerName . '.insert_tags', 'replaceCustomizeInsertTags');
+}
 
 //if( TL_MODE === "BE" )
 //{
