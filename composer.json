@@ -15,13 +15,24 @@
     ],
     "require":
     {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "contao/core-bundle": "~4",
         "contao/news-bundle": "~4",
         "contao/calendar-bundle": "~4",
         "madeyourday/contao-rocksolid-custom-elements": "~2",
         "codefog/contao-cookiebar": "~2",
         "menatwork/contao-multicolumnwizard-bundle": "~3"
+    },
+    "require-dev":
+    {
+        "contao/test-case": "1.1.*",
+        "contao/manager-plugin": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.2",
+        "phpunit/phpunit": "^6.0",
+        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/message-factory": "^1.0.2",
+        "php-coveralls/php-coveralls": "^2.0",
+        "symfony/phpunit-bridge": "^3.2"
     },
     "conflict":
     {
@@ -42,6 +53,13 @@
             "src/Resources/contao/languages/",
             "src/Resources/contao/templates/"
         ]
+    },
+    "autoload-dev":
+    {
+        "psr-4":
+        {
+            "IIDO\\BasicBundle\\Tests\\": "tests/"
+        }
     },
     "config":
     {
