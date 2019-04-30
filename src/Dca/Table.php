@@ -354,6 +354,7 @@ class Table
 
             if( !$this->withoutSQL )
             {
+                $GLOBALS['TL_DCA'][ $this->strTable ]['config']['sql']['engine'] = 'InnoDB';
                 if( !$isReferenceTable )
                 {
                     $GLOBALS['TL_DCA'][ $this->strTable ]['config']['sql']['keys']['id']    = 'primary';
