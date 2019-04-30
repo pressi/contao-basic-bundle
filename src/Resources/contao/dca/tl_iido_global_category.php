@@ -35,7 +35,7 @@ $objTable->addTableButtonsLabel([
 $objTable->addSorting(5, array
 (
 //    'pasteButtonCallback'   => ['tl_prestep_products_category', 'onPasteButtonCallback'],
-    'icon'                  => \PRESTEP\ProductsBundle\Config\BundleConfig::getBundlePath( true, false ) . '/images/icons/categories.png',
+    'icon'                  => \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true, false ) . '/images/backend/icons/categories.png',
     'panelLayout'           => 'filter;search'
 ));
 
