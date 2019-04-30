@@ -83,17 +83,22 @@ class GlobalCategoriesHelper
     public static function getCategoriesFromTable( $strTable )
     {
         $arrGCs = array();
-        $objGCs = GlobalCategoryModel::findPublishedByPid(0);
+        $db     = \Database::getInstance();
 
-        if( $objGCs )
+        if( $db->tableExists('tl_iido_global_category') )
         {
-            while( $objGCs->next() )
-            {
-                $enableIn = \StringUtil::deserialize($objGCs->enableCategoriesIn, TRUE);
+            $objGCs = GlobalCategoryModel::findPublishedByPid(0);
 
-                if( count($enableIn) && in_array( $strTable, $enableIn ) )
+            if( $objGCs )
+            {
+                while( $objGCs->next() )
                 {
-                    $arrGCs[] = $objGCs->current();
+                    $enableIn = \StringUtil::deserialize($objGCs->enableCategoriesIn, TRUE);
+
+                    if( count($enableIn) && in_array( $strTable, $enableIn ) )
+                    {
+                        $arrGCs[] = $objGCs->current();
+                    }
                 }
             }
         }

@@ -35,24 +35,28 @@ $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['categori
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['color']         = 'color';
 
 
+$db = \Database::getInstance();
 
-$objGloablCategories = \IIDO\BasicBundle\Model\GlobalCategoryModel::findPublishedByPid(0);
-
-if( $objGloablCategories )
+if( $db->tableExists('tl_iido_global_category') )
 {
-    while( $objGloablCategories->next() )
+    $objGloablCategories = \IIDO\BasicBundle\Model\GlobalCategoryModel::findPublishedByPid(0);
+
+    if( $objGloablCategories )
     {
-        $arrEnableIn = \StringUtil::deserialize( $objGloablCategories->enableCategoriesIn, TRUE );
-
-        if( is_array($arrEnableIn) && in_array('tl_files', $arrEnableIn) )
+        while( $objGloablCategories->next() )
         {
-            array_insert($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'], 0, array
-            (
-                'gc_' . $objGloablCategories->alias => 'globalCategoriesPicker_' . $objGloablCategories->id
-            ));
+            $arrEnableIn = \StringUtil::deserialize( $objGloablCategories->enableCategoriesIn, TRUE );
+
+            if( is_array($arrEnableIn) && in_array('tl_files', $arrEnableIn) )
+            {
+                array_insert($GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'], 0, array
+                (
+                    'gc_' . $objGloablCategories->alias => 'globalCategoriesPicker_' . $objGloablCategories->id
+                ));
 
 
-            $GLOBALS['TL_LANG']['MSC']['aw_gc_' . $objGloablCategories->alias ] = $objGloablCategories->title;
+                $GLOBALS['TL_LANG']['MSC']['aw_gc_' . $objGloablCategories->alias ] = $objGloablCategories->title;
+            }
         }
     }
 }
