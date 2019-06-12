@@ -60,7 +60,7 @@ $GLOBALS['IIDO']['GLOBAL_CATEGORIES']['ENABLE']['tl_calendar_events']   = 'Event
 
 array_insert($GLOBALS['BE_MOD']['system'], 2, array
 (
-//    $prefix . 'WebsiteConfigOld' => array
+//    $prefix . 'WebsiteConfigStd' => array
 //    (
 //        'tables'    => array($tablePrefix . 'website_config')
 //    ),
@@ -74,6 +74,11 @@ array_insert($GLOBALS['BE_MOD']['system'], 2, array
     $prefix . 'WebsiteStyles' => array
     (
         'callback'  => $ns . '\BackendModule\WebsiteStylesModule'
+    ),
+
+    $prefix . 'WebsiteStylesStd' => array
+    (
+        'tables'    => array($tablePrefix . 'website_styles')
     )
 ));
 
@@ -120,7 +125,9 @@ array_insert($GLOBALS['BE_MOD']['system'], 2, array
  * Content elements
  */
 
-$GLOBALS['TL_CTE']['news']['newslist']                      = '\ModuleNewsList';
+//$GLOBALS['TL_CTE']['news']['newslist']                      = '\ModuleNewsList';
+$GLOBALS['TL_CTE']['news']['newslist']                  = $ns . '\FrontendModule\NewsListModule';
+
 
 if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_categories') )
 {
