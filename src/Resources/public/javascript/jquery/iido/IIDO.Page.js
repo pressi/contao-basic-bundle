@@ -1220,6 +1220,11 @@ IIDO.Page = IIDO.Page || {};
             url         = page;
         }
 
+        if( page.match(/.pdf$/) )
+        {
+            openType = "iframe";
+        }
+
         var options = {
             src: page,
             type: openType,
