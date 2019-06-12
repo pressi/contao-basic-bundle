@@ -57,46 +57,48 @@ if ($GLOBALS['TL_CONFIG']['useRTE']):
                             {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
                             {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
                         ],
-                    <?php if( count($themeColors ) ): ?>
                     style_formats_merge: true,
                     style_formats:
                         [
+                            <?php if( count($themeColors ) ): ?>
                             {
                                 title: 'Farben',
                                 items:
-                                [
-                                    <?php $i=0; foreach( $themeColors as $theme => $arrColors):
-                                    foreach($arrColors as $code => $color):
+                                    [
+                                        <?php $i=0; foreach( $themeColors as $theme => $arrColors):
+                                        foreach($arrColors as $code => $color):
                                         $code = preg_replace('/&#35;/', '#', $code);
-                                    ?>
-                                        <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
-                                    <?php $i++; endforeach; endforeach ?>
-                                ]
+                                        ?>
+                                            <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
+                                        <?php $i++; endforeach; endforeach ?>
+                                    ]
                             },
+                            <?php endif ?>
                             {
                                 title: 'Microdata',
                                 items:
-                                [
-                                     {title: 'Adresse', block: 'div', attributes: {itemprop: 'address', itemscope: '', itemtype: 'http://shema.org/PostalAddress'}, wrapper: true},
-                                     {title: 'Straße', inline: 'span', attributes: {itemprop: 'streetAddress'}, wrapper: true},
-                                     {title: 'Postleitzahl', inline: 'span', attributes: {itemprop: 'postalCode'}, wrapper: true},
-                                     {title: 'Ort', inline: 'span', attributes: {itemprop: 'addressLocality'}, wrapper: true},
-                                     {title: 'Telefonnummer', inline: 'span', attributes: {itemprop: 'telephone'}, wrapper: true},
-                                     {title: 'Faxnummer', inline: 'span', attributes: {itemprop: 'faxNumber'}, wrapper: true},
-                                     {title: 'E-Mail', inline: 'span', attributes: {itemprop: 'email'}, wrapper: true},
-                                     {title: 'Internetadresse', inline: 'span', attributes: {itemprop: 'url'}, wrapper: true}
-                                ]
+                                    [
+                                        {title: 'Adresse', block: 'div', attributes: {itemprop: 'address', itemscope: '', itemtype: 'http://shema.org/PostalAddress'}, wrapper: true},
+                                        {title: 'Straße', inline: 'span', attributes: {itemprop: 'streetAddress'}, wrapper: true},
+                                        {title: 'Postleitzahl', inline: 'span', attributes: {itemprop: 'postalCode'}, wrapper: true},
+                                        {title: 'Ort', inline: 'span', attributes: {itemprop: 'addressLocality'}, wrapper: true},
+                                        {title: 'Telefonnummer', inline: 'span', attributes: {itemprop: 'telephone'}, wrapper: true},
+                                        {title: 'Faxnummer', inline: 'span', attributes: {itemprop: 'faxNumber'}, wrapper: true},
+                                        {title: 'E-Mail', inline: 'span', attributes: {itemprop: 'email'}, wrapper: true},
+                                        {title: 'Internetadresse', inline: 'span', attributes: {itemprop: 'url'}, wrapper: true}
+                                    ]
                             },
                             {
                                 title: 'Elemente',
                                 items:
-                                [
-                                    {title: 'Trenner', inline: 'span', classes: 'span-divider'},
-                                    {title: 'Heller / Light', inline: 'span', classes: 'span-light'}
-                                ]
+                                    [
+                                        {title: 'Trenner', inline: 'span', classes: 'span-divider'},
+                                        {title: 'Heller / Light', inline: 'span', classes: 'span-light'},
+                                        {title: 'Unterstrichen', inline: 'span', classes: 'span-underline'},
+                                        {title: 'Schrift-Kleiner', inline: 'span', classes: 'span-mini'}
+                                    ]
                             }
                         ],
-                    <?php endif ?>
                     style_formats_autohide: true,
                     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks',
                     browser_spellcheck: true,
@@ -155,46 +157,46 @@ setTimeout(function()
         {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
         {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
     ],
-    <?php if( count($themeColors) ): ?>
       style_formats_merge: true,
       style_formats:
-      [
-          {
-              title : 'Farben',
-              items :
-                  [
-                      <?php $i=0; foreach( $themeColors as $theme => $arrColors):
-                      foreach($arrColors as $code => $color):
-                      $code = preg_replace('/&#35;/', '#', $code);
-                      ?>
-                          <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
-                      <?php $i++; endforeach; endforeach; ?>
-                  ]
-          },
-          {
-              title: 'Microdata',
-              items:
-                  [
-                      {title: 'Adresse', block: 'div', attributes: {itemprop: 'address', itemscope: '', itemtype: 'http://shema.org/PostalAddress'}, wrapper: true},
-                      {title: 'Straße', inline: 'span', attributes: {itemprop: 'streetAddress'}, wrapper: true},
-                      {title: 'Postleitzahl', inline: 'span', attributes: {itemprop: 'postalCode'}, wrapper: true},
-                      {title: 'Ort', inline: 'span', attributes: {itemprop: 'addressLocality'}, wrapper: true},
-                      {title: 'Telefonnummer', inline: 'span', attributes: {itemprop: 'telephone'}, wrapper: true},
-                      {title: 'Faxnummer', inline: 'span', attributes: {itemprop: 'faxNumber'}, wrapper: true},
-                      {title: 'E-Mail', inline: 'span', attributes: {itemprop: 'email'}, wrapper: true},
-                      {title: 'Internetadresse', inline: 'span', attributes: {itemprop: 'url'}, wrapper: true}
-                  ]
-          },
-          {
-              title: 'Elemente',
-              items:
-                  [
-                      {title: 'Trenner', inline: 'span', classes: 'span-divider'},
-                      {title: 'Heller / Light', inline: 'span', classes: 'span-light'}
-                  ]
-          }
-      ],
-    <?php endif ?>
+          [
+              <?php if( count($themeColors) ): ?>
+              {
+                  title : 'Farben',
+                  items :
+                      [
+                          <?php $i=0; foreach( $themeColors as $theme => $arrColors):
+                          foreach($arrColors as $code => $color):
+                          $code = preg_replace('/&#35;/', '#', $code);
+                          ?>
+                              <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
+                          <?php $i++; endforeach; endforeach; ?>
+                      ]
+              },
+              <?php endif ?>
+              {
+                  title: 'Microdata',
+                  items:
+                      [
+                          {title: 'Adresse', block: 'div', attributes: {itemprop: 'address', itemscope: '', itemtype: 'http://shema.org/PostalAddress'}, wrapper: true},
+                          {title: 'Straße', inline: 'span', attributes: {itemprop: 'streetAddress'}, wrapper: true},
+                          {title: 'Postleitzahl', inline: 'span', attributes: {itemprop: 'postalCode'}, wrapper: true},
+                          {title: 'Ort', inline: 'span', attributes: {itemprop: 'addressLocality'}, wrapper: true},
+                          {title: 'Telefonnummer', inline: 'span', attributes: {itemprop: 'telephone'}, wrapper: true},
+                          {title: 'Faxnummer', inline: 'span', attributes: {itemprop: 'faxNumber'}, wrapper: true},
+                          {title: 'E-Mail', inline: 'span', attributes: {itemprop: 'email'}, wrapper: true},
+                          {title: 'Internetadresse', inline: 'span', attributes: {itemprop: 'url'}, wrapper: true}
+                      ]
+              },
+              {
+                  title: 'Elemente',
+                  items:
+                      [
+                          {title: 'Trenner', inline: 'span', classes: 'span-divider'},
+                          {title: 'Heller / Light', inline: 'span', classes: 'span-light'}
+                      ]
+              }
+          ],
     style_formats_autohide: true,
     content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.css',
     plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks visualchars',
