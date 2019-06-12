@@ -68,7 +68,9 @@ class GlobalCategoryTable implements FrameworkAwareInterface
      */
     public function onCategoriesTableLoadCallback( $dc )
     {
-        if( !$dc->id || !$this->db->tableExists('tl_iido_global_category') )
+        $dbManager = $this->db->getSchemaManager();
+
+        if( !$dc->id || !$dbManager->tablesExist(['tl_iido_global_category']) )
         {
             return;
         }
