@@ -9,7 +9,9 @@
 
 namespace IIDO\BasicBundle\FrontendModule;
 
+use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
 use \Contao\CoreBundle\Exception\PageNotFoundException;
+use IIDO\BasicBundle\Helper\NewsCategoriesHelper;
 use \Patchwork\Utf8;
 
 
@@ -21,6 +23,13 @@ use \Patchwork\Utf8;
 class NewsListModule extends \ModuleNewsList
 {
 
+    /**
+     * Kategory (GET)
+     */
+    protected $category;
+
+
+
 	/**
 	 * Display a wildcard in the back end
 	 *
@@ -28,6 +37,13 @@ class NewsListModule extends \ModuleNewsList
 	 */
 	public function generate()
 	{
+	    $this->category = \Input::get('kategorie') ?:\Input::get('category');
+
+	    if( $this->category )
+        {
+            $this->news_filterCategories = TRUE;
+        }
+
 		return parent::generate();
 	}
 
@@ -39,7 +55,7 @@ class NewsListModule extends \ModuleNewsList
 	protected function compile()
 	{
 		$limit      = null;
-		$offset     = intval($this->skipFirst);
+		$offset     = (int) $this->skipFirst;
         $options    = array();
 
 		// Maximum number of items
@@ -49,11 +65,11 @@ class NewsListModule extends \ModuleNewsList
 		}
 
 		// Handle featured news
-		if ($this->news_featured == 'featured')
+		if ($this->news_featured === 'featured')
 		{
 			$blnFeatured = true;
 		}
-		elseif ($this->news_featured == 'unfeatured')
+		elseif ($this->news_featured === 'unfeatured')
 		{
 			$blnFeatured = false;
 		}
@@ -68,7 +84,7 @@ class NewsListModule extends \ModuleNewsList
 		// Get the total number of items
 		$intTotal = $this->countItems($this->news_archives, $blnFeatured);
 
-		if ($intTotal < 1)
+		if( $intTotal < 1 )
 		{
 			return;
 		}
@@ -76,7 +92,7 @@ class NewsListModule extends \ModuleNewsList
 		$total = $intTotal - $offset;
 
 		// Split the results
-		if ($this->perPage > 0 && (!isset($limit) || $this->numberOfItems > $this->perPage))
+		if( $this->perPage > 0 && (!isset($limit) || $this->numberOfItems > $this->perPage) )
 		{
 			// Adjust the overall limit
 			if (isset($limit))
@@ -97,7 +113,7 @@ class NewsListModule extends \ModuleNewsList
 			// Set limit and offset
 			$limit = $this->perPage;
 			$offset += (max($page, 1) - 1) * $this->perPage;
-			$skip = intval($this->skipFirst);
+			$skip = (int) $this->skipFirst;
 
 			// Overall limit
 			if ($offset + $limit > $total + $skip)
@@ -142,11 +158,12 @@ class NewsListModule extends \ModuleNewsList
 	 * @param  integer $offset
      * @param  array   $options
 	 *
-	 * @return \Model\Collection|\NewsModel|null
+	 * @return \Contao\Model\Collection|\Contao\NewsModel|\Contao\NewsModel[]
 	 */
 	protected function fetchItems($newsArchives, $blnFeatured, $limit, $offset, array $options = array())
 	{
-		// HOOK: add custom logic
+//        echo "<pre>"; print_r( $GLOBALS['TL_HOOKS']['newsListFetchItems'] ); exit;
+	    // HOOK: add custom logic
 		if (isset($GLOBALS['TL_HOOKS']['newsListFetchItems']) && is_array($GLOBALS['TL_HOOKS']['newsListFetchItems']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['newsListFetchItems'] as $callback)
@@ -162,6 +179,21 @@ class NewsListModule extends \ModuleNewsList
 				}
 			}
 		}
+
+//		if( $this->category )
+//        {
+//            if( $limit )
+//            {
+//                $options['limit']  = $limit;
+//            }
+//
+//            if( $offset )
+//            {
+//                $options['offset'] = $offset;
+//            }
+//
+//            return NewsCategoriesHelper::getUsageNews($newsArchives, $this->category, $options);
+//        }
 
 		return \NewsModel::findPublishedByPids($newsArchives, $blnFeatured, $limit, $offset, $options);
 	}

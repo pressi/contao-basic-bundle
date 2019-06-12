@@ -494,7 +494,7 @@ class NavigationModule extends \ModuleNavigation
                 $useCustomNav   = TRUE;
                 $objSubPages    = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $arrNavPages[0] );
 
-                if( $objSubPages || $this->navigationTpl === "nav_fullpage" )
+                if( $objSubPages || $this->navigationTpl === 'nav_fullpage' )
                 {
                     $useCustomNav       = FALSE;
 
@@ -520,36 +520,39 @@ class NavigationModule extends \ModuleNavigation
         $host = null;
 
         // Overwrite the domain and language if the reference page belongs to a differnt root page (see #3765)
-        if ($this->defineRoot && $this->rootPage > 0)
+        if( $this->defineRoot && $this->rootPage > 0 )
         {
             $objRootPage = \PageModel::findWithDetails($this->rootPage);
 
-            // Set the language
-            if (\Config::get('addLanguageToUrl') && $objRootPage->rootLanguage != $objPage->rootLanguage)
+            if( $objRootPage )
             {
-                $lang = $objRootPage->rootLanguage;
-            }
+                // Set the language
+                if( $objRootPage->rootLanguage !== $objPage->rootLanguage && \Config::get('addLanguageToUrl') )
+                {
+                    $lang = $objRootPage->rootLanguage;
+                }
 
-            // Set the domain
-            if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain != '' && $objRootPage->domain != $objPage->domain)
-            {
-                $host = $objRootPage->domain;
+                // Set the domain
+                if( $objRootPage->rootId !== $objPage->rootId && $objRootPage->domain !== '' && $objRootPage->domain !== $objPage->domain )
+                {
+                    $host = $objRootPage->domain;
+                }
             }
         }
 
         $cssID = \StringUtil::deserialize($this->cssID, TRUE);
-        $isOnePageNavigation = (preg_match('/page-is-onepage/', $objPage->cssClass) && preg_match('/nav-onepage/', $cssID));
+        $isOnePageNavigation = (FALSE !== strpos( $objPage->cssClass, 'page-is-onepage' ) && FALSE !== strpos( $cssID, 'nav-onepage' ));
 
-        if( $objPage->enableFullpage || $isOnePageNavigation || ($this->navigationTpl === "nav_fullpage" && $this->rootPage) ) // && count($this->getPageSiblings($objPage, true)) === 0
+        if( $objPage->enableFullpage || $isOnePageNavigation || ($this->navigationTpl === 'nav_fullpage' && $this->rootPage) ) // && count($this->getPageSiblings($objPage, true)) === 0
         {
             $searchPageId = $objPage->id;
 
-            if( $this->navigationTpl === "nav_fullpage" && $this->rootPage )
+            if( $this->navigationTpl === 'nav_fullpage' && $this->rootPage )
             {
                 $searchPageId = $this->rootPage;
             }
 
-            $strItems = $this->getPages($searchPageId, 1, $host, $lang, "articles");
+            $strItems = $this->getPages($searchPageId, 1, $host, $lang, 'articles');
         }
         else
         {
@@ -583,6 +586,8 @@ class NavigationModule extends \ModuleNavigation
 //                    }
 
                     $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
+//                    echo "<pre>"; print_r( $strItems ); exit;
+
                 }
             }
         }
@@ -615,7 +620,7 @@ class NavigationModule extends \ModuleNavigation
 //        if( $pid === 35 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $objParentPage ); echo "</pre>";}
 
         $cssID = \StringUtil::deserialize($this->cssID, TRUE);
-        $isOnePageNavigation = (preg_match('/page-is-onepage/', $objPage->cssClass) && preg_match('/nav-onepage/', $cssID));
+        $isOnePageNavigation = (FALSE !== strpos( $objPage->cssClass, 'page-is-onepage' ) && FALSE !== strpos( $cssID, 'nav-onepage' ));
 
         if( $objParentPage->enableFullpage || $isOnePageNavigation )
         {
@@ -624,7 +629,7 @@ class NavigationModule extends \ModuleNavigation
         }
 
         // Layout template fallback
-        if ($this->navigationTpl == '')
+        if ($this->navigationTpl === '')
         {
             $this->navigationTpl = 'nav_default';
         }
@@ -637,14 +642,14 @@ class NavigationModule extends \ModuleNavigation
         $objTemplate->cssID = $this->cssID;
         $objTemplate->level = 'level_' . $level++;
 
-        if( preg_match('/article-menu/', $this->cssID[1]) )
+        if( FALSE !== strpos( $this->cssID[1], 'article-menu' ) )
         {
             $objTemplate->level .=' article-submenu';
         }
 
-        if( $objParentPage->submenuSRC == "articles" && !preg_match('/article-submenu/', $objTemplate->level) && $objPage->id == $objParentPage->id && !$objPage->enableFullpage && !$isOnePageNavigation )
+        if( $objParentPage->submenuSRC === 'articles' && $objPage->id === $objParentPage->id && !$objPage->enableFullpage && !$isOnePageNavigation && FALSE === strpos( $objTemplate->level, 'article-submenu' ) )
         {
-            if( !preg_match('/load-articles/', $this->cssID[1]) )
+            if( FALSE === strpos( $this->cssID[1], 'load-articles' ) )
             {
                 $objTemplate->level .=' article-menu';
             }
@@ -657,11 +662,11 @@ class NavigationModule extends \ModuleNavigation
         {
             switch( $objParentPage->submenuSRC )
             {
-                case "articles":
+                case 'articles':
                     $arrItems = $this->getArticlePages( $objParentPage, $level, $host, $language );
                     break;
 
-                case "news":
+                case 'news':
                     $arrItems = $this->getNewsPages( $objParentPage, $level, $host, $language );
                     break;
 
@@ -675,6 +680,7 @@ class NavigationModule extends \ModuleNavigation
         {
             $objPages = \PageModel::findPublishedSubpagesWithoutGuestsByPid( $pid, $this->showHidden );
 //            if( $pid === 35 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $objPages ); echo "</pre>";}
+
             if( $objPages )
             {
                 while( $objPages->next() )
@@ -696,14 +702,14 @@ class NavigationModule extends \ModuleNavigation
                     if (!$objItem->protected || (is_array($_groups) && count(array_intersect($_groups, $groups))) || $this->showProtected || ($this instanceof \ModuleSitemap && $objItem->sitemap == 'map_always'))
                     {
                         // Check whether there will be subpages
-                        if( (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objItem->id || in_array($objPage->id, $this->Database->getChildRecords($objItem->id, 'tl_page'))))) )
+                        if( !$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id === $objItem->id || in_array( $objPage->id, $this->Database->getChildRecords( $objItem->id, 'tl_page' ), TRUE ))) )
                         {
 //                            if( $pid === 34 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $objItem ); echo "</pre>";}
                             $subitems = $this->getPages($objItem->id, $level, $host, $language);
 //                            if( $pid === 34 ) {echo "<pre>"; print_r( $pid ); echo "<br>"; print_r( $subitems ); echo "</pre>";}
                         }
 
-                        $arrItem    = $this->setItemRow($objPages->row(), $objItem, "page", $subitems);
+                        $arrItem    = $this->setItemRow($objPages->row(), $objItem, 'page', $subitems);
 
                         $arrItems[] = $arrItem;
                     }
@@ -732,7 +738,7 @@ class NavigationModule extends \ModuleNavigation
 
         if( count($arrItems) === 1 )
         {
-            if( $arrItems[0]['id'] == $objPage->id && $this->name !== "Navigation Main")
+            if( $this->name !== 'Navigation Main' && $arrItems[0]['id'] === $objPage->id)
             {
                 return '';
             }
