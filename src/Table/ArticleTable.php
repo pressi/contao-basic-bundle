@@ -80,6 +80,8 @@ class ArticleTable extends \Backend
             }
         }
 
+        $strLabel = preg_replace('/<span([A-za-z0-9\s\-,;.:_#="]{0,})>\[([A-Za-z\sÜÄÖöäüß]{0,})\]<\/span>/u', '', $strLabel);
+
         return $strLabel;
     }
 }

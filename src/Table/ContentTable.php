@@ -438,7 +438,7 @@ class ContentTable extends \Backend
             }
         }
 
-        $strContent = preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/', '<div class="cte_type$1">$2' . $addContentTitle . '</div>', $strContent);
+        $strContent = preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/u', '<div class="cte_type$1">$2' . $addContentTitle . '</div>', $strContent);
 
         return $strContent;
     }
@@ -695,26 +695,26 @@ class ContentTable extends \Backend
             }
         }
 
-//        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
-//
-//        $arrOptions     = array();
-//        $arrStyles      = \StringUtil::deserialize( \Config::get($fieldPrefix . 'headlineStyles'), TRUE);
-//
-//        if( count($arrStyles) )
+        $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+
+        $arrOptions     = array();
+        $arrStyles      = \StringUtil::deserialize( \Config::get($fieldPrefix . 'headlineStyles'), TRUE);
+
+        if( count($arrStyles) )
+        {
+            foreach($arrStyles as $arrStyle)
+            {
+                if( strlen(trim($arrStyle['name'])) )
+                {
+                    $arrOptions[ $arrStyle['id'] ] = $arrStyle['name'];
+                }
+            }
+        }
+
+//        if( count($arrOptions) )
 //        {
-//            foreach($arrStyles as $arrStyle)
-//            {
-//                if( strlen(trim($arrStyle['name'])) )
-//                {
-//                    $arrOptions[ $arrStyle['id'] ] = $arrStyle['name'];
-//                }
-//            }
+//            $arrOptions = array_merge(array(''=>'-'), $arrOptions);
 //        }
-//
-////        if( count($arrOptions) )
-////        {
-////            $arrOptions = array_merge(array(''=>'-'), $arrOptions);
-////        }
 
         return $arrOptions;
     }

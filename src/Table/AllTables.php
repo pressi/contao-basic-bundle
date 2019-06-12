@@ -210,7 +210,7 @@ class AllTables
      */
     public function generateAlias($varValue, \DataContainer $dc)
     {
-        echo "<pre>"; print_r( $dc ); exit;
+//        echo "<pre>"; print_r( $dc ); exit;
         $prefix     = 'article-';
         $strTable   = '';
 
