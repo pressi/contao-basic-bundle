@@ -771,6 +771,7 @@ class BasicHelper extends \Frontend
                 $objModule->navPages        = $objClass->navPages;
                 $objModule->navPagesOrder   = $objClass->navPagesOrder;
                 $objModule->navigationTpl   = $objClass->navigationTpl;
+//                $objModule->showLevel       = $objClass->showLevel?:1;
 
                 $arrPages = \StringUtil::deserialize($objClass->navPages, true);
 
@@ -800,7 +801,7 @@ class BasicHelper extends \Frontend
                 if( $objModule->type === "booknav" )
                 {
                     $strBuffer = preg_replace(array('/ (>|&gt;)<\/a>/', '/>(<|&lt;) /'), array('</a>', '>'), $strBuffer);
-                    $strBuffer = preg_replace('/<a([A-Za-z0-9\s\-\',;.:="\/]{0,})>([A-Za-z0-9\-\söäüÖÄÜß]{0,})<\/a>/', '<a$1><span>$2</span></a>', $strBuffer);
+                    $strBuffer = preg_replace('/<a([A-Za-z0-9\s\-\',;.:="\/]{0,})>([A-Za-z0-9\-\söäüÖÄÜß]{0,})<\/a>/u', '<a$1><span>$2</span></a>', $strBuffer);
 
                     preg_match_all('/<li class="previous">.*<\/li>/', $strBuffer, $arrMatches);
 

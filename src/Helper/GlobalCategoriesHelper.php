@@ -106,4 +106,48 @@ class GlobalCategoriesHelper
         return $arrGCs;
     }
 
+
+
+    public static function getGlobalCategoriesFromItem( $objItem, $returnObject = false, $returnMain = false )
+    {
+        $arrCategories = array();
+
+        $strTable   = $objItem->getTable();
+        $arrCats    = self::getCategoriesFromTable( $strTable );
+
+        if( count($arrCats) )
+        {
+            foreach( $arrCats as $objCat )
+            {
+                $arrSubCats = self::loadValueFromTable($objCat->alias, $objItem->id, $strTable);
+
+                if( $returnObject )
+                {
+                    $arrNewSubCats = array();
+
+                    foreach( $arrSubCats as $subCatID )
+                    {
+                        $objSubCat = ( $objCat->subCategoriesArePages ) ? \PageModel::findByPk($subCatID) : GlobalCategoryModel::findByPk( $subCatID );
+
+                        $arrNewSubCats[ $subCatID ] = $objSubCat;
+                    }
+
+                    $arrSubCats = $arrNewSubCats;
+                }
+
+                if( count($arrSubCats) )
+                {
+                    if( $returnMain )
+                    {
+                        $arrSubCats = ['main'=>$objCat,'sub'=>$arrSubCats];
+                    }
+
+                    $arrCategories['gc_' . $objCat->alias] = $arrSubCats;
+                }
+            }
+        }
+
+        return $arrCategories;
+    }
+
 }

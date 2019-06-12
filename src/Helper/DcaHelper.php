@@ -1068,7 +1068,15 @@ class DcaHelper extends \Frontend
             \Controller::loadLanguageFile( $langTable );
         }
 
-        $orderFieldName = preg_replace('/SRC/', 'OrderSRC', $fieldName);
+        if( preg_match('/SRC/', $fieldName) )
+        {
+            $orderFieldName = preg_replace('/SRC/', 'OrderSRC', $fieldName);
+        }
+        else
+        {
+            $orderFieldName = $fieldName . 'OrderSRC';
+        }
+
 
         $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ] = array
         (

@@ -11,7 +11,8 @@ namespace IIDO\BasicBundle\Helper;
 
 
 use Postyou\ContaoWebPBundle\Util\WebPHelper;
-use PRESTEP\ProductsBundle\Config\BundleConfig;
+//use PRESTEP\ProductsBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Config\BundleConfig;
 
 
 /**
@@ -241,7 +242,7 @@ class ImageHelper extends \Backend
 
             if( $srcImagePath )
             {
-                $attributes .= 'srcset="' . $srcImagePath . '"';
+                $attributes .= 'srcset="' . self::renderImagePath($srcImagePath) . '"';
 
                 $script = '<script>window.respimage&&window.respimage({elements:[document.images[document.images.length-1]]})</script>';
             }
@@ -322,7 +323,10 @@ class ImageHelper extends \Backend
 
         if( !is_dir( TL_ROOT . '/assets/images/webp') )
         {
-            mkdir( TL_ROOT . '/assets/images/webp' );
+            if( !mkdir( $concurrentDirectory = TL_ROOT . '/assets/images/webp' ) && !is_dir( $concurrentDirectory ) )
+            {
+                throw new \RuntimeException( sprintf( 'Directory "%s" was not created', $concurrentDirectory ) );
+            }
         }
 
         copy( $realIimagePath, $imagePath );

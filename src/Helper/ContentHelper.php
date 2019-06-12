@@ -89,7 +89,7 @@ class ContentHelper
             $strClass = 'pos-abs pos-' . str_replace('_', '-', $objClass->position);
         }
 
-        $arrPosMargin = deserialize($objClass->positionMargin, TRUE);
+        $arrPosMargin = \StringUtil::deserialize($objClass->positionMargin, TRUE);
 
         if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
         {
@@ -118,7 +118,23 @@ class ContentHelper
                     $unitRight = '';
                 }
 
-                $strStyles .= "margin-right:" . $posRight. $unitRight . ";";
+                if( preg_match('/(transY|tansX)/', $arrPosMargin['top']) )
+                {
+                    $transKey = 'Y';
+
+                    if( FALSE !== strpos( $arrPosMargin['top'], 'transX' ) )
+                    {
+                        $transKey = 'X';
+                    }
+
+                    $transValue = preg_replace('/^(transX|transY)/', '', $arrPosMargin['top']);
+
+                    $strStyles .= " transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ");";
+                }
+                else
+                {
+                    $strStyles .= "margin-right:" . $posRight. $unitRight . ";";
+                }
             }
 
             if( $arrPosMargin['bottom'] )
