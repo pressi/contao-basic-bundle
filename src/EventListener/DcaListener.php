@@ -76,7 +76,7 @@ class DcaListener extends DefaultListener
                         $strLegendFields .= ',gc_' . $objGC->alias;
                     }
 
-                    if( preg_match('/categories_legend/', $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ]) )
+                    if( FALSE !== strpos( $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ], 'categories_legend' ) )
                     {
                         $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ] = preg_replace('/\{categories_legend/', '{globalCategories_legend}' . $strLegendFields . ';{categories_legend', $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strPalette ], 1);
                     }

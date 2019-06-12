@@ -92,14 +92,14 @@ class ContentListener extends DefaultListener
 //            }
 //        }
 
-        if( $objRow->type == "image" )
+        if( $objRow->type === 'image' )
         {
             if( $objRow->fullsize )
             {
                 $strBuffer = ContentHelper::generateImageHoverTags($strBuffer, $objRow);
             }
 
-            if( preg_match('/bg-image/', $cssID[1]) )
+            if( FALSE !== strpos( $cssID[1], 'bg-image' ) )
             {
                 $bgImage    = '';
                 $objImage   = \FilesModel::findByPk( $objRow->singleSRC );
@@ -110,14 +110,21 @@ class ContentListener extends DefaultListener
                 }
 
                 $strBuffer = preg_replace('/<figure([A-Za-z0-9\s\-=",;.:_\(\)\{\}\/]{0,})>([A-Za-z0-9\s\n\-<>,;.:="\/_]{0,})<\/figure>/', '<figure$1 style="background-image:url(' . $bgImage . ')"></figure>', $strBuffer);
-                $strBuffer = preg_replace('/image_container/', 'image_container bg-image bg-cover', $strBuffer);
+                $strBuffer = str_replace('image_container', 'image_container bg-image bg-cover', $strBuffer);
+            }
+
+            if( FALSE !== strpos( $cssID[1], 'extend-caption' ) )
+            {
+                preg_match_all('/<figcaption([A-Za-z0-9\s\-=",;.:_\(\)\{\}\/]{0,})>(.*)<\/figcaption>/', $strBuffer, $captionMatches);
+
+                $strBuffer = preg_replace('/<figcaption([A-Za-z0-9\s\-=",;.:_\(\)\{\}\/]{0,})>(.*)<\/figcaption>/', '<figcaption$1>' . ContentHelper::renderText($captionMatches[2][0], true) . '</figcatpion>', $strBuffer);
             }
         }
-        elseif( $objRow->type == "text")
+        elseif( $objRow->type === 'text')
         {
             if( $objRow->addImage )
             {
-                $addClass = "";
+                $addClass = '';
 
                 if( strlen($objRow->headlineImagePosition) )
                 {
@@ -139,7 +146,7 @@ class ContentListener extends DefaultListener
 
                             $strBuffer = str_replace('</figure>' , '</figure>' . $strHeadline, $strBuffer);
                         }
-                        elseif( $objRow->floating == "left" || $objRow->floating == "right" )
+                        elseif( $objRow->floating === "left" || $objRow->floating === "right" )
                         {
                             if( $objRow->headlineImagePosition == "nextTo" || $objRow->headlineImagePosition == "bottom" )
                             {
@@ -370,18 +377,21 @@ class ContentListener extends DefaultListener
 //        $arrClasses     = array();
         $arrAttributes  = array();
 
-        if( $objRow->position && TL_MODE === "FE" ) //TODO: auslagern in helper class, auch für rsce und sonstiges!!
+        if(  TL_MODE === "FE" ) //TODO: auslagern in helper class, auch für rsce und sonstiges!!
         {
             //TODO: merge rendered position with position function in content helper #80
             $strStyles = '';
 
-            $arrElementClasses[] = 'pos-' . ($objRow->positionFixed ? 'fixed' : 'abs');
-            $arrElementClasses[] = 'pos-' . str_replace('_', '-', $objRow->position);
-
-            $arrPosMargin = deserialize($objRow->positionMargin, TRUE);
-
-            if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
+            if( $objRow->position )
             {
+                $arrElementClasses[] = 'pos-' . ($objRow->positionFixed ? 'fixed' : 'abs');
+                $arrElementClasses[] = 'pos-' . str_replace('_', '-', $objRow->position);
+            }
+
+            $arrPosMargin = \StringUtil::deserialize($objRow->positionMargin, TRUE);
+
+//            if( $arrPosMargin['top'] || $arrPosMargin['right'] || $arrPosMargin['bottom'] || $arrPosMargin['left'] )
+//            {
                 $unit       = $arrPosMargin['unit']?:'px';
                 $useUnit    = true;
                 $prefix     = 'margin';
@@ -403,7 +413,7 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( preg_match('/(transY|tansX)/', $arrPosMargin['top']) )
+                    if( preg_match('/(transY|transX)/', $arrPosMargin['top']) )
                     {
                         $transKey = 'Y';
 
@@ -414,7 +424,10 @@ class ContentListener extends DefaultListener
 
                         $transValue = preg_replace('/^(transX|transY)/', '', $arrPosMargin['top']);
 
-                        $strStyles .= " transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ");";
+                        $strStyles .= " transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ")"; if( $transKey === 'X' && $objRow->position === 'center_center' )
+                    {
+                        $strStyles .= 'translateY(-50%)';
+                    } $strStyles .= ';';
                     }
                     else
                     {
@@ -441,12 +454,35 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    $strStyles .= " " . $prefix . "-right:" . $arrPosMargin['right'] . (($useUnit)?$unit:'') . ";";
+                    if( preg_match('/(transY|transX)/', $arrPosMargin['right']) )
+                    {
+                        $transKey = 'Y';
+
+                        if( FALSE !== strpos( $arrPosMargin['right'], 'transX' ) )
+                        {
+                            $transKey = 'X';
+                        }
+
+                        $transValue = preg_replace('/^(transX|transY)(&#40;|\()([A-Za-z0-9%\-+]{0,})(&#41;|\))/ui', '$3', trim($arrPosMargin['right']));
+
+                        $strStyles .= " transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ")";
+
+                        if( $transKey === 'X' && $objRow->position === 'center_center' )
+                        {
+                            $strStyles .= 'translateY(-50%)';
+                        }
+
+                        $strStyles .= ';';
+                    }
+                    else
+                    {
+                        $strStyles .= " " . $prefix . "-right:" . $arrPosMargin['right'] . (($useUnit)?$unit:'') . ";";
+                    }
 
                     $useUnit    = true;
                 }
 
-                if( $arrPosMargin['bottom'] )
+                if( $arrPosMargin['bottom'] ||$arrPosMargin['bottom'] === '0' )
                 {
                     if( preg_match('/(' . implode('|', $GLOBALS['TL_CSS_UNITS']) . ')$/', $arrPosMargin['bottom']) )
                     {
@@ -479,7 +515,7 @@ class ContentListener extends DefaultListener
 
                     $useUnit    = true;
                 }
-            }
+//            }
 
             if( strlen($strStyles) )
             {
@@ -543,7 +579,7 @@ class ContentListener extends DefaultListener
         $strBuffer = $strBoxBuffer;
 
         if( count($arrElementClasses) )
-        {;
+        {
             $strBuffer = $this->addClassToContentElement( $strBuffer, $objRow, $arrElementClasses );
         }
 
@@ -554,6 +590,7 @@ class ContentListener extends DefaultListener
 
         $strBuffer  = str_replace(['[R]'], ['<sup>&reg;</sup>'], $strBuffer);
 //        $strBuffer = preg_replace(['/\|([A-Za-zöäüÖÄÜß0-9]{1,})\|/'], ['<strong>$1</strong>'], $strBuffer);
+//        $strBuffer = preg_replace('/\|\|([^\|\|]+)\|\|/', '<span class="light">$1</span>', $strBuffer);
         $strBuffer  = preg_replace('/\|([^\|]+)\|/', '<strong>$1</strong>', $strBuffer);
 
 //        $strBuffer  = preg_replace('/<figcaption()>(.+)<\/figcaption>/','<figcaption$1>' . preg_replace('/;/', '<br>', '$2') . '</figcaption>', $strBuffer);
@@ -823,6 +860,32 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
             $arrConfig = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineStyle' );
 
+            if( !is_array($arrConfig) || (is_array($arrConfig) && !count($arrConfig)) )
+            {
+                $fieldPrefix    = BundleConfig::getTableFieldPrefix();
+
+                $arrConfig  = array();
+                $arrStyles  = \StringUtil::deserialize( \Config::get($fieldPrefix . 'headlineStyles'), TRUE);
+
+                if( count($arrStyles) )
+                {
+                    foreach($arrStyles as $arrStyle)
+                    {
+                        if( strlen(trim($arrStyle['name'])) )
+                        {
+                            $arrInternStyle = $arrStyle;
+
+                            $arrInternStyle['internID']         = $arrStyle['id'];
+
+                            $arrInternStyle['classes']          = $arrStyle['tagClasses'];
+                            $arrInternStyle['tagClasses']       = $arrStyle['elementClasses'];
+
+                            $arrConfig[ $arrStyle['id'] ] = $arrInternStyle;
+                        }
+                    }
+                }
+            }
+
             if( count($arrConfig) )
             {
                 $arrStyle = array();
@@ -879,12 +942,12 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
         if( count($arrTopHeadlineClasses) )
         {
-            $strTopClass = $strTopClass . " " . implode(" ", $arrTopHeadlineClasses);
+            $strTopClass = $strTopClass . ' ' . implode(' ', $arrTopHeadlineClasses);
         }
 
         if( count($arrSubHeadlineClasses) )
         {
-            $strSubClass = $strSubClass . " " . implode(" ", $arrSubHeadlineClasses);
+            $strSubClass = $strSubClass . ' ' . implode(' ', $arrSubHeadlineClasses);
         }
 
         $topHeadline    = ($objRow->addTopHeadline  ? '<div class="top-headline' . $strTopClass . '"><span class="th-inside">' . $objRow->topHeadline . '</span></div>' : '');
@@ -894,7 +957,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
         if( count($arrHeadlineClasses) )
         {
-            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@éèáàóòúùüâûêôñãõ]{0,})<\/h([1-6])>/', $strContent, $arrHeadlineMatches);
+            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@éèáàóòúùüâûêôñãõ]{0,})<\/h([1-6])>/u', $strContent, $arrHeadlineMatches);
 
             if( count($arrHeadlineMatches[0]) )
             {
@@ -1028,7 +1091,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             $arrClasses[] = 'btn-' . $objRow->buttonStyle;
             $arrClasses[] = 'btn-type-' . $objRow->buttonType;
 
-            if( !strlen($objRow->linkTitle) )
+            if( $objRow->linkTitle === '' )
             {
                 $arrClasses[] = 'btn-empty';
             }
@@ -1046,11 +1109,25 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                         break;
 
                     case "icon":
-                        $strLinkText    = $objRow->titleText?:$objRow->url;
+                        $strLinkText    = $objRow->linkTitle?:$objRow->url;
                         $iconColor      = ColorHelper::compileColor( $objRow->buttonAddonIconColor );
                         $iconBackground = (($iconColor !== "transparent") ? 'background:' . $iconColor . ';' : '');
                         $strIconPath    = ImageHelper::renderImagePath( \FilesModel::findByPk( $objRow->buttonAddonIcon )->path );
                         $strIcon        = '<i class="icon icon-mask" style="mask-image:url(' . $strIconPath . ');-webkit-mask-image:url(' . $strIconPath . ');' . $iconBackground . '"></i>';
+
+
+                        if( FALSE !== strpos( $cssID[1], 'box-link' ) )
+                        {
+
+                            if( $objRow->buttonAddonPosition === 'left' )
+                            {
+                                $strIcon .= ContentHelper::renderText($strLinkText, true);
+                            }
+                            elseif( $objRow->buttonAddonPosition === 'right' )
+                            {
+                                $strIcon = ContentHelper::renderText($strLinkText, true) . $strIcon;
+                            }
+                        }
 
 //                        $arrClasses[] = 'icon-' . $objRow->buttonAddonIcon;
 //                        $strContent = preg_replace('/<a/', '<a data-icon="' . $objRow->buttonAddonIcon . '"', $strContent);
@@ -1099,20 +1176,26 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         }
 
 //        $strContent = Helper::renderText( $strContent, true);
-        preg_match_all('/<a([A-Za-z0-9\s\-="_,;.:\{\}\(\)\/#!?]{0,})>([A-Za-z0-9\s\-,;\{\}:.!?\(\)]{0,})<\/a>/', $strContent, $arrMatches);
+        preg_match_all('/<a([A-Za-zöäüÖÄÜ0-9\s\-="_,;.:\{\}\(\)\/#!?\|]{0,})>([A-Za-zöäüÖÄÜ0-9\s\-,;\{\}:.!?\(\)\|]{0,})<\/a>/u', $strContent, $arrMatches);
 
         if( count($arrMatches[0]) )
         {
-            $renderLines = true;
+            $beforeLink     = '';
+            $afterLink      = '';
+
+            $renderLines    = true;
 
             if( preg_match('/no-text-lines/', $cssID[1]) || preg_match('/no-lines/', $cssID[1]) )
             {
-                $renderLines = false;
+                $renderLines    = false;
+
+                $beforeLink     = '<span class="link-text">';
+                $afterLink      = '</span>';
             }
 
 //            $strTitle   = trim(preg_replace('/;/', '', $arrMatches[2][0]));
 //            $strContent = preg_replace('/title="' . preg_quote($arrMatches[2][0], '/') . '"/', 'title="' . $strTitle . '"', $strContent);
-            $strContent = preg_replace('/>' . preg_quote($arrMatches[2][0], '/') . '</', '>' . Helper::renderText($arrMatches[2][0], $renderLines). '<', $strContent);
+            $strContent = preg_replace('/>' . preg_quote($arrMatches[2][0], '/') . '</', '>' . $beforeLink . Helper::renderText($arrMatches[2][0], $renderLines) . $afterLink . '<', $strContent);
 //            $strContent = preg_replace('/title="([A-Za-z0-9\s\-;,.:\{\}<>="]{0,})" rel="/', 'title="' . $strTitle . '" rel="', $strContent);
         }
 
