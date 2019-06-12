@@ -1450,60 +1450,125 @@ class Table
 
 
 
-    public function addImageFields( $imagePalette = '' )
+    public function addImageFields( $imagePalette = '', $fieldPrefx = '' )
     {
-        Field::create('addImage', 'checkbox')
+        Field::create($fieldPrefx . 'addImage', 'checkbox')
             ->setSelector(true)
             ->addToTable( $this );
 
+        $standardFields = $imagePalette?:'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta';
+        $arrImageFields = explode(',', $standardFields);
 
-        Field::create('overwriteMeta', 'checkbox')
-            ->setSelector(true)
-            ->addEval('tl_class', 'clr')
-            ->addToTable( $this );
+        foreach( $arrImageFields as $strField)
+        {
+            if( $strField === 'overwriteMeta' )
+            {
+                Field::create($fieldPrefx . 'overwriteMeta', 'checkbox')
+                    ->setSelector(true)
+                    ->addEval('tl_class', 'clr')
+                    ->addToTable( $this );
 
+                Field::create($fieldPrefx . 'alt')
+                    ->addConfig('search', true)
+                    ->addToTable( $this );
 
-        Field::create('singleSRC', 'fileTree')
-            ->addEval('mandatory', true)
-            ->addToTable( $this );
+                Field::create($fieldPrefx . 'imageTitle')
+                    ->addConfig('search', true)
+                    ->addToTable( $this );
 
-        Field::create('alt')
-            ->addConfig('search', true)
-            ->addToTable( $this );
+                Field::create($fieldPrefx . 'caption')
+                    ->addConfig('search', true)
+                    ->addEval('allowHtml', true)
+                    ->addToTable( $this );
 
-        Field::create('imageTitle')
-            ->addConfig('search', true)
-            ->addToTable( $this );
+                Field::create($fieldPrefx . 'imageUrl', 'url')
+                    ->addConfig('search', true)
+                    ->addToTable( $this );
+            }
+            elseif( $strField === 'singleSRC' )
+            {
+                Field::create($fieldPrefx . 'singleSRC', 'fileTree')
+                    ->addEval('mandatory', true)
+                    ->addToTable( $this );
+            }
+            elseif( $strField === 'size' )
+            {
+                Field::create($fieldPrefx . 'size', 'imageSize')
+                    ->addEval('tl_class', 'clr')
+                    ->addToTable( $this );
+            }
+            elseif( $strField === 'imagemargin' )
+            {
+                Field::create($fieldPrefx. 'imagemargin', 'trbl')
+                    ->addEval('tl_class', 'clr')
+                    ->addToTable( $this );
+            }
+//            elseif( $strField === 'imageUrl' )
+//            {
+//                Field::create($fieldPrefx . 'imageUrl', 'url')
+//                    ->addConfig('search', true)
+//                    ->addToTable( $this );
+//            }
+            elseif( $strField === 'fullsize' )
+            {
+                Field::create($fieldPrefx . 'fullsize', 'checkbox')
+                    ->addToTable( $this );
+            }
+//            elseif( $strField === 'caption' )
+//            {
+//                Field::create($fieldPrefx . 'caption')
+//                    ->addConfig('search', true)
+//                    ->addEval('allowHtml', true)
+//                    ->addToTable( $this );
+//            }
+            elseif( $strField === 'floating' )
+            {
+                Field::create($fieldPrefx . 'floating', 'radioTable')
+                    ->addConfig('default', 'above')
+                    ->addConfig('reference', $GLOBALS['TL_LANG']['MSC'])
+                    ->addOptions(['above', 'left', 'right', 'below'])
+                    ->addEval('cols', 4)
+                    ->addToTable( $this );
+            }
+//            elseif( in_array($strField, ['alt', 'imageTitle']) )
+//            {
+//                Field::create($fieldPrefx . $strField)
+//                    ->addConfig('search', true)
+//                    ->addToTable( $this );
+//            }
+        }
 
-        Field::create('size', 'imageSize')
-            ->addEval('tl_class', 'clr')
-            ->addToTable( $this );
+        if( $fieldPrefx )
+        {
+            foreach($arrImageFields as $subIndex => $subField)
+            {
+                $arrImageFields[ $subIndex ] = $fieldPrefx . $subField;
+            }
 
-        Field::create('imagemargin', 'trbl')
-            ->addEval('tl_class', 'clr')
-            ->addToTable( $this );
+            $standardFields = implode(',', $arrImageFields);
+        }
 
-        Field::create('imageUrl', 'url')
-            ->addConfig('search', true)
-            ->addToTable( $this );
+        $this->addSubpalette($fieldPrefx . 'addImage', $standardFields);
 
-        Field::create('fullsize', 'checkbox')
-            ->addToTable( $this );
+        if( !$imagePalette || ($imagePalette && FALSE !== strpos( $imagePalette, 'overwriteMeta' )) )
+        {
+            $metaSubFields = 'alt,imageTitle,imageUrl,caption';
 
-        Field::create('caption')
-            ->addConfig('search', true)
-            ->addEval('allowHtml', true)
-            ->addToTable( $this );
+            if( $fieldPrefx )
+            {
+                $metaSubFields = explode(',', $metaSubFields);
 
-        Field::create('floating', 'radioTable')
-            ->addConfig('default', 'above')
-            ->addConfig('reference', $GLOBALS['TL_LANG']['MSC'])
-            ->addOptions(['above', 'left', 'right', 'below'])
-            ->addEval('cols', 4)
-            ->addToTable( $this );
+                foreach($metaSubFields as $metaSubIndex => $metaSubField)
+                {
+                    $metaSubFields[ $metaSubIndex ] = $fieldPrefx . $metaSubField;
+                }
 
-        $this->addSubpalette('addImage', $imagePalette?:'singleSRC,size,floating,imagemargin,fullsize,overwriteMeta');
-        $this->addSubpalette('overwriteMeta', 'alt,imageTitle,imageUrl,caption');
+                $metaSubFields = implode(',', $metaSubFields);
+            }
+
+            $this->addSubpalette($fieldPrefx . 'overwriteMeta', $metaSubFields);
+        }
+
     }
 
 
@@ -1641,6 +1706,8 @@ class Table
                 ->addEval('tl_class', 'clr wizard', true)
                 ->addToSubpalette( $videoField )
                 ->addToTable( $this );
+
+            $this->addSubpalette('addVideo', 'videos');
         }
     }
 
