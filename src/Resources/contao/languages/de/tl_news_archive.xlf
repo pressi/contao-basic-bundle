@@ -20,16 +20,20 @@
                 <target>Presse</target>
             </trans-unit>
             <trans-unit id="tl_news_archive.options.newsTyps.hotel">
-                <source>hotel</source>
+                <source>Hotel</source>
                 <target>Hotel</target>
             </trans-unit>
             <trans-unit id="tl_news_archive.options.newsTyps.hall">
-                <source>hall</source>
+                <source>Hall</source>
                 <target>Saal</target>
             </trans-unit>
             <trans-unit id="tl_news_archive.options.newsTyps.location">
-                <source>location</source>
+                <source>Location</source>
                 <target>Ort</target>
+            </trans-unit>
+            <trans-unit id="tl_news_archive.options.newsTyps.project">
+                <source>Project</source>
+                <target>Projekt</target>
             </trans-unit>
 
 

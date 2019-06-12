@@ -12,8 +12,13 @@
             </trans-unit>
 
             <trans-unit id="MOD.iidoWebsiteStyles.0">
-                <source>Website Styles-Editor</source>
-                <target>Website Styles-Editor</target>
+                <source>Styles-Editor (SCSS)</source>
+                <target>Styles-Editor (SCSS)</target>
+            </trans-unit>
+
+            <trans-unit id="MOD.iidoWebsiteStylesStd.0">
+                <source>Styles-Editor</source>
+                <target>Styles-Editor</target>
             </trans-unit>
 
 

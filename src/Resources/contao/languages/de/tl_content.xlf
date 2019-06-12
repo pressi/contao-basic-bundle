@@ -506,11 +506,15 @@
             </trans-unit>
             <trans-unit id="tl_content.options.buttonStyle.tertiary">
                 <source>right</source>
-                <target>Style 3</target>
+                <target>Style 3 (Tertiary)</target>
             </trans-unit>
             <trans-unit id="tl_content.options.buttonStyle.quaternary">
                 <source>right</source>
-                <target>Style 4</target>
+                <target>Style 4 (Quaternary)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonStyle.link">
+                <source>link</source>
+                <target>Nur Link (Kein Button)</target>
             </trans-unit>
 
 
@@ -530,6 +534,10 @@
             <trans-unit id="tl_content.options.buttonType.round_border">
                 <source>left</source>
                 <target>Rund (Kreis), nur Rahmen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.buttonType.blank">
+                <source>blank</source>
+                <target>Nur Link</target>
             </trans-unit>
 
 
