@@ -406,9 +406,9 @@ class ArticleTemplateRenderer
 
         if( $objArticle->inColumn === "main" )
         {
-            $divTableStart  = "";
-            $divTableEnd    = "";
-            $divOverlay     = "";
+            $divTableStart  = '';
+            $divTableEnd    = '';
+            $divOverlay     = '';
 
 //                if( $objArticle->textMiddle && $isFullpage )
             if( $objArticle->textMiddle )
@@ -420,6 +420,12 @@ class ArticleTemplateRenderer
             if( $objArticle->addBackgroundOverlay )
             {
                 $divOverlay = '<div class="bg-container-overlay"></div>';
+            }
+
+            if( FALSE !== strpos($cssID[1], 'add-bg-container') )
+            {
+                $divTableStart = '<div class="article-bg-container"><div class="article-bg-container-inside">' . $divTableStart;
+                $divTableEnd   .= '</div></div>';
             }
 
             $strArticleInsideStyles = '';
@@ -447,7 +453,7 @@ class ArticleTemplateRenderer
                 $strArticleInsideStyles = ' style="' . $strArticleInsideStyles . '"';
             }
 
-            $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3>' . $divOverlay . '<div class="article-inside"' . $strArticleInsideStyles . '>' . $divTableStart, $strContent, -1, $count);
+            $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<div$1class="mod_article$2"$3>' . $divOverlay . '<div class="article-inside"' . $strArticleInsideStyles . '>' . $divTableStart, $strContent, -1, $count);
 
             if( $count > 0 )
             {
