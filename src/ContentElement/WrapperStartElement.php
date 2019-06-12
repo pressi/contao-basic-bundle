@@ -105,10 +105,12 @@ class WrapperStartElement extends \ContentElement
         $cssID = \StringUtil::deserialize($this->cssID, TRUE);
         $cssClass = $cssID[1];
 
-        if( strlen( trim($cssClass) ) )
+        if( trim($cssClass) !== '' )
         {
             $this->Template->class          = preg_replace('/' . $cssClass . '/', '', $this->Template->class);
         }
+
+        $cssClass = preg_replace(array('/([\s]{1,})col\-left/', '/([\s]{1,})w([0-9]{1,})/', '/([\s]{1,})h([0-9]{1,})/'), array('', '', ''), $cssClass);
 
         $this->Template->addClasses     = ' inside-' . ($countSeparator + 1);
         $this->Template->colClasses     = $cssClass;
