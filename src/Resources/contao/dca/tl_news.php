@@ -7,17 +7,17 @@
  * www.iido.at <development@iido.at>
  *******************************************************************/
 
-System::loadLanguageFile("tl_content");
-Controller::loadDataContainer("tl_content");
+System::loadLanguageFile( 'tl_content' );
+Controller::loadDataContainer( 'tl_content' );
 
 $objElement     = false;
 $objArchive     = false;
 
 $db             = Database::getInstance();
-$do             = Input::get("do");
-$act            = Input::get("act");
-$table          = Input::get("table");
-$id             = (int) Input::get("id");
+$do             = Input::get( 'do' );
+$act            = Input::get( 'act' );
+$table          = Input::get( 'table' );
+$id             = (int) Input::get( 'id' );
 $theme          = Backend::getTheme();
 
 //$strFileName    = \NewsModel::getTable();
@@ -30,21 +30,21 @@ if( count( $db->listTables() ) > 0 )
 {
 	if( $id )
 	{
-		if( $act && $act === "edit")
+		if( $act && $act === 'edit' )
 		{
 //			$objNews = \NewsModel::findByPk($id);
-			$objNews = $db->prepare("SELECT * FROM " . $strFileName . " WHERE id=?")->limit(1)->execute( $id );
+			$objNews = $db->prepare( 'SELECT * FROM ' . $strFileName . ' WHERE id=?' )->limit(1)->execute( $id );
 
-			if($objNews)
+			if( $objNews )
 			{
 //				$objArchive = \NewsArchiveModel::findByPk( $objNews->pid );
-				$objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limit(1)->execute( $objNews->pid );
+				$objArchive = $db->prepare( 'SELECT * FROM tl_news_archive WHERE id=?' )->limit(1)->execute( $objNews->pid );
 			}
 		}
 		else
 		{
 //            $objArchive = \NewsArchiveModel::findByPk( $id );
-            $objArchive = $db->prepare("SELECT * FROM tl_news_archive WHERE id=?")->limit(1)->execute( $id );
+            $objArchive = $db->prepare( 'SELECT * FROM tl_news_archive WHERE id=?' )->limit(1)->execute( $id );
 		}
 	}
 }
@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['__selector__'][]           = 'ad
 //$GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace('addImage;', '{source_legend},multiSRC,sortBy,metaIgnore;{image_legend},gal_size,gal_imagemargin,gal_perRow,gal_fullsize,gal_perPage,gal_numberOfItems;{template_legend:hide},galleryTpl,customTpl;', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
 foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
 {
-	if( $palette == "__selector__" )
+	if( $palette === '__selector__' )
 	{
 		continue;
 	}
@@ -97,14 +97,14 @@ foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
 	{
 		if( $objArchive->hideContentElements || in_array($objArchive->newsTyps, array("job", "pressReport")) )
 		{
-			$fields = str_replace('teaser;', 'teaser;{text_legend},text;', $fields);
+			$fields = str_replace('teaser;', 'teaser;{text_legend},text;', $fields); //textBig,textMiddle,textLeft,textRight
 		}
 
-        if( $objArchive->newsTyps === "job" )
+        if( $objArchive->newsTyps === 'job' )
         {
             $fields = preg_replace('/text;/', 'text;{addText_legend},contactPerson,contactLink,contactLinkTitle;', $fields);
         }
-        elseif( $objArchive->newsTyps === "pressReport" )
+        elseif( $objArchive->newsTyps === 'pressReport' )
         {
             $fields = preg_replace('/text;/', 'text;{blockquotes_legend},blockquotes;', $fields);
         }
@@ -132,6 +132,23 @@ foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
 //        $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = $fields;
 //    }
 //}
+
+if( $objArchive && $objArchive->newsTyps === 'project' )
+{
+    foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
+    {
+        if( $palette === '__selector__' )
+        {
+            continue;
+        }
+
+        $fields = str_replace('{date_legend', '{detail_legend},location,year,projectStatus,projectLeistung,projectPhotos;{slogan_legend},sloganTextBig,sloganTextSmall,sloganTextSmallFloating,sloganTextSmallMargin,sloganClass;{date_legend', $fields);
+        $fields = preg_replace('/\{date_legend([a-zA-Z0-9\s\-,_\{\}]{0,});/', '', $fields);
+        $fields = preg_replace('/\{teaser_legend([a-zA-Z0-9\s\-,_\{\}]{0,});/', '{addText_legend},text2Headline,text3Headline,text2,text3;{teaser_legend$1;', $fields);
+
+        $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = $fields;
+    }
+}
 
 
 
@@ -166,7 +183,11 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['sorting'] = array
 
 //$GLOBALS['TL_DCA'][ $strFileName ]['fields']['text'] = $GLOBALS['TL_DCA']['tl_content']['fields']['text'];
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField( 'text', $strFileName, array(), '', false, true);
+//\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField( 'textBig', $strFileNameTable, array(), '', false, true);
+//\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField( 'textMiddle', $strFileNameTable, array(), '', false, true);
 
+//\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField( 'textLeft', $strFileNameTable, array(), 'clr w50 hauto', false, true);
+//\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField( 'textRight', $strFileNameTable, array(), 'w50 hauto', true, true);
 
 
 //$GLOBALS['TL_DCA'][ $strFileName ]['fields']['categories']['options_callback']			= array('DPS\Customize\Table\News', 'getMainNewsCategories');
@@ -190,6 +211,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']				= $GLOBALS['TL_DCA']
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['tl_class']		= trim($GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['tl_class'] . " clr");
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['orderField'] 	= 'orderGallerySRC';
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['isGallery'] 	= TRUE;
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['mandatory'] 	= TRUE;
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['extensions'] 	= Config::get('validImageTypes');
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['orderGallerySRC'] = array
@@ -263,7 +285,6 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['useCarouFredSel'] = array
 
 
 // -- CarouFredSel Thumbnails
-
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['useCarouFredSelThumbnails'] = array
 (
 	'label'					=> &$GLOBALS['TL_LANG'][ $strFileName ]['useCarouFredSelThumbnails'],
@@ -299,6 +320,12 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addVideo']['label']    = &$GLOBALS
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('posterSRC', $strFileName, 'posterSRC', 'tl_content');
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('playerSize', $strFileName, 'playerSize', 'tl_content');
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('autoplay', $strFileName, 'autoplay', 'tl_content');
+
+
+
+// -- Project
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('location', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('year', $strFileName, array('rgxp'=>'digit'));
 
 
 
@@ -350,3 +377,58 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['blockquotes'] = array
     ),
     'sql'                     => "blob NULL"
 );
+
+
+
+// - Project Infos
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('projectStatus', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('projectLeistung', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('projectPhotos', $strFileName);
+
+
+
+// - Slogan
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField('sloganTextBig', $strFileName, [], '', false, true );
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('sloganTextSmall', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('sloganClass', $strFileName);
+//\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('sloganTextSmallFloating', $strFileName, 'textSmallFloating', 'tl_content');
+//\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('sloganTextSmallMargin', $strFileName, 'textSmallMargin', 'tl_content');
+\IIDO\BasicBundle\Helper\DcaHelper::addPositionField('sloganTextSmallMargin', $strFileName);
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['sloganTextSmallFloating'] = array
+(
+    'label'                 => array('Text Ausrichtung', ''),
+    'default'               =>'header_left',
+    'inputType'             => 'radioTable',
+    'options'               => $GLOBALS['TL_LANG']['tl_content']['options']['headlineFloating'],
+    'eval'                  => array('cols'=>3, 'tl_class'=>'w50'),
+    'sql'                   => "varchar(32) NOT NULL default ''"
+);
+
+//        'textSmallFloating' => array
+//(
+//    'label'                 => array('Text Ausrichtung', ''),
+//    'default'                 =>'header_left',
+//    'inputType'               => 'radioTable',
+//    'options'                 => $GLOBALS['TL_LANG']['tl_content']['options']['headlineFloating'],
+//    'eval'                    => array('cols'=>3, 'tl_class'=>'w50'),
+//),
+
+//        'textSmallMargin' => array
+//(
+//    'label'     => array('Text Verschiebung', ''),
+//    'inputType'         => 'trbl',
+//    'options'           => $GLOBALS['TL_CSS_UNITS'],
+//    'eval'              => array('tl_class'=>'w50'),
+//),
+
+
+
+// add texts
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('text2Headline', $strFileName, );
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('text3Headline', $strFileName );
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField('text2', $strFileName, [], 'w50 hauto', false, true );
+\IIDO\BasicBundle\Helper\DcaHelper::addTextareaField('text3', $strFileName, [], 'w50 hauto', true, true );

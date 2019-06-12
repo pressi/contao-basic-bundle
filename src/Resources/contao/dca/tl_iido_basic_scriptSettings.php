@@ -13,7 +13,7 @@ $tableClass     = \IIDO\BasicBundle\Config\BundleConfig::getTableClass( $strFile
 
 \IIDO\BasicBundle\Helper\DcaHelper::createNewTable( $strFileName, true );
 
-
+//TODO:: add components instead ???
 
 /**
  * Palettes

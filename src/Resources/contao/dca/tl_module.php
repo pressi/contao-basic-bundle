@@ -28,7 +28,7 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['iido_inheritArticle'] = '{title_leg
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['master_ID'] = array
 (
-    'sql'                       => "int(10) unsigned NOT NULL"
+    'sql'                       => "int(10) unsigned NOT NULL default '0'"
 );
 
 //$GLOBALS['TL_DCA']['tl_module']['fields']['inheritColumn'] = $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn'];

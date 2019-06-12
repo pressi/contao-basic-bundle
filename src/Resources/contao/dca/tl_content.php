@@ -316,7 +316,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['navModule'] = array
     (
         'tl_class'              => 'w50'
     ),
-    'sql'                   => "int(10) unsigned NOT NULL"
+    'sql'                   => "int(10) unsigned NOT NULL default '0'"
 );
 
 
@@ -1169,7 +1169,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 
 
 // LOGIN
-\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('loginModuleId', $strFileName, array(), '', false, '', false, false, '', array('options_callback' => array($strTableClass, 'getLoginModule'), 'sql' => "int(10) unsigned NOT NULL"));
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('loginModuleId', $strFileName, array(), '', false, '', false, false, '', array('options_callback' => array($strTableClass, 'getLoginModule'), 'sql' => "int(10) unsigned NOT NULL default '0'"));
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('logoutPage', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPageField('registerPage', $strFileName);
