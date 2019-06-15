@@ -1,0 +1,29 @@
+<? $this->extend("block_searchable"); ?>
+
+<? $this->block('content');
+
+$arrImageSize = getimagesize(IIDO\BasicBundle\Helper\BasicHelper::getRootDir() . '/' . \IIDO\BasicBundle\Helper\ImageHelper::getImagePath($this->frontImageSC));
+
+$ratio      = ($arrImageSize[0] / $arrImageSize[1]);
+$imgHeight  = (840 / $ratio);
+
+$skiNumber  = \Input::post("skiNumber");
+?>
+
+    <div class="flip-container vertical only-toggler" id="flipContainer_<?= $this->id ?>" style="height:<?= $imgHeight ?>px;">
+        <div class="flip-front front"></div>
+        <div class="flip-back back"></div>
+    </div>
+
+    <div class="toggle-flip" onclick="toggleFlipContainer_<?= $this->id ?>();">Flip</div>
+
+<div class="beaf-slider">
+    <?= \IIDO\BasicBundle\Helper\ImageHelper::getImageTag($this->frontImageSC) ?>
+
+    <div class="resize">
+        <img src="" alt="">
+    </div>
+    <span class="handle"></span>
+</div>
+
+<? $this->endblock(); ?>
