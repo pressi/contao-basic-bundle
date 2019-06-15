@@ -145,4 +145,145 @@ class DateHelper extends \Frontend
 
         return $month;
     }
+
+
+
+
+
+    /**
+     * Ermittle Feiertage, Arbeitstage und Wochenenden von einem Datum
+     *
+     * @param $datum als String im Format Y-m-d oder als Timestamp
+     * @param string $bundesland<br>
+     *    B   = Burgenland<br>
+     *    K   = Kärnten<br>
+     *    NOE = Niederösterreich<br>
+     *    OOE = Oberösterreich<br>
+     *    S   = Salzburg<br>
+     *    ST  = Steiermark<br>
+     *    T   = Tirol<br>
+     *    V   = Vorarlberg<br>
+     *    W   = Wien
+     * @return 'Arbeitstag', 'Wochenende' oder Name des Feiertags als String
+     */
+    public static function feiertag ($datum, $bundesland='')
+    {
+        $bundesland = strtoupper($bundesland);
+        if (is_object($datum))
+        {
+            $datum = date("Y-m-d", $datum);
+        }
+        $datum = explode("-", $datum);
+
+        $datum[1] = str_pad($datum[1], 2, "0", STR_PAD_LEFT);
+        $datum[2] = str_pad($datum[2], 2, "0", STR_PAD_LEFT);
+
+        if (!checkdate($datum[1], $datum[2], $datum[0])) return false;
+
+        $datum_arr = getdate(mktime(0,0,0,$datum[1],$datum[2],$datum[0]));
+
+        $easter_d = date("d", easter_date($datum[0]));
+        $easter_m = date("m", easter_date($datum[0]));
+
+        $status = 'Arbeitstag';
+        if ($datum_arr['wday'] == 0 || $datum_arr['wday'] == 6) $status = 'Wochenende';
+
+        if ($datum[1].$datum[2] == '0101')
+        {
+            return 'Neujahr';
+        }
+        elseif ($datum[1].$datum[2] == '0106')
+        {
+            return 'Heilige Drei Könige';
+        }
+        elseif ($datum[1].$datum[2] == '0319' && ($bundesland == 'K' || $bundesland == 'ST' || $bundesland == 'T' || $bundesland == 'V'))
+        {
+            return 'Josef';
+        }
+        elseif ($datum[1].$datum[2] == $easter_m.$easter_d)
+        {
+            return 'Ostersonntag';
+        }
+        elseif ($datum[1].$datum[2] == date("md",mktime(0,0,0,$easter_m,$easter_d+1,$datum[0])))
+        {
+            return 'Ostermontag';
+        }
+        elseif ($datum[1].$datum[2] == date("md",mktime(0,0,0,$easter_m,$easter_d+39,$datum[0])))
+        {
+            return 'Christi Himmelfahrt';
+        }
+        elseif ($datum[1].$datum[2] == date("md",mktime(0,0,0,$easter_m,$easter_d+49,$datum[0])))
+        {
+            return 'Pfingstsonntag';
+        }
+        elseif ($datum[1].$datum[2] == date("md",mktime(0,0,0,$easter_m,$easter_d+50,$datum[0])))
+        {
+            return 'Pfingstmontag';
+        }
+        elseif ($datum[1].$datum[2] == date("md",mktime(0,0,0,$easter_m,$easter_d+60,$datum[0])))
+        {
+            return 'Fronleichnam';
+        }
+        elseif ($datum[1].$datum[2] == '0501')
+        {
+            return 'Erster Mai';
+        }
+        elseif ($datum[1].$datum[2] == '0504' && $bundesland == 'OOE')
+        {
+            return 'Florian';
+        }
+        elseif ($datum[1].$datum[2] == '0815')
+        {
+            return 'Mariä Himmelfahrt';
+        }
+        elseif ($datum[1].$datum[2] == '0924' && $bundesland == 'S')
+        {
+            return 'Rupertitag';
+        }
+        elseif ($datum[1].$datum[2] == '1010' && $bundesland == 'K')
+        {
+            return 'Tag der Volksabstimmung';
+        }
+        elseif ($datum[1].$datum[2] == '1026')
+        {
+            return 'Nationalfeiertag';
+        }
+        elseif ($datum[1].$datum[2] == '1101')
+        {
+            return 'Allerheiligen';
+        }
+        elseif ($datum[1].$datum[2] == '1111' && $bundesland == 'B')
+        {
+            return 'Martini';
+        }
+        elseif ($datum[1].$datum[2] == '1115' && ($bundesland == 'NOE' || $bundesland == 'W'))
+        {
+            return 'Leopoldi';
+        }
+        elseif ($datum[1].$datum[2] == '1208')
+        {
+            return 'Mariä Empfängnis';
+        }
+//        elseif ($datum[1].$datum[2] == '1224')
+//        {
+//            return 'Heiliger Abend';
+//        }
+        elseif ($datum[1].$datum[2] == '1225')
+        {
+            return 'Christtag';
+        }
+        elseif ($datum[1].$datum[2] == '1226')
+        {
+            return 'Stefanitag';
+        }
+        elseif ($datum[1].$datum[2] == '1231' || $datum[1].$datum[2] == '1224')
+        {
+            return 'Geschlossen';
+        }
+        else
+        {
+            return $status;
+        }
+    }
+
 }

@@ -59,11 +59,11 @@ class ContentListener extends DefaultListener
         $cssID          = \StringUtil::deserialize($objRow->cssID, TRUE);
         $isMobile       = \Environment::get("agent")->mobile;
 
-        if( $isMobile && ($objRow->hideOnMobile || preg_match('/hide-on-mobile/', $cssID[1])) )
+        if( $isMobile && ($objRow->hideOnMobile || FALSE !== strpos( $cssID[1], 'hide-on-mobile' )) )
         {
             return '';
         }
-        elseif( !$isMobile && ($objRow->showOnMobile || preg_match('/show-on-mobile/', $cssID[1])) )
+        elseif( !$isMobile && ($objRow->showOnMobile || FALSE !== strpos( $cssID[1], 'show-on-mobile' )) )
         {
             return '';
         }

@@ -161,7 +161,7 @@ class PageTable extends \Backend
         }
 
         // Return if there is no active record (override all)
-        if ( !$dc->activeRecord || $dc->activeRecord->title == "Standard" )
+        if ( !$dc->activeRecord || $dc->activeRecord->title === 'Standard' )
         {
             return;
         }
@@ -196,9 +196,9 @@ class PageTable extends \Backend
 
             foreach ( $modules as $module )
             {
-                if( $module['mod'] == 0 && $module['enable'] == 1 && $module['col'] != "main" )
+                if( $module['mod'] === 0 && $module['enable'] === 1 && $module['col'] !== 'main' )
                 {
-                    $artTitle = (($module['col'] == "left") ? "Linke Spalte" : "Rechte Spalte");
+                    $artTitle = (($module['col'] === 'left') ? 'Linke Spalte' : 'Rechte Spalte');
 
 
                     // Create article

@@ -24,8 +24,8 @@
             </trans-unit>
 
             <trans-unit id="tl_article.padding.0">
-                <source>Padding</source>
-                <target>Padding</target>
+                <source>Padding (Innenabstand)</source>
+                <target>Padding (Innenabstand)</target>
             </trans-unit>
 
             <trans-unit id="tl_article.isFixed.0">
