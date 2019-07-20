@@ -24,7 +24,6 @@ use IIDO\BasicBundle\Helper\GlobalCategoriesHelper;
 use IIDO\BasicBundle\Model\GlobalCategoryModel;
 use IIDO\BasicBundle\Permission\PermissionChecker;
 use IIDO\BasicBundle\Widget\MetaWizardWidget;
-use Haste\Model\Relations;
 
 
 class GlobalCategoryTable implements FrameworkAwareInterface

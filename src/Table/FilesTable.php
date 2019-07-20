@@ -37,6 +37,8 @@ class FilesTable extends \Backend
         $arrLangs   = array();
         $update     = false;
 
+        $arrFields  = ['previewImage'];
+
         foreach( $arrMeta as $strLang => $arrLangMeta )
         {
             $arrLangs[] = $strLang;
@@ -68,6 +70,21 @@ class FilesTable extends \Backend
                 }
             }
         }
+
+        foreach($arrFields as $strField)
+        {
+            foreach($arrLangs as $strLang)
+            {
+                if( \Input::findPost( $strField . '_' . $strLang) )
+                {
+                    $varLangValue = \Input::post( $strField . '_' . $strLang);
+
+                    $arrMeta[ $strLang ][ $strField ] = $varLangValue;
+                }
+            }
+        }
+
+
 
         if( $update )
         {
@@ -146,6 +163,25 @@ class FilesTable extends \Backend
                     }
                 }
             }
+        }
+
+        $arrPreviewImageData = array
+        (
+            'label'     => array('', ''),
+            'inputType' => 'fileTree',
+            'eval'      => array
+            (
+                'filesOnly'=>true,
+                'fieldType'=>'radio',
+                'mandatory'=>true,
+                'tl_class'=>'clr',
+                'extensions' => \Config::get('validImageTypes')
+            )
+        );
+
+        foreach( $arrLangs as $strLang )
+        {
+            $GLOBALS['TL_DCA'][ $this->strTable ]['fields']['previewImage_' . $strLang ] = $arrPreviewImageData;
         }
     }
 

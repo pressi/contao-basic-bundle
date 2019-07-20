@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\Table;
 
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
+use IIDO\BasicBundle\Helper\ColumnsHelper;
 use IIDO\BasicBundle\Helper\ContentHelper;
 use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
 
@@ -27,6 +28,59 @@ class ContentTable extends \Backend
 
     protected $ornamentePath        = "files/Library/Images/Ornamente/"; //TODO: wartbar machen?!
 
+
+
+    public function getCssConfigClasses( $rootAlias, $mode = 'elements' )
+    {
+        $arrClasses     = array();
+        $rootDir        = BasicHelper::getRootDir(true);
+        $cssConfigFile  = 'files/' . $rootAlias . '/css/config.json';
+
+        if( file_exists( $rootDir . $cssConfigFile) )
+        {
+            $objConfig  = json_decode( file_get_contents($rootDir . $cssConfigFile) );
+            $arrPrefixs = $objConfig->prefixes;
+
+            foreach( $objConfig->$mode as $class )
+            {
+                if( FALSE !== strpos($class, '*') )
+                {
+                    foreach( $arrPrefixs as $prefix )
+                    {
+                        $newClass = preg_replace('/\*/', $prefix, $class);
+
+                        $arrClasses[ $newClass ] = $newClass;
+                    }
+                }
+                else
+                {
+                    $arrClasses[ $class ] = $class;
+                }
+            }
+
+            foreach( $objConfig->all as $class )
+            {
+                if( FALSE !== strpos($class, '*') )
+                {
+                    foreach( $arrPrefixs as $prefix )
+                    {
+                        $newClass = preg_replace('/\*/', $prefix, $class);
+
+                        $arrClasses[ $newClass ] = $newClass;
+                    }
+                }
+                else
+                {
+                    $arrClasses[ $class ] = $class;
+                }
+            }
+        }
+
+        ksort( $arrClasses );
+        $arrClasses = array_values($arrClasses);
+
+        return $arrClasses;
+    }
 
 
     public function getNavigationModule( $dc )
@@ -301,23 +355,35 @@ class ContentTable extends \Backend
     {
         $objTableContent    = new \tl_content();
         $strContent         = $objTableContent->addCteType( $arrRow );
-        $addContentTitle    = "";
+
+        preg_match_all('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/u', $strContent, $arrTitleMatches);
+
+        $addContentTitle    = $arrTitleMatches[2][0];
 
         if( $arrRow['elementIsBox'] )
         {
 //            $addContentTitle = "Box-Element " . str_replace('w', '', $arrRow['boxWidth']) . "x" . str_replace('h', '', $arrRow['boxHeight']);
-            $addContentTitle = "Box-Element > " . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxWidth'][ $arrRow['boxWidth'] ];
+//            $addContentTitle = "Box-Element > " . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxWidth'][ $arrRow['boxWidth'] ];
+
+            $addContentTitle = 'Box (B: ' . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxWidth'][ $arrRow['boxWidth'] ];
 
             if( $arrRow['boxHeight'] )
             {
-                $addContentTitle .= ' x ' . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxHeight'][ $arrRow['boxHeight'] ];
+//                $addContentTitle .= ' x ' . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxHeight'][ $arrRow['boxHeight'] ];
+                $addContentTitle .= ', H: ' . $GLOBALS['TL_LANG'][ $this->strTable ]['options']['boxHeight'][ $arrRow['boxHeight'] ];
             }
+
+            $addContentTitle .= ') - ' . $arrTitleMatches[2][0];
+        }
+        else
+        {
+            $addContentTitle = $arrTitleMatches[2][0];
         }
 
-        if( strlen($addContentTitle) )
-        {
-            $addContentTitle = " - " . $addContentTitle;
-        }
+//        if( strlen($addContentTitle) )
+//        {
+//            $addContentTitle = " - " . $addContentTitle;
+//        }
 
         if( $arrRow['type'] === "newslist" )
         {
@@ -438,9 +504,45 @@ class ContentTable extends \Backend
             }
         }
 
-        $strContent = preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/u', '<div class="cte_type$1">$2' . $addContentTitle . '</div>', $strContent);
+        $rsceType = $arrRow['type'];
 
-        return $strContent;
+        if( 0 === strpos($arrRow['type'], 'rsce_') )
+        {
+            $isRSCEelement = true;
+            $rsceType = preg_replace('/^rsce_/', '', $rsceType);
+        }
+
+        if( $isRSCEelement )
+        {
+            switch( $rsceType )
+            {
+                case 'columns':
+                    $columnsCount   = count($rsce_data['columns']);
+                    $columnsRow     = '';
+
+                    $run = 0;
+                    foreach( $rsce_data['columns'] as $index => $column)
+                    {
+                        if( $run > 0 )
+                        {
+                            $columnsRow .= ' / ';
+                        }
+
+                        $columnsRow .= ColumnsHelper::getColumnWidth( $rsce_data['columns'], $index);
+
+                        $run++;
+                    }
+
+                    $addContentTitle .= sprintf(' <span class="columns-count" style="margin-left:20px;">%s Spalten</span> <span class="columns-row" style="margin-left:5px;">( %s )</span>', $columnsCount, $columnsRow);
+                    break;
+
+                case "team":
+                    $addContentTitle .= '<span class="team-member-name" style="margin-left:40px;">(' . $rsce_data['name'] . ')</span>';
+                    break;
+            }
+        }
+
+        return preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-_öäüÖÄÜß@:;,.+#*&%!?\/\\\(\)\]\[\{\}\'\"]{0,})<\/div>/u', '<div class="cte_type$1">' . $addContentTitle . '</div>', $strContent);
     }
 
 
@@ -715,6 +817,76 @@ class ContentTable extends \Backend
 //        {
 //            $arrOptions = array_merge(array(''=>'-'), $arrOptions);
 //        }
+
+        return $arrOptions;
+    }
+
+
+
+    public static function loadHeadlineTopStyles( $dc )
+    {
+        $arrOptions = array();
+        $objElement = \ContentModel::findByPk( \Input::get("id") );
+
+        if( $objElement )
+        {
+            $objArticle = \ArticleModel::findByPk( $objElement->pid );
+
+            if( $objArticle )
+            {
+                $objPage = \PageModel::findByPk( $objArticle->pid );
+
+                if( $objPage )
+                {
+                    $objPage = $objPage->loadDetails();
+
+                    $arrStyles = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineTopStyle' );
+
+                    if( count($arrStyles) )
+                    {
+                        foreach( $arrStyles as $arrStyle )
+                        {
+                            $arrOptions[ $arrStyle['internID'] ] = $arrStyle['name'];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $arrOptions;
+    }
+
+
+
+    public static function loadHeadlineBottomStyles( $dc )
+    {
+        $arrOptions = array();
+        $objElement = \ContentModel::findByPk( \Input::get("id") );
+
+        if( $objElement )
+        {
+            $objArticle = \ArticleModel::findByPk( $objElement->pid );
+
+            if( $objArticle )
+            {
+                $objPage = \PageModel::findByPk( $objArticle->pid );
+
+                if( $objPage )
+                {
+                    $objPage = $objPage->loadDetails();
+
+                    $arrStyles = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineBottomStyle' );
+
+                    if( count($arrStyles) )
+                    {
+                        foreach( $arrStyles as $arrStyle )
+                        {
+                            $arrOptions[ $arrStyle['internID'] ] = $arrStyle['name'];
+                        }
+                    }
+                }
+            }
+        }
 
         return $arrOptions;
     }
