@@ -1,0 +1,82 @@
+<?
+    $levelID    = (int) preg_replace('/level_/', '', $this->level);
+    $objNavPage = false;
+
+    if( $levelID > 1 )
+    {
+        $objNavPage = \PageModel::findByPk( $this->pid );
+    }
+
+    $strLevelClasses = '';
+
+    foreach ($this->items as $i)
+    {
+        if( $i['isActive'] )
+        {
+            $strLevelClasses .= ' item-is-active';
+
+            if( strlen($i['subitems']) )
+            {
+                $strLevelClasses .= ' active-submenu';
+            }
+
+            break;
+        }
+
+        if( preg_match('/trail/', $i['class']) )
+        {
+            $strLevelClasses .= ' item-is-trail';
+            break;
+        }
+    }
+?>
+<ul class="<?= $this->level ?><?= $strLevelClasses ?>">
+    <? if( $objNavPage ): ?>
+    <li class="nav-title"><?= $objNavPage->alt_pagename?:$objNavPage->title ?></li>
+    <? endif ?>
+  <?php foreach ($this->items as $item):
+      $noLink = false;
+
+      if( preg_match('/no-link/', $item['class']) )
+      {
+          $noLink = true;
+      }
+
+      if( $item['navTitle'] )
+      {
+          $item['link'] = $item['navTitle'];
+      }
+
+//      if( $item['href'] === '#' . $item['alias'] )
+//      {
+//          if( preg_match('/home/', $item['href']) )
+//          {
+//              $item['class'] = trim($item['class'] . ' active');
+//          }
+//
+//          $item['href'] = '#article-' . $item['id'];
+//      }
+//
+//      if( preg_match('/article-menu/', $this->level) )
+//      {
+//          $item['href'] = '#article-' . $item['id'];
+//      }
+
+      if( $item['openPageInLightbox'] )
+      {
+          $item['linkClass'] = trim($item['linkClass'] . ' open-page-in-lightbox lb-animation');
+      }
+
+      $item['href'] = '#article-' . $item['id'];
+
+      $item['class'] = preg_replace('/padding-top-none/', '', $item['class']);
+      $item['class'] = preg_replace('/([\s]{2,})/', ' ', $item['class']);
+
+      ?>
+    <?php if ($item['isActive']): ?>
+      <li class="<?= $item['class'] ?>"<?= $item['listAttributes'] ?>><strong class="<?= $item['class'] ?>"<?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?>><span itemprop="name"><?= $item['link'] ?></span></strong><?= $item['subitems'] ?></li>
+    <?php else: ?>
+      <li<?php if ($item['class']) echo ' class="' . $item['class'] . '"'; ?><?= $item['listAttributes'] ?>><<? if($noLink): ?>strong<? else: ?>a href="<?= $item['href'] ?: './' ?>"<? endif ?> title="<?= $item['pageTitle'] ?: $item['title'] ?>"<?php if ($item['class'] || $item['linkClass']) echo ' class="' . trim($item['class'] . ' ' . $item['linkClass']) . '"'; ?><?php if ($item['accesskey']) echo ' accesskey="' . $item['accesskey'] . '"'; ?><?php if ($item['tabindex']) echo ' tabindex="' . $item['tabindex'] . '"'; ?><?php if ($item['nofollow']) echo ' rel="nofollow"'; ?><?= $item['target'] ?><?php if (!empty($item['subitems'])) echo ' aria-haspopup="true"'; ?> itemprop="url"><span itemprop="name"><?= $item['link'] ?></span></<? if($noLink): ?>strong<? else: ?>a<? endif ?>><?= $item['subitems'] ?></li>
+    <?php endif; ?>
+  <?php endforeach; ?>
+</ul>
