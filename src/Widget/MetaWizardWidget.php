@@ -456,6 +456,50 @@ class MetaWizardWidget extends \MetaWizard
 
                         $strField = preg_replace('/name="' . $strInputName . '/', 'name="' . $this->strId . '[' . $lang . '][' . $field . ']', $strField);
                     }
+                    elseif( $attributes === 'image' )
+                    {
+                        $arrData = array
+                        (
+                            'label'     => array('', ''),
+                            'inputType' => 'fileTree',
+                            'eval'      => array
+                            (
+                                'filesOnly'=>true,
+                                'fieldType'=>'radio',
+                                'tl_class'=>'clr',
+                                'extensions' => \Config::get('validImageTypes')
+                            )
+                        );
+
+                        $strInputName   = $field . '_' . $lang;
+                        $varValue       = $meta[ $field ];
+//                        $arrValue       = \StringUtil::deserialize($varValue, true);
+
+                        $strClass       = $GLOBALS['BE_FFL']['fileTree'];
+
+                        $GLOBALS['TL_DCA']['tl_files' ]['fields'][ $strInputName ] = $arrData;
+
+                        $objWidget      = new $strClass( $strClass::getAttributesFromDca($arrData, $strInputName, $varValue, $strInputName, 'tl_files', $this) );
+
+                        $objWidget->id              = $field . '_' . $lang;
+
+                        $objWidget->filesOnly       = TRUE;
+                        $objWidget->fieldType       = 'radio';
+                        $objWidget->extensions      = \Config::get('validImageTypes');
+
+//                        $objWidget->class           = 'w50 wizard';
+
+                        $objWidget->isMetaField     = TRUE;
+                        $objWidget->metaPrefix      = $this->strId;
+                        $objWidget->metaLang        = $lang;
+                        $objWidget->metaField       = $field;
+
+                        $strField   = $objWidget->generate();
+
+//                        $wizard = \Backend::getDcaPickerWizard($arrData['eval']['dcaPicker'], 'tl_files', $field, $strInputName);
+
+//                        $strField = $strField . $wizard;
+                    }
                     else
                     {
                         $arrAttributes  = explode("_", $attributes);

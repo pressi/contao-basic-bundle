@@ -10,7 +10,10 @@
 namespace IIDO\BasicBundle\Widget;
 
 
+use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
+use IIDO\BasicBundle\Helper\ContentHelper;
 
 
 /**
@@ -240,7 +243,7 @@ class TextFieldWidget extends \TextField
 //                $strField = $strField . $wizard;
 //            }
 
-            $strField = preg_replace('/<img([A-Za-zöäüÖÄÜ0-9\s\-=".:,;\[\]_\/]{0,})>/', $strSelectField . '<img$1>', $strField);
+            $strField = preg_replace('/<img([A-Za-zöäüÖÄÜ0-9\s\-=".:,;\[\]_\/]{0,})>/u', $strSelectField . '<img$1>', $strField);
             $strField = preg_replace('/maxlength="64"/', 'maxlength="6"', $strField, 1);
             $strField = preg_replace('/maxlength="64"/', 'maxlength="3"', $strField, 1);
 
@@ -251,6 +254,60 @@ class TextFieldWidget extends \TextField
 
                 $strField = preg_replace('/<input([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})id="ctrl_' . $this->strField . '_0"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})maxlength="([0-9]{1,})"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})>/', '<input$1id="ctrl_' . $this->strField . '_0"$2maxlength="6"$4>', $strField);
                 $strField = preg_replace('/<input([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})id="ctrl_' . $this->strField . '_1"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})maxlength="([0-9]{1,})"([A-Za-z0-9\s\-,;.:_="\[\]\(\)]{0,})>/', '<input$1id="ctrl_' . $this->strField . '_1"$2maxlength="3"$4>', $strField);
+            }
+        }
+        elseif( $this->classSelector )
+        {
+            if( $this->size === 2 )
+            {
+                $arrValue       = $this->value[2];
+                $arrClasses     = array();
+
+                $this->import( $this->getClasses[0] );
+
+                if( \Input::get('do') === 'article' )
+                {
+                    $mode = 'articles';
+
+                    if( \Input::get('table') === 'tl_content')
+                    {
+                        $mode = 'elements';
+
+                        $objCEElement   = \ContentModel::findByPk( \Input::get('id') );
+                    }
+                    else
+                    {
+                        $objCEElement   = \ArticleModel::findByPk( \Input::get('id') );
+                    }
+
+                    if( $objCEElement )
+                    {
+                        $rootAlias  = BasicHelper::getCustomerFolderFromBackend( $objCEElement, preg_replace('/s$/', '', $mode) );
+                        $arrClasses = $this->{$this->getClasses[0]}->{$this->getClasses[1]}( $rootAlias, $mode );
+                    }
+                }
+
+                if( count($arrClasses) )
+                {
+                    $strOptions     = '';
+
+                    foreach( $arrClasses as $strClass )
+                    {
+                        $selected = '';
+
+                        if( in_array($strClass, $arrValue) )
+                        {
+                            $selected = ' selected';
+                        }
+
+                        $strOptions .= '<option value="' . $strClass . '"' . $selected . '>' . $strClass . '</option>';
+                    }
+
+                    $selectField    = '<select name="' . $this->strField . '[2][]" id="ctrl_' . $this->strField . '_2" class="tl_mselect tl_chosen" multiple onfocus="Backend.getScrollOffset()">' . $strOptions .'</select>';
+                    $strField       = preg_replace('/<input([A-Za-z0-9\s\-,;.:_\[\]="\(\)]{0,})id="ctrl_' . $this->strField . '_1"(.*?)>/', '<input$1id="ctrl_' . $this->strField . '_1"$2>' . $selectField , $strField);
+
+                    $strField       = preg_replace('/<div id="ctrl_' . $this->strField . '" class="/', '<div id="ctrl_' . $this->strField . '" class="big-css-selector ', $strField);
+                }
             }
         }
         else
@@ -265,6 +322,12 @@ class TextFieldWidget extends \TextField
             {
                 $strNewName = $this->metaPrefix . '[' . $this->metaLang . '][' . $this->metaField . ']';
                 $strField   = preg_replace('/name="' . $this->strField . '"/', 'name="' . $strNewName . '"', $strField);
+            }
+
+            if( $this->disableIdField )
+            {
+                $strField = preg_replace('/<input([A-Za-z0-9\s\-_,;.:=";\(\)\[\]]{0,})id="ctrl_' . $this->strField . '_0"([A-Za-z0-9\s\-_,;.:=";\(\)\[\]]{0,})>/', '<input$1id="ctrl_' . $this->strField . '_0"$2 readonly>', $strField);
+//                echo "<pre>"; print_r( $strField ); exit;
             }
         }
 
