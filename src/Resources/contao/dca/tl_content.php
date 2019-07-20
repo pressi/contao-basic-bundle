@@ -79,7 +79,7 @@ $GLOBALS['TL_DCA']['tl_content']['list']['sorting']['child_record_callback'] = a
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]          = 'addBoxLinkButton';
 
 
-if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
+if( $objContent && $objContent->type === "iidoCustomize_newsGalleryDetail" )
 {
 //    $GLOBALS['TL_DCA']['tl_content']['palettes']['__selector__'][]      = 'news_archives';
 //    $GLOBALS['TL_DCA']['tl_content']['subpalettes']['news_archives']    = 'news_item';
@@ -96,7 +96,7 @@ if( $objContent && $objContent->type == "iidoCustomize_newsGalleryDetail" )
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_wrapperStop', '', $strFileName);
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_imprint', '{imprint_legend},imprintCompanyName,imprintSubline,imprintStreet,imprintPostal,imprintCity,imprintPhone,imprintFax,imprintEmail,imprintWeb,addImprintContactLabel;{imprintAdd_legend},imprintMitglied,imprintBerufsrecht,imprintBehoerde,imprintBeruf,imprintCountry,imprintObjectOfTheCompany,imprintVATnumber;{imprintBigAdd_legend},imprintCompanyWording,imprintManagingDirector,imprintSection,imprintOccupationalGroup,imprintCompanyRegister,imprintFirmengericht,imprintAddText;{imprintFields_legend},imprintText,privacyPolicyText;{imprintImageCopyright_legend},imprintImageCopyrights;', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst;{newsTemplate_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addPalette('newslist', '{config_legend},news_archives,numberOfItems,news_featured,perPage,skipFirst,news_gapSize;{newsTemplate_legend:hide},news_metaFields,news_template,customTpl;{image_legend:hide},imgSize;', $strFileName, '', true, true, 'template');
 
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_navigation', '{config_legend},navModule,navPages,navigationTpl;', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addPalette('iido_weather', '{config_legend},addIcon,addSnow,addTemperature,snowUrl;', $strFileName);
@@ -165,7 +165,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
     if( !is_array($strFields) )
     {
 //        $headlineFields = 'addTopHeadline,headline,headlineFloating,addHeadlineBorder,addHeadlineLink,addSubHeadline;';
-        $headlineFields = 'addTopHeadline,headline,headlineFloating,headlineStyles,subHeadline;';
+        $headlineFields = 'topHeadline,headlineTopFloating,headlineTopStyles,headline,headlineFloating,headlineStyles,subHeadline,headlineBottomFloating,headlineBottomStyles;';
         $strFields      = str_replace( 'headline;', $headlineFields, $strFields );
 
 //        if( !preg_match('/^box/', $strPalette) )
@@ -201,6 +201,11 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
         }
     }
 
+    if( $strPalette === 'image' )
+    {
+        $strFields = preg_replace('/{template_legend/', '{addImages_legend},openImagesInLightbox;{template_legend', $strFields);
+    }
+
     $strFields = preg_replace('/{expert_legend/', '{position_legend},position,positionMargin,positionFixed;{expert_legend', $strFields);
     $strFields = preg_replace('/,invisible/', ',invisible,hideOnMobile,showOnMobile', $strFields);
 
@@ -210,7 +215,7 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 }
 
 
-\IIDO\BasicBundle\Helper\DcaHelper::replacePaletteFields('hyperlink', ',rel', ',rel,showAsButton', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::replacePaletteFields('hyperlink', ',rel', ',rel,showAsButton,showAsButtonBox', $strFileName);
 //$GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink'] = str_replace(',rel', ',rel,showAsButton', $GLOBALS['TL_DCA']['tl_content']['palettes']['hyperlink']);
 
 
@@ -220,8 +225,11 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
  */
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('showAsButton', 'buttonStyle,buttonType,buttonAddon,buttonLinkMode', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('showAsButtonBox', ',bb_fontSize,bb_removeMinWidth,bb_width,bb_height,bb_bgColor,bb_bgColorHover,bb_padding,bb_textValignMiddle', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('buttonAddon_arrow', 'buttonAddonPosition,buttonAddonArrow', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('buttonAddon_icon', 'buttonAddonPosition,buttonAddonIcon,buttonAddonIconColor', $strFileName);
+
+
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['showAsButton']         = 'buttonStyle,buttonType,buttonAddon,buttonLinkMode';
 
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['buttonAddon_arrow']     = 'buttonAddonPosition,buttonAddonArrow';
@@ -230,7 +238,9 @@ foreach($GLOBALS['TL_DCA']['tl_content']['palettes'] as $strPalette => $strField
 
 
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxWidth,boxHeight,boxLink,boxLinkText,boxBackgroundColor";
-$GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxWidth,boxHeight,boxBackgroundColor,boxIcon,boxLink";
+$GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxTitle,boxTitlePosition,boxWidth,boxHeight,boxImageIsBG,boxBackgroundColor,boxIcon,boxLink";
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette('boxImageIsBG', 'boxImageMode', $strFileName);
+
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['usedTime']             = "tickerTime";
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['addOrnament']          = 'ornamentLight,onlyOrnament,ornament,addOrnamentLinie';
 //$GLOBALS['TL_DCA']['tl_content']['subpalettes']['bgOnOtherColumn']      = 'bgToArticle';
@@ -248,9 +258,10 @@ $GLOBALS['TL_DCA']['tl_content']['subpalettes']['elementIsBox']         = "boxWi
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addAnimation", "animationType,animateRun,animationWait,animationOffset", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addSnow", "snowDepth,snowUnit,snowSubline", $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addTopHeadline", "topHeadline", $strFileName);
+//\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("addTopHeadline", "topHeadline", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("enableFacebookPixelTracking", "fbq_mode,fbq_action,fbq_object", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("enableGoogleTracking", "gt_event,gt_category,gt_action,gt_label,gt_pageTitle,gt_page,gt_location", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("openImagesInLightbox", "multiSRC", $strFileName);
 
 
 
@@ -384,10 +395,17 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['floating']['eval']['submitOnChange']
 //);
 \IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('elementIsBox', $strFileName, [], '', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField('boxWidth', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('boxHeight', $strFileName);
-\IIDO\BasicBundle\Helper\DcaHelper::addColorField('boxBackgroundColor', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('boxHeight', $strFileName, array('includeBlankOption'=>true));
+\IIDO\BasicBundle\Helper\DcaHelper::addColorField('boxBackgroundColor', $strFileName, [], 'clr');
 \IIDO\BasicBundle\Helper\DcaHelper::addImageField('boxIcon', $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addLinkField('boxLink', $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('boxTitle', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('boxTitlePosition', $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('boxImageIsBG', $strFileName, [], 'nclra', false, true);
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField('boxImageMode', $strFileName);
+
 
 //$GLOBALS['TL_DCA']['tl_content']['fields']['boxHeight']						= $GLOBALS['TL_DCA']['tl_content']['fields']['boxWidth'];
 //$GLOBALS['TL_DCA']['tl_content']['fields']['boxHeight']['label'] 			= $GLOBALS['TL_LANG']['tl_content']['iidoCustomize']['boxHeight'];
@@ -708,7 +726,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'] = array
 
 // HEADLINE
 
-\IIDO\BasicBundle\Helper\DcaHelper::addField('topHeadline', 'text', $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField('topHeadline', 'text', $strFileName, [], 'clr');
 \IIDO\BasicBundle\Helper\DcaHelper::addField('subHeadline', 'text', $strFileName, array(), 'clr');
 
 \IIDO\BasicBundle\Helper\DcaHelper::addField('addTopHeadline', 'checkbox__selector', $strFileName, array(), 'clr sub-box');
@@ -718,7 +736,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'] = array
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 (
-    'label'                   => &$GLOBALS['TL_LANG']['tl_content']['headlineFloating'],
+    'label'                   => $GLOBALS['TL_LANG']['tl_content']['headlineFloating'],
     'exclude'                 => true,
     'default'                 =>'header_left',
     'inputType'               => 'radioTable',
@@ -728,6 +746,12 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 );
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField("headlineStyles", $strFileName, array('maxlength'=>255,'includeBlankOption'=>true), 'w25', true, '', false, false, '', array('options_callback'=>array($strTableClass, 'loadHeadlineStyles')));
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField("headlineTopStyles", $strFileName, array('maxlength'=>255,'includeBlankOption'=>true), 'w25', true, '', false, false, '', array('options_callback'=>array($strTableClass, 'loadHeadlineTopStyles')));
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField("headlineBottomStyles", $strFileName, array('maxlength'=>255,'includeBlankOption'=>true), 'w25', true, '', false, false, '', array('options_callback'=>array($strTableClass, 'loadHeadlineBottomStyles')));
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['headlineTopFloating'] = $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'];
+$GLOBALS['TL_DCA']['tl_content']['fields']['headlineBottomFloating'] = $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'];
+
 
 
 //$GLOBALS['TL_DCA']['tl_content']['fields']['subHeadlineFloating']			= $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'];
@@ -797,6 +821,27 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['headlineFloating'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonType", "select", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonLinkMode", "select", $strFileName);
 \IIDO\BasicBundle\Helper\DcaHelper::addField("buttonAddonPosition", "select", $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("showAsButtonBox", "checkbox__selector", $strFileName, array('submitOnChange'=>true), "clr");
+
+//$GLOBALS['TL_DCA']['tl_content']['fields']['bb_width'] = $GLOBALS['TL_DCA']['tl_content']['fields']['dividerSize'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['bb_width']['label'] = $GLOBALS['TL_LANG']['tl_content']['bb_width'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['bb_width']['options'] = $GLOBALS['TL_CSS_UNITS'];
+
+//$GLOBALS['TL_DCA']['tl_content']['fields']['bb_height'] = $GLOBALS['TL_DCA']['tl_content']['fields']['bb_width'];
+//$GLOBALS['TL_DCA']['tl_content']['fields']['bb_height']['label']= $GLOBALS['TL_LANG']['tl_content']['bb_height'];
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_width", "unit", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_height", "unit", $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_bgColor", "color", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_bgColorHover", "color", $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_padding", "trbl__units", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_textValignMiddle", "checkbox", $strFileName);
+
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_fontSize", "select", $strFileName);
+\IIDO\BasicBundle\Helper\DcaHelper::addField("bb_removeMinWidth", "checkbox", $strFileName);
 
 
 //$GLOBALS['TL_DCA'][ $strFileName ]['fields']['buttonAddonIcon'] = array
@@ -1166,6 +1211,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_metaFields', $strFileName, 'news_metaFields', 'tl_module');
 \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('news_template', $strFileName, 'news_template', 'tl_module');
 
+\IIDO\BasicBundle\Helper\DcaHelper::addUnitField('news_gapSize', $strFileName);
 
 
 // LOGIN
@@ -1204,3 +1250,14 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['imprintImageCopyrights'] = array
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['singleSRC']['eval']['submitOnChange'] = true;
 \IIDO\BasicBundle\Helper\DcaHelper::addColorField('imageColor', $strFileName);
+
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['eval']['classSelector']  = true;
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['eval']['getClasses']     = array($strTableClass, 'getCssConfigClasses');
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['eval']['tl_class']       = 'clr w100';
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['sql'] = 'blob NULL';
+
+
+// Image > Images Lightbox
+\IIDO\BasicBundle\Helper\DcaHelper::addCheckboxField('openImagesInLightbox', $strFileName, [], '', false, true);
+

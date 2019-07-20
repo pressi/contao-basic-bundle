@@ -33,7 +33,7 @@ $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['cssClass
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['categories']    = 'iidoTag';
 
 $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['color']         = 'color';
-
+$GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields']['previewImage']  = 'image';
 
 $db = \Database::getInstance();
 

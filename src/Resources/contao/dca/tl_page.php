@@ -129,6 +129,8 @@ if( \Config::get("folderUrl") )
 $objTable->replacePaletteFields('root', '{global_legend', '{analytics_legend},googleAnalyticsId;{global_legend');
 $objTable->replacePaletteFields('root', '{publish_legend', '{expert_legend},cssClass;{publish_legend');
 $objTable->replacePaletteFields('root', '{cache_legend', '{additional_legend},enablePageFadeEffect,addPageLoader,enableCookie,enableLazyLoad;{cache_legend');
+$objTable->replacePaletteFields('root', ',includeLayout', ',includeLayout,addPageBorder');
+
 
 if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO\BasicBundle\Helper\PageHelper::checkIfParentPagesHasPageLoader( $id ) )
 {
@@ -216,6 +218,9 @@ if( $objCurrentPage->type !== "root" && !$objCurrentPage->addPageLoader && \IIDO
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuNoPages", "submenuSRC,submenuPageCombination", $strTableName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuSRC_news", "submenuNewsArchive", $strTableName);
 \IIDO\BasicBundle\Helper\DcaHelper::addSubpalette("submenuPageCombination", "submenuPageOrder", $strTableName);
+
+//\IIDO\BasicBundle\Helper\DcaHelper::replaceSubpaletteFields('includeLayout', ',mobileLayout', ',mobileLayout,addPageBorder', $strTableName);
+$objTable->addSubpalette('addPageBorder', 'pageBorderWidth,pageBorderColor');
 
 
 
@@ -378,6 +383,16 @@ $objSubmenuNewsArchiveField->addToTable( $objTable );
 \IIDO\BasicBundle\Dca\Field::create('removePageLoader', 'checkbox')->addToTable( $objTable );
 
 \IIDO\BasicBundle\Dca\Field::create('googleAnalyticsId')->addToTable( $objTable );
+
+
+\IIDO\BasicBundle\Dca\Field::create('addPageBorder', 'checkbox')
+    ->setSelector(true)
+//    ->addEval('submitOnChange', true)
+    ->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('pageBorderColor', 'color')->addToTable( $objTable );
+\IIDO\BasicBundle\Dca\Field::create('pageBorderWidth', 'unit')->addToTable( $objTable );
+
 
 $objTable->updateDca();
 //echo "<pre>"; print_r( $GLOBALS['TL_DCA'][ $strTableName ] ); exit;

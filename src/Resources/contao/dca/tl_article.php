@@ -83,7 +83,8 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
     ->addLegend('navigation_legend', 'title_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
     ->addLegend('animation_legend', 'expert_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
     ->addLegend('divider_legend', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
-    ->addLegend('inside_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+    ->addLegend('styles_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
+    ->addLegend('inside_legend', 'styles_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
 
 
 
@@ -102,7 +103,8 @@ Contao\CoreBundle\DataContainer\PaletteManipulator::create()
 
     ->addField('addDivider', 'divider_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
 
-    ->addField(array('padding'), 'inside_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+    ->addField(array('padding'), 'styles_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+    ->addField(array('inside_cssID'), 'inside_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
 
 
     ->applyToPalette('default', $strFileName);
@@ -300,3 +302,10 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['videoSRC'] = array
 
 // Inside Legend
 \IIDO\BasicBundle\Helper\DcaHelper::addField('padding', 'trbl__units', $strFileName);
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['eval']['classSelector']  = true;
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['eval']['getClasses']     = array(IIDO\BasicBundle\Table\ContentTable::class, 'getCssConfigClasses');
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['eval']['tl_class']       = 'clr w100';
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['cssID']['sql'] = 'blob NULL';
+
+\IIDO\BasicBundle\Helper\DcaHelper::copyField('inside_cssID', $strFileName, 'cssID');

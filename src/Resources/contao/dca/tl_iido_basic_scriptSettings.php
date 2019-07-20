@@ -44,6 +44,8 @@ $arrFields =
 
         $fieldPrefix . 'scriptNav',
         $fieldPrefix . 'scriptPickdate',
+
+        $fieldPrefix . 'scriptStellar',
     ],
 ];
 
@@ -71,6 +73,8 @@ $arrFields =
 
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField($fieldPrefix . 'scriptNav', $strFileName, array(), '', false, '', false, false,'', array('options_callback'=>array($tableClass, 'getScriptVersion')));
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField($fieldPrefix . 'scriptPickdate', $strFileName, array(), '', false, '', false, false,'', array('options_callback'=>array($tableClass, 'getScriptVersion')));
+
+\IIDO\BasicBundle\Helper\DcaHelper::addSelectField($fieldPrefix . 'scriptStellar', $strFileName, array(), '', false, '', false, false,'', array('options_callback'=>array($tableClass, 'getScriptVersion')));
 
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields'][$fieldPrefix . 'scriptExplanation'] = array

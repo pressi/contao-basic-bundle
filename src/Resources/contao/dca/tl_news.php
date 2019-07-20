@@ -80,6 +80,7 @@ if( isset($GLOBALS['TL_DCA'][ $strFileName ]['config']['onload_callback']) && is
 
 $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['__selector__'][]           = 'addTable';
 $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['__selector__'][]           = 'addGallery';
+$GLOBALS['TL_DCA'][ $strFileName ]['palettes']['__selector__'][]           = 'addGallery_lb';
 $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['__selector__'][]           = 'useCarouFredSel';
 $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['__selector__'][]           = 'useCarouFredSelThumbnails';
 $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['__selector__'][]           = 'addVideo';
@@ -110,7 +111,7 @@ foreach($GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields)
         }
 	}
 
-    $fields = str_replace('addImage;', 'addImage;{gallery_legend},addGallery;{video_legend},addVideo;', $fields);
+    $fields = str_replace('addImage;', 'addImage;{gallery_legend},addGallery;{gallery_lb_legend},addGallery_lb;{video_legend},addVideo;', $fields);
     $fields = preg_replace('/{image_legend}/', '{table_legend},addTable;{image_legend}', $fields);
 
 
@@ -158,6 +159,7 @@ if( $objArchive && $objArchive->newsTyps === 'project' )
 
 $GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addTable']					= 'tableitems,tableFirstColBold';
 $GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addGallery']			        = 'multiSRC,sortBy,metaIgnore,gal_size,gal_imagemargin,gal_perRow,gal_fullsize,gal_perPage,gal_numberOfItems,galleryTpl,customTpl' . (($enableCarouFredSel) ? ',useCarouFredSel' : '');
+$GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['addGallery_lb']			    = 'multiSRC_lb';
 $GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['useCarouFredSel']			= 'carouFredSelConfig,useCarouFredSelThumbnails';
 $GLOBALS['TL_DCA'][ $strFileName ]['subpalettes']['useCarouFredSelThumbnails']	= 'cfsThumbnailSize,cfsThumbnailsPosition,cfsThumbnailsAlign,cfsThumbnailsWidth,cfsThumbnailsHeight';
 
@@ -206,6 +208,8 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['sorting'] = array
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addGallery']           = $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addImage'];
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addGallery']['label']  = &$GLOBALS['TL_LANG'][ $strFileName ]['addGallery'];
 
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['addGallery_lb']       = $GLOBALS['TL_DCA'][ $strFileName ]['fields']['addGallery'];
+
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']				= $GLOBALS['TL_DCA']['tl_content']['fields']['multiSRC'];
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['tl_class']		= trim($GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC']['eval']['tl_class'] . " clr");
@@ -233,6 +237,12 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['gal_numberOfItems']	= $GLOBALS['TL
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['galleryTpl']			= $GLOBALS['TL_DCA']['tl_content']['fields']['galleryTpl'];
 $GLOBALS['TL_DCA'][ $strFileName ]['fields']['customTpl']			= $GLOBALS['TL_DCA']['tl_content']['fields']['customTpl'];
 
+
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC_lb'] = $GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC'];
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['multiSRC_lb']['eval']['orderField'] = 'orderGallerySRC_lb';
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['orderGallerySRC_lb'] = $GLOBALS['TL_DCA'][ $strFileName ]['fields']['orderGallerySRC'];
 
 
 // -- TABLE
@@ -427,7 +437,7 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['sloganTextSmallFloating'] = array
 
 
 // add texts
-\IIDO\BasicBundle\Helper\DcaHelper::addTextField('text2Headline', $strFileName, );
+\IIDO\BasicBundle\Helper\DcaHelper::addTextField('text2Headline', $strFileName );
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('text3Headline', $strFileName );
 
 \IIDO\BasicBundle\Helper\DcaHelper::addTextareaField('text2', $strFileName, [], 'w50 hauto', false, true );
