@@ -204,6 +204,11 @@
                 <target>Galerie - Einstellungen</target>
             </trans-unit>
 
+            <trans-unit id="tl_news.gallery_lb_legend">
+                <source>gallery settings</source>
+                <target>Detail (Lightbox) Galerie - Einstellungen</target>
+            </trans-unit>
+
             <trans-unit id="tl_news.video_legend">
                 <source>video settings</source>
                 <target>Video - Einstellungen</target>

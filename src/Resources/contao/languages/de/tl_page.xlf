@@ -206,6 +206,23 @@
 
 
 
+            <trans-unit id="tl_page.addPageBorder.0">
+                <source>Seitenrahmen hinzufügen</source>
+                <target>Seitenrahmen hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.pageBorderColor.0">
+                <source>Seitenrahmen Farbe</source>
+                <target>Seitenrahmen Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_page.pageBorderWidth.0">
+                <source>Seitenrahmen Breite / Größe</source>
+                <target>Seitenrahmen Breite / Größe</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
             <trans-unit id="tl_page.overview_legend">

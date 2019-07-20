@@ -132,6 +132,14 @@
                 <source>Stil</source>
                 <target>Stil</target>
             </trans-unit>
+            <trans-unit id="tl_content.headlineTopStyles.0">
+                <source>Stil</source>
+                <target>Stil</target>
+            </trans-unit>
+            <trans-unit id="tl_content.headlineBottomStyles.0">
+                <source>Stil</source>
+                <target>Stil</target>
+            </trans-unit>
 
 
 			<trans-unit id="tl_content.dividerSize.0">
@@ -432,6 +440,127 @@
 
 
 
+            <trans-unit id="tl_content.showAsButton.0">
+                <source>show as button</source>
+                <target>Als Button darstellen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.showAsButtonBox.0">
+                <source>show as button box</source>
+                <target>Als Box (Button) darstellen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.buttonStyle.0">
+                <source>Style</source>
+                <target>Stil</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.buttonType.0">
+                <source>Type</source>
+                <target>Typ</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.buttonAddon.0">
+                <source>Addon</source>
+                <target>Addon</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.buttonLinkMode.0">
+                <source>Link Mode</source>
+                <target>Link-Modus</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_width.0">
+                <source>Width</source>
+                <target>Breite</target>
+            </trans-unit>
+            <trans-unit id="tl_content.bb_width.1">
+                <source>Standard Width 160px</source>
+                <target>Standard Breite 160px (mind. Breite)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_height.0">
+                <source>Height</source>
+                <target>Höhe</target>
+            </trans-unit>
+            <trans-unit id="tl_content.bb_height.1">
+                <source>Standard Height 100px</source>
+                <target>Standard Höhe 100px (mind. Höhe)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_bgColor.0">
+                <source>background color</source>
+                <target>Hintergrundfarbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_bgColorHover.0">
+                <source>hover background color</source>
+                <target>Hover - Hintergrundfarbe</target>
+            </trans-unit>
+            <trans-unit id="tl_content.bb_bgColorHover.1">
+                <source>standard hover background color + 20% black</source>
+                <target>Standard Hover - Hintergrundfarbe + 20% Schwarz</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_padding.0">
+                <source>padding</source>
+                <target>Padding (Innenabstand)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_textValignMiddle.0">
+                <source>Text vertikal zentrieren</source>
+                <target>Text vertikal zentrieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_fontSize.0">
+                <source>Schriftgröße</source>
+                <target>Schriftgröße</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.bb_removeMinWidth.0">
+                <source>Mind.-Breite entfernen</source>
+                <target>Mind.-Breite entfernen</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.boxImageIsBG.0">
+                <source>Bild als Hintergrundbild darstellen</source>
+                <target>Bild als Hintergrundbild darstellen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.boxTitle.0">
+                <source>Titel</source>
+                <target>Titel</target>
+            </trans-unit>
+            <trans-unit id="tl_content.boxTitle.1">
+                <source><![CDATA[Umbruch mit <strong>;</strong> oder <strong>{{br}}</strong>]]></source>
+                <target><![CDATA[Umbruch mit <strong>;</strong> oder <strong>{{br}}</strong>]]></target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.boxTitlePosition.0">
+                <source>Titel Position</source>
+                <target>Titel Position</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.boxImageMode.0">
+                <source>Hintergrundbild - Modus</source>
+                <target>Hintergrundbild - Modus</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.news_gapSize.0">
+                <source>Abstand zwischen den Beiträgen</source>
+                <target>Abstand zwischen den Beiträgen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.news_gapSize.1">
+                <source>Standard: 30px</source>
+                <target>Standard: 30px</target>
+            </trans-unit>
+
+
+
 <!-- ### LEGENDS ############################################################################################################ -->
 
 			<trans-unit id="tl_content.intern_legend">
@@ -489,6 +618,11 @@
             <trans-unit id="tl_content.imprintImageCopyright_legend">
                 <source>Imprint Image-Rights-Settings</source>
                 <target>Impressums Bildrechte-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.newsTemplate_legend">
+                <source>Nachrichten Template-Einstellungen</source>
+                <target>Nachrichten Template-Einstellungen</target>
             </trans-unit>
 
 
@@ -625,41 +759,41 @@
 
 			<trans-unit id="tl_content.options.boxWidth.w1">
 				<source>width 1</source>
-				<target>Breite 1 (25%)</target>
+				<target>25%</target>
 			</trans-unit>
             <trans-unit id="tl_content.options.boxWidth.w33">
                 <source>width 33</source>
-                <target>Breite 1/3 (33%)</target>
+                <target>33%</target>
             </trans-unit>
 			<trans-unit id="tl_content.options.boxWidth.w2">
 				<source>width 2</source>
-				<target>Breite 2 (50%)</target>
+				<target>50%</target>
 			</trans-unit>
 			<trans-unit id="tl_content.options.boxWidth.w3">
 				<source>width 3</source>
-				<target>Breite 3 (75%)</target>
+				<target>75%</target>
 			</trans-unit>
 			<trans-unit id="tl_content.options.boxWidth.w4">
 				<source>width 4</source>
-				<target>Breite 4 (100%)</target>
+				<target>100%</target>
 			</trans-unit>
 
 
 			<trans-unit id="tl_content.options.boxHeight.ha">
 				<source>height auto</source>
-				<target>Höhe Automatisch</target>
+				<target>Automatisch</target>
 			</trans-unit>
             <trans-unit id="tl_content.options.boxHeight.h1x1">
                 <source>height 1x1</source>
-                <target>Höhe 1x1 (Höhe = Breite)</target>
+                <target>1x1</target>
             </trans-unit>
             <trans-unit id="tl_content.options.boxHeight.h1x2">
                 <source>height 1x1</source>
-                <target>Höhe 1x2 (Höhe = 2xBreite)</target>
+                <target>1x2</target>
             </trans-unit>
             <trans-unit id="tl_content.options.boxHeight.h1">
                 <source>height 1</source>
-                <target>Höhe 1 (min. 150px)</target>
+                <target>min. 150px</target>
             </trans-unit>
 <!--			<trans-unit id="tl_content.options.boxHeight.h2">-->
 <!--				<source>height 2</source>-->
@@ -924,6 +1058,79 @@
 				<source>lightbox</source>
 				<target>Lightbox</target>
 			</trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.boxTitlePosition.left_bottom">
+                <source>left center</source>
+                <target>Links Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.left_center">
+                <source>left center</source>
+                <target>Links Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.left_top">
+                <source>left top</source>
+                <target>Links Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.center_center">
+                <source>center center</source>
+                <target>Zentriert</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.center_top">
+                <source>center top</source>
+                <target>Zentriert Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.center_bottom">
+                <source>center bottom</source>
+                <target>Zentriert Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.right_top">
+                <source>right top</source>
+                <target>Rechts Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.right_center">
+                <source>right center</source>
+                <target>Rechts Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxTitlePosition.right_bottom">
+                <source>right center</source>
+                <target>Rechts Unten</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.boxImageMode.cover">
+                <source>Vollflächig (beschnitten)</source>
+                <target>Vollflächig (beschnitten)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxImageMode.contain">
+                <source>An Rahmen anpassen (Breite oder Höhe)</source>
+                <target>An Rahmen anpassen (Breite oder Höhe)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxImageMode.default">
+                <source>Standard</source>
+                <target>Standard (Original Größe)</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.bb_fontSize.20">
+                <source>M 20px (Box Link Standard)</source>
+                <target>M 20px (Box Link Standard)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.bb_fontSize.13">
+                <source>XS 13px (Inhalt Standardschriftgröße)</source>
+                <target>XS 13px (Inhalt Standardschriftgröße)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.bb_fontSize.16">
+                <source>S 16px</source>
+                <target>S 16px</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.bb_fontSize.24">
+                <source>L 24px</source>
+                <target>L 24px</target>
+            </trans-unit>
 
 
 

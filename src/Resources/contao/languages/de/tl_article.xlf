@@ -114,6 +114,11 @@
                 <target>Hintergrund-Overlay hinzufügen</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.enableBackgroundParallax.0">
+                <source>enable parallac</source>
+                <target>Parallax-Effekt aktivieren</target>
+            </trans-unit>
+
 
             <trans-unit id="tl_article.overviewImage.0">
                 <source>overview image</source>
