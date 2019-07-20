@@ -1,0 +1,31 @@
+<?php $this->extend("block_searchable") ?>
+
+<?php $this->block('content'); ?>
+
+    <div class="download-filter-container">
+
+        <?php foreach($this->filters as $strFiler => $arrFilters): ?>
+            <div class="filter-item filter-group" data-filter-group="<?= $strFiler ?>">
+                <div class="filter-item-inside">
+
+                    <div class="header">
+                        <div class="title"><?= $GLOBALS['TL_LANG']['MSC']['dwl_filter'][ $strFiler ] ?></div>
+                        <div class="selected">{{iflng::de}}Alle{{iflng::en}}All{{iflng}}</div>
+                    </div>
+                    <div class="list">
+                        <div class="list-item is-checked" data-filter="">{{iflng::de}}Alle{{iflng::en}}All{{iflng}}</div>
+                        <?php foreach($arrFilters as $filterFilter => $filterName): ?>
+                            <div class="list-item" data-filter=".filter-<?= $strFiler ?>-<?= $filterFilter ?>"><?= strtoupper($filterName) ?></div>
+                        <?php endforeach ?>
+                    </div>
+
+                </div>
+            </div>
+        <?php endforeach ?>
+    </div>
+
+    <script>
+
+    </script>
+
+<?php $this->endblock(); ?>

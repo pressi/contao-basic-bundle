@@ -136,6 +136,7 @@ if( \IIDO\BasicBundle\Config\BundleConfig::isActiveBundle('codefog/contao-news_c
 
 $GLOBALS['TL_CTE']['module']['iido_navigation']             = $ns . '\ContentElement\NavigationElement';
 $GLOBALS['TL_CTE']['module']['iido_filesFilter']            = $ns . '\ContentElement\FilesFilterElement';
+$GLOBALS['TL_CTE']['module']['iido_downloadFilter']         = $ns . '\ContentElement\DownloadFilterElement';
 $GLOBALS['TL_CTE']['module']['iido_detail']                 = $ns . '\ContentElement\DetailElement';
 $GLOBALS['TL_CTE']['module']['iido_articleTeaser']          = $ns . '\ContentElement\ArticleTeaserElement';
 $GLOBALS['TL_CTE']['module']['iido_weather']                = $ns . '\ContentElement\WeatherElement';
@@ -174,6 +175,7 @@ $GLOBALS['BE_FFL']['iidoTag']           = $ns . '\Widget\TagsFieldWidget';
 $GLOBALS['BE_FFL']['explanation']       = $ns . '\Widget\ExplanationWidget';
 $GLOBALS['BE_FFL']['listWizard']        = $ns . '\Widget\ListWizardWidget';
 $GLOBALS['BE_FFL']['pageTree']          = $ns . '\Widget\PageTreeWidget';
+$GLOBALS['BE_FFL']['fileTree']          = $ns . '\Widget\FileTreeWidget';
 
 $GLOBALS['BE_FFL']['globalCategoriesPicker'] = $ns . '\Widget\GlobalCategoriesPickerWidget';
 
