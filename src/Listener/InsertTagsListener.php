@@ -55,10 +55,21 @@ class InsertTagsListener extends DefaultListener
 
         $return         = false;
         $arrSplit       = explode('::', $strTag);
-        $strCurTag      = $tags[$_rit+1];
+        $strCurTag      = $tags[ $_rit + 1 ];
 
         switch( strtolower($arrSplit[0]) )
         {
+            case "link":
+
+                switch( $arrSplit[1] )
+                {
+                    case "void":
+
+                        $return = 'javascript:void(0);';
+                        break;
+                }
+                break;
+
             case "iido":
 
                 switch( $arrSplit[1] )
@@ -69,6 +80,10 @@ class InsertTagsListener extends DefaultListener
 
                     case "countdown":
                         $return = $this->renderCountdown( $arrSplit[2], $arrSplit[3], $arrSplit[4], $arrSplit[5] );
+                        break;
+
+                    case 'staticmap':
+                        $return = $this->renderStaticMap( $arrSplit[2] );
                         break;
 
 
@@ -272,10 +287,53 @@ class InsertTagsListener extends DefaultListener
                         {
                             case "title":
                                 $return = $objPage->pageTitle?:$objPage->title?:$objPage->alt_pagename;
+
+                                if( $arrSplit[3] )
+                                {
+                                    $level = -1;
+
+                                    if( preg_match('/level-/', $arrSplit[3]) )
+                                    {
+                                        $level = (int) preg_replace('/level-/', '', $arrSplit[3]);
+                                    }
+
+                                    if( $level >= 0 )
+                                    {
+                                        if( count($objPage->trail) > ($level + 1) )
+                                        {
+                                            $objLevelPage = \PageModel::findByPk( $objPage->trail[ $level ] );
+                                            $return = $objLevelPage->pageTitle?:$objLevelPage->alt_pagename?:$objLevelPage->title;
+                                        }
+                                    }
+                                }
                                 break;
 
                             case "subtitle":
                                 $return = $objPage->subtitle?:'&nbsp;';
+                                break;
+
+                            case "navtitle":
+                                $return = $objPage->navTitle?:$objPage->pageTitle?:$objPage->title?:$objPage->alt_pagename;
+
+                                if( $arrSplit[3] )
+                                {
+                                    $level = -1;
+
+                                    if( preg_match('/level-/', $arrSplit[3]) )
+                                    {
+                                        $level = (int) preg_replace('/level-/', '', $arrSplit[3]);
+                                    }
+
+                                    if( $level >= 0 )
+                                    {
+                                        if( count($objPage->trail) > ($level + 1) )
+                                        {
+                                            $objLevelPage = \PageModel::findByPk( $objPage->trail[ $level ] );
+                                            $return = $objLevelPage->navTitle?:$objLevelPage->pageTitle?:$objLevelPage->alt_pagename?:$objLevelPage->title;
+                                        }
+                                    }
+                                }
+
                                 break;
                         }
                         break;
@@ -469,6 +527,11 @@ class InsertTagsListener extends DefaultListener
 //            $strHoursLabel = $GLOBALS['TL_LANG']['MSC'][ (($hours > 1 || $hours === 0) ? 'hours' : 'hour') ];
             $strHoursLabel = $GLOBALS['TL_LANG']['MSC'][ 'hours'];
 
+            if( (int) $hours === 1 )
+            {
+                $strHoursLabel = $GLOBALS['TL_LANG']['MSC']['hour'];
+            }
+
             if( $boxed )
             {
                 $countdown .= '<div class="box box-hours"><span class="value">' . $hours . '</span><span class="label">' . $strHoursLabel . '</span></div>';
@@ -488,6 +551,11 @@ class InsertTagsListener extends DefaultListener
 //        {
 //            $strMinutesLabel = $GLOBALS['TL_LANG']['MSC'][ ($minutes > 1 ? 'minutes' : 'minute') ];
             $strMinutesLabel = $GLOBALS['TL_LANG']['MSC']['minutes'];
+
+            if( (int) $minutes === 1 )
+            {
+                $strMinutesLabel = $GLOBALS['TL_LANG']['MSC']['minute'];
+            }
 
             if( $boxed )
             {
@@ -536,7 +604,14 @@ class InsertTagsListener extends DefaultListener
 
         if( $boxed )
         {
-            $countdown = '<div class="countdown-container" data-date="' . $strDate . '" data-text="' . $textAfter . '">' . $countdown . '</div>';
+            $strAttributes = ' data-date="' . $strDate . '" data-text="' . $textAfter . '"';
+
+            if( $mode !== 'live' )
+            {
+                $strAttributes = '';
+            }
+
+            $countdown = '<div class="countdown-container mode-' . $mode . '"' . $strAttributes . '>' . $countdown . '</div>';
         }
 
         return $countdown;
@@ -549,12 +624,48 @@ class InsertTagsListener extends DefaultListener
         $strContent = '';
         $strIcon    = $arrSplit[2];
         $strClass   = $arrSplit[3];
+        $useWrapper = $arrSplit[4];
 
         if( preg_match('/inline/', $strClass) )
         {
             $strContent = file_get_contents(BasicHelper::getRootDir( true ) . 'files/master/images/icons/' . $strIcon . '.svg' );
+
+            $strClass = preg_replace('/inline/', '', $strClass);
+            $strClass = preg_replace('/  /', ' ', $strClass);
         }
 
-        return '<i class="ico icon-' . $strIcon . (($strClass) ? ' ' . $strClass : '') .'">' . $strContent . '</i>';
+        $wrapperStart   = '';
+        $wrapperEnd     = '';
+
+        if( $useWrapper === 'wrapper' )
+        {
+            $wrapperStart   = '<div class="icon-wrapper">';
+            $wrapperEnd     = '</div>';
+        }
+
+        return $wrapperStart . '<i class="ico icon-' . $strIcon . (($strClass) ? ' ' . $strClass : '') .'">' . $strContent . '</i>' . $wrapperEnd;
+    }
+
+
+
+    protected function renderStaticMap( $address )
+    {
+        $address = preg_replace('/\s/', '+', $address);
+
+//        $url = 'https%253A%252F%252Fmaps.googleapis.com%252Fmaps%252Fapi%252Fstaticmap%253center%253DBad+Mitterndorf,%C3%96sterreich%2526zoom%253D13&size%253D200x200&maptype%253Droadmap%2526markers%253Dcolor%25253Ared%7CBad+Mitterndorf,%C3%96sterreich%2526key%253DAIzaSyC1JEm1lazyJmyCfePKh60kbCfo_JQYhTo';
+        $url = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $address . '&zoom=13&size=200x200&maptype=roadmap&markers=color:red%7C' . $address . '&key=AIzaSyC1JEm1lazyJmyCfePKh60kbCfo_JQYhTo';
+
+
+        $strContent = '<svg width="200" viewBox="0 0 100 100" version="1.1" class="staticmap-svg" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    	<pattern id="img-location-11" height="100%" width="100%" patternUnits="userSpaceOnUse">
+    		<image xlink:href="' . $url . '" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"></image>
+        </pattern>
+    </defs>
+    <polygon fill="url(#img-location-11)" points="50 1 95 25 95 75 50 99 5 75 5 25"></polygon>
+    <polygon class="overlay" points="50 1 95 25 95 75 50 99 5 75 5 25" fill-opacity="0 "></polygon>
+</svg>';
+
+        return $strContent;
     }
 }

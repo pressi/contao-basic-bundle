@@ -234,6 +234,10 @@ fieldset.rsce_list {
     padding: 0;
 }
 
+.tl_metawizard .widget-previewImage > div {
+    float: left;
+}
+
 .ha,
 .heightauto,
 .height-auto,
@@ -416,8 +420,8 @@ body.popup #main .tl_formbody_submit {
 
 .sub-box {
     border: 1px solid #ccc;
-    padding: 6px 0 0 15px;
-    margin-bottom: -1px;
+    padding: 6px 0 15px 15px;
+    margin-bottom: 10px;
 
     -webkit-box-sizing : border-box;
     -moz-box-sizing    : border-box;
@@ -435,12 +439,14 @@ body.popup #main .tl_formbody_submit {
     content: '';
 
     position: absolute;
-    top: -3px; left: 0;
+    top: -12px; left: -1px;
 
     background: #fff;
 
-    width: calc(50% - 16px);
-    height: 5px;
+    width: calc(50% - 15px); height: 12px;
+
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
 
 span.grey,
@@ -634,6 +640,8 @@ input.tl_text.has-addon + .addon {
     width: calc(25% - 30px);
 
     clear: none;
+
+    min-height: 80px;
 }
 
 .widget.wauto {
@@ -776,4 +784,12 @@ span.pos-infos > span {
 .tl_content_left > span.tl_info {
     padding-top: 6px;
     padding-bottom: 6px;
+}
+
+.big-css-selector input.tl_text_2:first-child {
+    width: 20%;
+}
+.big-css-selector input.tl_text_2:nth-child(2) {
+    width: 79%;
+    margin-right: 0;
 }

@@ -144,7 +144,7 @@ class ArticleTemplateRenderer
         $arrArticleClasses  = array();
         $arrAttributes      = array();
 
-        $cssID          = deserialize($objArticle->cssID, true);
+        $cssID          = \StringUtil::deserialize($objArticle->cssID, true);
         $objArticles    = \ArticleModel::findPublishedByPidAndColumn($objPage->id, "main");
 
         if( is_array($arrMatches) && is_array($arrMatches[0]) && count($arrMatches[0]) > 0 )
@@ -419,6 +419,8 @@ class ArticleTemplateRenderer
 
             if( $objArticle->addBackgroundOverlay )
             {
+                $arrArticleClasses[] = 'has-bg-overlay';
+
                 $divOverlay = '<div class="bg-container-overlay"></div>';
             }
 
@@ -453,7 +455,34 @@ class ArticleTemplateRenderer
                 $strArticleInsideStyles = ' style="' . $strArticleInsideStyles . '"';
             }
 
-            $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<div$1class="mod_article$2"$3>' . $divOverlay . '<div class="article-inside"' . $strArticleInsideStyles . '>' . $divTableStart, $strContent, -1, $count);
+            $addTwiceInside = '';
+            $insideClasses  = '';
+
+            $insideCssID = \StringUtil::deserialize($objArticles->inside_cssID, TRUE);
+
+            if( $insideCssID[1] )
+            {
+                $insideClasses = trim($insideCssID[1]);
+            }
+
+            if( isset($insideCssID[2]) && count($insideCssID[2]) )
+            {
+                $insideClasses = trim( ($insideClasses ? ' ' : '') . implode(' ', $insideCssID[2]) );
+            }
+
+            if( $insideClasses )
+            {
+                $insideClasses = ' ' . $insideClasses;
+            }
+
+            if( $objArticles->fullWidth && $objArticles->addDivider )
+            {
+                $addTwiceInside = '<div class="article-inside-cont' . $insideClasses . '">';
+
+                $insideClasses = '';
+            }
+
+            $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<div$1class="mod_article$2"$3>' . $divOverlay . '<div class="article-inside' . $insideClasses . '"' . $strArticleInsideStyles . '>' . $addTwiceInside . $divTableStart, $strContent, -1, $count);
 
             if( $count > 0 )
             {
@@ -524,6 +553,11 @@ class ArticleTemplateRenderer
                 }
 
                 $strContent = $strContent . $divTableEnd . '</div>';
+
+                if( $objArticles->fullWidth && $objArticles->addDivider )
+                {
+                    $strContent .= '</div>';
+                }
             }
 
 //                $strContent = preg_replace('/<div([A-Za-z0-9\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9\s\-_="\'.,;:\(\)\/#%]{0,})>/', '<div$1class="mod_article$2"$3><div class="article-inside">', $strContent);
@@ -563,7 +597,7 @@ class ArticleTemplateRenderer
             $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticle->pid, $objArticle->inColumn, $objArticle->sorting));
             $bgColor        = ColorHelper::compileColor( \StringUtil::deserialize($objNextArticle->bgColor, TRUE) );
 
-            if( !$bgColor )
+            if( !$bgColor || $bgColor === "transparent" )
             {
                 $bgColor = '#fff';
             }
@@ -592,6 +626,30 @@ class ArticleTemplateRenderer
 						 M95 100 Q 100 15 105 100 Z" style="fill:' . $bgColor . '">
 				</path>
 			</svg></div>';
+
+            $strContent = preg_replace('/<\/div>$/', $strDivider . '</div>', $strContent);
+        }
+        elseif( $objArticle->addDivider && $objArticle->dividerStyle === "style9" )
+        {
+            $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticle->pid, $objArticle->inColumn, $objArticle->sorting));
+            $bgColor        = ColorHelper::compileColor( \StringUtil::deserialize($objNextArticle->bgColor, TRUE) );
+            $articleBgColor = ColorHelper::compileColor( \StringUtil::deserialize($objArticle->bgColor, TRUE) );
+
+            if( !$bgColor || $bgColor === "transparent" )
+            {
+                $bgColor = '#fff';
+            }
+
+            if( !$articleBgColor || $articleBgColor === "transparent" )
+            {
+                $articleBgColor = '#fff';
+            }
+
+            $strDivider = '<div class="divider-container" style="background-color:' . $bgColor . '">
+    <svg class="bevel" xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100" viewBox="0 0 100 102" preserveAspectRatio="none">
+        <path d="M0 0 L0 100 L100 0 Z" style="fill:' . $articleBgColor . ';stroke:' . $articleBgColor . ';"></path>
+    </svg>
+    </div>';
 
             $strContent = preg_replace('/<\/div>$/', $strDivider . '</div>', $strContent);
         }
@@ -639,6 +697,29 @@ class ArticleTemplateRenderer
 
 
             $strContent = preg_replace('/<\/div>([\s\n]{0,})<\/div>$/', $strSubmenu . '</div></div>', $strContent);
+        }
+
+        $arrArticleClasses = array_unique($arrArticleClasses);
+
+        if( count($arrArticleClasses) )
+        {
+            $strContent = preg_replace('/class="mod_article/',  ((count($arrAttributes) > 0) ? ' ' . implode(' ', $arrAttributes) : '') . 'class="mod_article' . ((count($arrArticleClasses) > 0) ? ' ' : '') . implode(' ', $arrArticleClasses), $strContent);
+        }
+
+        $strContent = self::addDefaultClasses( $strContent, $objArticle );
+
+        return $strContent;
+    }
+
+
+
+    protected static function addDefaultClasses( $strContent, $objArticle )
+    {
+        $cssID = \StringUtil::deserialize( $objArticle->cssID, TRUE );
+
+        if( isset($cssID[2]) && count($cssID[2]) )
+        {
+            $strContent      = preg_replace('/class="mod_article/', ' class="mod_article ' . implode(' ', $cssID[2]), $strContent);
         }
 
         return $strContent;
