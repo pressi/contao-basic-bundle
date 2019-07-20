@@ -124,7 +124,7 @@ class StylesheetHelper
             {
                 $pageColor = ColorHelper::getCurrentPageColor( $objPages );
 
-                if( $pageColor != "transparent" )
+                if( $pageColor !== 'transparent' )
                 {
                     $arrVariables[] = array
                     (
@@ -164,7 +164,7 @@ class StylesheetHelper
                     {
                         $pageColor = ColorHelper::getCurrentPageColor( $objSubPages->current() );
 
-                        if( $pageColor != "transparent" )
+                        if( $pageColor !== 'transparent' )
                         {
                             $arrVariables[] = array
                             (
@@ -204,7 +204,7 @@ class StylesheetHelper
                             {
                                 $pageColor = ColorHelper::getCurrentPageColor( $objSubSubPages->current() );
 
-                                if( $pageColor != "transparent" )
+                                if( $pageColor !== 'transparent' )
                                 {
                                     $arrVariables[] = array
                                     (
@@ -340,13 +340,13 @@ class StylesheetHelper
 //                    $strContent = str_replace($strChunk . $addColor, $pageColor, $strContent);
 //                    break;
 
-                case (preg_match('/^calc_/', $strKey) ? true : false):
-                    $arrCalc    = explode("__", $strKey);
+                case (0 === strpos( $strKey, 'calc_' )):
+                    $arrCalc    = explode('__', $strKey);
 //                    $calc       = preg_replace('/px/', '', self::replaceDefaultVars( self::replaceThemeVars( preg_replace('/^calc_/', '', $arrCalc[0]) ), true ));
                     $calc       = self::replaceThemeVars( preg_replace('/^calc_/', '', $arrCalc[0]) );
                     $result     = 0; //MathHelper::calculate( $calc );
 
-                    eval("\$result = " . $calc . ";");
+                    eval( '$result = ' . $calc . ';');
 
                     $op = '';
 
@@ -594,7 +594,7 @@ class StylesheetHelper
         {
             $selector = $mode;
 
-            if( $mode === "header" )
+            if( $mode === 'header' )
             {
                 $objTopHeader = HeaderHelper::headerTopBarExists();
 
@@ -603,12 +603,12 @@ class StylesheetHelper
                     $selector = '#header .header-bar';
                 }
             }
-            elseif( $mode === "topheader" )
+            elseif( $mode === 'topheader' )
             {
                 $selector = '#header .header-top-bar';
             }
 
-            if( $mode === "footer" )
+            if( $mode === 'footer' )
             {
                 $selector = '#' . $mode;
             }
@@ -624,7 +624,7 @@ class StylesheetHelper
                 $articleWidth   = \StringUtil::deserialize($objData->articleWidth, true);
                 $articleHeight  = \StringUtil::deserialize($objData->articleHeight, true);
 
-                if( $mode === "header" )
+                if( $mode === 'header' )
                 {
                     if( $objTopHeader )
                     {
@@ -638,18 +638,21 @@ class StylesheetHelper
                     }
                     else
                     {
-                        $selector = $selector . '.is-fixed';
+                        if( !$objData->isAbsolute )
+                        {
+                            $selector .= '.is-fixed';
+                        }
 
                         $arrStyles = array
                         (
                             'selector'      => $selector,
 
                             'positioning'   => true,
-                            'position'      => 'fixed'
+                            'position'      => $objData->isAbsolute ? 'absolute' : 'fixed'
                         );
                     }
                 }
-                elseif( $mode === "topheader" )
+                elseif( $mode === 'topheader' )
                 {
                     $arrStyles = array
                     (
@@ -661,7 +664,7 @@ class StylesheetHelper
                 }
                 else
                 {
-                    $selector = $selector . '.is-fixed';
+                    $selector .= '.is-fixed';
 
                     $arrStyles = array
                     (
@@ -687,7 +690,7 @@ class StylesheetHelper
                     }
                 }
 
-                if( $objData->position === "top" )
+                if( $objData->position === 'top' )
                 {
                     $arrPosition['top'] = '0';
 
@@ -737,13 +740,13 @@ class StylesheetHelper
 
             if( $objData->isFixed )
             {
-                if( !preg_match('/z-index/', $arrStyles['own']) )
+                if( FALSE === strpos( $arrStyles['own'], 'z-index' ) )
                 {
-                    $arrStyles['own']     = $arrStyles['own'] . 'z-index:900;';
+                    $arrStyles['own']     .= 'z-index:900;';
                 }
             }
 
-            if( $mode === "header" || $mode === "footer" )
+            if( $mode === 'header' || $mode === 'footer' )
             {
                 $arrPadding = \StringUtil::deserialize( $objData->padding, TRUE);
 
@@ -773,7 +776,7 @@ class StylesheetHelper
     {
         $addBackgroundImage = $objArticle->addBackgroundImage;
         $arrOwnStyles       = array();
-        $arrBackgroundSize  = deserialize($objArticle->bgSize, true);
+        $arrBackgroundSize  = \StringUtil::deserialize($objArticle->bgSize, true);
 
         if( $addBackgroundImage && is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
         {
@@ -970,9 +973,14 @@ class StylesheetHelper
         $cssPathCustom  = 'files/' . $rootAlias . '/css/';
         $scssPathCustom = 'files/' . $rootAlias . '/scss/';
 
+        $arrFilesFirst = array
+        (
+            'reset.css'
+        );
+
         $arrFiles       = array
         (
-            'reset.css',
+//            'reset.css',
             'animate.css',
 //            'grid16.css',
             'styles.css',
@@ -982,7 +990,7 @@ class StylesheetHelper
 
         $arrMasterFiles = array
         (
-            'reset.css',
+//            'reset.css',
             'animate.css',
             'hamburgers.css',
             'hamburgers.min.css',
@@ -1022,6 +1030,19 @@ class StylesheetHelper
         );
 
         $rootDir = BasicHelper::getRootDir();
+
+        foreach($arrFilesFirst as $strFile)
+        {
+            if( file_exists( $rootDir . '/' . $cssPathMaster . $strFile) )
+            {
+                $GLOBALS['TL_CSS'][ 'master_' . $strFile ] =  $cssPathMaster . $strFile . '||static';
+            }
+
+            if( file_exists( $rootDir . '/' . $cssPathCustom . $strFile) )
+            {
+                $GLOBALS['TL_CSS'][ 'custom_' . $strFile ] =  $cssPathCustom . $strFile . '||static';
+            }
+        }
 
         foreach($arrFiles as $strFile)
         {
@@ -1164,6 +1185,7 @@ class StylesheetHelper
 
                 $arrPageStyles[ $artBgName ] = array_merge($arrPageStyles[ $artBgName ], StylesheetHelper::getBackgroundStyles($objArticles->current()));
 //                echo "<pre>"; print_r( $arrPageStyles ); echo "</pre>";
+//                exit;
 
                 if( $objArticles->addDivider )
                 {
@@ -1174,6 +1196,11 @@ class StylesheetHelper
                     );
 
                     $bgColor = ColorHelper::compileColor( \StringUtil::deserialize($objArticles->bgColor, TRUE) );
+
+                    if( $bgColor === 'transparent' )
+                    {
+                        $bgColor = '#fff';
+                    }
 
                     switch( $objArticles->dividerStyle )
                     {
@@ -1193,6 +1220,16 @@ class StylesheetHelper
 
                         case "style2":
                             $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticles->pid, $objArticles->inColumn, $objArticles->sorting));
+                            $nextBgColor    = $objNextArticle->bgColor;
+
+                            $arrNextBgColor = \StringUtil::deserialize($nextBgColor, TRUE);
+
+                            if( $arrNextBgColor[0] === '' && $arrNextBgColor[1] === '' )
+                            {
+                                $arrNextBgColor[0] = 'fff';
+
+                                $nextBgColor = serialize( $arrNextBgColor );
+                            }
 
                             $arrPageStyles[ $objArticles->id . '_bow-bottom_background' ] = array
                             (
@@ -1205,18 +1242,28 @@ class StylesheetHelper
                             (
                                 'selector'      => '.mod_article.has-article-divider#' . $articleID . ':after',
                                 'background'    => '1',
-                                'bgcolor'       => $objNextArticle->bgColor
+                                'bgcolor'       => $nextBgColor
                             );
                             break;
 
                         case "style3":
                             $objNextArticle = \ArticleModel::findOneBy(array('published=?', 'pid=?', 'inColumn=?', 'sorting>?'), array('1', $objArticles->pid, $objArticles->inColumn, $objArticles->sorting));
+                            $nextBgColor    = $objNextArticle->bgColor;
+
+                            $arrNextBgColor = \StringUtil::deserialize($nextBgColor, TRUE);
+
+                            if( $arrNextBgColor[0] === '' && $arrNextBgColor[1] === '' )
+                            {
+                                $arrNextBgColor[0] = 'fff';
+
+                                $nextBgColor = serialize( $arrNextBgColor );
+                            }
 
                             $arrPageStyles[ $objArticles->id . '_bow-bottom-top_background' ] = array
                             (
                                 'selector'      => '.mod_article.has-article-divider#' . $articleID . ':before',
                                 'background'    => '1',
-                                'bgcolor'       => $objNextArticle->bgColor
+                                'bgcolor'       => $nextBgColor
                             );
 
                             $arrPageStyles[ $objArticles->id . '_bow-bottom-top' ] = array

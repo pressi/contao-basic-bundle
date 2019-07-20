@@ -668,6 +668,18 @@ class BasicHelper extends \Frontend
 
         if(!is_array($chars) || (is_array($chars) && empty($chars)))
         {
+            if( !is_array($chars) )
+            {
+                if( strlen($chars) )
+                {
+                    $chars = array($chars);
+                }
+                else
+                {
+                    $chars = array();
+                }
+            }
+
             for($i=65;$i<=90;$i++)
             {
                 $chars[] = chr($i);
@@ -927,9 +939,16 @@ class BasicHelper extends \Frontend
 
 
 
-    public static function getCustomerFolderFromBackend( $objElement )
+    public static function getCustomerFolderFromBackend( $objElement, $mode = 'element' )
     {
-        $objArticle         = \ArticleModel::findByPk( $objElement->pid );
+        if( $mode === 'element' )
+        {
+            $objArticle = \ArticleModel::findByPk( $objElement->pid );
+        }
+        else
+        {
+            $objArticle = $objElement;
+        }
 
         if( $objArticle )
         {

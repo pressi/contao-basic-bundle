@@ -337,7 +337,7 @@ class DcaHelper extends \Frontend
 
             case "trbl":
             case "position":
-                $typeAdd = FALSE;$shortOptions = FALSE;
+                $typeAdd = FALSE; $shortOptions = FALSE;
 
                 if( $arrFieldType[1] === "unit" || $arrFieldType[1] === "units" )
                 {
@@ -351,7 +351,7 @@ class DcaHelper extends \Frontend
 
 
 
-    public static function addPalette($strName, $arrFields, $strTable, $override = FALSE, $addDefaultBefore = TRUE, $addDefaultAfter = TRUE)
+    public static function addPalette($strName, $arrFields, $strTable, $override = FALSE, $addDefaultBefore = TRUE, $addDefaultAfter = TRUE, $removeLegends = '')
     {
         $strFields = $arrFields;
 
@@ -406,6 +406,31 @@ class DcaHelper extends \Frontend
         if( preg_match('/^,/', $strFields) )
         {
             $strFields = preg_replace('/^,/', '', $strFields);
+        }
+
+        if( !is_array($removeLegends) && strlen($removeLegends) )
+        {
+            if( preg_match('/,/', $removeLegends) )
+            {
+                $removeLegends = explode(",", $removeLegends);
+            }
+            else
+            {
+                $removeLegends = array($removeLegends);
+            }
+        }
+
+        if( is_array($removeLegends) && count($removeLegends) )
+        {
+            foreach( $removeLegends as $strLegend )
+            {
+                if( FALSE === strpos($strLegend, '_legend') )
+                {
+                    $strLegend .= '_legend';
+                }
+
+                $strFields = preg_replace('/\{' . $strLegend . '([A-Za-z0-9\s\-_,\}:]{0,});/', '', $strFields);
+            }
         }
 
         $GLOBALS['TL_DCA'][ $strTable ]['palettes'][ $strName ] = $strFields;

@@ -100,7 +100,7 @@ class WebsiteStylesHelper
                                 $fieldType = 'text';
 
                                 $arrMcFieldPart = explode("-", $configFields[ $num ]);
-                                $fieldType = $arrMcFieldPart[1]?:'';
+                                $fieldType = $arrMcFieldPart[1]?:$fieldType;
 
                                 if( $fieldKey === 'internID' )
                                 {

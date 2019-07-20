@@ -162,7 +162,7 @@ class FilterHelper extends \Frontend
         $subfilters     = array();
         $mainfilters    = array();
 
-        $objElements    = \ContentModel::findBy(array('pid=?', 'type=?'), array($pid, $type));
+        $objElements    = \ContentModel::findBy(array('tl_content.pid=?', 'tl_content.type=?'), array($pid, $type));
         $arrConfig      = glob(TL_ROOT . '/templates/*/' . $type . '_config.php');
 
         $arrFileConfig  = include  $arrConfig[0];
@@ -176,7 +176,7 @@ class FilterHelper extends \Frontend
 
                 if ($objElements->rsce_data && substr($objElements->rsce_data, 0, 1) === '{')
                 {
-                    $arrData = json_decode($objElements->rsce_data);
+                    $arrData = json_decode( $objElements->rsce_data );
                 }
 
                 $arrData        = BasicHelper::deserializeDataRecursive($arrData);

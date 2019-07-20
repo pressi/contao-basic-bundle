@@ -65,7 +65,7 @@ class HeaderHelper
         if( $objHeaderArticle )
         {
             $headerClasses      = \StringUtil::deserialize($objHeaderArticle->cssID, true)[1];
-            $arrClasses         = explode(" ", $headerClasses);
+            $arrClasses         = explode(' ', $headerClasses);
             $arrAttributes      = array();
 
             if( $objHeaderArticle->isFixed )
@@ -139,6 +139,11 @@ class HeaderHelper
                     }
 
                     $arrAttributes['style'] = trim($arrAttributes['style'] . ' ' . $positionStyles);
+                }
+
+                if( in_array( 'add-no-sticky-wrapper', $arrClasses, TRUE ) )
+                {
+                    $arrAttributes['data-wrapper']  = 'no';
                 }
 
                 $arrHeaderWidth = \StringUtil::deserialize($objHeaderArticle->articleWidth, TRUE);

@@ -45,7 +45,7 @@ class ScriptHelper
         {
             while( $objArticles->next() )
             {
-                if( $objArticles->addAnimation )
+                if( $objArticles->addAnimation || $objArticles->enableBackgroundParallax )
                 {
                     $hasAnimation = true;
                     break;
