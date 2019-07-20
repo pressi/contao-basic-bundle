@@ -653,7 +653,7 @@ class InsertTagsListener extends DefaultListener
         $address = preg_replace('/\s/', '+', $address);
 
 //        $url = 'https%253A%252F%252Fmaps.googleapis.com%252Fmaps%252Fapi%252Fstaticmap%253center%253DBad+Mitterndorf,%C3%96sterreich%2526zoom%253D13&size%253D200x200&maptype%253Droadmap%2526markers%253Dcolor%25253Ared%7CBad+Mitterndorf,%C3%96sterreich%2526key%253DAIzaSyC1JEm1lazyJmyCfePKh60kbCfo_JQYhTo';
-        $url = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $address . '&zoom=13&size=200x200&maptype=roadmap&markers=color:red%7C' . $address . '&key=AIzaSyC1JEm1lazyJmyCfePKh60kbCfo_JQYhTo';
+        $url = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $address . '&zoom=13&size=200x200&maptype=roadmap&markers=color:red%7C' . $address . '&key=';
 
 
         $strContent = '<svg width="200" viewBox="0 0 100 100" version="1.1" class="staticmap-svg" xmlns="http://www.w3.org/2000/svg">
