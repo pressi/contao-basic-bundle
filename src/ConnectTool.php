@@ -17,6 +17,7 @@ use Contao\System;
 use Contao\Encryption;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -201,16 +202,33 @@ class ConnectTool
      *
      * @return bool
      */
-    public function isLocked()
+    public function isLocked(): bool
     {
-        $cache = \System::getContainer()->get('contao.cache');
-
-        if ($cache->contains('login-count'))
+        if( version_compare(BasicHelper::getContaoVersion(), '4.7', '>=') )
         {
-            return intval($cache->fetch('login-count')) >= 3;
-        }
+            $file = $this->rootDir.'/var/install_lock';
 
-        return false;
+            if( !file_exists($file) )
+            {
+                return false;
+            }
+
+            $count = file_get_contents($this->rootDir.'/var/install_lock');
+
+            return (int) $count >= 3;
+        }
+        else
+        {
+            $cache = \System::getContainer()->get('contao.cache');
+
+            if ($cache->contains('login-count'))
+            {
+                return intval($cache->fetch('login-count')) >= 3;
+            }
+
+            return false;
+        }
+        
     }
 
 
@@ -242,20 +260,37 @@ class ConnectTool
     /**
      * Increases the login count.
      */
-    public function increaseLoginCount()
+    public function increaseLoginCount(): void
     {
-        $cache = \System::getContainer()->get('contao.cache');
-
-        if ($cache->contains('login-count'))
+        if( version_compare(BasicHelper::getContaoVersion(), '4.7', '>=') )
         {
-            $count = intval($cache->fetch('login-count')) + 1;
+            $count = 0;
+            $file = $this->rootDir.'/var/install_lock';
+
+            if( file_exists($file) )
+            {
+                $count = file_get_contents($this->rootDir.'/var/install_lock');
+            }
+
+            $fs = new Filesystem();
+            $fs->dumpFile($file, (int) $count + 1);
         }
         else
         {
-            $count = 1;
-        }
+            $cache = \System::getContainer()->get('contao.cache');
 
-        $cache->save('login-count', $count);
+            if ($cache->contains('login-count'))
+            {
+                $count = intval($cache->fetch('login-count')) + 1;
+            }
+            else
+            {
+                $count = 1;
+            }
+
+            $cache->save('login-count', $count);
+        }
+        
     }
 
 
