@@ -42,11 +42,16 @@ IIDO.Filter = IIDO.Filter || {};
             filterContainer = $( document.querySelector(".project-inside-container") );
         }
 
+        if( filterList.length && filterContainer.length === 0 )
+        {
+            filterContainer = filterList.parent(".article-inside");
+        }
+
         if( filterList.length && filterContainer )
         {
             var isoConfig = {
                 itemSelector: '.project-item',
-                // stamp: '.project-filter',
+                stamp: filterList,
                 layoutMode: 'masonry',
                 percentPosition: true,
                 masonry:
@@ -190,7 +195,7 @@ IIDO.Filter = IIDO.Filter || {};
 
         if( filterList.length && filterList.hasClass("open-on-click") )
         {
-            filterList.find(".filter .label").click( function()
+            filterList.find(".filter .label").on('click', function()
             {
                 if( $(this).parent().hasClass("open") )
                 {

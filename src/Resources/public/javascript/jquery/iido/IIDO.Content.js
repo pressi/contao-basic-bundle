@@ -226,7 +226,7 @@ IIDO.Content = IIDO.Content || {};
 
     content.initCountdown = function()
     {
-        var containers = document.querySelectorAll(".countdown-container");
+        var containers = document.querySelectorAll(".countdown-container.mode-live");
 
         if( containers.length )
         {
@@ -368,7 +368,7 @@ IIDO.Content = IIDO.Content || {};
             {
                 elements.waypoint(function(direction)
                     {
-                        if(!$("body").is(".mobile,.ios,.android"))
+                        if( !$("body").is(".mobile,.ios,.android") )
                         {
                             $.stellar({
                                 horizontalOffset: 0,

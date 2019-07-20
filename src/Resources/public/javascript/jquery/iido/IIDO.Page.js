@@ -48,14 +48,15 @@ IIDO.Page = IIDO.Page || {};
             this.initScroll();
         }
 
-        $(window).resize( function()
+        $(window).on('resize',  function()
         {
             IIDO.Page.initMobile();
         });
 
-        $("a.open-in-lightbox,a.open-page-in-lightbox").click( function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
+        $("a.open-in-lightbox,a.open-page-in-lightbox").on('click', function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
+        $('.open-file-in-lightbox').on('click', function(e) { e.preventDefault(); IIDO.Page.openFileInLightbox(e); } );
 
-        $(document).keyup(function(e)
+        $(document).on('keyup', function(e)
         {
             if (e.keyCode === 27)
             {
@@ -102,6 +103,25 @@ IIDO.Page = IIDO.Page || {};
 
                return false;
             });
+        }
+
+
+
+        var scrollTop = document.querySelectorAll('.scroll-to-top');
+
+        if( scrollTop.length )
+        {
+            for(var sti=0; sti<scrollTop.length; sti++)
+            {
+                scrollTop[ sti ].addEventListener("click", function(e)
+                {
+                    e.preventDefault();
+
+                    IIDO.Page.scrollTo(e, 'top');
+
+                    return false;
+                });
+            }
         }
     };
 
@@ -612,9 +632,9 @@ IIDO.Page = IIDO.Page || {};
         //
         //         /* if( linkMain.hasClass("article-link") )
         //         // {
-        //         //     linkMain.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
+        //         //     linkMain.on('click', function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
         //         // } */
-        //         linkMain.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
+        //         linkMain.on('click', function(e) { e.preventDefault(); IIDO.Page.changeUrl( linkMain, true, true ); });
         //
         //         if( elChilds.length )
         //         {
@@ -624,9 +644,9 @@ IIDO.Page = IIDO.Page || {};
         //
         //                 /* if( link.hasClass("article-link") )
         //                 // {
-        //                 //     link.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
+        //                 //     link.on('click', function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
         //                 // } */
-        //                 link.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
+        //                 link.on('click', function(e) { e.preventDefault(); IIDO.Page.changeUrl( link, true, true ); });
         //             });
         //         }
         //     });
@@ -657,18 +677,18 @@ IIDO.Page = IIDO.Page || {};
                         {
                             if( childLink.attr("target") === "_blank" )
                             {
-                                childLink.click( function(e) { e.preventDefault(); window.open( childLink.attr("href") ); });
+                                childLink.on('click', function(e) { e.preventDefault(); window.open( childLink.attr("href") ); });
                             }
                             else
                             {
-                                childLink.click( function(e) { e.preventDefault(); location.href = childLink.attr("href"); });
+                                childLink.on('click', function(e) { e.preventDefault(); location.href = childLink.attr("href"); });
                             }
                         }
                         else
                         {
                             if( childLink.hasClass("article-link") )
                             {
-                                childLink.click( function(e) { e.preventDefault(); IIDO.Page.changeUrl( childLink, true, true ); });
+                                childLink.on('click', function(e) { e.preventDefault(); IIDO.Page.changeUrl( childLink, true, true ); });
                             }
                         }
                     });
@@ -1363,7 +1383,7 @@ IIDO.Page = IIDO.Page || {};
 
                     $(window).unbind('.infscr');
 
-                    $('#loadingListParent').find('.pagination li.next a').click(function(){
+                    $('#loadingListParent').find('.pagination li.next a').on('click', function(){
                         $container.infinitescroll('retrieve');
                         return false;
                     });
@@ -1438,6 +1458,83 @@ IIDO.Page = IIDO.Page || {};
 
             $lbOpen         = true;
         }
+    };
+
+
+
+    page.openFileInLightbox = function(e)
+    {
+        e.preventDefault();
+
+        var el              = $( e.currentTarget ),
+            openType        = 'ajax',
+            page            = el.attr("href");
+
+
+
+        var options = {
+            src: page,
+            // type: openType,
+
+            opts: {
+                margin    : [ 110, 0, 110, 0 ],
+                padding   : 0,
+                /*minWidth : "100%",
+                // height    : 600,*/
+                minHeight : 600,
+
+                type : openType,
+
+                infobar : false,
+                buttons : false,
+
+                slideShow  : false,
+                fullScreen : false,
+                thumbs     : false,
+                closeBtn   : true,
+
+                focus : false,
+
+                beforeShow : function(e)
+                {
+                    /* $( "html" ).addClass( "fancybox-lock" );*/
+                },
+
+                afterShow : function()
+                {
+                },
+
+                beforeClose : function()
+                {
+                },
+
+                afterClose : function()
+                {
+                    /* $( "html" ).removeClass( "fancybox-lock" );
+                    //
+                    // if( activeTag.length )
+                    // {
+                    //     activeTag.removeClass( "active" );
+                    // }*/
+
+                    if( $menuLink )
+                    {
+                        $menuLink.removeClass("active");
+                        $menuLink = '';
+                    }
+
+                    if( $openLinkTag )
+                    {
+                        $openLinkTag.removeClass("active");
+                        $openLinkTag = '';
+                    }
+
+                    $lbOpen = false;
+                }
+            }
+        };
+
+        $.fancybox.open(options);
     };
 
 
@@ -1976,7 +2073,7 @@ IIDO.Page = IIDO.Page || {};
                 linkElement = false,
                 linkAlias   = "";
 
-            elLink.click( function()
+            elLink.on('click', function()
             {
                 $.each(linkParts, function(linkIndex, linkEl)
                 {
@@ -2176,7 +2273,7 @@ IIDO.Page = IIDO.Page || {};
 
             var listContainers = $mobileNav.find('li.submenu'), button, listItem;
 
-            $mobileNav.find("ul.level_1 > li > a,ul.level_2 > li > a").click( function() { if(!this.classList.contains("no-content") && !this.classList.contains("link-forward") && !this.classList.contains("link-toggler") ) { IIDO.Page.closeMobileNavigation(); } } );
+            $mobileNav.find("ul.level_1 > li > a,ul.level_2 > li > a").on('click', function() { if(!this.classList.contains("no-content") && !this.classList.contains("link-forward") && !this.classList.contains("link-toggler") ) { IIDO.Page.closeMobileNavigation(); } } );
 
             if( listContainers.length )
             {
@@ -2273,12 +2370,12 @@ IIDO.Page = IIDO.Page || {};
         {
             if( eventMenu.length )
             {
-                eventMenu.find("h3").click(function() { eventMenu.toggleClass("open"); });
+                eventMenu.find("h3").on('click', function() { eventMenu.toggleClass("open"); });
             }
 
             if( eventFilter.length )
             {
-                eventFilter.click( function(e) { IIDO.Page.scrollTo(e, $(".mod_article#article-31") ); });
+                eventFilter.on('click', function(e) { IIDO.Page.scrollTo(e, $(".mod_article#article-31") ); });
             }
         }
         else
@@ -2304,7 +2401,7 @@ IIDO.Page = IIDO.Page || {};
             {
                 var link        = $(linkElement);
 
-                link.click( function(e) { IIDO.Page.scrollLinkClicked(e, link); } );
+                link.on('click', function(e) { IIDO.Page.scrollLinkClicked(e, link); } );
             });
         }
     };
@@ -2391,6 +2488,18 @@ IIDO.Page = IIDO.Page || {};
                 if( addWrapper && addWrapper === "no" )
                 {
                     stickyConfig.wrapper = null;
+                }
+
+                if( element.getAttribute('id') === 'header' && element.classList.contains('pos-bottom') )
+                {
+                    var triggerElement = document.createElement('div');
+
+                    triggerElement.style.position = 'absolute';
+                    triggerElement.style.top = 'calc(100vh - ' + element.offsetHeight + 'px)';
+
+                    document.body.append( triggerElement );
+
+                    stickyConfig.triggerElement = $(triggerElement);
                 }
 
                 var stickyElement = new Waypoint.Sticky(stickyConfig);
