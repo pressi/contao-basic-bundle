@@ -66,9 +66,11 @@ services:
 
     iido.basic.configs.global_categories:
         class: IIDO\BasicBundle\WebsiteConfig\GlobalCategoriesConfig
+        public: true
 
     iido.basic.configs.script_settings:
         class: IIDO\BasicBundle\WebsiteConfig\ScriptSettingsConfig
+        public: true
 
 #    contao.connect_tool_twig_extension:
 #        class: SensioLabs\AnsiConverter\Bridge\Twig\AnsiExtension
