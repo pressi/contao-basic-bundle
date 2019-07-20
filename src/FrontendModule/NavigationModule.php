@@ -607,7 +607,7 @@ class NavigationModule extends \ModuleNavigation
         {
             $objParentPage = \PageModel::findByPk( $pid );
 
-            if( $type === "article" )
+            if( $type === 'article' )
             {
                 $objParentPage = \ArticleModel::findByPk( $pid );
 
@@ -625,7 +625,7 @@ class NavigationModule extends \ModuleNavigation
         if( $objParentPage->enableFullpage || $isOnePageNavigation )
         {
             $objParentPage->submenuNoPages  = true;
-            $objParentPage->submenuSRC      = "articles";
+            $objParentPage->submenuSRC      = 'articles';
         }
 
         // Layout template fallback
@@ -686,6 +686,11 @@ class NavigationModule extends \ModuleNavigation
                 while( $objPages->next() )
                 {
                     $objItem    = $objPages->current();
+
+                    if( $this->showHidden && FALSE !== strpos($objItem->cssClass, 'always-hidden'))
+                    {
+                        continue;
+                    }
 
                     $trail      = in_array($objItem->id, $objPage->trail);
                     $href       = null;

@@ -54,6 +54,10 @@ class NewsListModule extends \ModuleNewsList
 	 */
 	protected function compile()
 	{
+	    global $objPage;
+
+	    $objPage->cssClass = trim($objPage->cssClass . ' news-category-page news-page-' . ($this->category ? : 'all'));
+
 		$limit      = null;
 		$offset     = (int) $this->skipFirst;
         $options    = array();
