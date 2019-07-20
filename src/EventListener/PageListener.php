@@ -191,7 +191,9 @@ class PageListener extends DefaultListener
 
 
             // parallax background
-            $GLOBALS['TL_JAVASCRIPT']['stellar']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.stellar.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT']['stellar']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/jquery.stellar.min.js|static';
+//            $GLOBALS['TL_JAVASCRIPT']['stellar']            = $this->bundlePathPublic . '/javascript/' . $jsPrefix . '/stellar/0.6.2/jquery.stellar.js|static';
+            ScriptHelper::addScript('stellar');
 
 
             if( ScriptHelper::hasPageAnimation() )

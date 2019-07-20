@@ -58,6 +58,16 @@ class InsertTagsListener extends DefaultListener
 
         switch( strtolower($arrSplit[0]) )
         {
+            case "link":
+
+                switch( $arrSplit[1] )
+                {
+                    case "void":
+                        $return = 'javascript:void(0);';
+                        break;
+                }
+                break;
+
             case "iido":
 
                 switch( $arrSplit[1] )
@@ -507,6 +517,11 @@ class InsertTagsListener extends DefaultListener
 //            $strHoursLabel = $GLOBALS['TL_LANG']['MSC'][ (($hours > 1 || $hours === 0) ? 'hours' : 'hour') ];
             $strHoursLabel = $GLOBALS['TL_LANG']['MSC'][ 'hours'];
 
+            if( (int) $hours === 1 )
+            {
+                $strHoursLabel = $GLOBALS['TL_LANG']['MSC']['hour'];
+            }
+
             if( $boxed )
             {
                 $countdown .= '<div class="box box-hours"><span class="value">' . $hours . '</span><span class="label">' . $strHoursLabel . '</span></div>';
@@ -526,6 +541,11 @@ class InsertTagsListener extends DefaultListener
 //        {
 //            $strMinutesLabel = $GLOBALS['TL_LANG']['MSC'][ ($minutes > 1 ? 'minutes' : 'minute') ];
             $strMinutesLabel = $GLOBALS['TL_LANG']['MSC']['minutes'];
+
+            if( (int) $minutes === 1 )
+            {
+                $strMinutesLabel = $GLOBALS['TL_LANG']['MSC']['minute'];
+            }
 
             if( $boxed )
             {

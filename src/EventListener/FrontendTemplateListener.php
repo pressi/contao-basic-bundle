@@ -50,7 +50,7 @@ class FrontendTemplateListener extends DefaultListener
                 {
                     if( !$objModule->hideSubtitles )
                     {
-                        preg_match_all('/<li([A-Za-z0-9\s\-_:;.,\(\)#"\'=\/]{0,})><(a|strong)([A-Za-z0-9\s\-_:;.,\/\(\)#"\'=]{0,})>([A-Za-z0-9\s\-.:;,#+&\[\]\(\)=ßöäüÖÄÜ?!%$"\']{0,})<\/(a|strong)><\/li>/', $strContent, $navListMatches);
+                        preg_match_all('/<li([A-Za-z0-9\s\-_:;.,\(\)#"\'=\/]{0,})><(a|strong)([A-Za-z0-9\s\-_:;.,\/\(\)#"\'=]{0,})>([A-Za-z0-9\s\-.:;,#+&\[\]\(\)=ßöäüÖÄÜ?!%$"\']{0,})<\/(a|strong)><\/li>/u', $strContent, $navListMatches);
 
                         if( is_array($navListMatches[0]) && count($navListMatches[0]) > 0 )
                         {
@@ -445,6 +445,31 @@ class FrontendTemplateListener extends DefaultListener
             if( preg_match('/nav-cont-left-outside/', $strBuffer) )
             {
                 $strBuffer = preg_replace('/<\/body>/', '<div class="open-left-side-navigation"><div class="olsn-inside"></div></div></body>', $strBuffer);
+            }
+
+            if( $objRootPage->addPageBorder )
+            {
+                $wrapperStyles = '';
+
+                $arrBorderWidth = \StringUtil::deserialize( $objRootPage->pageBorderWidth );
+                $borderColor    = ColorHelper::compileColor( $objRootPage->pageBorderColor );
+
+                if( $borderColor === "transparent" )
+                {
+                    $borderColor = '#fff';
+                }
+
+                if( $arrBorderWidth['value'] && $arrBorderWidth['unit'] )
+                {
+                    $wrapperStyles = 'border:' .$arrBorderWidth['value'] . $arrBorderWidth['unit'] . ' solid ' . $borderColor . ';';
+                }
+
+                if( $wrapperStyles )
+                {
+                    $strBuffer = preg_replace('/id="wrapper"/', 'id="wrapper" style="' . $wrapperStyles . '"', $strBuffer);
+
+                    $strBuffer = PageHelper::replaceBodyClasses($strBuffer, ['page-has-border']);
+                }
             }
 
         }
