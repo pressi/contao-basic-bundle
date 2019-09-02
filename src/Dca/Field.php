@@ -552,6 +552,11 @@ class Field
         {
             $this->addEval('extensions', \Config::get('validImageTypes'));
         }
+
+        if( $this->getEval('isGallery') && $this->getEval('multiple') )
+        {
+            $this->addSQL("blob NULL");
+        }
     }
 
 

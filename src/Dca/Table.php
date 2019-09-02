@@ -1589,7 +1589,7 @@ class Table
             ->addEval('files', true)
             ->addEval('isGallery', true)
             ->addEval('extensions', \Config::get('validImageTypes'))
-            ->addToSubpalette( $galleryField )
+//            ->addToSubpalette( $galleryField )
             ->addToTable( $this );
 
         Field::create('orderGallerySRC')
@@ -1609,7 +1609,7 @@ class Table
             'numberOfItems' => 'gal_numberOfItems',
 
             'galleryTpl',
-            'customTpl'
+//            'customTpl'
         );
 
         $this->copyFieldsFromTable('tl_content', $arrFields, [], $galleryField);
@@ -1628,6 +1628,7 @@ class Table
             Field::create('useGallerySlider', 'checkbox')
                 ->setSelector(true)
 //                ->addToSubpalette($galleryField)
+                ->addEval('tl_class', 'clr')
                 ->addToTable( $this );
 
             Field::create('gallerySliderConfig', 'select')
