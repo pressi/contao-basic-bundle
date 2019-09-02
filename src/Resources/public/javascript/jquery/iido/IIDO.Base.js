@@ -102,4 +102,88 @@ IIDO.Base = IIDO.Base || {};
         return (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
     };
 
+
+
+    base.each = function(array, callback)
+    {
+        if (!array || !array.length)
+        {
+            return;
+        }
+
+        for (var i = 0; i < array.length; i++)
+        {
+            callback(array[i], i);
+        }
+    };
+
+
+
+    base.addClass = function(element, className)
+    {
+        var elements = ('length' in element && !('className' in element))
+            ? element
+            : [element];
+        var classNames = (typeof className === 'string')
+            ? className.split(' ')
+            : className;
+        for (var i = 0; i < elements.length; i++)
+        {
+            for (var j = 0; j < classNames.length; j++)
+            {
+                if (!this.hasClass(elements[i], classNames[j]))
+                {
+                    elements[i].className += ' ' + classNames[j];
+                }
+            }
+        }
+    };
+
+
+
+    base.removeClass = function(element, className)
+    {
+            var elements = ('length' in element && !('className' in element))
+                ? element
+                : [element];
+            var classNames = (typeof className === 'string')
+                ? className.split(' ')
+                : className;
+
+            for (var i = 0; i < elements.length; i++)
+            {
+                for (var j = 0; j < classNames.length; j++)
+                {
+                    if (this.hasClass(elements[i], classNames[j]))
+                    {
+                        elements[i].className = elements[i].className.replace(new RegExp('(?:^|\\s+)' + classNames[j] + '(?:$|\\s+)'), ' ');
+                    }
+                }
+            }
+    };
+
+
+
+    base.hasClass = function(element, className)
+    {
+            return !!element.className.match('(?:^|\\s)' + className + '(?:$|\\s)');
+    };
+
+
+
+    base.elementMatches = function(element, selector)
+    {
+        var methods = ['matches', 'matchesSelector', 'msMatchesSelector', 'mozMatchesSelector', 'webkitMatchesSelector'];
+
+        for (var i = 0; i < methods.length; i++)
+        {
+            if (methods[i] in element)
+            {
+                return element[methods[i]](selector);
+            }
+        }
+
+        return false;
+    };
+
 })(window, jQuery, IIDO.Base);

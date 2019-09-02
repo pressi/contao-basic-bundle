@@ -129,20 +129,24 @@ IIDO.Page = IIDO.Page || {};
 
     page.initFooter = function()
     {
-        var footer          = document.getElementById('footer'),
-            wrapper         = document.getElementById('wrapper'),
-            winHeight       = window.innerHeight,
-            footerHeight    = footer.offsetHeight;
+        var footer = document.getElementById('footer');
 
-        if( (winHeight - footerHeight) <= parseInt(wrapper.offsetHeight) )
+        if( footer )
         {
-            wrapper.classList.add("has-shadow");
-            footer.classList.remove("has-shadow");
-        }
-        else
-        {
-            wrapper.classList.remove("has-shadow");
-            footer.classList.add("has-shadow");
+            var wrapper         = document.getElementById('wrapper'),
+                winHeight       = window.innerHeight,
+                footerHeight    = footer.offsetHeight;
+
+            if( (winHeight - footerHeight) <= parseInt(wrapper.offsetHeight) )
+            {
+                wrapper.classList.add("has-shadow");
+                footer.classList.remove("has-shadow");
+            }
+            else
+            {
+                wrapper.classList.remove("has-shadow");
+                footer.classList.add("has-shadow");
+            }
         }
     };
 
@@ -452,6 +456,27 @@ IIDO.Page = IIDO.Page || {};
             else
             {
                 document.body.classList.remove("scrolled");
+            }
+        });
+
+        if( IIDO.Base.getBodyScrollTop() >= 300 )
+        {
+            document.body.classList.add("scrolled-twice");
+        }
+        else
+        {
+            document.body.classList.remove("scrolled-twice");
+        }
+
+        window.addEventListener("scroll", function()
+        {
+            if( IIDO.Base.getBodyScrollTop() >= 300 )
+            {
+                document.body.classList.add("scrolled-twice");
+            }
+            else
+            {
+                document.body.classList.remove("scrolled-twice");
             }
         });
     };
@@ -2239,8 +2264,10 @@ IIDO.Page = IIDO.Page || {};
     {
         $mobileNav  = $('.main-navigation-mobile');
 
-        if( $mobileNav.length )
+        if( $mobileNav.length && !document.body.classList.contains('init-mobile-nav') )
         {
+            document.body.classList.add('init-mobile-nav');
+
             IIDO.Base.addEvent(window, 'resize', IIDO.Page.updateMobileNavigationHeight);
             $mobileNav.addClass('is-enabled');
 
@@ -2404,6 +2431,18 @@ IIDO.Page = IIDO.Page || {};
                 link.on('click', function(e) { IIDO.Page.scrollLinkClicked(e, link); } );
             });
         }
+
+        var navLinks = $('a.nav-scroll-to');
+
+        if( navLinks.length )
+        {
+            navLinks.each( function(index, scrollLink)
+            {
+               var link = $(scrollLink);
+
+                link.on('click', function(e) { e.preventDefault(); IIDO.Page.scrollTo(e, link, -15); return false; } );
+            });
+        }
     };
 
 
@@ -2438,7 +2477,7 @@ IIDO.Page = IIDO.Page || {};
     {
         var stickyElements = document.querySelectorAll(".is-sticky-element");
 
-        if( stickyElements.length )
+        if( stickyElements.length && window.innerWidth > 1024)
         {
             Array.prototype.forEach.call(stickyElements, function(element, index)
             {

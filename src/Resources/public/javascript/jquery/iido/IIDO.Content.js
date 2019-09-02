@@ -42,6 +42,9 @@ IIDO.Content = IIDO.Content || {};
                     if( boxPos.classList.contains("pos-center-center") )
                     {
                         boxPos.style.marginTop = '-' + (boxPos.offsetHeight / 2) + 'px';
+
+                        boxPos.style.top = '50%';
+                        boxPos.style.left = '50%';
                     }
 
                     boxPos.classList.add("no-transform");
@@ -371,7 +374,7 @@ IIDO.Content = IIDO.Content || {};
                         if( !$("body").is(".mobile,.ios,.android") )
                         {
                             $.stellar({
-                                horizontalOffset: 0,
+                                horizontalOffset: '50%',
                                 verticalOffset: 0,
                                 horizontalScrolling: false,
                                 verticalScrolling: true,
