@@ -15,14 +15,7 @@ use Contao\Config;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\HeaderHelper;
 
-use Contao\Environment;
-use Contao\PageModel;
-use Contao\LayoutModel;
-use Contao\Model\Collection;
-use Contao\NewsFeedModel;
-use Contao\StringUtil;
-use Contao\Template;
-use Contao\Frontend;
+
 //use IIDO\WebsiteBundle\Helper\SocialmediaHelper;
 //use IIDO\WebsiteBundle\Helper\WebsiteHelper;
 
@@ -83,7 +76,7 @@ class InsertTagsListener extends DefaultListener
                         break;
 
                     case 'staticmap':
-                        $return = $this->renderStaticMap( $arrSplit[2] );
+                        $return = $this->renderStaticMap( $arrSplit[2], BasicHelper::getRandomHash(4) );
                         break;
 
 
@@ -648,7 +641,7 @@ class InsertTagsListener extends DefaultListener
 
 
 
-    protected function renderStaticMap( $address )
+    protected function renderStaticMap( $address, $strID )
     {
         $address = preg_replace('/\s/', '+', $address);
 
@@ -656,16 +649,20 @@ class InsertTagsListener extends DefaultListener
         $url = 'https://maps.googleapis.com/maps/api/staticmap?center=' . $address . '&zoom=13&size=200x200&maptype=roadmap&markers=color:red%7C' . $address . '&key=';
 
 
-        $strContent = '<svg width="200" viewBox="0 0 100 100" version="1.1" class="staticmap-svg" xmlns="http://www.w3.org/2000/svg">
+        $strContent = '<div class="staticmap-container"><a class="location-map" target="_blank" href="https://maps.google.com/?q=' . $address .'">';
+
+        $strContent .= '<svg width="200" viewBox="0 0 100 100" version="1.1" class="staticmap-svg" xmlns="http://www.w3.org/2000/svg">
     <defs>
-    	<pattern id="img-location-11" height="100%" width="100%" patternUnits="userSpaceOnUse">
+    	<pattern id="img-location-' . $strID . '" height="100%" width="100%" patternUnits="userSpaceOnUse">
     		<image xlink:href="' . $url . '" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"></image>
         </pattern>
     </defs>
-    <polygon fill="url(#img-location-11)" points="50 1 95 25 95 75 50 99 5 75 5 25"></polygon>
+    <polygon fill="url(#img-location-' . $strID . ')" points="50 1 95 25 95 75 50 99 5 75 5 25"></polygon>
     <polygon class="overlay" points="50 1 95 25 95 75 50 99 5 75 5 25" fill-opacity="0 "></polygon>
 </svg>';
 
-        return $strContent;
+        $strContent .= '<div class="hover-container">{{iido::icon::maps::inline}}</div>';
+
+        return $strContent . '</a></div>';
     }
 }
