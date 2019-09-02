@@ -1026,6 +1026,7 @@ class StylesheetHelper
             'style.css',
             'styles.css',
             'page.css',
+            'sidekick.css',
             'responsive.css'
         );
 
