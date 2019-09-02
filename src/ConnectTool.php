@@ -228,7 +228,7 @@ class ConnectTool
 
             return false;
         }
-        
+
     }
 
 
@@ -290,7 +290,7 @@ class ConnectTool
 
             $cache->save('login-count', $count);
         }
-        
+
     }
 
 
