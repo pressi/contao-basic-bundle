@@ -34,7 +34,8 @@ class ContentTable extends \Backend
     {
         $arrClasses     = array();
         $rootDir        = BasicHelper::getRootDir(true);
-        $cssConfigFile  = 'files/' . $rootAlias . '/css/config.json';
+//        $cssConfigFile  = 'files/' . $rootAlias . '/css/config.json';
+        $cssConfigFile  = BundleConfig::getBundlePath() . '/Resources/config/config.json';
 
         if( file_exists( $rootDir . $cssConfigFile) )
         {
@@ -537,7 +538,10 @@ class ContentTable extends \Backend
                     break;
 
                 case "team":
-                    $addContentTitle .= '<span class="team-member-name" style="margin-left:40px;">(' . $rsce_data['name'] . ')</span>';
+                    $width = $rsce_data['width'];
+//                    $width = preg_replace('/^w/', '', $rsce_data['width'] . '%');
+
+                    $addContentTitle .= '<span class="team-member-name" style="margin-left:40px;">(' . $rsce_data['name'] . ') - ' . $width . '</span>';
                     break;
             }
         }
