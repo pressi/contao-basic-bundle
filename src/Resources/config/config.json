@@ -1,0 +1,42 @@
+{
+    "all": [
+        "*-top-xs",
+        "*-top-s",
+        "*-top-m",
+        "*-top-l",
+        "*-top-xl",
+        "*-top-xxl",
+
+        "*-right-xs",
+        "*-right-s",
+        "*-right-m",
+        "*-right-l",
+        "*-right-xl",
+        "*-right-xxl",
+
+        "*-bottom-xs",
+        "*-bottom-s",
+        "*-bottom-m",
+        "*-bottom-l",
+        "*-bottom-xl",
+        "*-bottom-xxl",
+
+        "*-left-xs",
+        "*-left-s",
+        "*-left-m",
+        "*-left-l",
+        "*-left-xl",
+        "*-left-xxl"
+    ],
+
+    "elements": [],
+
+    "articles": [],
+
+    "headlines": [],
+    
+    "prefixes": [
+        "margin",
+        "padding"
+    ]
+}
