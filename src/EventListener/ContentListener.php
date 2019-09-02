@@ -57,7 +57,8 @@ class ContentListener extends DefaultListener
         global $objPage;
 
         $cssID          = \StringUtil::deserialize($objRow->cssID, TRUE);
-        $isMobile       = \Environment::get("agent")->mobile;
+        $ua             = \Environment::get("agent");
+        $isMobile       = $ua->mobile;
 
         if( $isMobile && ($objRow->hideOnMobile || FALSE !== strpos( $cssID[1], 'hide-on-mobile' )) )
         {
@@ -116,7 +117,7 @@ class ContentListener extends DefaultListener
                 $strBuffer = ContentHelper::generateImageHoverTags($strBuffer, $objRow);
             }
 
-            if( (FALSE !== strpos( $cssID[1], 'bg-image' )) || ($objRow->elementIsBox && $objRow->boxImageIsBG) )
+            if( ((FALSE !== strpos( $cssID[1], 'bg-image' )) || ($objRow->elementIsBox && $objRow->boxImageIsBG)) && (!$isMobile && $ua->os !== 'android' && $ua->os !== 'ios') )
             {
                 $bgImage    = '';
                 $objImage   = \FilesModel::findByPk( $objRow->singleSRC );
@@ -152,7 +153,7 @@ class ContentListener extends DefaultListener
 
                 if( strlen($objRow->headlineImagePosition) )
                 {
-                    $arrHeadline        = deserialize($objRow->headline, true);
+                    $arrHeadline        = \StringUtil::deserialize($objRow->headline, true);
 
                     $headlineUnit       = $arrHeadline['unit'];
                     $headlineValue      = $arrHeadline['value'];
@@ -243,6 +244,15 @@ class ContentListener extends DefaultListener
                 $strBuffer = preg_replace($toReplaceTag, $replaceTag . '<div class="table-container"><div class="ctable"><div class="ctable-row"><div class="ctable-cell">', $strBuffer);
                 $strBuffer = $strBuffer . '</div></div></div></div>';
             }
+            elseif( preg_match('/text-image-cols/', $cssID[1]) )
+            {
+                $strBuffer = preg_replace('/<\/figure>/', '</figure><div class="text-container">', $strBuffer, -1, $imageColsCounter);
+
+                if( $imageColsCounter )
+                {
+                    $strBuffer = $strBuffer . '</div>';
+                }
+            }
 
 //            $strBuffer = ContentHelper::renderText($strBuffer);
         }
@@ -251,16 +261,18 @@ class ContentListener extends DefaultListener
         {
             $arrGapSize = \StringUtil::deserialize($objRow->news_gapSize, TRUE);
 
-            if( $arrGapSize['value'] )
+            if( $arrGapSize['value'] || $arrGapSize['value'] === '0' )
             {
                 $gapSize    = ((int) $arrGapSize['value'] / 2) . $arrGapSize['unit']?:'px';
                 $strBuffer  = preg_replace('/class="([A-Za-z0-9\s\-_]{0,})layout_([A-Za-z0-9\s\-_]{0,})"/', 'class="$1layout_$2" style="padding-right:' . $gapSize . ';padding-left:' . $gapSize . ';"', $strBuffer, -1, $gapCounter);
 
-                if( $gapCounter > 0 )
-                {
-                    $gapSizeTwice   = $arrGapSize['value'] . $arrGapSize['unit']?:'px';
-                    $strBuffer      = preg_replace('/class="([A-Za-z0-9\s\-_]{0,})layout_([A-Za-z0-9\s\-_]{0,})last([A-Za-z0-9\s\-_]{0,})" style="padding-right:' . $gapSize . ';/', 'class="$1layout_$2last$3" style="padding-right:' . $gapSizeTwice . ';', $strBuffer);
-                }
+//                if( $gapCounter > 0 )
+//                {
+//                    $gapSizeTwice   = $arrGapSize['value'] . $arrGapSize['unit']?:'px';
+//
+//                    $strBuffer      = preg_replace('/class="([A-Za-z0-9\s\-_]{0,})layout_([A-Za-z0-9\s\-_]{0,})last([A-Za-z0-9\s\-_]{0,})" style="padding-right:' . $gapSize . ';/', 'class="$1layout_$2last$3" style="padding-right:' . $gapSizeTwice . ';', $strBuffer);
+//                    $strBuffer      = preg_replace('/class="([A-Za-z0-9\s\-_]{0,})layout_([A-Za-z0-9\s\-_]{0,})first([A-Za-z0-9\s\-_]{0,})" style="padding-right:' . $gapSize . ';padding-left:' . $gapSize . ';/', 'class="$1layout_$2first$3" style="padding-right:' . $gapSize . ';padding-left:' . $gapSizeTwice . ';', $strBuffer);
+//                }
             }
         }
 
@@ -436,6 +448,7 @@ class ContentListener extends DefaultListener
                 $unit       = $arrPosMargin['unit']?:'px';
                 $useUnit    = true;
                 $prefix     = 'margin';
+                $transform  = '';
 
                 if( preg_match('/mip/', $cssID[1]) )
                 {
@@ -454,9 +467,10 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( preg_match('/(transY|transX)/', $arrPosMargin['top']) )
-                    {
-                        $transKey = 'Y';
+                if( preg_match('/(transY|transX)/', $arrPosMargin['top']) )
+                {
+                    $useUnit = false;
+                    $transKey = 'Y';
 
                         if( preg_match('/transX/', $arrPosMargin['top']) )
                         {
@@ -465,10 +479,14 @@ class ContentListener extends DefaultListener
 
                         $transValue = preg_replace('/^(transX|transY)/', '', $arrPosMargin['top']);
 
-                        $strStyles .= " transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ")"; if( $transKey === 'X' && $objRow->position === 'center_center' )
+                    $strStyles .= ' transform:translate' . $transKey . '(' . $transValue . ($useUnit ?$unit:'') . ')';
+
+                    if( $transKey === 'X' && $objRow->position === 'center_center' )
                     {
                         $strStyles .= 'translateY(-50%)';
-                    } $strStyles .= ';';
+                    } 
+                        
+                        $strStyles .= ';';
                     }
                     else
                     {
@@ -490,10 +508,10 @@ class ContentListener extends DefaultListener
                         $useUnit = false;
                     }
 
-                    if( preg_match('/calc/', $arrPosMargin['right']) )
-                    {
-                        $useUnit = false;
-                    }
+                if( $useUnit && (FALSE !== strpos( $arrPosMargin['right'], 'calc' ) || FALSE !== strpos( $arrPosMargin['right'], 'trans' )) )
+                {
+                    $useUnit = false;
+                }
 
                     if( preg_match('/(transY|transX)/', $arrPosMargin['right']) )
                     {
@@ -504,21 +522,33 @@ class ContentListener extends DefaultListener
                             $transKey = 'X';
                         }
 
-                        $transValue = preg_replace('/^(transX|transY)(&#40;|\()([A-Za-z0-9%\-+]{0,})(&#41;|\))/ui', '$3', trim($arrPosMargin['right']));
+                    $noEnd = false;
+                    $transValue = preg_replace('/^(transX|transY)(&#40;|\()([A-Za-z0-9%\-+]{0,})(&#41;|\))/ui', '$3', trim($arrPosMargin['right']));
 
+                    if( FALSE !== strpos($strStyles, 'transform') )
+                    {
+                        $noEnd = true;
+                        $strStyles = preg_replace('/transform:/', "transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ") ", $strStyles);
+                    }
+                    else
+                    {
                         $strStyles .= " transform:translate" . $transKey . "(" . $transValue . (($useUnit)?$unit:'') . ")";
+                    }
 
                         if( $transKey === 'X' && $objRow->position === 'center_center' )
                         {
                             $strStyles .= 'translateY(-50%)';
                         }
 
+                    if( !$noEnd )
+                    {
                         $strStyles .= ';';
                     }
-                    else
-                    {
-                        $strStyles .= " " . $prefix . "-right:" . $arrPosMargin['right'] . (($useUnit)?$unit:'') . ";";
-                    }
+                }
+                else
+                {
+                    $strStyles .= " " . $prefix . "-right:" . $arrPosMargin['right'] . (($useUnit)?$unit:'') . ";";
+                }
 
                     $useUnit    = true;
                 }
@@ -554,14 +584,32 @@ class ContentListener extends DefaultListener
 
                     $strStyles .= " " . $prefix . "-left:" . $arrPosMargin['left'] . (($useUnit)?$unit:'') . ";";
 
-                    $useUnit    = true;
-                }
-//            }
-
-            if( strlen($strStyles) )
-            {
-                $arrAttributes['style'] = trim($arrAttributes['style'] . $strStyles);
+                $useUnit    = true;
             }
+        }
+
+        if( TL_MODE === 'FE' && $objRow->position && $objRow->positionInnerContentWidth )
+        {
+            $insideStyle        = '';
+            $intWebsiteWidth    = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'websiteContentWidth');
+
+            if( $arrPosMargin['left'] )
+            {
+//                $strStyles = preg_replace('/' . $prefix . '-left:([0-9a-zA-Z\(\)]+);/', '', $strStyles, -1, $styleMatches);
+//                $insideStyle .= $prefix . '-left:' . $styleMatches[0] . ';';
+            }
+
+            if( $objRow->position === 'left_center' || $objRow->position === 'left_top' ||$objRow->position === 'left_bottom' )
+            {
+                $strStyles .= 'left:calc((100% - ' . $intWebsiteWidth . ') / 2);';
+            }
+
+            $strBuffer = preg_replace('/element-inside([A-Za-z0-9\s\-_]+)"/', 'element-inside$1" style="' . $insideStyle . '', $strBuffer);
+        }
+
+        if( strlen($strStyles) )
+        {
+            $arrAttributes['style'] = trim($arrAttributes['style'] . $strStyles);
         }
 
 //        if( preg_match('/<h([1-6])([A-Za-z0-9\s\-=":;,._]{0,})>/', $strBuffer) )
@@ -573,6 +621,7 @@ class ContentListener extends DefaultListener
         $strBuffer = $this->renderHeadlines($strBuffer, $objRow);
         $strBuffer = $this->renderBox($strBuffer, $objRow, $objElement);
         $strBuffer = $this->renderImages( $strBuffer, $objRow );
+//        $strBuffer = $this->renderTeamContainer( $strBuffer, $objRow );
 
         if( $objRow->addAnimation || $objArticle->addAnimation )
         {
@@ -764,11 +813,17 @@ class ContentListener extends DefaultListener
                 $arrElementClasses[] = 'has-height';
             }
 
+            if( $objRow->boxValignPosition )
+            {
+                $arrElementClasses[] = 'fval-' . $objRow->boxValignPosition;
+            }
+
             $bgColor = ColorHelper::compileColor( $objRow->boxBackgroundColor, TRUE );
 
             if( $bgColor !== "transparent" && !$objRow->boxLink )
             {
-                $arrAttributes['style'][] = 'background-color:' . $bgColor . ';';
+//                $arrAttributes['style'][] = 'background-color:' . $bgColor . ';';
+                $strBuffer = preg_replace('/class="element-inside/', 'style="background-color:' . $bgColor . ';" class="element-inside', $strBuffer);
             }
 
             if( $objRow->boxImageIsBG )
@@ -806,7 +861,7 @@ class ContentListener extends DefaultListener
                 $strOpenLink = '<a href="' . $objRow->boxLink . '"' . $styles . '>';
             }
 
-            $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-=",;.:_\/\(\)\{\}]{0,})class="element-inside([A-Za-z\s\-_\{\}]{0,})"([A-Za-z0-9\s\-=",;.:_\/\(\)\{\}]{0,})>/',  '<div$1class="element-inside$2"$3>' . $strOpenLink . '<div class="element-box-inside">' . $strIcon, $strBuffer, -1, $count);
+            $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-=",;.:_\/\(\)\{\}#]{0,})class="element-inside([A-Za-z\s\-_\{\}]{0,})"([A-Za-z0-9\s\-=",;.:_\/\(\)\{\}#]{0,})>/',  '<div$1class="element-inside$2"$3>' . $strOpenLink . '<div class="element-box-inside">' . $strIcon, $strBuffer, -1, $count);
 
             if( $count )
             {
@@ -858,6 +913,61 @@ class ContentListener extends DefaultListener
             }
         }
 
+        if( $objRow->elementIsBox && TL_MODE === 'FE' )
+        {
+            $arrHeadline     = \StringUtil::deserialize( $objRow->headline, TRUE );
+            $headlineValue  = $arrHeadline['value'];
+            $headlineUnit   = $arrHeadline['unit'];
+
+            $addPosClass    = '';
+
+            if( $objRow->boxTitlePosition )
+            {
+                $addPosClass = ' has-position pos-' . $objRow->boxTitlePosition;
+            }
+
+            $headlinContOpen    = '<div class="headline-container title-box' . $addPosClass . '">';
+            $headlinContClose   = '</div>';
+
+            $headlineRegexStart = '/<' . $headlineUnit . '/';
+            $headlineRegexEnd   = '/<\/' . $headlineUnit . '>/';
+
+            $headlineRepalceStart   = '<' . $headlineUnit;
+            $headlineRepalceEnd     = '</' . $headlineUnit . '>';
+
+            if( $objRow->topHeadline )
+            {
+                $headlineRegexStart     = '/<div class="top-headline/';
+                $headlineRepalceStart   = '<div class="top-headline';
+            }
+
+            if( $objRow->subHeadline )
+            {
+                $headlineRegexEnd   = '/<div class="sub-headline([A-Za-z0-9\s\-;:,.]{0,})"([A-Za-z0-9\s\-;:,.="\(\))]{0,})>(.*)<\/div>/';
+                $headlineRepalceEnd = '<div class="sub-headline$1"$2>$3</div>';
+            }
+//echo "<pre>"; print_R( $strBuffer ); exit;
+//            echo "<pre>";
+//            print_r( $headlineRegexStart );
+//            echo "<br>";
+//            print_r( $headlinContOpen );
+//            echo "<br>";
+//            print_r( $headlineRepalceStart );
+//
+//            echo "<br><br>";
+//            print_r( $headlineRegexEnd );
+//            echo "<br>";
+//            print_r( $headlineRepalceEnd );
+//            echo "<br>";
+//            print_r( $headlinContClose );
+//            exit;
+
+            $strBuffer = preg_replace($headlineRegexStart, $headlinContOpen . $headlineRepalceStart, $strBuffer);
+            $strBuffer = preg_replace($headlineRegexEnd,  $headlineRepalceEnd . $headlinContClose, $strBuffer);
+        }
+
+//        echo "<pre>"; print_r( $strBuffer ); echo "</pre>";
+
         return [$strBuffer, $arrElementClasses, $arrAttributes];
     }
 
@@ -888,19 +998,68 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         $arrStyleHeadlineClasses    = array();
         $arrElementClasses          = array();
 
-        $arrHeadline    = deserialize($objRow->headline, TRUE);
+        $arrHeadline    = \StringUtil::deserialize($objRow->headline, TRUE);
         $unit           = $arrHeadline['unit'];
         $headline       = $arrHeadline['value'];
 
         $strTopClass    = $strSubClass = ' unit-' . $unit;
         $replaceClass   = 'headline';
+        $strSubStyles   = $strHeadlineStyles = '';
+
+        $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
 
 
-        if( $objRow->addTopHeadline )
+//        if( $objRow->addTopHeadline )
+        if( $objRow->topHeadline )
         {
             $arrHeadlineClasses[] = 'has-top-headline';
 
             $arrContClasses[] = 'cont-has-top-headline';
+
+            if( $objRow->headlineTopFloating )
+            {
+                $topFloating = preg_replace('/header_/', '', $objRow->headlineTopFloating);
+
+                $arrTopHeadlineClasses[]    = 'text-' . $topFloating;
+            }
+
+            if( $objRow->headlineTopStyles )
+            {
+                $arrConfig = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineTopStyle' );
+
+                if( count($arrConfig) )
+                {
+                    $arrStyle = array();
+
+                    foreach($arrConfig as $arrHTSConfig )
+                    {
+                        if( $arrHTSConfig['internID'] === $objRow->headlineTopStyles )
+                        {
+                            $arrStyle = $arrHTSConfig;
+                            break;
+                        }
+                    }
+
+                    if( $arrStyle['tagClasses'] || $arrStyle['classes'] )
+                    {
+                        $arrTagClasses          = explode(" ", $arrStyle['classes']);
+                        $arrTopElementClasses   = explode(" ", $arrStyle['tagClasses']);
+
+                        if( count($arrTopElementClasses) )
+                        {
+                            $arrElementClasses = array_merge($arrElementClasses, $arrTopElementClasses);
+                        }
+
+                        foreach($arrTagClasses as $arrTagClass)
+                        {
+                            if( !in_array($arrTagClass, $arrTopHeadlineClasses) )
+                            {
+                                $arrTopHeadlineClasses[] = $arrTagClass;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if( $objRow->subHeadline )
@@ -908,6 +1067,51 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             $arrHeadlineClasses[] = 'has-sub-headline';
 
             $arrContClasses[] = 'cont-has-sub-headline';
+
+            if( $objRow->headlineBottomFloating )
+            {
+                $subFloating = preg_replace('/header_/', '', $objRow->headlineBottomFloating);
+
+                $arrSubHeadlineClasses[]    = 'text-' . $subFloating;
+            }
+
+            if( $objRow->headlineBottomStyles )
+            {
+                $arrConfig = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineBottomStyle' );
+
+                if( count($arrConfig) )
+                {
+                    $arrStyle = array();
+
+                    foreach($arrConfig as $arrHSSConfig )
+                    {
+                        if( $arrHSSConfig['internID'] === $objRow->headlineBottomStyles )
+                        {
+                            $arrStyle = $arrHSSConfig;
+                            break;
+                        }
+                    }
+
+                    if( $arrStyle['tagClasses'] || $arrStyle['classes'] )
+                    {
+                        $arrTagClasses          = explode(" ", $arrStyle['classes']);
+                        $arrSubElementClasses   = explode(" ", $arrStyle['tagClasses']);
+
+                        if( count($arrSubElementClasses) )
+                        {
+                            $arrElementClasses = array_merge($arrElementClasses, $arrSubElementClasses);
+                        }
+
+                        foreach($arrTagClasses as $arrTagClass)
+                        {
+                            if( !in_array($arrTagClass, $arrSubHeadlineClasses) )
+                            {
+                                $arrSubHeadlineClasses[] = $arrTagClass;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if( $objRow->headlineFloating )
@@ -915,8 +1119,8 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             $floating = preg_replace('/header_/', '', $objRow->headlineFloating);
 
             $arrHeadlineClasses[]       = 'text-' . $floating;
-            $arrTopHeadlineClasses[]    = 'text-' . $floating;
-            $arrSubHeadlineClasses[]    = 'text-' . $floating;
+//            $arrTopHeadlineClasses[]    = 'text-' . $floating;
+//            $arrSubHeadlineClasses[]    = 'text-' . $floating;
         }
 
         if( $objRow->headlineStyles )
@@ -964,7 +1168,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                     }
                 }
 
-                if( $arrStyle['tagClasses'] )
+                if( $arrStyle['tagClasses'] || $arrStyle['classes'] )
                 {
                     $arrTagClasses      = explode(" ", $arrStyle['classes']);
                     $arrElementClasses  = explode(" ", $arrStyle['tagClasses']);
@@ -1015,14 +1219,44 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             $strSubClass = $strSubClass . ' ' . implode(' ', $arrSubHeadlineClasses);
         }
 
-        $topHeadline    = ($objRow->addTopHeadline  ? '<div class="top-headline' . $strTopClass . '"><span class="th-inside">' . $objRow->topHeadline . '</span></div>' : '');
-        $subHeadline    = ($objRow->subHeadline     ? '<div class="sub-headline' . $strSubClass . '"><span class="sh-inside">' . $objRow->subHeadline . '</span></div>' : '');
+        $arrMarginBottom = \StringUtil::deserialize($objRow->headlineMarginBottom, TRUE);
+
+        if( $objRow->subHeadline && trim($arrMarginBottom['value']) !== '' )
+        {
+            $strSubStyles = 'margin-bottom:' . $arrMarginBottom['value'] . ($arrMarginBottom['unit'] !=='' ? $arrMarginBottom['unit'] : 'px') . ';';
+        }
+        elseif( trim($arrMarginBottom['value']) !== '' )
+        {
+            $strHeadlineStyles = 'margin-bottom:' . $arrMarginBottom['value'] . ($arrMarginBottom['unit'] !=='' ? $arrMarginBottom['unit'] : 'px') . ';';
+        }
+
+        $renderTopLines     = false;
+        $renderBottomLines  = false;
+
+        if( $objRow->headlineTopStyles === 'hs10' || $objRow->headlineTopStyles === 'hs11' )
+        {
+            $renderTopLines = true;
+        }
+
+        if( $objRow->headlineBottomStyles === 'hs10' || $objRow->headlineBottomStyles === 'hs11' )
+        {
+            $renderBottomLines = true;
+        }
+
+        $topHeadline    = ($objRow->topHeadline     ? '<div class="top-headline' . $strTopClass . '"><span class="th-inside">' . ContentHelper::renderText($objRow->topHeadline, $renderTopLines) . '</span></div>' : '');
+        $subHeadline    = ($objRow->subHeadline     ? '<div class="sub-headline' . $strSubClass . '"' . ($strSubStyles ? ' style="' . $strSubStyles . '"' : '') . '><span class="sh-inside">' . ContentHelper::renderText($objRow->subHeadline, $renderBottomLines) . '</span></div>' : '');
+
+        if( FALSE !== strpos($cssID[1], 'show-as-shadow-box') )
+        {
+            $topHeadline = '<div class="headline-box">' . $topHeadline;
+            $subHeadline = $subHeadline . '</div>';
+        }
 
         $strHeadline    = preg_replace(array('/;/'), array('<br>'), $headline);
 
         if( count($arrHeadlineClasses) )
         {
-            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@éèáàóòúùüâûêôñãõ]{0,})<\/h([1-6])>/u', $strContent, $arrHeadlineMatches);
+            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@éèáàóòúùüâûêôñãõ\|]{0,})<\/h([1-6])>/u', $strContent, $arrHeadlineMatches);
 
             if( count($arrHeadlineMatches[0]) )
             {
@@ -1036,7 +1270,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                     }
                     else
                     {
-                        $strNewHeadline = preg_replace('/<h' . $findUnit . '/', '<h' . $findUnit . ' class="headline"', $strFindHeadline);
+                        $strNewHeadline = preg_replace('/<h' . $findUnit . '/', '<h' . $findUnit . ' class="headline"' . ($strHeadlineStyles ? ' style="' . $strHeadlineStyles . '"' : ''), $strFindHeadline);
                     }
 
                     $strNewHeadline = preg_replace('/' . preg_quote($arrHeadlineMatches[3][ $headlineNum ], '/') . '/', preg_replace('/;/', '<br>', $arrHeadlineMatches[3][ $headlineNum ]), $strNewHeadline);
@@ -1052,7 +1286,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         if( count($arrStyleHeadlineClasses) )
         {
             $strUnit    = $arrHeadline['unit'];
-            $strContent = preg_replace('/<' . $strUnit . ' class="' . $replaceClass . '/', '<' . $strUnit . ' class="' . $replaceClass . ' ' . implode(" ", $arrStyleHeadlineClasses), $strContent);
+            $strContent = preg_replace('/<' . $strUnit . '([A-Za-z0-9\s\-=",;.:\(\)\{\}_#]{0,})class="' . $replaceClass . '/', '<' . $strUnit . '$1class="' . $replaceClass . ' ' . implode(" ", $arrStyleHeadlineClasses), $strContent);
         }
 
         if( $objRow->type === "headline" )
@@ -1072,7 +1306,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             }
         }
 
-        $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}]{0,})>/', $topHeadline . '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
+        $strContent = preg_replace('/<h([1-6]{1})([A-Za-z0-9\s\-_="\{\}\|:;.\(\)]{0,})>/', $topHeadline . '<h$1$2><span class="headline-inside"><span class="headline-span">', $strContent);
         $strContent = preg_replace('/<\/h([1-6]{1})>/', '</span></span></h$1>' . $subHeadline, $strContent);
 
         if( preg_match('/<\/h([1-6]{1})>([\s\n]{0,})<h([1-6]{1})/', trim($strContent)) )
@@ -1146,6 +1380,33 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                 $strContent = preg_replace('/##IMAGEPATH##/', preg_replace('/ /', '%20', $objImage->path), $strContent);
                 $strContent = preg_replace('/##IMAGEBACKGROUND##/', $imageColor, $strContent);
             }
+        }
+
+        return $strContent;
+    }
+
+
+
+    protected function renderTeamContainer( $strContent, $objRow )
+    {
+        if( $objRow->type === 'rsce_team' && TL_MODE === 'FE' )
+        {
+            $GLOBALS['IIDO']['TEAM']['OPEN_WRAPPER'] = $GLOBALS['IIDO']['TEAM']['OPEN_WRAPPER'] || FALSE;
+
+            if( $GLOBALS['IIDO']['TEAM']['OPEN_WRAPPER'] === FALSE )
+            {
+                $GLOBALS['IIDO']['TEAM']['OPEN_WRAPPER'] = TRUE;
+
+                $strContent = '<div class="team-box-container"><div class="tbc-inside">' . $strContent;
+            }
+
+            if( $GLOBALS['IIDO']['TEAM']['OPEN_WRAPPER'] === TRUE && $this->checkIfLastOfType( $objRow , 'rsce_team') )
+            {
+                $GLOBALS['IIDO']['TEAM']['OPEN_WRAPPER'] = FALSE;
+
+                $strContent = $strContent . '</div></div>';
+            }
+
         }
 
         return $strContent;
@@ -1308,19 +1569,22 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 //            echo "<pre>"; print_r( $strContent ); exit;
         }
 
-        switch( $objRow->buttonLinkMode )
+        if( $objRow->showAsButton )
         {
-            case "lightbox":
-                $arrLinkClasses[] = 'open-in-lightbox';
-                break;
+            switch( $objRow->buttonLinkMode )
+            {
+                case "lightbox":
+                    $arrLinkClasses[] = 'open-in-lightbox';
+                    break;
 
-            case "scroll":
-                $arrLinkClasses[] = 'scroll-to';
-                break;
+                case "scroll":
+                    $arrLinkClasses[] = 'scroll-to';
+                    break;
 
-            case "nolink":
-                $arrLinkClasses[] = 'no-link';
-                break;
+                case "nolink":
+                    $arrLinkClasses[] = 'no-link';
+                    break;
+            }
         }
 
         if( preg_match_all('/atag-([A-Za-z0-9\-]{0,})/', $cssID[1], $arrClassMatches) )
@@ -1389,6 +1653,8 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         {
             $strContent = preg_replace('/hyperlink_txt/', 'hyperlink_txt no-link', $strContent);
         }
+
+//        $strContent = preg_replace('/rel="/', 'data-lightbox="', $strContent);
 
         return $strContent;
     }
@@ -1551,6 +1817,11 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             $elementClass = preg_replace('/^ce_/', 'mod_', $elementClass);
         }
 
+        if( 0 !== strpos($elementClass, 'ce_') && 0 !== strpos($elementClass, 'mod_') )
+        {
+            $elementClass = 'ce_' . $elementClass;
+        }
+
         return $elementClass;
     }
 
@@ -1688,6 +1959,51 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
 
 
+    protected function checkIfLastOfType( $objRow, $strType, $strSearchClass = '' )
+    {
+        global $objPage;
+
+        $lastElement    = FALSE;
+        $objElements    = \ContentModel::findPublishedByPidAndTable( $objRow->pid, 'tl_article');
+
+        if( $objElements )
+        {
+            $checkElement   = false;
+            $isBox          = false;
+
+            while( $objElements->next() )
+            {
+                if( $objElements->id === $objRow->id )
+                {
+                    $checkElement = true;
+                    continue;
+                }
+                else
+                {
+                    if( $checkElement )
+                    {
+                        $cssID = \StringUtil::deserialize( $objElements->cssID );
+
+                        if( ($strSearchClass && preg_match('/' . $strSearchClass . '/', $cssID[1])) || $objRow->type === $strType )
+                        {
+                            $isBox = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if( !$isBox )
+            {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
+    }
+
+
+
     public function renderList( $strBuffer, $objRow, $objElement )
     {
         $cssID = \StringUtil::deserialize($objRow->cssID, TRUE);
@@ -1734,12 +2050,12 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                 foreach( $arrListMatches[2] as $key => $strList )
                 {
                     $oldText    = $strList; //$arrListMatches[0][ $key ];
-                    $newText    = '<div class="list-box first">';
+                    $newText    = '<div class="list-box first"><div class="list-box-inside">';
 
                     $arrTextBlocks = explode('--', $strList);
-                    $newText .= implode('</div><div class="list-box">', $arrTextBlocks);
+                    $newText .= implode('</div></div><div class="list-box"><div class="list-box-inside">', $arrTextBlocks);
 
-                    $newText .= '</div>';
+                    $newText .= '</div></div>';
 
                     $strBuffer = preg_replace('/' . preg_quote($oldText, '/') . '/', $newText, $strBuffer);
                 }

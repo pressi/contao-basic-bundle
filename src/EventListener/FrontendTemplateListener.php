@@ -323,6 +323,13 @@ class FrontendTemplateListener extends DefaultListener
                 }
             }
 
+            if( FALSE !== strpos($objPage->cssClass, 'blankpage') )
+            {
+                $strBuffer = preg_replace('#<script(.*?)>(.*?)</script>#is', '', $strBuffer);
+                $strBuffer = preg_replace('/<script(.*?)><\/script>/', '', $strBuffer);
+                $strBuffer = preg_replace('/<script([A-Za-z0-9\s\-\/.:="]{0,})><\/script>/', '', $strBuffer);
+            }
+
             if( preg_match('/nav-sub/', $strBuffer) && !preg_match('/(ce_backlink|mod_newsearder)/', $strBuffer ))
             {
                 $strBuffer = preg_replace('/nav-sub/', 'nav-sub has-bg-left', $strBuffer);
