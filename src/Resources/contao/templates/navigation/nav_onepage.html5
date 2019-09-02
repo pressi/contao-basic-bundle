@@ -70,6 +70,8 @@
       $item['href'] = '#article-' . $item['id'];
 
       $item['class'] = preg_replace('/padding-top-none/', '', $item['class']);
+      $item['class'] = preg_replace('/padding-([a-z]+)-([a-z]+)/', '', $item['class']);
+      $item['class'] = preg_replace('/margin-([a-z]+)-([a-z]+)/', '', $item['class']);
       $item['class'] = preg_replace('/([\s]{2,})/', ' ', $item['class']);
 
       ?>

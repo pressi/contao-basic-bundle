@@ -68,6 +68,11 @@
           $item['linkClass'] = trim($item['linkClass'] . ' open-page-in-lightbox lb-animation');
       }
 
+      $item['class'] = preg_replace('/padding-top-none/', '', $item['class']);
+      $item['class'] = preg_replace('/padding-([a-z]+)-([a-z]+)/', '', $item['class']);
+      $item['class'] = preg_replace('/margin-([a-z]+)-([a-z]+)/', '', $item['class']);
+      $item['class'] = preg_replace('/([\s]{2,})/', ' ', $item['class']);
+
       if( FALSE !== strpos($item['attributes'], 'data-color') )
       {
           preg_match_all('/ data-color="([A-Za-z0-9#]{4,7})"/', $item['attributes'], $colorMatches);
