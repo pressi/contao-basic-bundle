@@ -757,6 +757,10 @@
 
 
 
+            <trans-unit id="tl_content.options.boxWidth.w20">
+                <source>width </source>
+                <target>20% (1/5)</target>
+            </trans-unit>
 			<trans-unit id="tl_content.options.boxWidth.w1">
 				<source>width 1</source>
 				<target>25%</target>
@@ -779,6 +783,7 @@
 			</trans-unit>
 
 
+
 			<trans-unit id="tl_content.options.boxHeight.ha">
 				<source>height auto</source>
 				<target>Automatisch</target>
@@ -794,6 +799,10 @@
             <trans-unit id="tl_content.options.boxHeight.h1">
                 <source>height 1</source>
                 <target>min. 150px</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.boxHeight.h2">
+                <source>height 2</source>
+                <target>min. 175px</target>
             </trans-unit>
 <!--			<trans-unit id="tl_content.options.boxHeight.h2">-->
 <!--				<source>height 2</source>-->
