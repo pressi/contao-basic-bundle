@@ -51,6 +51,13 @@ IIDO.Content = IIDO.Content || {};
                 }
             }
 
+            var timeout = 500;
+
+            if( document.getElementById('loaderContainer') )
+            {
+                timeout = 2000;
+            }
+
             setTimeout(function()
             {
                 var articles = document.querySelectorAll('.mod_article');
@@ -59,7 +66,7 @@ IIDO.Content = IIDO.Content || {};
                 {
                     IIDO.Content.startAnimate( article );
                 });
-            }, 500);
+            }, timeout);
         });
     };
 

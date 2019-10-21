@@ -268,6 +268,8 @@ class Field
     public function setLangTable( $strLangTableName )
     {
         $this->strLangTable = $strLangTableName;
+
+        return $this;
     }
 
 

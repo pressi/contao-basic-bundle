@@ -143,30 +143,30 @@ IIDO.Base = IIDO.Base || {};
 
     base.removeClass = function(element, className)
     {
-            var elements = ('length' in element && !('className' in element))
-                ? element
-                : [element];
-            var classNames = (typeof className === 'string')
-                ? className.split(' ')
-                : className;
+        var elements = ('length' in element && !('className' in element))
+            ? element
+            : [element];
+        var classNames = (typeof className === 'string')
+            ? className.split(' ')
+            : className;
 
-            for (var i = 0; i < elements.length; i++)
+        for (var i = 0; i < elements.length; i++)
+        {
+            for (var j = 0; j < classNames.length; j++)
             {
-                for (var j = 0; j < classNames.length; j++)
+                if (this.hasClass(elements[i], classNames[j]))
                 {
-                    if (this.hasClass(elements[i], classNames[j]))
-                    {
-                        elements[i].className = elements[i].className.replace(new RegExp('(?:^|\\s+)' + classNames[j] + '(?:$|\\s+)'), ' ');
-                    }
+                    elements[i].className = elements[i].className.replace(new RegExp('(?:^|\\s+)' + classNames[j] + '(?:$|\\s+)'), ' ');
                 }
             }
+        }
     };
 
 
 
     base.hasClass = function(element, className)
     {
-            return !!element.className.match('(?:^|\\s)' + className + '(?:$|\\s)');
+        return !!element.className.match('(?:^|\\s)' + className + '(?:$|\\s)');
     };
 
 
@@ -184,6 +184,20 @@ IIDO.Base = IIDO.Base || {};
         }
 
         return false;
+    };
+
+
+
+    base.isInViewport = function (elem)
+    {
+        var bounding = elem.getBoundingClientRect();
+
+        return (
+            bounding.top >= 0 &&
+            bounding.left >= 0 &&
+            bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
     };
 
 })(window, jQuery, IIDO.Base);

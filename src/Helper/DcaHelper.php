@@ -863,7 +863,7 @@ class DcaHelper extends \Frontend
             'exclude'               => TRUE,
             'inputType'             => 'select',
             'eval'                  => $defaultEval,
-            'sql'                   => "varchar(" . ($defaultEval['maxlength']?:32)  . ") NOT NULL default ''"
+            'sql'                   => "varchar(" . ($defaultEval['maxlength']?:32)  . ") NOT NULL default '" . $defaultValue . "'"
         );
 
         if( is_array($defaultConfig) && count($defaultConfig) && key_exists('options_callback', $defaultConfig) )
@@ -876,7 +876,7 @@ class DcaHelper extends \Frontend
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['options'] = $arrOptions;
         }
 
-        if( strlen($defaultValue) )
+        if( $defaultValue && strlen($defaultValue) )
         {
             $GLOBALS['TL_DCA'][ $strTable ]['fields'][ $fieldName ]['default'] = $defaultValue;
         }

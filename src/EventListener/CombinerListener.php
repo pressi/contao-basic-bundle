@@ -36,7 +36,7 @@ class CombinerListener extends DefaultListener
         $isInFiles  = preg_match('/^files/', $arrFile['name']);
         $isInBundle = preg_match('/^' . preg_quote($this->bundlePathPublic, '/') . '/', $arrFile['name']);
 
-        if( $strMode === \Combiner::CSS )
+        if( $arrFile['extension'] === \Combiner::CSS )
         {
             if( $isInFiles || $isInBundle )
             {
@@ -47,7 +47,7 @@ class CombinerListener extends DefaultListener
                 $strContent = $objMinify->minify();
             }
         }
-        elseif( $strMode === \Combiner::JS )
+        elseif( $arrFile['extension'] == \Combiner::JS )
         {
             if( $isInFiles || $isInBundle )
             {

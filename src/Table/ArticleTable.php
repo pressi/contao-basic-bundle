@@ -82,6 +82,43 @@ class ArticleTable extends \Backend
 
         $strLabel = preg_replace('/<span([A-za-z0-9\s\-,;.:_#="]{0,})>\[([A-Za-z\sÜÄÖöäüß]{0,})\]<\/span>/u', '', $strLabel);
 
+        $objParentPage = \PageModel::findByPk( $row['pid'] );
+
+        if( $objParentPage->submenuNoPages && $objParentPage->submenuSRC === 'articles' )
+        {
+            $navTitle = '';
+
+            if( $row['navTitle'] )
+            {
+                $navTitle = '[' . $row['navTitle'] . ']';
+            }
+
+            $inNav      = '';
+            $addon      = '';
+            $navColor   = '#999';
+
+            if( $row['hideInMenu'] )
+            {
+                $inNav = 'nicht in Navigation';
+            }
+
+            if( $row['navLinkMode'] )
+            {
+                $inNav      = $GLOBALS['TL_LANG']['tl_article']['options']['navLinkMode'][ $row['navLinkMode'] ];
+                $navColor   = '#5b7ba5';
+
+                if( $row['navLinkMode'] === 'extern' )
+                {
+                    $addon = '<span class="extern-link" style="margin-left:20px;color:#c5c5c5;">(' . $row['navLinkUrl'] . ')</span>';
+                }
+            }
+
+            $strLabel =  preg_replace('/<\/a>/' , '</a><span style="display:inline-block;width:150px;text-indent:0;padding-left:8px;">', $strLabel) .'</span>';
+            $strLabel .= ' <span class="nav-title" style="display:inline-block;color:#999;margin-left:15px;width:120px;">' . $navTitle . '</span>';
+
+            $strLabel .= '<span class="in-nav" style="color:' . $navColor . ';">' . $inNav . '</span>' .$addon;
+        }
+
         return $strLabel;
     }
 }

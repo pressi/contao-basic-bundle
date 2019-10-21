@@ -110,6 +110,13 @@ class ContentTable extends \Backend
 
 
 
+    public function getTextColor( $dc )
+    {
+        return $GLOBALS['TL_LANG'][ $this->strTable ]['options']['textColor'];
+    }
+
+
+
     public function getLoginModule( $dc )
     {
         $activeRecord   = $dc->activeRecord;

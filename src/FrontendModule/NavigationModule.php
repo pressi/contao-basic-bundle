@@ -585,8 +585,14 @@ class NavigationModule extends \ModuleNavigation
 //                        $level++;
 //                    }
 
-                    $strItems = $this->getPages( $trail[ $level ], 1, $host, $lang );
-//                    echo "<pre>"; print_r( $strItems ); exit;
+                    $lastPage = 0;
+
+                    if( $level > 1 && !$trail[ $level ] )
+                    {
+                        $lastPage = array_pop($trail);
+                    }
+
+                    $strItems = $this->getPages( $lastPage > 0 ? $lastPage : $trail[ $level ], 1, $host, $lang );
 
                 }
             }
@@ -1015,7 +1021,7 @@ class NavigationModule extends \ModuleNavigation
 
             $objParentPage  = \PageModel::findByPk( $objItem->pid );
             $href           = $objParentPage->getFrontendUrl('/' . $langPartName . '/' . $objItem->alias);
-            $strClass       = deserialize($objItem->cssID, true)[1] . ' article-link';
+            $strClass       = \StringUtil::deserialize($objItem->cssID, true)[1] . ' article-link';
 
             $cssID = \StringUtil::deserialize($this->cssID, TRUE);
             $isOnePageNavigation = (preg_match('/page-is-onepage/', $objPage->cssClass) && preg_match('/nav-onepage/', $cssID));
@@ -1023,6 +1029,20 @@ class NavigationModule extends \ModuleNavigation
             if( $objPage->enableFullpage || $isOnePageNavigation )
             {
                 $href = '#' . $objItem->alias;
+            }
+
+            if( $objItem->navLinkMode )
+            {
+                if( $objItem->navLinkMode === 'intern' )
+                {
+                    $objLinkPage = \PageModel::findByPk( $objItem->navLinkPage );
+
+                    $href = $objLinkPage->getFrontendUrl();
+                }
+                else
+                {
+                    $href = $objItem->navLinkUrl;
+                }
             }
 
             if( $activeArticle == $objItem->alias )

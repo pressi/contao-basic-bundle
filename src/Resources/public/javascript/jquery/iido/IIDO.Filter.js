@@ -32,6 +32,11 @@ IIDO.Filter = IIDO.Filter || {};
             filterList = $('.filter-list');
         }
 
+        if( !filterContainer.length )
+        {
+            filterContainer = filterList.parent('.article-bg-container-inside');
+        }
+
         if( filterList.length && filterList.hasClass("load-items-from-next-article") )
         {
             filterContainer = filterContainer.parent(".mod_article").next(".mod_article").find(".article-inside");
@@ -65,8 +70,42 @@ IIDO.Filter = IIDO.Filter || {};
                 isoConfig.filter = '.page-0';
             }
 
+            var filterStamp = filterContainer.find('.item-stamp');
+
+            if( filterStamp )
+            {
+                isoConfig.stamp = filterStamp;
+            }
+
+            var oldIsoConfig = isoConfig;
+
+            oldIsoConfig.initLayout = false;
+
             // init Isotope
-            $grid = filterContainer.isotope( isoConfig );
+            // $grid = filterContainer.isotope( isoConfig );
+            $grid = filterContainer.isotope( oldIsoConfig );
+
+            $grid.isotope('on', 'arrangeComplete', function(filteredItems)
+            {
+                if( filteredItems.length )
+                {
+                    var zIndex = (filteredItems.length + 10);
+
+                    for( var fii=0; fii<filteredItems.length; fii++ )
+                    {
+                        $(filteredItems[ fii ].element).css('z-index', zIndex);
+
+                        zIndex--;
+                    }
+                }
+            //     var marginRight = parseInt( filterContainer.find(".ce_rsce_team.team-item").css('margin-bottom') );
+            //     filterContainer.css('margin-right', '-' + marginRight + 'px');
+            //     filterContainer.css('width', filterContainer.parent().width() + marginRight);
+                // filterContainer.css('width', '101%');
+            });
+
+            $grid.isotope( isoConfig );
+
 
             // store filter for each group
             var filters = {};

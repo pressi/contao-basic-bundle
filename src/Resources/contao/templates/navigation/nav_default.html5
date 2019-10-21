@@ -38,6 +38,8 @@
       $noLink = false;
       $addon = '';
 
+      $item['href'] = \Controller::replaceInsertTags( $item['href'] );
+
       if( preg_match('/no-link/', $item['class']) )
       {
           $noLink = true;
@@ -81,6 +83,11 @@
 
           $addon = '<span class="tile" style="background:' . $colorMatches[1][0] . '"></span>';
       }
+
+    if( \IIDO\BasicBundle\Helper\BasicHelper::getLanguage() === 'de' && FALSE !== strpos($item['href'], 'articles') )
+    {
+        $item['href'] = preg_replace('/\/articles\//', '/artikel/', $item['href']);
+    }
 
       ?>
     <?php if ($item['isActive']): ?>

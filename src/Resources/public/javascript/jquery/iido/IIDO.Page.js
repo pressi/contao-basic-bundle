@@ -424,6 +424,18 @@ IIDO.Page = IIDO.Page || {};
 
     page.initPageScroll = function()
     {
+        this.checkScrollState();
+
+        window.addEventListener("scroll", function()
+        {
+            IIDO.Page.checkScrollState();
+        });
+    };
+
+
+
+    page.checkScrollState = function()
+    {
         var navMainRight = document.querySelector('.nav-main.nav-right');
 
         if( IIDO.Base.getBodyScrollTop() >= 50 )
@@ -434,6 +446,7 @@ IIDO.Page = IIDO.Page || {};
             {
                 navMainRight.classList.remove("open");
                 document.body.classList.remove("open-right-navigation");
+                document.body.classList.remove("open-hidden-page-navigation");
             }
         }
         else

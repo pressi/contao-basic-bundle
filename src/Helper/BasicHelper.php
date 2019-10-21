@@ -1175,4 +1175,11 @@ class BasicHelper extends \Frontend
 
         return $arrTables;
     }
+
+
+
+    public static function renderStylesPageAlias( $strAlias )
+    {
+        return preg_replace('/\//', '-', $strAlias);
+    }
 }

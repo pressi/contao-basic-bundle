@@ -635,14 +635,20 @@ input.tl_text.has-addon + .addon {
     padding: 0 0 13px;
 }
 
-.widget.w25 {
+.widget.w15,
+.widget.w20,
+.widget.w25,
+.widget.w30 {
     float: left;
-    width: calc(25% - 30px);
+    width: calc(30% - 30px);
 
     clear: none;
 
     min-height: 80px;
 }
+.widget.w15 { width: calc(15% - 30px); }
+.widget.w20 { width: calc(20% - 30px); }
+.widget.w25 { width: calc(25% - 30px); }
 
 .widget.wauto {
     clear: none;

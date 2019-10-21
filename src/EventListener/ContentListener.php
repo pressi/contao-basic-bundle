@@ -134,7 +134,14 @@ class ContentListener extends DefaultListener
                     $bgClass = 'contain';
                 }
 
-                $strBuffer = preg_replace('/<figure([A-Za-z0-9\s\-=",;.:_\(\)\{\}\/]{0,})>([A-Za-z0-9\s\n\-<>,;.:="\/_]{0,})<\/figure>/', '<figure$1 style="background-image:url(' . $bgImage . ')"></figure>', $strBuffer);
+                $strAttributes = '';
+
+                if( FALSE !== strpos( $cssID[1], 'box-image' ) )
+                {
+                    $strAttributes = ' data-stellar-offset-parent="true" data-stellar-background-ratio="0.85"';
+                }
+
+                $strBuffer = preg_replace('/<figure([A-Za-z0-9\s\-=",;.:_\(\)\{\}\/]{0,})>([A-Za-z0-9\s\n\-<>,;.:="\/_]{0,})<\/figure>/', '<figure$1 style="background-image:url(' . $bgImage . ')"' . $strAttributes . '></figure>', $strBuffer);
                 $strBuffer = str_replace('image_container', 'image_container bg-image bg-' . $bgClass, $strBuffer);
             }
 
@@ -623,7 +630,9 @@ class ContentListener extends DefaultListener
         $strBuffer = $this->renderImages( $strBuffer, $objRow );
 //        $strBuffer = $this->renderTeamContainer( $strBuffer, $objRow );
 
-        if( $objRow->addAnimation || $objArticle->addAnimation )
+        $objRootPage = \PageModel::findByPk( $objPage->rootId );
+
+        if( $objRow->addAnimation || $objArticle->addAnimation || $objPage->addAnimation || $objRootPage->addAnimation )
         {
             $arrElementClasses[] = 'animate-box';
 
@@ -1023,6 +1032,11 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                 $arrTopHeadlineClasses[]    = 'text-' . $topFloating;
             }
 
+            if( $objRow->headlineTopColor )
+            {
+                $arrTopHeadlineClasses[]    = 'ht-color-' . $objRow->headlineTopColor;
+            }
+
             if( $objRow->headlineTopStyles )
             {
                 $arrConfig = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineTopStyle' );
@@ -1075,6 +1089,11 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                 $arrSubHeadlineClasses[]    = 'text-' . $subFloating;
             }
 
+            if( $objRow->headlineBottomColor )
+            {
+                $arrSubHeadlineClasses[]    = 'ht-color-' . $objRow->headlineBottomColor;
+            }
+
             if( $objRow->headlineBottomStyles )
             {
                 $arrConfig = WebsiteStylesHelper::getConfigFieldValue( $objPage->rootAlias, 'headlineBottomStyle' );
@@ -1121,6 +1140,11 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             $arrHeadlineClasses[]       = 'text-' . $floating;
 //            $arrTopHeadlineClasses[]    = 'text-' . $floating;
 //            $arrSubHeadlineClasses[]    = 'text-' . $floating;
+        }
+
+        if( $objRow->headlineColor )
+        {
+            $arrHeadlineClasses[]    = 'ht-color-' . $objRow->headlineColor;
         }
 
         if( $objRow->headlineStyles )
@@ -1256,7 +1280,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
         if( count($arrHeadlineClasses) )
         {
-            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\'\/\\\(\)\{\}=ßöäüÖÄÜ@éèáàóòúùüâûêôñãõ\|]{0,})<\/h([1-6])>/u', $strContent, $arrHeadlineMatches);
+            preg_match_all('/<h([1-6])([A-Za-z0-9\s\-_="\/\\\(\)\{\}]{0,})>([A-Za-z0-9\s\-,;.:_#+!?$%&€§"\|\'\/\\\(\)\{\}=ßöäüÖÄÜ@éèáàóòúùüâûêôñãõ\|]{0,})<\/h([1-6])>/u', $strContent, $arrHeadlineMatches);
 
             if( count($arrHeadlineMatches[0]) )
             {

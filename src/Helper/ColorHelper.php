@@ -22,7 +22,7 @@ class ColorHelper
      */
     public static function getBackgroundColor( $objRow )
     {
-        $bgColor = deserialize($objRow->bgColor, TRUE);
+        $bgColor = \StringUtil::deserialize($objRow->bgColor, TRUE);
 //        $bgColor = self::compileColor(deserialize($objRow->bgColor, TRUE));
 
 //        if( !strlen($bgColor) || $bgColor == 'transparent' )
@@ -61,7 +61,7 @@ class ColorHelper
         }
         else
         {
-            $bgGradient = deserialize($objRow->gradientColors, TRUE);
+            $bgGradient = \StringUtil::deserialize($objRow->gradientColors, TRUE);
 
             if( !empty($bgGradient[0]) )
             {

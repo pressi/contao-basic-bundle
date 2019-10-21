@@ -32,7 +32,9 @@ class FrontendTemplateListener extends DefaultListener
         /* @var \PageModel $objPage */
         global $objPage;
 
-        if( $strTemplate === "mod_article" )
+
+//        if( $strTemplate === "mod_article" )
+        if( 0 === strpos($strTemplate, 'mod_article') )
         {
             $strContent = ArticleTemplateRenderer::parseTemplate( $strContent, $strTemplate );
         }
@@ -477,6 +479,13 @@ class FrontendTemplateListener extends DefaultListener
 
                     $strBuffer = PageHelper::replaceBodyClasses($strBuffer, ['page-has-border']);
                 }
+            }
+
+            $pageColor = ColorHelper::compileColor( $objPage->pageColor );
+
+            if( $pageColor !== 'transparent' )
+            {
+                $strBuffer = preg_replace('/<body/', '<body style="background:' . $pageColor . ';"', $strBuffer);
             }
 
         }
