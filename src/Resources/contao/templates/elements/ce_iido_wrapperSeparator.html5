@@ -1,4 +1,0 @@
-        </div>
-    </div>
-    <div class="html-column-container<?= $this->colClasses ? ' ' . $this->colClasses : '' ?>">
-        <div class="html-column-inside">

@@ -1,3 +1,0 @@
-<div class="iido-message tl_<?= $this->class ?> <?= $this->class ?>">
-    <div><?= $this->message ?></div>
-</div>

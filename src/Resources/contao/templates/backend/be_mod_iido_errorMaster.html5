@@ -1,7 +1,0 @@
-<div class="backend-container error-master-container">
-
-    <h2>Verbindungsfehler!</h2>
-
-    <?= $this->message ?>
-
-</div>
