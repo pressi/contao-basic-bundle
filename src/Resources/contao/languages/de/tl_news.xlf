@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_news.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_news.areasOfApplication.0">
+                <source>Anwendungsbereich(e)</source>
+                <target>Anwendungsbereich(e)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news.usage.0">
+                <source>Verwendungszweck(e)</source>
+                <target>Verwendungszweck(e)</target>
+            </trans-unit>
+
+
+
+<!-- ### GLOBAL OPERATIONS ################################################################################################## -->
+
+            <trans-unit id="tl_news.global_operation.areasOfApplication">
+                <source>Anwendungsbereiche</source>
+                <target>Anwendungsbereiche</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news.global_operation.uses">
+                <source>Verwendungszweck</source>
+                <target>Verwendungszweck</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

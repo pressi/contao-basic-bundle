@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_maintenance.iido_settings_headline">
+                <source>IIDO Einstellungen</source>
+                <target>IIDO Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_maintenance.iido_settings_description">
+                <source>Hier können Sie Einstellungen für Ihre Website vornehmen.</source>
+                <target>Hier können Sie Einstellungen für Ihre Website vornehmen.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_maintenance.iido_settings_submit">
+                <source>Einstellungen bearbeiten</source>
+                <target>Einstellungen bearbeiten</target>
+            </trans-unit>
+
+            <trans-unit id="tl_maintenance.iido_open_master_connect">
+                <source>Master Verbindungstool</source>
+                <target>Master Verbindungstool</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

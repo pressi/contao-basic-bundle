@@ -1,0 +1,598 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_content.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_content.elements.0">
+                <source>Elements</source>
+                <target>Elemente</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.topHeadline.0">
+                <source>top headline</source>
+                <target>Überschrift oben</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.topHeadlineFloating.0">
+                <source>Ausrichtung</source>
+                <target>Ausrichtung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.topHeadlineColor.0">
+                <source>Farbe</source>
+                <target>Farbe</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_content.headlineFloating.0">
+                <source>Ausrichtung</source>
+                <target>Ausrichtung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.headlineColor.0">
+                <source>Farbe</source>
+                <target>Farbe</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.layout_col_mobile.0">
+                <source>Smartphone</source>
+                <target>Smartphone</target>
+            </trans-unit>
+            <trans-unit id="tl_content.layout_col_mobile.1">
+                <source>Spaltenanzahl</source>
+                <target>Spaltenanzahl</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.layout_col_tablet.0">
+                <source>Tablet</source>
+                <target>Tablet</target>
+            </trans-unit>
+            <trans-unit id="tl_content.layout_col_tablet.1">
+                <source>Spaltenanzahl</source>
+                <target>Spaltenanzahl</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.layout_col_desktop.0">
+                <source>Desktop</source>
+                <target>Desktop</target>
+            </trans-unit>
+            <trans-unit id="tl_content.layout_col_desktop.1">
+                <source>Spaltenanzahl</source>
+                <target>Spaltenanzahl</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.layout_col_wide.0">
+                <source>Widescreen (Breitbild)</source>
+                <target>Widescreen (Breitbild)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.layout_col_wide.1">
+                <source>Spaltenanzahl</source>
+                <target>Spaltenanzahl</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.layout_cond_width.0">
+                <source>Anzeigen auf:</source>
+                <target>Anzeigen auf:</target>
+            </trans-unit>
+            <trans-unit id="tl_content.layout_cond_width.1">
+                <source>Wählen Sie auf welchen Geräten das Element angezeigt werden soll.</source>
+                <target>Wählen Sie auf welchen Geräten das Element angezeigt werden soll.</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.addAnimation.0">
+                <source>add animation</source>
+                <target>Animationen hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animationType.0">
+                <source>animation type</source>
+                <target>Typ</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animationOffset.0">
+                <source>animation offset</source>
+                <target>Abstand von unten bis zum Start</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animationWait.0">
+                <source>animation wait</source>
+                <target>Verzögerung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animateRun.0">
+                <source>add animation</source>
+                <target>Ausführung</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_content.elements_legend">
+                <source>Elemnte</source>
+                <target>Elemnte</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.template_legend">
+                <source>Template</source>
+                <target>Template</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.layout_legend">
+                <source>Layout</source>
+                <target>Layout</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.animation_legend">
+                <source>Animation</source>
+                <target>Animation</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_content.options.headlineFloating.left">
+                <source>align left</source>
+                <target>Linksbündig</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.headlineFloating.center">
+                <source>align center</source>
+                <target>Zentriert</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.headlineFloating.right">
+                <source>align right</source>
+                <target>Rechtsbündig</target>
+            </trans-unit>
+
+
+
+<!--            <trans-unit id="tl_content.options.layout_cond_width.mobile">-->
+<!--                <source>Smartphones</source>-->
+<!--                <target>Smartphones</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_cond_width.tablet">-->
+<!--                <source>Tablets</source>-->
+<!--                <target>Tablets</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_cond_width.desktop">-->
+<!--                <source>Desktops</source>-->
+<!--                <target>Desktops</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_cond_width.wide">-->
+<!--                <source>Widescreen (Breitbild)</source>-->
+<!--                <target>Widescreen (Breitbild)</target>-->
+<!--            </trans-unit>-->
+            <trans-unit id="tl_content.options.layout_cond_width.mobile">
+                <source>show on Smartphones</source>
+                <target>Auf Smartphones anzeigen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_cond_width.tablet">
+                <source>show on Tablets</source>
+                <target>Auf Tablets anzeigen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_cond_width.desktop">
+                <source>show on Desktops</source>
+                <target>Auf Desktops anzeigen</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_cond_width.wide">
+                <source>show on Widescreens</source>
+                <target>Auf Widescreens anzeigen</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.layout_col_mobile.12">
+                <source>12/12 Volle Breite</source>
+                <target>12/12 Volle Breite</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.11">
+                <source>11/12</source>
+                <target>11/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.10">
+                <source>10/12</source>
+                <target>10/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.9">
+                <source>9/12</source>
+                <target>9/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.8">
+                <source>8/12</source>
+                <target>8/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.7">
+                <source>7/12</source>
+                <target>7/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.6">
+                <source>6/12 Halbe Breite</source>
+                <target>6/12 Halbe Breite</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.5">
+                <source>5/12</source>
+                <target>5/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.4">
+                <source>4/12</source>
+                <target>4/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.3">
+                <source>3/12</source>
+                <target>3/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.2">
+                <source>2/12</source>
+                <target>2/12</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_col_mobile.1">
+                <source>1/12</source>
+                <target>1/12</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.layout_align_mobile.normal">
+                <source>normal</source>
+                <target>Normal</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_align_mobile.center">
+                <source>center</source>
+                <target>Zentriert</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_align_mobile.left">
+                <source>left</source>
+                <target>Links</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.layout_align_mobile.right">
+                <source>right</source>
+                <target>Rechts</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.bounce">
+                <source>bounce</source>
+                <target>bounce</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.flash">
+                <source>flash</source>
+                <target>flash</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.pulse">
+                <source>pulse</source>
+                <target>pulse</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.rubberBand">
+                <source>rubberBand</source>
+                <target>rubberBand</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.shake">
+                <source>shake</source>
+                <target>shake</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.swing">
+                <source>swing</source>
+                <target>swing</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.tada">
+                <source>tada</source>
+                <target>tada</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.wobble">
+                <source>wobble</source>
+                <target>wobble (Flattern)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.jello">
+                <source>jello</source>
+                <target>jello (Wackelpudding)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Aufmerksamkeitssuchende.heartBeat">
+                <source>heartBeat</source>
+                <target>heartBeat (Herzschlag)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceIn">
+                <source>bounceIn</source>
+                <target>bounceIn</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInDown">
+                <source>bounceInDown</source>
+                <target>bounceInDown</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInLeft">
+                <source>bounceInLeft</source>
+                <target>bounceInLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInRight">
+                <source>bounceInRight</source>
+                <target>bounceInRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Einstiege.bounceInUp">
+                <source>bounceInUp</source>
+                <target>bounceInUp</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOut">
+                <source>bounceOut</source>
+                <target>bounceOut</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutDown">
+                <source>bounceOutDown</source>
+                <target>bounceOutDown</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutLeft">
+                <source>bounceOutLeft</source>
+                <target>bounceOutLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutRight">
+                <source>bounceOutRight</source>
+                <target>bounceOutRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Hüpfende Ausgänge.bounceOutUp">
+                <source>bounceOutUp</source>
+                <target>bounceOutUp</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeIn">
+                <source>fadeIn</source>
+                <target>fadeIn</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInDown">
+                <source>fadeInDown</source>
+                <target>fadeInDown</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInDownBig">
+                <source>fadeInDownBig</source>
+                <target>fadeInDownBig</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInLeft">
+                <source>fadeInLeft</source>
+                <target>fadeInLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInLeftBig">
+                <source>fadeInLeftBig</source>
+                <target>fadeInLeftBig</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInRight">
+                <source>fadeInRight</source>
+                <target>fadeInRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInRightBig">
+                <source>fadeInRightBig</source>
+                <target>fadeInRightBig</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInUp">
+                <source>fadeInUp</source>
+                <target>fadeInUp</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Eingänge.fadeInUpBig">
+                <source>fadeInUpBig</source>
+                <target>fadeInUpBig</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOut">
+                <source>fadeOut</source>
+                <target>fadeOut</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutDown">
+                <source>fadeOutDown</source>
+                <target>fadeOutDown</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutDownBig">
+                <source>fadeOutDownBig</source>
+                <target>fadeOutDownBig</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutLeft">
+                <source>fadeOutLeft</source>
+                <target>fadeOutLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutLeftBig">
+                <source>fadeOutLeftBig</source>
+                <target>fadeOutLeftBig</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutRight">
+                <source>fadeOutRight</source>
+                <target>fadeOutRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutRightBig">
+                <source>fadeOutRightBig</source>
+                <target>fadeOutRightBig</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutUp">
+                <source>fadeOutUp</source>
+                <target>fadeOutUp</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Verblassende Ausgänge.fadeOutUpBig">
+                <source>fadeOutUpBig</source>
+                <target>fadeOutUpBig</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Flippers.flip">
+                <source>flip</source>
+                <target>flip</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Flippers.flipInX">
+                <source>flipInX</source>
+                <target>flipInX (Horizontal, Einblenden)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Flippers.flipInY">
+                <source>flipInY</source>
+                <target>flipInY (Vertikal, Einblenden)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Flippers.flipOutX">
+                <source>flipOutX</source>
+                <target>flipOutX (Horizontal, Ausblenden)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Flippers.flipOutY">
+                <source>flipOutY</source>
+                <target>flipOutY (Vertikal, Ausblenden)</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Lichtgeschwindigkeit.lightSpeedIn">
+                <source>lightSpeedIn</source>
+                <target>lightSpeedIn</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Lichtgeschwindigkeit.lightSpeedOut">
+                <source>lightSpeedOut</source>
+                <target>lightSpeedOut</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateIn">
+                <source>rotateIn</source>
+                <target>rotateIn</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInDownLeft">
+                <source>rotateInDownLeft</source>
+                <target>rotateInDownLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInDownRight">
+                <source>rotateInDownRight</source>
+                <target>rotateInDownRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInUpLeft">
+                <source>rotateInUpLeft</source>
+                <target>rotateInUpLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Eingänge.rotateInUpRight">
+                <source>rotateInUpRight</source>
+                <target>rotateInUpRight</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOut">
+                <source>rotateOut</source>
+                <target>rotateOut</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutDownLeft">
+                <source>rotateOutDownLeft</source>
+                <target>rotateOutDownLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutDownRight">
+                <source>rotateOutDownRight</source>
+                <target>rotateOutDownRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutUpLeft">
+                <source>rotateOutUpLeft</source>
+                <target>rotateOutUpLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Rotierende Ausgänge.rotateOutUpRight">
+                <source>rotateOutUpRight</source>
+                <target>rotateOutUpRight</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInUp">
+                <source>slideInUp</source>
+                <target>slideInUp</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInLeft">
+                <source>slideInLeft</source>
+                <target>slideInLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInRight">
+                <source>slideInRight</source>
+                <target>slideInRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Gleitende Eingänge.slideInDown">
+                <source>slideInDown</source>
+                <target>slideInDown</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutDown">
+                <source>slideOutDown</source>
+                <target>slideOutDown</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutLeft">
+                <source>slideOutLeft</source>
+                <target>slideOutLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutRight">
+                <source>slideOutRight</source>
+                <target>slideOutRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Gleitende Ausgänge.slideOutDown">
+                <source>slideOutDown</source>
+                <target>slideOutDown</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomIn">
+                <source>zoomIn</source>
+                <target>zoomIn</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInDown">
+                <source>zoomInDown</source>
+                <target>zoomInDown</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInLeft">
+                <source>zoomInLeft</source>
+                <target>zoomInLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInRight">
+                <source>zoomInRight</source>
+                <target>zoomInRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Eingänge.zoomInUp">
+                <source>zoomInUp</source>
+                <target>zoomInUp</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOut">
+                <source>zoomOut</source>
+                <target>zoomOut</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutDown">
+                <source>zoomOutDown</source>
+                <target>zoomOutDown</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutLeft">
+                <source>zoomOutLeft</source>
+                <target>zoomOutLeft</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutRight">
+                <source>zoomOutRight</source>
+                <target>zoomOutRight</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Zoom Ausgänge.zoomOutUp">
+                <source>zoomOutUp</source>
+                <target>zoomOutUp</target>
+            </trans-unit>
+
+            <trans-unit id="tl_content.options_animationType.Spezielles.hinge">
+                <source>hinge</source>
+                <target>hinge</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Spezielles.jackInTheBox">
+                <source>jackInTheBox</source>
+                <target>jackInTheBox</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Spezielles.rollIn">
+                <source>rollIn</source>
+                <target>rollIn</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options_animationType.Spezielles.rollOut">
+                <source>rollOut</source>
+                <target>rollOut</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.animateRun.once">
+                <source>once</source>
+                <target>nach unten (nur einmal)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.animateRun.down">
+                <source>down</source>
+                <target>nach unten (immer)</target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.animateRun.down_up">
+                <source>down and up</source>
+                <target>nach unten und nach oben (immer)</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

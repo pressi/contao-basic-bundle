@@ -1,0 +1,132 @@
+<?php
+// Add the fancybox style sheet
+//$tableFieldPrefix   = \IIDO\BasicBundle\Config\BundleConfig::getTableFieldPrefix();
+//$publicBundlePath   = \IIDO\BasicBundle\Config\BundleConfig::getBundlePath( true );
+
+//$fancyboxVersion    = \Config::get( $tableFieldPrefix . 'scriptsFancybox');
+
+//$GLOBALS['TL_CSS']['fancybox']        = $publicBundlePath . '/css/fancybox/' . $fancyboxVersion . '/jquery.fancybox.min.css||static';
+//$GLOBALS['TL_JAVASCRIPT']['fancybox'] = $publicBundlePath . '/javascript/jquery/fancybox/' . $fancyboxVersion . '/jquery.fancybox.min.js|static';
+
+//\IIDO\BasicBundle\Helper\ScriptHelper::addScript( "fancybox", true);
+\IIDO\BasicBundle\Helper\ScriptHelper::insertScript( "fancybox", true);
+
+$titleCounter   = FALSE;
+$hideTitle      = FALSE;
+
+//$titleType				= \Config::get("iidoCustomize_fancyboxTitleType");
+//$titleCounter			= \Config::get("iidoCustomize_fancyboxAddTitleCounter");
+//$hideTitle				= \Config::get("iidoCustomize_fancyboxHideTitle");
+
+//if( $titleCounter && $titleType == "none" )
+//{
+//	$titleType	= 'outside';
+//	$hideTitle	= TRUE;
+//}
+?>
+<script>
+jQuery = window.jQuery || jQuery;
+//$.fancybox.defaults.tpl.closeBtn            = '<div title="Close" class="fancybox-item fancybox-close">schliessen</div>';
+<?php //if($titleType == "none"): ?>
+//$.fancybox.defaults.helpers.title           = null;
+<?php //else: ?>
+//$.fancybox.defaults.helpers.title.type      = '<?php //echo $titleType; ?>//';
+<?php //endif; ?>
+jQuery.fancybox.defaults.padding                 = 0;
+jQuery.fancybox.defaults.margin                  = 100;
+jQuery.fancybox.defaults.loop                    = false;
+jQuery.fancybox.defaults.autoSize                = false;
+jQuery.fancybox.defaults.prevEffect              = 'none';
+jQuery.fancybox.defaults.nextEffect              = 'none';
+jQuery.fancybox.defaults.fullScreen              = false;
+//$.fancybox.defaults.touch.vertivcal         = true;
+<?php /*
+ jQuery.fancybox.defaults.buttons                = ["zoom", "close"];
+
+jQuery.fancybox.defaults.btnTpl.arrowRight      = '<button data-fancybox-next class="fancybox-button fancybox-button--arrow_right" title="{{iflng::de}}Weiter{{iflng}}{{ifnlng::de}}Next{{ifnlng}}">' +
+    '<div><svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="408px" height="408px" viewBox="0 0 408 408" style="enable-background:new 0 0 408 408" xml:space="preserve">' +
+    '<g><g id="arrow-forward">' +
+    '<polygon points="204,0 168.3,35.7 311.1,178.5 0,178.5 0,229.5 311.1,229.5 168.3,372.3 204,408 408,204"></polygon>' +
+    '</g></g></svg></div>' +
+    "</button>";
+
+jQuery.fancybox.defaults.btnTpl.arrowLeft       = '<button data-fancybox-prev class="fancybox-button fancybox-button--arrow_left" title="{{iflng::de}}Zurück{{iflng}}{{ifnlng::de}}Back{{ifnlng}}">' +
+    '<div><svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="408px" height="408px" viewBox="0 0 408 408" style="enable-background:new 0 0 408 408" xml:space="preserve">' +
+    '<g><g id="arrow-forward">' +
+    '<polygon points="204,0 168.3,35.7 311.1,178.5 0,178.5 0,229.5 311.1,229.5 168.3,372.3 204,408 408,204"></polygon>' +
+    '</g></g></svg></div>' +
+    "</button>";
+
+jQuery.fancybox.defaults.btnTpl.zoom =  '<button data-fancybox-zoom class="fancybox-button fancybox-button--zoom" title="Zoom">' +
+    '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 52.966 52.966" style="enable-background:new 0 0 52.966 52.966;" xml:space="preserve"><g><path d="M28.983,20h-6v-6c0-0.552-0.448-1-1-1s-1,0.448-1,1v6h-6c-0.552,0-1,0.448-1,1s0.448,1,1,1h6v6c0,0.552,0.448,1,1,1 s1-0.448,1-1v-6h6c0.552,0,1-0.448,1-1S29.535,20,28.983,20z"/><path d="M51.704,51.273L36.845,35.82c3.79-3.801,6.138-9.041,6.138-14.82c0-11.58-9.42-21-21-21s-21,9.42-21,21s9.42,21,21,21 c5.083,0,9.748-1.817,13.384-4.832l14.895,15.491c0.196,0.205,0.458,0.307,0.721,0.307c0.25,0,0.499-0.093,0.693-0.279 C52.074,52.304,52.086,51.671,51.704,51.273z M2.983,21c0-10.477,8.523-19,19-19s19,8.523,19,19s-8.523,19-19,19 S2.983,31.477,2.983,21z"/></g></svg>' +
+    "</button>";
+*/ ?>
+(function($) {
+
+	$('[rel="gallery"]').fancybox();
+
+	$(document).on("click", "[data-lightbox]", function(e)
+    {
+		e.preventDefault();
+		var grp = $(this).data('lightbox'),
+			els = this;
+
+		if (grp) {
+			els = $('[data-lightbox=' + grp + ']');
+		}
+
+		var index = 0;
+		for(i=0; i < els.length; i++)
+		{
+			if(this.href === els[ i ].href)
+			{
+				index = i;
+				break;
+			}
+		}
+
+		$.fancybox.open(els, {
+			openEffect	: 'elastic',
+			closeEffect	: 'elastic',
+			"index"		:   index,
+
+//			helpers	: {
+//				title		: {
+//					type		: 'outside' //$.fancybox.defaults.helpers.title.type
+//				}
+//			},
+            caption: function( instance, item )
+            {
+                var caption = $(this).data('caption') || '';
+
+                if ( !caption.length )
+                {
+                    caption = $(this).attr("title");
+                }
+
+                if( caption )
+                {
+                    if( caption.indexOf('.jpg') !== -1 )
+                    {
+                        caption = '';
+                    }
+                }
+
+                return caption;
+            },
+
+			afterLoad : function()
+			{
+				<?php if($titleCounter): ?>
+					<?php if($hideTitle): ?>
+						this.title = '<span class="counter">' + (this.index + 1) + ' / ' + this.group.length + '</span>';
+					<?php else: ?>
+						this.title = (this.title ? this.title : '') + '<span class="counter">' + (this.index + 1) + ' / ' + this.group.length + '</span>';
+					<?php endif; ?>
+				<?php endif; ?>
+			}
+		});
+	});
+
+})(jQuery);
+</script>

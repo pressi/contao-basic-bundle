@@ -1,0 +1,121 @@
+services:
+
+  _defaults:
+    public: true
+    autoconfigure: true
+
+  IIDO\BasicBundle\EventListener\InitializeSystemListener:
+    arguments:
+      - "@request_stack"
+      - "@contao.routing.scope_matcher"
+
+  IIDO\BasicBundle\EventListener\ArticleListener:
+  IIDO\BasicBundle\EventListener\PageListener:
+  IIDO\BasicBundle\EventListener\FrontendTemplateListener:
+  IIDO\BasicBundle\EventListener\ContentListener:
+  IIDO\BasicBundle\EventListener\MessagesListener:
+
+  IIDO\BasicBundle\EventListener\BackendTemplateListener:
+    arguments:
+      - "@contao.framework"
+
+  IIDO\BasicBundle\EventListener\InsertTagsListener:
+    arguments:
+      - "@contao.framework"
+
+  IIDO\BasicBundle\EventListener\AjaxListener:
+    arguments:
+      - "@monolog.logger.contao"
+      - "@contao.framework"
+
+  IIDO\BasicBundle\EventListener\BackendMenuListener:
+    arguments:
+      - "@router"
+      - "@request_stack"
+    tags:
+      - { name: kernel.event_listener, event: contao.backend_menu_build, method: onBuild, priority: -255 }
+
+
+  ## DCA Tables
+  iido.basic.dca.content:
+    class: IIDO\BasicBundle\Dca\Table\ContentTable
+    public: true
+    arguments:
+      - "@contao.framework"
+      - "@security.token_storage"
+      - "@session"
+      - "doctrine.orm.entity_manager"
+
+
+  iido.basic.twig.template.twig_extension:
+    class: IIDO\BasicBundle\Twig\TwigTemplatesExtension
+    public: false
+    tags:
+      - {name: twig.extension}
+
+  iido.basic.config:
+    class: IIDO\BasicBundle\Config\IIDOConfig
+    public: true
+    arguments:
+      - '@database_connection'
+
+
+  IIDO\BasicBundle\Controller\Elements\ColumnMasterElement:
+
+
+  ## TABLES LISTENER - Callbacks
+  IIDO\BasicBundle\Dca\Listener\ConfigListener:
+
+
+  ## News Area Of Appliction Picker
+  iido.basic.news.areaOfApplication.manager:
+    class: IIDO\BasicBundle\Manager\NewsAreaOfApplicationManager
+
+  iido.basic.news.permission_checker:
+    class: IIDO\BasicBundle\Permission\NewsPermissionChecker
+    public: false
+    arguments:
+      - "@database_connection"
+      - "@security.token_storage"
+
+  iido.basic.news.areasOfApplication_picker:
+    class: IIDO\BasicBundle\Picker\NewsAreaOfApplicationPickerProvider
+    public: false
+    arguments:
+      - "@knp_menu.factory"
+      - "@router"
+    calls:
+      - [setTokenStorage, ["@security.token_storage"]]
+      - [setPermissionChecker, ["@iido.basic.news.permission_checker"]]
+    tags:
+      - { name: contao.picker_provider, priority: 133 }
+
+  iido.basic.listener.data_container.news:
+    class: IIDO\BasicBundle\EventListener\DataContainer\NewsListener
+    arguments:
+      - "@database_connection"
+      - "@iido.basic.news.permission_checker"
+      - "@contao.framework"
+
+  iido.basic.news.criteria_builder:
+    class: IIDO\BasicBundle\Criteria\NewsCriteriaBuilder
+    arguments:
+      - "@database_connection"
+      - "@iido.basic.news.areaOfApplication.manager"
+
+
+  ## News Usage Picker
+  iido.basic.news.usage.manager:
+    class: IIDO\BasicBundle\Manager\NewsUsageManager
+
+  iido.basic.news.usage_picker:
+    class: IIDO\BasicBundle\Picker\NewsUsagePickerProvider
+    public: false
+    arguments:
+      - "@knp_menu.factory"
+      - "@router"
+    calls:
+      - [setTokenStorage, ["@security.token_storage"]]
+      - [setPermissionChecker, ["@iido.basic.news.permission_checker"]]
+    tags:
+      - { name: contao.picker_provider, priority: 133 }

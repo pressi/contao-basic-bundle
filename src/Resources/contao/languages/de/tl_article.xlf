@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_article.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_article.bgColor.0">
+                <source>Hintergrund-Farbe</source>
+                <target>Hintergrund-Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.gradientColors.0">
+                <source>Hintergrund-Verlauf Farben</source>
+                <target>Hintergrund-Verlauf Farben</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.gradientAngle.0">
+                <source>Hintergrund-Verlauf Winkel</source>
+                <target>Hintergrund-Verlauf Winkel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgImage.0">
+                <source>Hintergrund-Bild</source>
+                <target>Hintergrund-Bild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgPosition.0">
+                <source>Hintergrund-Bild Position</source>
+                <target>Hintergrund-Bild Position</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgRepeat.0">
+                <source>Hintergrund-Bild Wiederholung</source>
+                <target>Hintergrund-Bild Wiederholung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgAttachment.0">
+                <source>Hintergrund-Bild Verhalten</source>
+                <target>Hintergrund-Bild Verhalten</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.bgSize.0">
+                <source>Hintergrund-Bild Größe</source>
+                <target>Hintergrund-Bild Größe</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_article.fullWidth.0">
+                <source>Volle Breite</source>
+                <target>Volle Breite</target>
+            </trans-unit>
+            <trans-unit id="tl_article.width.0">
+                <source>Breite</source>
+                <target>Breite</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.fullHeight.0">
+                <source>Volle Höhe</source>
+                <target>Volle Höhe</target>
+            </trans-unit>
+            <trans-unit id="tl_article.height.0">
+                <source>Höhe</source>
+                <target>Höhe</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_article.design_legend">
+                <source>Design</source>
+                <target>Design</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.dimensions_legend">
+                <source>Größen</source>
+                <target>Größen</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_article.options.bgSize._cover">
+                <source>cover</source>
+                <target>Vollflächig (abgeschnitten)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgSize._contain">
+                <source>cover</source>
+                <target>Vollflächig (passend)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgSize.own">
+                <source>own</source>
+                <target>Eigene Größe</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.bgPosition.left top">
+                <source>left top</source>
+                <target>Links Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.left center">
+                <source>left center</source>
+                <target>Links Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.left bottom">
+                <source>left bottom</source>
+                <target>Links Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.center top">
+                <source>center top</source>
+                <target>Mitte Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.center center">
+                <source>center center</source>
+                <target>Mitte Mitte (Zentriert)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.center bottom">
+                <source>center bottom</source>
+                <target>Mitte Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.right top">
+                <source>right top</source>
+                <target>Rechts Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.right center">
+                <source>right center</source>
+                <target>Rechts Mitte</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgPosition.right bottom">
+                <source>right bottom</source>
+                <target>Rechts Unten</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.bgRepeat.repeat">
+                <source>repeat</source>
+                <target>Wiederholung (Kacheln)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgRepeat.repeat-x">
+                <source>repeat x</source>
+                <target>Horizontale Wiederholung</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgRepeat.repeat-y">
+                <source>repeat y</source>
+                <target>Vertikale Wiederholung</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgRepeat.no-repeat">
+                <source>no repeat</source>
+                <target>Keine Wiederholung</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.bgAttachment.fixed">
+                <source>fixed</source>
+                <target>Fixiert</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.bgAttachment.scroll">
+                <source>scroll</source>
+                <target>Scroll</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.width.small">
+                <source>small</source>
+                <target>Small</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.width.medium">
+                <source>medium</source>
+                <target>Medium</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.width.large">
+                <source>large</source>
+                <target>Large</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.width.full">
+                <source>full width</source>
+                <target>Volle Breite</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.height.small">
+                <source>small</source>
+                <target>Small</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.height.medium">
+                <source>medium</source>
+                <target>Medium</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.height.large">
+                <source>large</source>
+                <target>Large</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.height.full">
+                <source>full height</source>
+                <target>Volle Höhe</target>
+            </trans-unit>
+
+
+        </body>
+    </file>
+</xliff>

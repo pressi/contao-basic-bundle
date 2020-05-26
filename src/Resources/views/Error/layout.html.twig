@@ -1,0 +1,165 @@
+{% trans_default_domain 'contao_exception' %}
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+    {% block head %}
+        <meta charset="utf-8">
+        <title>{% block title %}{{ statusCode }} Error{% endblock %}</title>
+        <meta name="generator" content="Contao Open Source CMS">
+        <meta name="robots" content="noindex,nofollow">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+        <link rel="stylesheet" href="{{ asset('system/themes/flexible/fonts.min.css') }}">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,800|Inconsolata' rel='stylesheet' type='text/css'>
+        {% block style %}
+            <style>
+                html {
+                    background: #fff;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font: 16px "Open Sans", Helvetica, sans-serif;
+                    font-weight: 300;
+                    color: #333;
+                }
+                @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+                    body {
+                        font-family: "Lato Retina", Lato, sans-serif;
+                    }
+                }
+                a, a:visited {
+                    text-decoration: none;
+                    color: #e4790f;
+                }
+                a:hover {
+                    text-decoration: underline;
+                }
+                h1, h2, h3 {
+                    font-weight: 300;
+                }
+                h1 {
+                    margin: 0;
+                    padding-bottom: 2%;
+                    font-size: 3em;
+                }
+                h2, h3 {
+                    font-size: 1.5em;
+                }
+                pre, code {
+                    font: 300 .75rem/1.25 "Roboto Mono", monospace;
+                }
+                #header {
+                    padding: 12px 0 10px;
+                }
+                #content {
+                    padding: 3% 0;
+                    background-color: #eee;
+                }
+                #footer {
+                    font-size: 0.75em;
+                    text-align: center;
+                    padding: .5em 0;
+                    color: #999;
+                }
+                .wrap {
+                    width: 60%;
+                    margin: 0 auto;
+                    padding: 1em;
+                    overflow: hidden;
+                }
+                .header-logo {
+                    display: inline-block;
+                }
+                .search {
+                    display: inline-block;
+                    float: right;
+                    margin-top: 12px;
+                }
+                .block-error {
+                    margin-bottom: 20px;
+                    background-color: #fff;
+                    border: 1px solid #dfdfdf;
+                    border-radius: 16px;
+                    padding: 15px 30px 24px;
+                    word-wrap: break-word;
+                    overflow: hidden;
+                }
+                .block-error:before {
+                    float: left;
+                    content: "</";
+                    font-size: 5em;
+                    color: #ccc;
+                }
+                .block-error .inner {
+                    padding-left: 13%;
+                }
+                input {
+                    background: #fff;
+                    padding: 6px;
+                    border: 1px solid #dfdfdf;
+                    border-radius: 3px;
+                    font-family: inherit;
+                    font-size: 14px;
+                    line-height: 16px;
+                }
+                input[type="search"] {
+                    width: 15em;
+                    margin-right: 6px;
+                }
+                button {
+                    border: 0;
+                    background: #fff;
+                    margin: 0;
+                    padding: 0;
+                    position: relative;
+                    top: 3px;
+                    cursor: pointer;
+                }
+            </style>
+       {% endblock %}
+    {% endblock %}
+</head>
+<body>
+
+    <div id="container">
+
+        <div class="inside">
+            {% block icon %}<img src="bundles/iidobasic/images/frontend/icons/maintance_big.png" width="260" height="259" alt="Werkzeug in Kreis">{% endblock %}
+            {% block headline %}<h1>{{ 'XPT.unavailable'|trans }}</h1>{% endblock %}
+            {% block main %}
+                {% if block('matter') is defined %}
+                    {% set _block = block('matter') %}
+                    {% if _block|trim is not empty %}
+                        <h2>{{ 'XPT.matter'|trans|default("What's the matter?") }}</h2>
+                        {{ _block|raw }}
+                    {% endif %}
+                {% endif %}
+                {% if block('howToFix') is defined %}
+                    {% set _block = block('howToFix') %}
+                    {% if _block|trim is not empty %}
+                        <h2>{{ 'XPT.howToFix'|trans|default('How can I fix the issue?') }}</h2>
+                        {{ _block|raw }}
+                    {% endif %}
+                {% endif %}
+                {% if block('explain') is defined %}
+                    {% set _block = block('explain') %}
+                    {% if _block|trim is not empty %}
+                        <h3>{{ error.more|trans|default('Tell me more, please') }}</h3>
+                        {{ _block|raw }}
+                    {% endif %}
+                {% endif %}
+            {% endblock %}
+        </div>
+
+
+        {#{% block publisher %}#}
+            {#<div class="publisher">#}
+                {#<a href="http://www.stephanpressl.at" target="_blank">#}
+                    {#<img src="bundles/iidobasic/images/frontend/icons/Logo_StephanPressl.png" width="82" height="36" alt="Logo Stephan Pressl">#}
+                    {#<div class="txt">Werbeagentur</div>#}
+                {#</a>#}
+            {#</div>#}
+        {#{% endblock %}#}
+    </div>
+</body>
+</html>

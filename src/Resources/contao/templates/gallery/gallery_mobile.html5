@@ -1,0 +1,39 @@
+<ul class="cols_<?= $this->perRow ?>" itemscope itemtype="http://schema.org/ImageGallery">
+  <?php foreach ($this->body as $class => $row): ?>
+    <?php foreach ($row as $col):
+        $insertPicture = true;
+        $strImage = '';
+
+        if( false !== strpos($col->picture['img']['src'], '.svg') )
+        {
+            $insertPicture = false;
+            $strImage = file_get_contents(\IIDO\BasicBundle\Helper\BasicHelper::getRootDir(true) . $col->picture['img']['src']);
+        }
+          ?>
+      <?php if ($col->addImage): ?>
+        <li class="<?= $class ?> <?= $col->class ?>">
+          <figure class="image_container"<?php if ($col->margin): ?> style="<?= $col->margin ?>"<?php endif; ?>>
+            <?php if ($col->href): ?>
+              <a href="<?= $col->href ?>"<?= $col->attributes ?><?php if ($col->linkTitle): ?> title="<?= $col->linkTitle ?>"<?php endif; ?>>
+                  <?php if( $insertPicture ): ?>
+                    <?php $this->insert('picture_default', $col->picture); ?>
+                  <?php else: ?>
+                    <?= $strImage ?>
+                  <?php endif ?>
+              </a>
+            <?php else: ?>
+                <?php if( $insertPicture ): ?>
+                    <?php $this->insert('picture_default', $col->picture); ?>
+                <?php else: ?>
+                    <?= $strImage ?>
+                <?php endif ?>
+            <?php endif; ?>
+            <?php if ($col->caption): ?>
+              <figcaption class="caption"><?= $col->caption ?></figcaption>
+            <?php endif; ?>
+          </figure>
+        </li>
+      <?php endif; ?>
+    <?php endforeach; ?>
+  <?php endforeach; ?>
+</ul>

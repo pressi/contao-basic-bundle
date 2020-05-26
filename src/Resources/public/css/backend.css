@@ -1,0 +1,112 @@
+.w25 {
+    float: left;
+    width: calc(25% - 30px);
+    min-height: 80px;
+}
+
+.w33 {
+    float: left;
+    width: calc(100% / 3 - 30px);
+    min-height: 80px;
+}
+
+.ha,
+.hauto,
+.heightauto,
+.height-auto {
+    height: auto;
+}
+
+.w50.ha,
+.w50.heightauto,
+.w50.height-auto,
+.w50.hauto {
+    min-height: 80px;
+}
+
+.clr.cw25 {
+    width: calc(100% - 30px);
+}
+
+.cw25 fieldset > br,
+.cw25 fieldset > legend,
+.cw25 fieldset > legend + input + input.tl_checkbox,
+.cw25 fieldset > legend + input + input.tl_checkbox + label {
+    display: none;
+}
+.cw25 fieldset > * {
+    float: left;
+}
+
+.cw25 fieldset > label {
+    width: calc(25% - 24px); height: 24px;
+    line-height: 24px;
+    margin: 0 7px 7px 0;
+}
+.cw25 fieldset > label:last-of-type {
+    width: auto;
+}
+
+.cw25 fieldset > input[type="checkbox"] {
+    width: 16px; height: 16px;
+    margin: 4px;
+}
+
+.cw25 fieldset:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+
+
+/**
+ * iido tags widget
+ * --------------------------------- */
+
+.labels {
+    background: #f3f3f3;
+    padding: 8px 8px 0;
+    border-radius: 3px;
+    margin: 5px 0;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+}
+
+.labels:after {
+    display: table;
+    content: '';
+    clear: both;
+    float: none;
+}
+
+.labels .label-link {
+    background: #909390;
+    color: #fff;
+    float: left;
+    display: block;
+    margin: 0 10px 8px 0;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.labels + input {
+    width: 100% !important;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+}
+
+.labels .label-link.active {
+    background: #000;
+}
+.labels .label-link:not(.active):hover {
+    background: #666966;
+}
+
+#tl_soverview > div#tl_intro {
+    padding-top: 18px;
+}

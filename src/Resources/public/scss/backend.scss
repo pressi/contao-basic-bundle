@@ -1,0 +1,220 @@
+@import "grid";
+
+.grid-page {
+
+    .row {
+        background: transparent !important;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 5px;
+        width: 100%;
+
+        & > li {
+            box-sizing: border-box;
+            display: block!important;
+            margin-top: 0;
+            padding: 5px;
+            position: relative;
+
+            & > * {
+                border: none;
+                box-shadow: 0 0 0 1px #ccc inset;
+                overflow: hidden;
+                padding: 15px;
+                height: calc(100% - 30px);
+
+                .cte_type {
+                    background: rgba(0, 0, 0, .025);
+                    border-bottom: 1px #ccc solid;
+                    font-size: 16px;
+                    line-height: 16px;
+                    margin: -15px -15px 15px;
+                    padding: 15px;
+                }
+            }
+
+            .limit_height {
+                height: calc(100% - 46px) !important;
+
+                *:last-child {
+                    margin-bottom: 0 !important;
+                }
+            }
+
+            .limit_toggler {
+                display: none !important;
+            }
+
+            .tl_content_right {
+                float: none;
+                font-size: 0;
+                height: 46px;
+                margin: 0;
+                position: absolute;
+                right: 0;
+                top: 0;
+
+                .tl_tree_checkbox {
+                    margin: 19px 20px 0 0;
+                }
+
+                a,
+                button {
+                    display: inline-block;
+                    height: 100%;
+                    padding: 15px 4px;
+
+                    &:hover {
+                        opacity: .65;
+                    }
+                }
+
+                button {
+                    padding: 15px 14px;
+                }
+            }
+        }
+    }
+
+    .tl_listing_container {
+        border: none !important;
+        margin: 0 !important;
+    }
+
+    .tl_header table.tl_header_table {
+        display: none;
+    }
+
+    .tl_header {
+        position: relative;
+
+        padding: 15px 20px;
+        margin: 5px 10px 20px;
+
+        box-shadow: 0 0 0 1px #ccc inset;
+
+        .tl_content_right {
+            position: absolute;
+            top: 0; right: 15px;
+
+            float: none;
+            font-size: 0;
+            height: 63px;
+            margin: 0;
+
+            a {
+                display: inline-block;
+                height: 100%;
+                padding: 23px 4px 0;
+
+                &:hover {
+                    opacity: 0.65;
+                }
+            }
+
+            .tl_tree_checkbox {
+                margin-top: 28px;
+            }
+
+            label.tl_select_label {
+                vertical-align: bottom;
+                margin-right: 6px;
+            }
+        }
+
+        &.hover-div:hover {
+            background: #f9f9fb !important;
+        }
+
+        .article-table {
+            display: flex;
+
+            .label {
+                font-weight: bold;
+
+                padding: 0 0 5px;
+            }
+
+            .name {
+                width: 30%;
+            }
+
+            .show {
+                width: 50%;
+
+                .start,
+                .stop {
+                    float: left;
+
+                    font-size: 12px;
+
+                    margin: 0 20px 0 0;
+                }
+            }
+        }
+    }
+
+    #main .content {
+        border: none;
+        background: transparent;
+    }
+
+    .hover-div:hover {
+        background: #fff !important;
+
+        &>.cte_type {
+            // box-shadow: 0 0 0 1px #aaa inset;
+        }
+    }
+
+    #paste_hint {
+        height: 20px;
+
+        p {
+            top: 8px; right: 65px;
+
+            z-index: 500;
+        }
+    }
+
+    .ce_text .image_container {
+
+        &.float_left {
+            margin-right: 20px;
+        }
+
+        &.float_above {
+            margin-top: 6px;
+            margin-bottom: 6px;
+        }
+    }
+}
+
+.be-row {
+    display: flex;
+    align-items: flex-start;
+
+    padding: 0 0 10px;
+
+    .row-label {
+        width: 240px;
+
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+
+        vertical-align: baseline;
+    }
+
+    .row-value {
+        width: calc(100% - 240px);
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+    }
+}

@@ -1,0 +1,142 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_iido_config.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_iido_config.previewMode.0">
+                <source>Vorschau-Modus aktivieren</source>
+                <target>Vorschau-Modus aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.backendStyles.0">
+                <source>Backend-Styles aktivieren</source>
+                <target>Backend-Styles aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.customLogin.0">
+                <source>personalisierter Login</source>
+                <target>personalisierter Login</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.enableMobileNavigation.0">
+                <source>Mobile Navigation aktivieren</source>
+                <target>Mobile Navigation aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.showMobileNavOnTablet.0">
+                <source>Mobile Navigation bereits auf Tablets anzeigen</source>
+                <target>Mobile Navigation bereits auf Tablets anzeigen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.showMobileNavBurgerDark.0">
+                <source>Dunkler Burger der Mobile Navigation anzeigen</source>
+                <target>Dunkler Burger der Mobile Navigation anzeigen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.includeElementFields.0">
+                <source>IIDO Felder bei den Inhaltselemente aktivieren</source>
+                <target>IIDO Felder bei den Inhaltselemente aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.elementFields.0">
+                <source>Fields</source>
+                <target>Felder</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.enableLayout.0">
+                <source>Spalten (Grid) Layout aktiviern</source>
+                <target>Spalten (Grid) Layout aktiviern</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.includeArticleFields.0">
+                <source>IIDO Felder bei den Artikeln aktivieren</source>
+                <target>IIDO Felder bei den Artikeln aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.articleFields.0">
+                <source>Fields</source>
+                <target>Felder</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.includePageFields.0">
+                <source>IIDO Felder bei den Seiten aktivieren</source>
+                <target>IIDO Felder bei den Seiten aktivieren</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.pageFields.0">
+                <source>Fields</source>
+                <target>Felder</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_iido_config.default_legend">
+                <source>Standards</source>
+                <target>Standards</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.navigation_legend">
+                <source>Navigation</source>
+                <target>Navigation</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.elements_legend">
+                <source>Inhalts Elemente</source>
+                <target>Inhalts Elemente</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.articles_legend">
+                <source>Artikel</source>
+                <target>Artikel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.pages_legend">
+                <source>Seiten</source>
+                <target>Seiten</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+<!--            <trans-unit id="tl_iido_config.options.elementFields.topHeadline">-->
+<!--                <source>top headline</source>-->
+<!--                <target>Überschrift oben</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_iido_config.options.elementFields.topHeadlineFloating">-->
+<!--                <source>top headline floating</source>-->
+<!--                <target>Überschrift oben: Ausrichtung</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_iido_config.options.elementFields.topHeadlineColor">-->
+<!--                <source>top headline color</source>-->
+<!--                <target>Überschrift oben: Farbe</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_iido_config.options.elementFields.headlineFloating">-->
+<!--                <source>top headline color</source>-->
+<!--                <target>Überschrift oben: Farbe</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_iido_config.options.elementFields.headlineColor">-->
+<!--                <source>top headline color</source>-->
+<!--                <target>Überschrift oben: Farbe</target>-->
+<!--            </trans-unit>-->
+
+            <trans-unit id="tl_iido_config.options.elementFields.dev">
+                <source>in development</source>
+                <target>In Entwicklung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.options.pageFields.dev">
+                <source>in development</source>
+                <target>In Entwicklung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_iido_config.options.articleFields.dev">
+                <source>in development</source>
+                <target>In Entwicklung</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>

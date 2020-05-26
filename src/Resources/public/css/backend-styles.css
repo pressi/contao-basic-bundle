@@ -1,0 +1,161 @@
+.widget.subfields {
+    position: relative;
+
+    padding-left: 20px;
+    border: 1px solid #cbcbcb;
+
+    z-index: 5;
+}
+
+.widget.subfields + .subpal {
+    position: relative;
+
+    /*background: #efefef;*/
+    border: 1px solid #cbcbcb;
+
+    margin: 0 15px;
+
+    z-index: 6;
+}
+
+.widget.subfields + .subpal:before {
+    position: absolute;
+    /*top: -65px; left: -1px*/
+    top: -23px; left: -1px;
+
+    /*width: calc(50% + 6px); height: 65px;*/
+    width: calc(50% + 6px); height: 23px;
+
+    /*background: #efefef;*/
+    background: #fff;
+
+    border-right: 1px solid #cbcbcb;
+    border-left: 1px solid #cbcbcb;
+}
+
+.subpal .widget.subfields,
+.subpal .widget.subfields + .subpal,
+.subpal .widget.subfields + .subpal:before {
+    border-color: #959595;
+}
+
+fieldset.tl_tbox,
+fieldset.tl_box {
+    position: relative;
+
+    border-color: #eaeaec;
+    border-width: 15px;
+}
+
+fieldset.tl_tbox:before,
+fieldset.tl_tbox:after,
+fieldset.tl_box:before,
+fieldset.tl_box:after {
+    content: '';
+
+    position: absolute;
+    top: -5px; left: 0;
+
+    width: 100%; height: 1px;
+
+    background: #d0d0d2;
+}
+
+fieldset.tl_tbox:after,
+fieldset.tl_box:after {
+    top: auto; bottom: 0;
+}
+
+.tl_tbox:last-child,
+.tl_box:last-child {
+    border-bottom: 15px solid #eaeaec;
+}
+
+.tl_edit_form .tl_formbody_edit:before,
+.tl_edit_form .tl_formbody_edit:after,
+fieldset.tl_tbox > legend:before,
+fieldset.tl_tbox > legend:after,
+fieldset.tl_box > legend:before,
+fieldset.tl_box > legend:after {
+    content: '';
+
+    position: absolute;
+    bottom: -15px;
+
+    height: 15px; width: 9px;
+
+    background: #eaeaec;
+}
+
+.tl_edit_form .tl_formbody_edit:before,
+.tl_edit_form .tl_formbody_edit:after {
+    top: -15px; bottom: 0;
+}
+
+.tl_edit_form .tl_formbody_edit:before,
+fieldset.tl_tbox > legend:before,
+fieldset.tl_box > legend:before {
+    left: -4px;
+}
+
+.tl_edit_form .tl_formbody_edit:after,
+fieldset.tl_tbox > legend:after,
+fieldset.tl_box > legend:after {
+    right: -4px;
+}
+
+.tl_edit_form .tl_formbody_edit {
+    position: relative;
+    border-top: 15px solid #eaeaec;
+}
+
+.tl_formbody_submit {
+    border-color: #d0d0d2;
+}
+
+
+.maintenance_inactive {
+    position: relative;
+
+    border-width: 15px;
+    border-color: #eaeaec;
+}
+
+.maintenance_inactive:before,
+.maintenance_inactive:after {
+    content: '';
+
+    position: absolute;
+    top: -15px;
+
+    width: 9px; height: 15px;
+
+    background: #eaeaec;
+}
+
+.maintenance_inactive:before {
+    left: -4px;
+}
+.maintenance_inactive:after {
+    right: -4px;
+}
+
+
+.tl_tree_xtnd .tl_folder:not(:first-child) {
+    margin-top: 20px !important;
+    /*border-top: 1px solid #aaa;*/
+}
+.tl_tree_xtnd .tl_folder {
+    border-top: 1px solid #aaa;
+}
+
+.tl_tree_xtnd .tl_folder_top + .tl_folder {
+    margin-top: 0 !important;
+    border-top: none;
+
+    border-bottom: none;
+}
+
+.content > #tl_buttons:first-child {
+    border-bottom: 1px solid #d0d0d2;
+}

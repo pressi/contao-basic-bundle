@@ -1,0 +1,232 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_news_usage.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_news_usage.title.0">
+                <source>Title</source>
+                <target>Titel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.alias.0">
+                <source>Alias</source>
+                <target>Alias</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.frontendTitle.0">
+                <source>Frontend Titel</source>
+                <target>Frontend Titel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.cssClass.0">
+                <source>CSS-Klasse</source>
+                <target>CSS-Klasse</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.image.0">
+                <source>Logo</source>
+                <target>Logo</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.address.0">
+                <source>Adresse</source>
+                <target>Adresse</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.phone.0">
+                <source>Telefon</source>
+                <target>Telefon</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.email.0">
+                <source>E-Mail</source>
+                <target>E-Mail</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.website.0">
+                <source>Website</source>
+                <target>Website</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.geo.0">
+                <source>GEO-Koordinaten</source>
+                <target>GEO-Koordinaten</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.oppening.0">
+                <source>Öffnungszeiten</source>
+                <target>Öffnungszeiten</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.description.0">
+                <source>Beschreibung</source>
+                <target>Beschreibung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.map.0">
+                <source>Kontakt-Map Bild</source>
+                <target>Kontakt-Map Bild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.mainCategory.0">
+                <source>Hauptkategorie</source>
+                <target>Hauptkategorie</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.addVideo.0">
+                <source>Video hinzufügen</source>
+                <target>Video hinzufügen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.videoMode.0">
+                <source>Quelle</source>
+                <target>Quelle</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.playerSRC.0">
+                <source>Video</source>
+                <target>Video</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.posterSRC.0">
+                <source>Vorschaubild</source>
+                <target>Vorschaubild</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.playerSize.0">
+                <source>Player-Größe</source>
+                <target>Player-Größe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.vimeoID.0">
+                <source>Vimeo ID</source>
+                <target>Vimeo ID</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.youtubeID.0">
+                <source>YouTube ID</source>
+                <target>YouTube ID</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.hideInList.0">
+                <source>Im Listen/Archiv-Modul verstecken</source>
+                <target>Im Listen/Archiv-Modul verstecken</target>
+            </trans-unit>
+            <trans-unit id="tl_news_usage.hideInList.1">
+                <source><![CDATA[Zeigt diesen Betrieb nicht im Liste oder Archiv Modul an (wirkt sich nur auf die <em>news_</em> Templates aus).]]></source>
+                <target><![CDATA[Zeigt diesen Betrieb nicht im Liste oder Archiv Modul an (wirkt sich nur auf die <em>news_</em> Templates aus).]]></target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.hideInReader.0">
+                <source>Im Leser-Modul verstecken</source>
+                <target>Im Leser-Modul verstecken</target>
+            </trans-unit>
+            <trans-unit id="tl_news_usage.hideInReader.1">
+                <source><![CDATA[Zeigt diesen Betrieb nicht im Leser-Modul an (wirkt sich nur auf die <em>news_</em> Templates aus).]]></source>
+                <target><![CDATA[Zeigt diesen Betrieb nicht im Leser-Modul an (wirkt sich nur auf die <em>news_</em> Templates aus).]]></target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.excludeInRelated.0">
+                <source>Aus ähnliche Betriebe ausschließen</source>
+                <target>Aus ähnliche Betriebe ausschließen</target>
+            </trans-unit>
+            <trans-unit id="tl_news_usage.excludeInRelated.1">
+                <source>Schließt die Beiträge von diesem Betrieb in der Liste der ähnlichen Betriebe/Beiträgen aus.</source>
+                <target>Schließt die Beiträge von diesem Betrieb in der Liste der ähnlichen Betriebe/Beiträgen aus.</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.start.0">
+                <source>Anzeigen ab</source>
+                <target>Anzeigen ab</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.stop.0">
+                <source>Anzeigen bis</source>
+                <target>Anzeigen bis</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.jumpTo.0">
+                <source>Weiterleitungsseite</source>
+                <target>Weiterleitungsseite</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.published.0">
+                <source>Veröffentlichen</source>
+                <target>Veröffentlichen</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+            <trans-unit id="tl_news_usage.title_legend">
+                <source>Bezeichnung</source>
+                <target>Bezeichnung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.details_legend">
+                <source>Details</source>
+                <target>Details</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.modules_legend">
+                <source>Module</source>
+                <target>Module</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.redirect_legend">
+                <source>Weiterleitung</source>
+                <target>Weiterleitung</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.video_legend">
+                <source>Video</source>
+                <target>Video</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news_usage.publish_legend">
+                <source>Veröffentlichung</source>
+                <target>Veröffentlichung</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_news_usage.options.videoMode.player">
+                <source>Player (Interne Datei)</source>
+                <target>Player (Interne Datei)</target>
+            </trans-unit>
+            <trans-unit id="tl_news_usage.options.videoMode.vimeo">
+                <source>Vimeo</source>
+                <target>Vimeo</target>
+            </trans-unit>
+            <trans-unit id="tl_news_usage.options.videoMode.youtube">
+                <source>YouTube</source>
+                <target>YouTube</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_news_usage.options.mainCategory.original">
+                <source>Bad Ischl Original</source>
+                <target>Bad Ischl Original</target>
+            </trans-unit>
+            <trans-unit id="tl_news_usage.options.mainCategory.supporter">
+                <source>Unterstützer</source>
+                <target>Unterstützer</target>
+            </trans-unit>
+
+
+
+<!-- ### REFERENCE ########################################################################################################## -->
+
+
+            <trans-unit id="tl_news_usage.new.0">
+                <source>Neuer Verwendungszweck</source>
+                <target>Neuer Verwendungszweck</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>
