@@ -13,11 +13,11 @@
             "role"      : "Developer"
         }
     ],
-    "version": "0.7.1",
+    "version": "0.7.2",
     "require":
     {
         "php": ">=7.3",
-        "contao/core-bundle": ">=4.9.*",
+        "contao/core-bundle": "^4.9.*",
         "symfony/framework-bundle": ">=4.9.*",
         "madeyourday/contao-rocksolid-custom-elements": ">=2.*",
         "heimrichhannot/contao-fieldpalette-bundle": "^0.*"
