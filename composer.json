@@ -13,13 +13,13 @@
             "role"      : "Developer"
         }
     ],
-    "version": "0.7.2",
+    "version": "0.7.3",
     "require":
     {
         "php": ">=7.3",
-        "contao/core-bundle": "^4.9.*",
-        "madeyourday/contao-rocksolid-custom-elements": "^2.*",
-        "heimrichhannot/contao-fieldpalette-bundle": "^0.*"
+        "contao/core-bundle": "4.9.*",
+        "madeyourday/contao-rocksolid-custom-elements": "^2",
+        "heimrichhannot/contao-fieldpalette-bundle": "^0"
     },
     "replace":
     {
