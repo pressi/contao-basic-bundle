@@ -18,8 +18,7 @@
     {
         "php": ">=7.3",
         "contao/core-bundle": "^4.9.*",
-        "symfony/framework-bundle": ">=4.9.*",
-        "madeyourday/contao-rocksolid-custom-elements": ">=2.*",
+        "madeyourday/contao-rocksolid-custom-elements": "^2.*",
         "heimrichhannot/contao-fieldpalette-bundle": "^0.*"
     },
     "replace":
@@ -36,6 +35,9 @@
         "2do/contao-master-connect-bundle": "IIDO Master Connection Bundle",
         "2do/contao-projects-bundle": "IIDO Projects Bundle",
         "2do/contao-hotel-bundle": "IIDO Hotel Bundle",
+        "codefog/contao-cookiebar": "Cookiebar",
+        "netzhirsch/cookie-opt-in-bundle": "Cookie Opt-In (Kommerziell)",
+        "numero2/contao-marketing-suite": "Marketing Suite, SEO (Kommerziell)",
         "terminal42/contao-changelanguage": "Sprachenwechsler",
         "terminal42/contao-leads": "Formular Erweiterung (Leads)",
         "terminal42/notification_center": "Notification Center",
@@ -43,7 +45,8 @@
         "heimrichhannot/contao-slick-bundle": "Slick Slider",
         "codefog/contao-news_categories": "News Kategorien",
         "madeyourday/contao-rocksolid-antispam": "Antispam",
-        "do-while/contao-backupdb-bundle": "Datenbanksicherung"
+        "do-while/contao-backupdb-bundle": "Datenbanksicherung",
+        "fritzmg/contao-backend-documentation": "Backend Dokumentation"
     },
     "autoload":
     {
