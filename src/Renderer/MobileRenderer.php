@@ -13,6 +13,7 @@ namespace IIDO\BasicBundle\Renderer;
 use Contao\PageModel;
 use Contao\ThemeModel;
 use Contao\ModuleModel;
+use Contao\System;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\GlobalElementsHelper;
 
