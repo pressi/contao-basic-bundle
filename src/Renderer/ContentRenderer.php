@@ -68,7 +68,7 @@ class ContentRenderer
             $styles .= 'color:' . $color . ';';
         }
 
-        if  (
+        if(
             $objRow->type === 'text' && $objRow->addImage && $objRow->singleSRC &&
             (
                 FALSE !== strpos($cssID[1], 'headline-nextto')
