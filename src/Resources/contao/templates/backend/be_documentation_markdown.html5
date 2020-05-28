@@ -1,0 +1,23 @@
+## Support
+
+Support erhalten Sie unter folgender Email: [dialog@zomedia.at](mailto:dialog@zomedia.at)
+
+[Support Ticket erstellen](<?= \Contao\Environment::get('request') ?>)
+
+
+## Dokumentation
+
+* [1. Seiten erstellen](<?= \Contao\Environment::get('request') ?>#pages)
+* [2. Inhalte einfügen](<?= \Contao\Environment::get('request') ?>#content)
+* [3. SEO](<?= \Contao\Environment::get('request') ?>#seo)
+
+Column | Column | ff
+------ | ------ | --
+Cell   | Cell   | fkfklflf
+
+
+### <a name="pages" id="pages"></a> 1. Seiten erstellen
+
+### <a name="content" id="content"></a> 2. Inhalte einfügen
+
+### <a name="seo" id="seo"></a> 3. SEO
