@@ -4,6 +4,7 @@
 namespace IIDO\BasicBundle\Renderer;
 
 
+use Contao\Template;
 use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\StylesHelper;
 
@@ -82,11 +83,11 @@ class ArticleTemplateRenderer
             $strArticleInsideClasses .= ' row';
         }
 
-        $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<div$1class="mod_article$2' . ($strArticleClasses ? ' ' . $strArticleClasses : '') . '"$3' . $strArticleStyles . '>' . $divOverlay . '<div class="article-inside' . $strArticleInsideClasses . '"' . $strArticleInsideStyles . '>' . $divTableStart, $strContent, -1, $count);
+        $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<section$1class="mod_article$2' . ($strArticleClasses ? ' ' . $strArticleClasses : '') . '"$3' . $strArticleStyles . '>' . $divOverlay . '<div class="article-inside' . $strArticleInsideClasses . '"' . $strArticleInsideStyles . '>' . $divTableStart, $strContent, -1, $count);
 
         if( $count )
         {
-            $strContent .= $divTableEnd . '</div>';
+            $strContent .= $divTableEnd . '</section>';
         }
 
         $styles = preg_replace('/^\{\}$/', '', trim( StylesHelper::getArticleStyles( $objArticle ) ) );
@@ -100,7 +101,7 @@ class ArticleTemplateRenderer
                 $articleID = $cssID[0];
             }
 
-            $styles = '<style>.mod_article#' . $articleID . $styles . '</style>';
+            $styles = Template::generateInlineStyle('.mod_article#' . $articleID . $styles);
         }
 
         return $styles . $strContent;
