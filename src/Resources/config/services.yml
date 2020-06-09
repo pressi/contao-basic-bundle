@@ -63,8 +63,18 @@ services:
   IIDO\BasicBundle\Controller\Elements\ColumnMasterElement:
 
 
+  ## Permission Checker
+  iido.basic.backend.permission_checker:
+    class: IIDO\BasicBundle\Permission\BackendPermissionChecker
+    public: true
+    arguments:
+      - "@database_connection"
+      - "@security.token_storage"
+
+
   ## TABLES LISTENER - Callbacks
   IIDO\BasicBundle\Dca\Listener\ConfigListener:
+  IIDO\BasicBundle\Dca\Listener\ArticleListener:
 
 
   ## News Area Of Appliction Picker
@@ -77,6 +87,7 @@ services:
     arguments:
       - "@database_connection"
       - "@security.token_storage"
+
 
   iido.basic.news.areasOfApplication_picker:
     class: IIDO\BasicBundle\Picker\NewsAreaOfApplicationPickerProvider
