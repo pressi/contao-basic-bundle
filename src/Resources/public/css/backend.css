@@ -110,3 +110,84 @@
 #tl_soverview > div#tl_intro {
     padding-top: 18px;
 }
+
+
+
+/**
+ * article list (tree)
+ * --------------------------------- */
+
+.tl_left .article-title {
+    float: left;
+
+    width: 35%;
+}
+
+.tl_left .article-col-width {
+    float: left;
+
+    text-indent: 0;
+}
+
+
+
+/**
+ * text field addon
+ * --------------------------------- */
+
+input.tl_text.has-addon {
+    width: 85%;
+
+    -webkit-border-radius : 2px 0 0 2px;
+    -moz-border-radius    : 2px 0 0 2px;
+    border-radius         : 2px 0 0 2px;
+}
+input.tl_text.has-addon + .addon {
+    display: inline-block;
+
+    width: 15%; height: 30px;
+
+    color: #333;
+    /*color: #9a9a9a;*/
+    /*color: #1d1d1b;*/
+    font-size: 18px;
+    text-align: center;
+    /*line-height: 28px;*/
+    line-height: 20px;
+
+    border: 1px solid #aaa;
+    border-left: none;
+
+    background: #ececec;
+
+    vertical-align: middle;
+
+    -webkit-box-sizing : border-box;
+    -moz-box-sizing    : border-box;
+    box-sizing         : border-box;
+
+    -webkit-border-radius : 0 2px 2px 0;
+    -moz-border-radius    : 0 2px 2px 0;
+    border-radius         : 0 2px 2px 0;
+}
+
+input.tl_text.has-addon + .addon sup {
+    font-size: 0.65em;
+}
+
+
+
+/**
+ * css ID field styles
+ * --------------------------------- */
+
+.widget.css-id-field {
+    width: calc(100% - 30px);
+}
+
+.widget.css-id-field .tl_text_2:first-child {
+    width: 23.5%;
+}
+.widget.css-id-field .tl_text_2:nth-child(2) {
+    width: 75.5%;
+}
