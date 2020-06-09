@@ -16,14 +16,17 @@ namespace IIDO\BasicBundle\EventListener;
 //use IIDO\BasicBundle\Helper\ContentElementHelper;
 //use IIDO\BasicBundle\Helper\ContentHelper as Helper;
 //use IIDO\BasicBundle\Helper\ContentHelper;
-//use IIDO\BasicBundle\Helper\ImageHelper;
 //use IIDO\BasicBundle\Helper\ScriptHelper;
 //use IIDO\BasicBundle\Helper\StylesheetHelper;
 //use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
+use Contao\ContentModel;
+use Contao\Controller;
 use Contao\StringUtil;
+use Contao\System;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\ContentHelper;
+use IIDO\BasicBundle\Helper\ImageHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Renderer\ContentRenderer;
 use Symfony\Cmf\Bundle\RoutingBundle\Tests\Fixtures\App\Document\Content;
@@ -83,9 +86,16 @@ class ContentListener implements ServiceAnnotationInterface
         $elementClass       = ContentHelper::getElementClass( $objRow );
         $arrElementClasses  = [];
         $arrAttributes      = [];
+        $objAliasElement    = false;
+
+        if( $elementType === 'alias' )
+        {
+            $objAliasElement = ContentModel::findByPk( $objRow->cteAlias );
+        }
 
         $strBuffer  = ContentRenderer::parseHeadline( $strBuffer, $objRow );
         $iidoConfig = \System::getContainer()->get('iido.basic.config');
+        $strType    = $this->getElementType( $objRow, $objAliasElement );
 
         if( $elementType === 'text' )
         {
@@ -193,15 +203,19 @@ class ContentListener implements ServiceAnnotationInterface
             }
         }
 
-        switch( $objRow->type )
+        switch( $strType )
         {
             case "hyperlink":
                 $strBuffer = $this->renderHyperlink( $strBuffer, $objRow, $objElement );
                 break;
 
-//            case "gallery":
-//                $strBuffer = $this->renderGallery( $strBuffer, $objRow, $objElement );
-//                break;
+            case "toplink":
+                $strBuffer = $this->renderToplink( $strBuffer, $objRow, $objElement );
+                break;
+
+            case "gallery":
+                $strBuffer = $this->renderGallery( $strBuffer, $objRow, $objElement, $objAliasElement );
+                break;
 //
 //            case "list":
 //                $strBuffer = $this->renderList( $strBuffer, $objRow, $objElement );
@@ -1218,11 +1232,32 @@ class ContentListener implements ServiceAnnotationInterface
 
     protected function renderTextNavigation( $strBuffer, $objRow, $objElement )
     {
+        global $objPage;
+
         $strBuffer = preg_replace('/<li>([\s\n]{0,})<a([A-Za-z0-9\s\-öäüÖÄÜß\/=,;.:_"#+?!&%\{\}]+)>/', '<li>$1<a$2><span itemprop="name">', $strBuffer, -1, $count);
 
         if( $count )
         {
+            preg_match_all('/<li>([\s\n]{0,})<a([A-Za-z0-9\s\-öäüÖÄÜß\/=,;.:_"#+?!&%\{\}]+)href="([A-Za-z0-9\s\-öäüÖÄÜß\/,;.:_#+?!&%\{\}]+)"([A-Za-z0-9\s\-öäüÖÄÜß\/=,;.:_"#+?!&%\{\}]{0,})>/', $strBuffer, $matches);
+
             $strBuffer = preg_replace('/<\/a>([\s\n]{0,})<\/li>/', '</span></a>$1</li>', $strBuffer);
+
+            if( count($matches[3]) )
+            {
+                foreach( $matches[3] as $key => $url )
+                {
+                    if( false !== strpos($url, 'link_url') )
+                    {
+                        $pageID = str_replace(['{{link_url::', '}}'], '', $url);
+
+                        if( $objPage->id == $pageID )
+                        {
+                            $strBuffer = preg_replace('/' . preg_quote($matches[0][ $key ], '/'). '/', '<li><strong>', $strBuffer);
+                            $strBuffer = preg_replace('/<li><strong><span itemprop="name">([A-Za-z0-9\s\-,;.:_?!#+ßöäüÖÄÜ\/=\{\}%&\[\]]+)<\/span><\/a>/', '<li><strong><span itemprop="name">$1</span></strong>', $strBuffer);
+                        }
+                    }
+                }
+            }
         }
 
         return $strBuffer;
@@ -1504,15 +1539,21 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
     protected function renderNewHeadlines( $strContent, $objRow, &$objElement )
     {
+        $objConfig      = System::getContainer()->get('iido.basic.config');
+        $arrFields      = StringUtil::deserialize( $objConfig->get('elementFields'), true);
+
         $cssID          = StringUtil::deserialize( $objRow->cssID, true);
         $strContent     = str_replace('®', '&reg;', $strContent);
 
         $arrHeadline    = \StringUtil::deserialize($objRow->headline, TRUE);
         $unit           = $arrHeadline['unit'];
         $headline       = $arrHeadline['value'];
-        $repHeadline    = $headline;
+        $repHeadline    = '<' . $unit . '>' . $headline . '</' . $unit . '>';
 
-        if( !$headline )
+        $topHeadline    = (($objConfig->get('includeElementFields') && in_array( 'topHeadline', $arrFields )) ? $objRow->topHeadline : '');
+        $subHeadline    = (($objConfig->get('includeElementFields') && in_array( 'subHeadline', $arrFields )) ? $objRow->subHeadline : '');
+
+        if( !$headline || false !== strpos($objRow->type, 'rsce_') || $objRow->type === 'headline' )
         {
             return $strContent;
         }
@@ -1521,15 +1562,24 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         {
             $strContent = preg_replace('/<' . $unit . '>' . preg_quote($headline, '/') . '<\/' . $unit . '>/', '', $strContent);
 
-            $strContent = preg_replace('/class="ctable-cell">/', 'class="ctable-cell"><' . $unit . ' class="headline">##HEADLINE##</' . $unit . '>', $strContent);
+            $strContent = preg_replace('/class="ctable-cell">/', 'class="ctable-cell">##HEADLINE##', $strContent);
             $repHeadline   = '##HEADLINE##';
         }
 
-        $newHeadline    = ContentHelper::renderText( $headline, true );
+        $newHeadline    = '<' . $unit . ' class="headline">' . ContentHelper::renderText( $headline, true ) . '</' . $unit . '>';
+//        $strContent     = preg_replace('/<' . $unit . '>/', '<' . $unit . ' class="headline">', $strContent);
 
-        $strContent     = preg_replace('/<' . $unit . '>/', '<' . $unit . ' class="headline">', $strContent);
+        if( $topHeadline )
+        {
+            $topHeadline = '<div class="top-headline">' . $topHeadline . '</div>';
+        }
 
-        return preg_replace('/' . preg_quote($repHeadline, '/') . '/', $newHeadline, $strContent);
+        if( $subHeadline )
+        {
+            $subHeadline = '<div class="sub-headline">' . $subHeadline . '</div>';
+        }
+
+        return preg_replace('/' . preg_quote($repHeadline, '/') . '/',  $topHeadline . $newHeadline . $subHeadline, $strContent);
     }
 
 
@@ -1979,172 +2029,172 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         $arrRemoveClasses   = array();
         $cssID              = \StringUtil::deserialize( $objRow->cssID, true);
 
-        if( $objRow->showAsButton ) //TODO: wird das noch gebraucht, eigenes element für buttons (RSCE)?!
-        {
-            $arrClasses[] = 'btn';
-            $arrClasses[] = 'btn-' . $objRow->buttonStyle;
-            $arrClasses[] = 'btn-type-' . $objRow->buttonType;
-
-            if( $objRow->linkTitle === '' )
-            {
-                $arrClasses[] = 'btn-empty';
-            }
-
-            if( $objRow->buttonAddon )
-            {
-                $arrClasses[] = 'btn-addon';
-                $arrClasses[] = 'addon-' . $objRow->buttonAddon;
-                $arrClasses[] = 'addon-pos-' . $objRow->buttonAddonPosition;
-
-                switch( $objRow->buttonAddon )
-                {
-                    case "arrow":
-                        $arrClasses[] = 'arrow-' . $objRow->buttonAddonArrow;
-                        break;
-
-                    case "icon":
-                        $strLinkText    = $objRow->linkTitle?:$objRow->url;
-                        $iconColor      = ColorHelper::compileColor( $objRow->buttonAddonIconColor );
-                        $iconBackground = (($iconColor !== "transparent") ? 'background:' . $iconColor . ';' : '');
-                        $strIconPath    = ImageHelper::renderImagePath( \FilesModel::findByPk( $objRow->buttonAddonIcon )->path );
-                        $strIcon        = '<i class="icon icon-mask" style="mask-image:url(' . $strIconPath . ');-webkit-mask-image:url(' . $strIconPath . ');' . $iconBackground . '"></i>';
-
-
-                        if( FALSE !== strpos( $cssID[1], 'box-link' ) )
-                        {
-
-                            if( $objRow->buttonAddonPosition === 'left' )
-                            {
-                                $strIcon .= ContentHelper::renderText($strLinkText, true);
-                            }
-                            elseif( $objRow->buttonAddonPosition === 'right' )
-                            {
-                                $strIcon = ContentHelper::renderText($strLinkText, true) . $strIcon;
-                            }
-                        }
-
-//                        $arrClasses[] = 'icon-' . $objRow->buttonAddonIcon;
-//                        $strContent = preg_replace('/<a/', '<a data-icon="' . $objRow->buttonAddonIcon . '"', $strContent);
-                        $strContent = preg_replace('/class="hyperlink_txt/', 'class="hyperlink_txt icon-link', $strContent);
-                        $strContent = preg_replace('/' . preg_quote($strLinkText, '/') . '([\s]{0,})<\/a>/', $strIcon . '</a>', $strContent);
-
-//                        echo "<pre>"; print_r( $objRow );
-//                        echo "<br>"; print_r( $strContent ); exit;
-                        break;
-                }
-            }
-        }
+//        if( $objRow->showAsButton ) //TODO: wird das noch gebraucht, eigenes element für buttons (RSCE)?!
+//        {
+//            $arrClasses[] = 'btn';
+//            $arrClasses[] = 'btn-' . $objRow->buttonStyle;
+//            $arrClasses[] = 'btn-type-' . $objRow->buttonType;
+//
+//            if( $objRow->linkTitle === '' )
+//            {
+//                $arrClasses[] = 'btn-empty';
+//            }
+//
+//            if( $objRow->buttonAddon )
+//            {
+//                $arrClasses[] = 'btn-addon';
+//                $arrClasses[] = 'addon-' . $objRow->buttonAddon;
+//                $arrClasses[] = 'addon-pos-' . $objRow->buttonAddonPosition;
+//
+//                switch( $objRow->buttonAddon )
+//                {
+//                    case "arrow":
+//                        $arrClasses[] = 'arrow-' . $objRow->buttonAddonArrow;
+//                        break;
+//
+//                    case "icon":
+//                        $strLinkText    = $objRow->linkTitle?:$objRow->url;
+//                        $iconColor      = ColorHelper::compileColor( $objRow->buttonAddonIconColor );
+//                        $iconBackground = (($iconColor !== "transparent") ? 'background:' . $iconColor . ';' : '');
+//                        $strIconPath    = ImageHelper::renderImagePath( \FilesModel::findByPk( $objRow->buttonAddonIcon )->path );
+//                        $strIcon        = '<i class="icon icon-mask" style="mask-image:url(' . $strIconPath . ');-webkit-mask-image:url(' . $strIconPath . ');' . $iconBackground . '"></i>';
+//
+//
+//                        if( FALSE !== strpos( $cssID[1], 'box-link' ) )
+//                        {
+//
+//                            if( $objRow->buttonAddonPosition === 'left' )
+//                            {
+//                                $strIcon .= ContentHelper::renderText($strLinkText, true);
+//                            }
+//                            elseif( $objRow->buttonAddonPosition === 'right' )
+//                            {
+//                                $strIcon = ContentHelper::renderText($strLinkText, true) . $strIcon;
+//                            }
+//                        }
+//
+////                        $arrClasses[] = 'icon-' . $objRow->buttonAddonIcon;
+////                        $strContent = preg_replace('/<a/', '<a data-icon="' . $objRow->buttonAddonIcon . '"', $strContent);
+//                        $strContent = preg_replace('/class="hyperlink_txt/', 'class="hyperlink_txt icon-link', $strContent);
+//                        $strContent = preg_replace('/' . preg_quote($strLinkText, '/') . '([\s]{0,})<\/a>/', $strIcon . '</a>', $strContent);
+//
+////                        echo "<pre>"; print_r( $objRow );
+////                        echo "<br>"; print_r( $strContent ); exit;
+//                        break;
+//                }
+//            }
+//        }
 
         $arrLinkClasses = array();
 
-        if( $objRow->showAsButtonBox || FALSE !== strpos($cssID[1], 'box') )
-        {
-            $arrClasses[] = 'box';
+//        if( $objRow->showAsButtonBox || FALSE !== strpos($cssID[1], 'box') )
+//        {
+//            $arrClasses[] = 'box';
+//
+//            $linkBoxStyles  = '';
+//
+//            $boxWidth       = \StringUtil::deserialize( $objRow->bb_width );
+//            $boxHeight      = \StringUtil::deserialize( $objRow->bb_height );
+//            $bgBoxColor     = ColorHelper::compileColor( $objRow->bb_bgColor );
+//            $arrBoxPadding  = \StringUtil::deserialize( $objRow->bb_padding, TRUE);
+//
+//            if( $bgBoxColor !== "transparent" )
+//            {
+//                $linkBoxStyles      = 'background-color:' . $bgBoxColor . ';';
+//                $bgHoverBoxColor    = ColorHelper::compileColor( $objRow->bb_bgColorHover );
+//
+//                if( $bgHoverBoxColor === "transparent" )
+//                {
+//                    $bgHoverBoxColor = ColorHelper::mixColors($bgBoxColor, '#000000', 20.0);
+//                }
+//
+//                $strContent = preg_replace('/<a/', '<a data-hbg="' . $bgHoverBoxColor . '"', $strContent);
+//
+//                $arrLinkClasses[] = 'has-bg-color';
+//            }
+//
+//            if( $boxWidth['value'] && $boxWidth['unit'] )
+//            {
+//                $linkBoxStyles .= 'width:' . $boxWidth['value'] . $boxWidth['unit'] . ';';
+//            }
+//
+//            if( $objRow->bb_removeMinWidth )
+//            {
+//                $arrLinkClasses[] = 'no-min-width';
+//            }
+//
+//            if( $boxHeight['value'] && $boxHeight['unit'] )
+//            {
+//                $linkBoxStyles .= 'height:' . $boxHeight['value'] . $boxHeight['unit'] . ';';
+//
+//                $arrLinkClasses[] = 'has-height';
+//            }
+//
+//            if( $objRow->bb_fontSize )
+//            {
+//                $linkBoxStyles .= 'font-size:' . $objRow->bb_fontSize . 'px;';
+//            }
+//
+//            if( $arrBoxPadding['top'] )
+//            {
+//                $linkBoxStyles .= 'padding-top:' . $arrBoxPadding['top'] . $arrBoxPadding['unit'] . ';';
+//            }
+//            elseif( $objRow->bb_textValignMiddle )
+//            {
+//                $linkBoxStyles .= 'padding-top:0;';
+//            }
+//
+//            if( $arrBoxPadding['right'] )
+//            {
+//                $linkBoxStyles .= 'padding-right:' . $arrBoxPadding['right'] . $arrBoxPadding['unit'] . ';';
+//            }
+//
+//            if( $arrBoxPadding['bottom'] )
+//            {
+//                $linkBoxStyles .= 'padding-bottom:' . $arrBoxPadding['bottom'] . $arrBoxPadding['unit'] . ';';
+//            }
+//            elseif( $objRow->bb_textValignMiddle )
+//            {
+//                $linkBoxStyles .= 'padding-bottom:0;';
+//            }
+//
+//            if( $arrBoxPadding['left'] )
+//            {
+//                $linkBoxStyles .= 'padding-left:' . $arrBoxPadding['left'] . $arrBoxPadding['unit'] . ';';
+//            }
+//
+//            $strContent     = preg_replace('/<a/', '<a style="' . $linkBoxStyles . '"', $strContent);
+//
+//            if( $objRow->bb_textValignMiddle )
+//            {
+//                $strContent = preg_replace('/<a([A-Za-z0-9\s\-\{\}=",;.:_\(\)\#\|öäüÖÄÜß]{0,})>/', '<a$1><span class="ctable"><span class="ctable-cell">', $strContent, -1, $tableCount);
+//
+//                if( $tableCount )
+//                {
+//                    $strContent = preg_replace('/<\/a>/', '</span></span></a>', $strContent);
+//                }
+//            }
+//
+////            echo "<pre>"; print_r( $strContent ); exit;
+//        }
 
-            $linkBoxStyles  = '';
-
-            $boxWidth       = \StringUtil::deserialize( $objRow->bb_width );
-            $boxHeight      = \StringUtil::deserialize( $objRow->bb_height );
-            $bgBoxColor     = ColorHelper::compileColor( $objRow->bb_bgColor );
-            $arrBoxPadding  = \StringUtil::deserialize( $objRow->bb_padding, TRUE);
-
-            if( $bgBoxColor !== "transparent" )
-            {
-                $linkBoxStyles      = 'background-color:' . $bgBoxColor . ';';
-                $bgHoverBoxColor    = ColorHelper::compileColor( $objRow->bb_bgColorHover );
-
-                if( $bgHoverBoxColor === "transparent" )
-                {
-                    $bgHoverBoxColor = ColorHelper::mixColors($bgBoxColor, '#000000', 20.0);
-                }
-
-                $strContent = preg_replace('/<a/', '<a data-hbg="' . $bgHoverBoxColor . '"', $strContent);
-
-                $arrLinkClasses[] = 'has-bg-color';
-            }
-
-            if( $boxWidth['value'] && $boxWidth['unit'] )
-            {
-                $linkBoxStyles .= 'width:' . $boxWidth['value'] . $boxWidth['unit'] . ';';
-            }
-
-            if( $objRow->bb_removeMinWidth )
-            {
-                $arrLinkClasses[] = 'no-min-width';
-            }
-
-            if( $boxHeight['value'] && $boxHeight['unit'] )
-            {
-                $linkBoxStyles .= 'height:' . $boxHeight['value'] . $boxHeight['unit'] . ';';
-
-                $arrLinkClasses[] = 'has-height';
-            }
-
-            if( $objRow->bb_fontSize )
-            {
-                $linkBoxStyles .= 'font-size:' . $objRow->bb_fontSize . 'px;';
-            }
-
-            if( $arrBoxPadding['top'] )
-            {
-                $linkBoxStyles .= 'padding-top:' . $arrBoxPadding['top'] . $arrBoxPadding['unit'] . ';';
-            }
-            elseif( $objRow->bb_textValignMiddle )
-            {
-                $linkBoxStyles .= 'padding-top:0;';
-            }
-
-            if( $arrBoxPadding['right'] )
-            {
-                $linkBoxStyles .= 'padding-right:' . $arrBoxPadding['right'] . $arrBoxPadding['unit'] . ';';
-            }
-
-            if( $arrBoxPadding['bottom'] )
-            {
-                $linkBoxStyles .= 'padding-bottom:' . $arrBoxPadding['bottom'] . $arrBoxPadding['unit'] . ';';
-            }
-            elseif( $objRow->bb_textValignMiddle )
-            {
-                $linkBoxStyles .= 'padding-bottom:0;';
-            }
-
-            if( $arrBoxPadding['left'] )
-            {
-                $linkBoxStyles .= 'padding-left:' . $arrBoxPadding['left'] . $arrBoxPadding['unit'] . ';';
-            }
-
-            $strContent     = preg_replace('/<a/', '<a style="' . $linkBoxStyles . '"', $strContent);
-
-            if( $objRow->bb_textValignMiddle )
-            {
-                $strContent = preg_replace('/<a([A-Za-z0-9\s\-\{\}=",;.:_\(\)\#\|öäüÖÄÜß]{0,})>/', '<a$1><span class="ctable"><span class="ctable-cell">', $strContent, -1, $tableCount);
-
-                if( $tableCount )
-                {
-                    $strContent = preg_replace('/<\/a>/', '</span></span></a>', $strContent);
-                }
-            }
-
-//            echo "<pre>"; print_r( $strContent ); exit;
-        }
-
-        if( $objRow->showAsButton )
-        {
-            switch( $objRow->buttonLinkMode )
-            {
-                case "lightbox":
-                    $arrLinkClasses[] = 'open-in-lightbox';
-                    break;
-
-                case "scroll":
-                    $arrLinkClasses[] = 'scroll-to';
-                    break;
-
-                case "nolink":
-                    $arrLinkClasses[] = 'no-link';
-                    break;
-            }
-        }
+//        if( $objRow->showAsButton )
+//        {
+//            switch( $objRow->buttonLinkMode )
+//            {
+//                case "lightbox":
+//                    $arrLinkClasses[] = 'open-in-lightbox';
+//                    break;
+//
+//                case "scroll":
+//                    $arrLinkClasses[] = 'scroll-to';
+//                    break;
+//
+//                case "nolink":
+//                    $arrLinkClasses[] = 'no-link';
+//                    break;
+//            }
+//        }
 
         if( preg_match_all('/atag-([A-Za-z0-9\-]{0,})/', $cssID[1], $arrClassMatches) )
         {
@@ -2219,16 +2269,70 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         }
 
 //        $strContent = preg_replace('/rel="/', 'data-lightbox="', $strContent);
+        if( false !== strpos($cssID[1], 'insert-icon') )
+        {
+            preg_match_all('/icon-([A-Za-z0-9\-]+)/', $cssID[1], $matchIcons);
+
+            $iconName       = strtolower( $matchIcons[1][0] );
+            $customerDir    = BasicHelper::getFilesCustomerDir();
+            $rootDir        = BasicHelper::getRootDir( true );
+
+            if( !file_exists($rootDir . 'files/' . $customerDir . '/Uploads/Icons/' . $iconName . '.svg') )
+            {
+                $iconName = ucfirst($iconName);
+
+                if( !file_exists($rootDir . 'files/' . $customerDir . '/Uploads/Icons/' . $iconName . '.svg') )
+                {
+                    $iconName = false;
+                }
+            }
+
+            if( $iconName )
+            {
+                $svgIcon = file_get_contents($rootDir . 'files/' . $customerDir . '/Uploads/Icons/' . $iconName . '.svg');
+
+                $strContent = preg_replace('/<a([A-Za-z0-9\s\-öäüÖÄÜß\(\)\{\}\[\],;.:_#+\/="]+)>/', '<a$1><span class="link-inside">', $strContent);
+                $strContent = preg_replace('/<\/a>/', '<span class="icon">' . $svgIcon . '</span></span></a>', $strContent);
+            }
+        }
 
         return $strContent;
     }
 
 
 
-    protected function renderGallery( $strContent, $objRow, $objElement )
+    protected function renderToplink( $strBuffer, $objRow, $objElement )
     {
-        $strContent = preg_replace('/<a/', '<a class="no-barba"', $strContent);
-        $cssID      = \StringUtil::deserialize($objRow->cssID, TRUE);
+        $cssID      = \StringUtil::deserialize( $objRow->cssID, true);
+        $arrow      = '';
+        $linkTitle  = $objRow->linkTitle;
+
+        $arrParts   = explode('-', $linkTitle);
+
+        if( false !== strpos($cssID[1], 'add-icon') || false !== strpos($cssID[1], 'add-arrow') )
+        {
+            $rootDir        = BasicHelper::getRootDir( true );
+            $customerDir    = BasicHelper::getFilesCustomerDir();
+            $iconPath       = $rootDir . 'files/' . $customerDir . '/Uploads/Icons/Arrow-up.svg';
+
+            if( file_exists($iconPath) )
+            {
+                $arrow = '<span class="icon">' . file_get_contents($iconPath) . '</span>';
+            }
+        }
+
+        $newTitle   = '<span class="title-left">' . $arrParts[0] . '</span>' . $arrow . '<span class="title-right">' . $arrParts[1] . '</span>';
+        $strBuffer  = preg_replace('/' . $linkTitle . '<\/a>/', $newTitle . '</a>', $strBuffer);
+
+        return $strBuffer;
+    }
+
+
+
+    protected function renderGallery( $strContent, $objRow, $objElement, $objAliasElement = false )
+    {
+//        $strContent = preg_replace('/<a/', '<a class="no-barba"', $strContent);
+        $cssID      = \StringUtil::deserialize($objElement->cssID, TRUE);
         $addTitle   = false;
 
         if( preg_match('/title-hover/', $cssID[1]) )
@@ -2236,12 +2340,20 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
             $addTitle = true;
         }
 
-        if( $objRow->fullsize )
+//        if( $objRow->fullsize )
+//        {
+//            $strContent = Helper::generateImageHoverTags( $strContent, $objRow );
+//        }
+
+        if( $objAliasElement )
         {
-            $strContent = Helper::generateImageHoverTags( $strContent, $objRow );
+            $arrImages = ImageHelper::getMultipleImages($objAliasElement->multiSRC, $objAliasElement->orderSRC);
+        }
+        else
+        {
+            $arrImages = ImageHelper::getMultipleImages($objElement->multiSRC, $objElement->orderSRC);
         }
 
-        $arrImages = ImageHelper::getMultipleImages($objRow->multiSRC, $objRow->orderSRC);
 
         preg_match_all('/<figure([A-Za-z0-9\s\-,;.:_\/\(\)\{\}="]{0,})>(.*?)<\/figure>/si', $strContent, $arrImageMatches);
 
@@ -2249,6 +2361,8 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         {
             $arrImage       = $arrImages[ $key ];
             $strImageClass  = ($arrImage['meta']['cssClass'] ? ' ' : '') . $arrImage['meta']['cssClass'];
+
+            $isSVG          = preg_match('/\.svg$/', $arrImage['singleSRC']);
 
             $newImageFigure = preg_replace('/class="image_container/', 'class="image_container' . $strImageClass, $strImageFigure);
 
@@ -2258,15 +2372,21 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
                 $newImageFigure = preg_replace('/<\/figure>/', '<div class="hover-title-cont"><div class="htc-inside">' . $hoverTitle . '</div></div></figure>', $newImageFigure);
             }
 
+            if( $isSVG )
+            {
+                $strImage = file_get_contents(BasicHelper::getRootDir( true ) . $arrImage['singleSRC']);
+                $newImageFigure = preg_replace('/<img([A-Za-z0-9\s\-\/\(\)\{\},;.:="_öäüÖÄÜß]+)>/', $strImage, $strImageFigure);
+            }
+
             $strContent     = preg_replace('/' . preg_quote($strImageFigure, '/') . '/', $newImageFigure, $strContent);
         }
 
-        if( $objRow->text )
-        {
-            $strText = '<div class="gallery-text">' . \StringUtil::encodeEmail( \StringUtil::toHtml5($objRow->text) ) . '</div>';
-
-            $strContent = preg_replace('/<\/ul>/', '</ul>' . $strText, $strContent);
-        }
+//        if( $objRow->text )
+//        {
+//            $strText = '<div class="gallery-text">' . \StringUtil::encodeEmail( \StringUtil::toHtml5($objRow->text) ) . '</div>';
+//
+//            $strContent = preg_replace('/<\/ul>/', '</ul>' . $strText, $strContent);
+//        }
 
         $strContent = preg_replace(array('/<figure/', '/<\/figure>/'), array('<div class="gallery-item-inside"><figure', '</figure></div>'), $strContent);
 
@@ -2565,6 +2685,25 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         }
 
         return $strBuffer;
+    }
+
+
+
+    protected function getElementType( $objRow, $objAliasElement = false )
+    {
+        $strType = $objRow->type;
+
+        if( $strType === 'alias' )
+        {
+            $objElement = $objAliasElement ?:ContentModel::findByPk( $objRow->cteAlias );
+
+            if( $objElement )
+            {
+                $strType = $objElement->type;
+            }
+        }
+
+        return $strType;
     }
 
 }

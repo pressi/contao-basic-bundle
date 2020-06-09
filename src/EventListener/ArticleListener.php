@@ -11,6 +11,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 
 
+use Contao\System;
 use IIDO\BasicBundle\Helper\ColorHelper;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
@@ -30,29 +31,45 @@ class ArticleListener implements ServiceAnnotationInterface
      */
     public function onGetArticle( $objRow )
     {
-        $bgColor    = ColorHelper::compileColor( $objRow->bgColor );
+        $objPermission = System::getContainer()->get('iido.basic.backend.permission_checker');
+        /* @var $objPermission \IIDO\BasicBundle\Permission\BackendPermissionChecker */
+
         $classes    = $objRow->classes;
 //        $classes[]  = "row";
 //        $classes[] = "row-direction-$objRow->layout_direction";
 
-        if( $objRow->bgImage )
+        if( $objPermission->hasFullAccessTo('article', 'bg_color') )
         {
-            $classes[] = 'has-bg-image';
+            $bgColor    = ColorHelper::compileColor( $objRow->bgColor );
+
+            if( $bgColor !== 'transparent' )
+            {
+                $arrArticleClasses[] = 'has-bg-color';
+            }
         }
 
-        if( $bgColor !== 'transparent' )
+        if( $objPermission->hasFullAccessTo('article', 'bg_image') )
         {
-            $arrArticleClasses[] = 'has-bg-color';
+            if( $objRow->bgImage )
+            {
+                $classes[] = 'has-bg-image';
+            }
         }
 
-        if( $objRow->width )
+        if( $objPermission->hasFullAccessTo('article', 'width') )
         {
-            $classes[] = 'width-' . $objRow->width;
+            if( $objRow->width )
+            {
+                $classes[] = 'width-' . $objRow->width;
+            }
         }
 
-        if( $objRow->height )
+        if( $objPermission->hasFullAccessTo('article', 'height') )
         {
-            $classes[] = 'height-' . $objRow->height;
+            if( $objRow->height )
+            {
+                $classes[] = 'height-' . $objRow->height;
+            }
         }
 
         $objRow->classes = $classes;
