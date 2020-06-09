@@ -98,6 +98,7 @@ class ContentHelper
 //        $strText = preg_replace('/;/', '<br>', $strText);
 //        $strText = preg_replace('/\|\|([^\|\|]+)\|\|/', '<span class="light">$1</span>', $strText);
         $strText = preg_replace('/\|([^\|]+)\|/', '<strong>$1</strong>', $strText);
+        $strText = preg_replace('/:([^\|]+):/', '<span class="underline">$1</span>', $strText);
 //
 //        $strText = preg_replace('/\{\{sup\}\}/', '<sup>', $strText);
 //        $strText = preg_replace('/\{\{\/sup\}\}/', '</sup>', $strText);

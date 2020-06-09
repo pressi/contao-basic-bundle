@@ -571,6 +571,13 @@ class RSCEHelper extends \Frontend
 
 
 
+    public static function getHeadlineFieldConfig( $label, $newLine = true, $eval = array() )
+    {
+        return self::getUnitFieldConfig( $label, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], $newLine, $eval);
+    }
+
+
+
     /**
      * Render Field Label
      *
@@ -633,7 +640,7 @@ class RSCEHelper extends \Frontend
 
 
 
-    public static function getImageTag( $image, $arrSize = array(), &$objClass = false, $returnPath = false, $floating = '', $showCaption = false )
+    public static function getImageTag( $image, $arrSize = array(), &$objClass = false, $returnPath = false, $floating = '', $showCaption = false, array $options = [] )
     {
         $strContent = '';
 
@@ -656,28 +663,34 @@ class RSCEHelper extends \Frontend
             }
             else
             {
-                $floatClass = '';
+                $image->useAsBG = true;
+                $image->insertImage = true;
 
-                if( $floating )
-                {
-                    $floatClass = ' float_' . $floating;
-                }
+                $strContent = $objClass->insert('image', (array) $image);
 
-                $strCaption = '';
-                if( $showCaption )
-                {
-//                    $arrMeta = \Contao\StringUtil::deserialize( $image->meta, true );
 
-                    if( $image->caption )
-                    {
-//                        $arrLangMeta = $arrMeta[ \IIDO\BasicBundle\Helper\BasicHelper::getLanguage() ];
-
-//                        $strCaption = '<figcaption class="caption">' . $arrLangMeta['caption'] . '</figcaption>';
-                        $strCaption = '<figcaption class="caption">' . ContentHelper::renderText( $image->caption, true ) . '</figcaption>';
-                    }
-                }
-
-                $strContent = '<figure class="image_container' . $floatClass . '"><img src="' . trim($image->src?:$image->picture['img']['src']) . '" alt="' .  trim($image->alt?:$image->picture['alt']) . '"' . $image->imgSize . '>' . $strCaption . '</figure>';
+//                $floatClass = '';
+//
+//                if( $floating )
+//                {
+//                    $floatClass = ' float_' . $floating;
+//                }
+//
+//                $strCaption = '';
+//                if( $showCaption )
+//                {
+////                    $arrMeta = \Contao\StringUtil::deserialize( $image->meta, true );
+//
+//                    if( $image->caption )
+//                    {
+////                        $arrLangMeta = $arrMeta[ \IIDO\BasicBundle\Helper\BasicHelper::getLanguage() ];
+//
+////                        $strCaption = '<figcaption class="caption">' . $arrLangMeta['caption'] . '</figcaption>';
+//                        $strCaption = '<figcaption class="caption">' . ContentHelper::renderText( $image->caption, true ) . '</figcaption>';
+//                    }
+//                }
+//
+//                $strContent = '<figure class="image_container' . $floatClass . '"><img src="' . trim($image->src?:$image->picture['img']['src']) . '" alt="' .  trim($image->alt?:$image->picture['alt']) . '"' . $image->imgSize . '>' . $strCaption . '</figure>';
             }
         }
 
