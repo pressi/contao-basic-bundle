@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @package IIDO\BasicBundle\Controller\Elements
  *
- * @ContentElement("iido_column_master",
+ * ContentElement("iido_column_master",
  *     category="texts",
  *     template="ce_iido_config_column-master",
  *     renderer="forward"
