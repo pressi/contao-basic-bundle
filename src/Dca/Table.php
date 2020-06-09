@@ -938,7 +938,8 @@ class Table
                         $GLOBALS['TL_DCA'][ $this->strTable ]['list']['operations']['copy'] = array
                         (
                             'label'               => $this->renderDefaultLangLabel('copy'),
-                            'href'                => 'act=paste&amp;mode=copy',
+//                            'href'                => 'act=paste&amp;mode=copy',
+                            'href'                => 'act=copy',
                             'icon'                => 'copy.svg'
                         );
                         break;
