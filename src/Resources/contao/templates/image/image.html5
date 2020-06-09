@@ -1,0 +1,39 @@
+<?php
+$attributes = '';
+
+if( $this->useAsBG )
+{
+    $this->floatClass .= ' bg-image bg-cover';
+
+    if( $this->lazyload )
+    {
+        $attributes = ' data-original="' . $this->picture['img']['src'] . '"';
+
+        $this->margin .= "background-image:url('');";
+    }
+    else
+    {
+        $this->margin .= "background-image:url('" . $this->picture['img']['src'] . "');";
+    }
+}
+?>
+<figure class="image_container<?= $this->floatClass ?>"<?php if ($this->margin): ?> style="<?= $this->margin ?>"<?php endif; ?><?= $attributes ?>>
+
+  <?php if ($this->href): ?>
+    <a href="<?= $this->href ?>"<?php if ($this->linkTitle): ?> title="<?= $this->linkTitle ?>"<?php endif; ?><?= $this->attributes ?>>
+  <?php endif; ?>
+
+  <?php if( !$this->useAsBG || $this->insertImage ) { $this->insert('picture_default', $this->picture); } ?>
+  <?= $this->contentInside ?>
+
+  <?php if ($this->href): ?>
+        <?php if( !$this->noImgHover ): ?><div class="image-hover"></div><?php endif ?>
+    </a>
+  <?php endif; ?>
+
+  <?php if ($this->caption): ?>
+    <figcaption class="caption"><?= $this->caption ?></figcaption>
+  <?php endif; ?>
+
+</figure>
+<?= $this->contentAfter ?>

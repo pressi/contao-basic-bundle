@@ -1,0 +1,8 @@
+<div class="offset-navigation-container">
+    <div class="onc-inside">
+        {{iido::insert_article::<?= $this->offsetNavAlias ?>}}
+    </div>
+
+    <div class="close"></div>
+</div>
+<div class="offset-navigation-overlay"></div>
