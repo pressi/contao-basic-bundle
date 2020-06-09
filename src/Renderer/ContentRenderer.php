@@ -28,9 +28,10 @@ class ContentRenderer
 
         $arrHeadline    = StringUtil::deserialize( $objRow->headline, TRUE );
         $unit           = $arrHeadline['unit'];
-        $floating       = $objRow->headlineFloating;
-        $color          = ColorHelper::compileColor($objRow->headlineColor);
-        $classes        = $floating;
+//        $floating       = $objRow->headlineFloating;
+//        $color          = ColorHelper::compileColor($objRow->headlineColor);
+//        $classes        = $floating;
+        $classes        = '';
         $styles         = '';
 
         $strNewHeadline = preg_replace(['/;/', '/--([\w\d\s!?]+)--/'], ['<br>', '<span class="normal">$1</span>'], $arrHeadline['value']);
@@ -52,7 +53,8 @@ class ContentRenderer
 
             $classes .= ' has-top-headline';
 
-            $strTopHeadline = '<div class="top-headline h-unit-' . $unit . ' text-' . $objRow->topHeadlineFloating . '">' . $objRow->topHeadline . '</div>';
+//            $strTopHeadline = '<div class="top-headline h-unit-' . $unit . ' text-' . $objRow->topHeadlineFloating . '">' . $objRow->topHeadline . '</div>';
+            $strTopHeadline = '<div class="top-headline h-unit-' . $unit . '">' . $objRow->topHeadline . '</div>';
 
             if( $isBackend && 1 == 2 ) // TODO: changeable in backend?!!
             {
@@ -63,10 +65,10 @@ class ContentRenderer
             }
         }
 
-        if( $color !== 'transparent' )
-        {
-            $styles .= 'color:' . $color . ';';
-        }
+//        if( $color !== 'transparent' )
+//        {
+//            $styles .= 'color:' . $color . ';';
+//        }
 
         if(
             $objRow->type === 'text' && $objRow->addImage && $objRow->singleSRC &&
@@ -122,7 +124,8 @@ class ContentRenderer
             $addContClose .= '</div></div>';
         }
 
-        $strContent     = preg_replace('/<' . $unit . '>/', $addContStart . $imageBefore . $strTopHeadline . '<' . $unit . ' class="headline text-' . $classes . '"' . $styles . '><span>', $strContent, 1);
+//        $strContent     = preg_replace('/<' . $unit . '>/', $addContStart . $imageBefore . $strTopHeadline . '<' . $unit . ' class="headline text-' . $classes . '"' . $styles . '><span>', $strContent, 1);
+        $strContent     = preg_replace('/<' . $unit . '>/', $addContStart . $imageBefore . $strTopHeadline . '<' . $unit . ' class="headline ' . $classes . '"' . $styles . '><span>', $strContent, 1);
         $strContent     = preg_replace('/<\/' . $unit . '>/' , '</span></' . $unit . '>' . $addContClose, $strContent);
         $strContent     = ContentHelper::addClassToElement( $strContent, $objRow, $arrElementClasses );
 
@@ -142,31 +145,47 @@ class ContentRenderer
 
         $GLOBALS['IIDO']['COLUMNS']['OPEN'] = $GLOBALS['IIDO']['COLUMNS']['OPEN'] || false;
         $GLOBALS['IIDO']['COLUMNS']['COUNT'] = (int) $GLOBALS['IIDO']['COLUMNS']['COUNT'] || 0;
+        $colsMax = 100;
 
         $classes = StringUtil::deserialize( $objRow->cssID, TRUE )[1];
-//echo "<pre>"; print_r( $GLOBALS['IIDO']['COLUMNS']['OPEN'] );
-//        echo "<br>"; print_r( $GLOBALS['IIDO']['COLUMNS']['COUNT'] );
-//        echo "<br>"; print_r( $objRow->id );
-//        echo "<br>"; print_r( $classes );
-//echo "</pre>";
-        if( false !== strpos($classes, 'column-item') )
+
+        if( false !== strpos($classes, 'col-item') )
+        {
+            $colsMax = 12;
+        }
+
+        if( false !== strpos($classes, 'column-item') || false !== strpos($classes, 'col-item') )
         {
             if( !$GLOBALS['IIDO']['COLUMNS']['OPEN'] )
             {
+                $strContClasses = '';
+
+                if( false !== strpos($classes, 'col-item') )
+                {
+                    $strContClasses = ' def-cols-container';
+                }
+
                 $GLOBALS['IIDO']['COLUMNS']['OPEN'] = true;
-                $strContent = '<div class="columns-container">' . $strContent;
+                $strContent = '<div class="columns-container' . $strContClasses . '">' . $strContent;
             }
 
             preg_match_all('/col-w-([0-9]+)/', $classes, $matches);
 
             $columnCount = (int) $matches[1][0];
 
+            if( false !== strpos($classes, 'col-item') )
+            {
+                preg_match_all('/col-c([0-9]+)/', $classes, $matches);
+
+                $columnCount = (int) $matches[1][0];
+            }
+
             $GLOBALS['IIDO']['COLUMNS']['COUNT'] = ($GLOBALS['IIDO']['COLUMNS']['COUNT'] + $columnCount);
         }
 
         if( (in_array('last', $objRow->classes) && $GLOBALS['IIDO']['COLUMNS']['OPEN'])
-        || (false === strpos($classes, 'column-item') && $GLOBALS['IIDO']['COLUMNS']['OPEN'])
-        || $GLOBALS['IIDO']['COLUMNS']['COUNT'] >= 100 )
+        || (false === strpos($classes, 'column-item') && false === strpos($classes, 'col-item') && $GLOBALS['IIDO']['COLUMNS']['OPEN'])
+        || $GLOBALS['IIDO']['COLUMNS']['COUNT'] >= $colsMax )
         {
             $GLOBALS['IIDO']['COLUMNS']['OPEN'] = false;
             $GLOBALS['IIDO']['COLUMNS']['COUNT'] = 0;
