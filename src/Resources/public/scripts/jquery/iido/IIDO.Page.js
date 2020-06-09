@@ -8,7 +8,7 @@
 var IIDO  = IIDO || {};
 IIDO.Page = IIDO.Page || {};
 
-(function (window, $, page)
+(function ($, page)
 {
     var $mobileNav, $openButton, $searchForm, $mobileIsOpened = false,
         $navOffset = 135;
@@ -21,6 +21,77 @@ IIDO.Page = IIDO.Page || {};
         this.initPageScroll();
         this.initMobileNavigation();
         this.initScrollLinks();
+        this.initNavigtion();
+    };
+
+
+
+    page.initNavigtion = function()
+    {
+        let offsetNavigation    = document.querySelector('.offset-navigation-container'),
+            offsetNavToggler    = document.querySelectorAll('.offset-navigation-toggler');
+
+        if( offsetNavigation && offsetNavToggler.length )
+        {
+            let offsetClose = offsetNavigation.querySelector('.close');
+
+            if( offsetClose )
+            {
+                offsetClose.addEventListener('click', function(e)
+                {
+                    offsetNavigation.classList.remove('open');
+                    document.body.classList.remove('open-offset-navigation');
+                });
+            }
+
+            if( offsetNavToggler.length )
+            {
+                offsetNavToggler.forEach( toggler => {
+                    toggler.addEventListener('click', function( e )
+                    {
+                        if( offsetNavigation.classList.contains('open') )
+                        {
+                            offsetNavigation.classList.remove('open');
+                            document.body.classList.remove('open-offset-navigation');
+                        }
+                        else
+                        {
+                            offsetNavigation.classList.add('open');
+                            document.body.classList.add('open-offset-navigation');
+                        }
+                    });
+                });
+            }
+
+            document.addEventListener('click', function(e)
+            {
+                let currentItem             = $(e.target);
+
+                let isOffsetNav             = false;
+                let offsetNavContParent     = currentItem.parents('.offset-navigation-container');
+                let offsetNav               = currentItem.hasClass('offset-navigation-container');
+
+                let isToggler               = false;
+                let offsetNavContToggler    = currentItem.parents('.offset-navigation-toggler');
+                let offsetToggler           = currentItem.hasClass('offset-navigation-toggler');
+
+                if( offsetToggler || offsetNavContToggler.length )
+                {
+                    isToggler = true;
+                }
+
+                if( offsetNav || offsetNavContParent.length )
+                {
+                    isOffsetNav = true;
+                }
+
+                if( !isOffsetNav && !isToggler )
+                {
+                    offsetNavigation.classList.remove('open');
+                    document.body.classList.remove('open-offset-navigation');
+                }
+            })
+        }
     };
 
 
@@ -29,7 +100,7 @@ IIDO.Page = IIDO.Page || {};
     {
         this.checkScrollState();
 
-        window.addEventListener("scroll", function()
+        window.addEventListener("scroll", function( e )
         {
             IIDO.Page.checkScrollState();
         });
@@ -39,7 +110,10 @@ IIDO.Page = IIDO.Page || {};
 
     page.checkScrollState = function()
     {
-        if( IIDO.Base.getBodyScrollTop() >= 50 )
+        let scrollY         = parseInt( IIDO.Base.getBodyScrollTop() );
+        let headerHeight    = parseInt( document.getElementById('header').offsetHeight );
+
+        if( scrollY >= 50 )
         {
             document.body.classList.add("scrolled");
 
@@ -67,6 +141,15 @@ IIDO.Page = IIDO.Page || {};
         else
         {
             document.body.classList.remove("scrolled");
+        }
+
+        if( scrollY >= (headerHeight + 25) )
+        {
+            document.body.classList.add('header-scrolled-out');
+        }
+        else
+        {
+            document.body.classList.remove('header-scrolled-out');
         }
     };
 
@@ -362,7 +445,7 @@ IIDO.Page = IIDO.Page || {};
         return false;
     };
 
-})(window, jQuery, IIDO.Page);
+})(jQuery, IIDO.Page);
 
 document.addEventListener("DOMContentLoaded", function(event)
 {
