@@ -136,7 +136,7 @@ class FrontendTemplateListener implements ServiceAnnotationInterface
 
         $objRootPage = PageModel::findByPk( $objPage->rootId );
 
-        if( $strTemplate === 'fe_page' )
+        if( 0 === strpos($strTemplate, 'fe_page') )
         {
             $config = System::getContainer()->get('iido.basic.config');
 
@@ -147,7 +147,7 @@ class FrontendTemplateListener implements ServiceAnnotationInterface
                 $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="canvasTop">([\s\n]{0,})<div class="inside">([A-Za-z0-9\s\n\-:_\{\}]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
             }
 
-            $objPitLane = ArticleModel::findByAlias("ge_pitlane_" . $objRootPage->alias);
+            $objPitLane = ArticleModel::findByAlias("ge_pit-lane_" . $objRootPage->alias);
 
             if( !$objPitLane )
             {

@@ -13,11 +13,13 @@ namespace IIDO\BasicBundle\EventListener;
 
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\StringUtil;
 use IIDO\BasicBundle\Config\BundleConfig;
 use IIDO\BasicBundle\Helper\PageHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Renderer\MobileRenderer;
 use IIDO\BasicBundle\Renderer\SearchRenderer;
+use IIDO\BasicBundle\Renderer\SectionRenderer;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 use Contao\ArticleModel;
 use Contao\LayoutModel;
@@ -81,6 +83,22 @@ class PageListener implements ServiceAnnotationInterface
             if( $objHeader )
             {
                 $strBuffer = $this->renderSection('header', $objHeader, $strBuffer);
+
+                $headerClasses = StringUtil::deserialize( $objHeader->cssID, true );
+
+                if( false !== strpos($headerClasses[1], 'layout-01') )
+                {
+                    $objOffsetNavigation = ArticleModel::findBy(['articleType=?', 'published=?'], ['navigationCont', '1'] );
+
+                    if( $objOffsetNavigation )
+                    {
+                        $strBuffer = SectionRenderer::renderOffsetNavigation( $strBuffer, true, $objOffsetNavigation );
+
+                        $offsetNavToggler = SectionRenderer::getOffsetNavigationToggler();
+
+                        $strBuffer = preg_replace('/<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/header>/', $offsetNavToggler . '</div></div></div></header>', $strBuffer);
+                    }
+                }
             }
 
             if( $objFooter )
@@ -91,10 +109,29 @@ class PageListener implements ServiceAnnotationInterface
             $strBuffer = SearchRenderer::renderSearchTemplate( $strBuffer );
             $strBuffer = MobileRenderer::renderMobileMenuTemplate( $strBuffer );
 
+//            $strBuffer = SectionRenderer::renderStickyHeader( $strBuffer, $offsetNavToggler );
+            $strBuffer = SectionRenderer::renderStickyHeader( $strBuffer );
+//            $strBuffer = SectionRenderer::renderFixedButtons( $strBuffer );
+
             $strBuffer = preg_replace('/<!-- REMOVE:([A-Za-z0-9\n\s\-,;.:_\{\}><]{0,}) -->/', '', $strBuffer);
         }
 
         return $strBuffer;
+    }
+
+
+
+    /**
+     * @Hook("getPageStatusIcon")
+     */
+    public function onGetPageStatusIcon( $objPage, string $image): string
+    {
+        if( $objPage->type === 'global_element' )
+        {
+            $image = str_replace('global_element', 'redirect', $image);
+        }
+
+        return $image;
     }
 
 

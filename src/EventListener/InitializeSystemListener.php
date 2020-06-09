@@ -11,6 +11,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use IIDO\BasicBundle\Model\NewsAreaOfApplicationModel;
 use IIDO\BasicBundle\Model\NewsUsageModel;
+use IIDO\BasicBundle\Pages\GlobalElementPage;
 use IIDO\BasicBundle\Widget\NewsAreaOfApplicationPickerWidget;
 use IIDO\BasicBundle\Widget\NewsUsagePickerWidget;
 use IIDO\BasicBundle\Model\IidoContentModel;
@@ -106,6 +107,9 @@ class InitializeSystemListener implements ServiceAnnotationInterface
         [
             'tables'    => ['tl_iido_config']
         ];
+
+        // Page types
+        $GLOBALS['TL_PTY']['global_element'] = GlobalElementPage::class;
 
 
         // BE form fields

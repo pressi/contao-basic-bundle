@@ -10,9 +10,12 @@
 namespace IIDO\BasicBundle\EventListener;
 
 
+use Contao\Controller;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\System;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\HeaderHelper;
+use IIDO\BasicBundle\Renderer\SectionRenderer;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 
@@ -41,7 +44,7 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
             switch( $chunks[1] )
             {
                 case "insert_article":
-                    if( ($strOutput = \Controller::getArticle($chunks[2], false, true)) !== false )
+                    if( ($strOutput = Controller::getArticle($chunks[2], false, true)) !== false )
                     {
                         $return     = ltrim($strOutput);
                         $strClass   = $chunks[3];
@@ -50,6 +53,7 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
                         $strAttributes  = '';
 
                         $topBarExists   = false;
+                        $isStickyHeader = false !== strpos($chunks[2], 'sticky-header');
 
                         if( $strClass )
                         {
@@ -89,6 +93,12 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
 
                             $return = '<div class="' . $strClass . $addClasses . '"' . $strAttributes . '><div class="' . $strClass . '-inside' . $rowClass . '">' . $layoutDivStart . $return . $layoutDivEnd . '</div></div>';
                         }
+
+                        if( $isStickyHeader )
+                        {
+                            $return .= SectionRenderer::getOffsetNavigationToggler();
+//                            $return = preg_replace('/<\/div>([\s\n]{0,})<\/div>/', SectionRenderer::getOffsetNavigationToggler() . '</div></div>', $return);
+                        }
                     }
                     else
                     {
@@ -100,7 +110,14 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
 
         if( $chunks[0] === 'icon' )
         {
-            return '';
+            $rootDir    = BasicHelper::getRootDir( true );
+            $iconPath   = 'files/' . BasicHelper::getFilesCustomerDir() . '/Uploads/Icons/';
+            $iconName   = ucfirst($chunks[1]) . '.svg';
+
+            if( file_exists( $rootDir . $iconPath . $iconName ) )
+            {
+                $return = file_get_contents( $rootDir . $iconPath . $iconName );
+            }
         }
 
         return $return;
