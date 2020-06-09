@@ -36,6 +36,7 @@ $arrPalette =
     'elements' =>
     [
         'includeElementFields',
+        'removeHeadlineFieldFromElements',
         'enableLayout'
     ],
 
@@ -134,8 +135,12 @@ $objConfTable->addSubpalette('loginShowPublisherLink', 'loginPublisher');
     ->addEval('multiple', true)
     ->addToTable( $objConfTable );
 
-\IIDO\BasicBundle\Dca\Field::create('enableLayout', 'checkbox')
+\IIDO\BasicBundle\Dca\Field::create('removeHeadlineFieldFromElements', 'checkbox')
     ->addEval('tl_class', 'clr')
+    ->addToTable( $objConfTable );
+
+\IIDO\BasicBundle\Dca\Field::create('enableLayout', 'checkbox')
+//    ->addEval('tl_class', 'clr')
     ->addToTable( $objConfTable );
 
 

@@ -5,7 +5,15 @@ $objContentTable    = new \IIDO\BasicBundle\Dca\ExistTable( $strContentFileName 
 
 $objContentTable->setTableListener( 'iido.basic.dca.content' );
 
-//$config = \Contao\System::getContainer()->get('iido.basic.config');
+
+$objConfig  = System::getContainer()->get('iido.basic.config');
+$objElement = false;
+
+if( Input::get('act') === 'edit' )
+{
+    $objElement = \Contao\ContentModel::findByPk( Input::get('id') );
+}
+
 
 
 /**
@@ -23,24 +31,67 @@ $objContentTable->setTableListener( 'iido.basic.dca.content' );
  * Palettes
  */
 
-//if( $config->get('includeElementFields') )
-//{
+$arrFields      = StringUtil::deserialize( $objConfig->get('elementFields'), true);
+$removeHeadline = $objConfig->get('removeHeadlineFieldFromElements');
+
+
+if( $objConfig->get('includeElementFields') )
+{
+    $headlineFields = '';
+
+
+    // HEADLINE
+
+    if( in_array('topHeadline', $arrFields) )
+    {
+        $headlineFields = ',topHeadline,headline';
+    }
+
+    if( in_array('subHeadline', $arrFields) )
+    {
+        if( !$headlineFields )
+        {
+            $headlineFields = ',headline';
+        }
+
+        $headlineFields .= ',subHeadline';
+    }
+
+    if( $headlineFields && !$removeHeadline )
+    {
+        $objContentTable->replacePaletteFields('all', ',headline', $headlineFields);
+    }
+
+    if( $removeHeadline && $headlineFields )
+    {
+        $objContentTable->replacePaletteFields('headline', ',headline', $headlineFields);
+    }
+
+
+    // ANIMATION
+
+    if( in_array('animation', $arrFields) )
+    {
+        $objContentTable->replaceFieldLegendInPalette('all', '{animation_legend},addAnimation;', 'end', ['boxStop','accordionStop','sliderStop','html','code','alias','article']);
+    }
+
+
 //    $objContentTable->replacePaletteFields('all', ',headline', ',topHeadline,topHeadlineFloating,topHeadlineColor,headline');
 //    $objContentTable->replacePaletteFields('all', ',headline', ',headline,headlineFloating,headlineColor');
-//}
+}
 
-//if( $config->get('enableLayout') )
+//if( $objConfig->get('enableLayout') )
 //{
 //    $objContentTable->replacePaletteFields('all', '{expert_legend:hide}', '{layout_legend:hide},layout_cond_width,layout_col_mobile,layout_col_tablet,layout_col_desktop,layout_col_wide,layout_align_mobile,layout_align_tablet,layout_align_desktop,layout_align_wide;{expert_legend:hide}');
 //}
 
-$palette = $objContentTable->getDefaultPaletteFields( $strContentFileName, ['elements' => ['iido_elements']]);
+if( $removeHeadline )
+{
+    $objContentTable->removeFieldFromPalette('headline', 'all', 'headline');
+}
 
-$objContentTable->addPalette('iido_column_master', $palette);
-
-//$objContentTable->removeFieldFromPalette('headline', 'all', 'headline');
-
-$objContentTable->replaceFieldLegendInPalette('all', '{animation_legend},addAnimation;', 'end', ['boxStop','accordionStop','sliderStop','html','code','alias','article']);
+//$palette = $objContentTable->getDefaultPaletteFields( $strContentFileName, ['elements' => ['iido_elements']]);
+//$objContentTable->addPalette('iido_column_master', $palette);
 
 
 
@@ -86,6 +137,7 @@ $objContentTable->addSubpalette("addAnimation", "animationType,animateRun,animat
 
 
 // ANIMATION
+
 \IIDO\BasicBundle\Dca\Field::create('addAnimation', 'checkbox')
     ->setAsSelector()
     ->addToTable( $objContentTable );
@@ -107,35 +159,39 @@ $objContentTable->addSubpalette("addAnimation", "animationType,animateRun,animat
 
 
 // HEADLINE
-/*
+
 \IIDO\BasicBundle\Dca\Field::create('topHeadline')
     ->addEval('tl_class', 'clr')
     ->addToTable( $objContentTable );
 
-\IIDO\BasicBundle\Dca\Field::create('topHeadlineFloating', 'select')
-    ->addOptions(['field', 'headlineFloating'])
-    ->addDefault('left')
-    ->addEval('tl_class', 'w25', true)
+//\IIDO\BasicBundle\Dca\Field::create('topHeadlineFloating', 'select')
+//    ->addOptions(['field', 'headlineFloating'])
+//    ->addDefault('left')
+//    ->addEval('tl_class', 'w25', true)
+//    ->addToTable( $objContentTable );
+
+//\IIDO\BasicBundle\Dca\Field::create('topHeadlineColor', 'select')
+//    ->addConfig('options_callback', [$objContentTable->getTableListener(), 'getColor'])
+//    ->addEval('includeBlankOption', true)
+//    ->addEval('tl_class', 'w25', true)
+//    ->addToTable( $objContentTable );
+
+
+//\IIDO\BasicBundle\Dca\Field::create('headlineFloating', 'select')
+//    ->addDefault('left')
+//    ->addEval('tl_class', 'w25', true)
+//    ->addToTable( $objContentTable );
+
+//\IIDO\BasicBundle\Dca\Field::create('headlineColor', 'select')
+//    ->addConfig('options_callback', [$objContentTable->getTableListener(), 'getColor'])
+//    ->addEval('includeBlankOption', true)
+//    ->addEval('tl_class', 'w25', true)
+//    ->addToTable( $objContentTable );
+
+\IIDO\BasicBundle\Dca\Field::create('subHeadline')
+    ->addEval('tl_class', 'clr')
     ->addToTable( $objContentTable );
 
-\IIDO\BasicBundle\Dca\Field::create('topHeadlineColor', 'select')
-    ->addConfig('options_callback', [$objContentTable->getTableListener(), 'getColor'])
-    ->addEval('includeBlankOption', true)
-    ->addEval('tl_class', 'w25', true)
-    ->addToTable( $objContentTable );
-
-
-\IIDO\BasicBundle\Dca\Field::create('headlineFloating', 'select')
-    ->addDefault('left')
-    ->addEval('tl_class', 'w25', true)
-    ->addToTable( $objContentTable );
-
-\IIDO\BasicBundle\Dca\Field::create('headlineColor', 'select')
-    ->addConfig('options_callback', [$objContentTable->getTableListener(), 'getColor'])
-    ->addEval('includeBlankOption', true)
-    ->addEval('tl_class', 'w25', true)
-    ->addToTable( $objContentTable );
-*/
 
 
 // LAYOUT
@@ -218,5 +274,12 @@ $objContentTable->addSubpalette("addAnimation", "animationType,animateRun,animat
     ->addSQL("varchar(8) NOT NULL default ''")
     ->addToTable( $objContentTable );
 */
+
+if( $objConfig->get('includeElementFields') && in_array('cssID', $arrFields) )
+{
+    \IIDO\BasicBundle\Dca\Field::update('cssID', $objContentTable)
+        ->addEval('tl_class', 'css-id-field')
+        ->updateField();
+}
 
 $objContentTable->updateDca();

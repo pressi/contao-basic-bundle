@@ -5,23 +5,106 @@ $objArticleTable    = new \IIDO\BasicBundle\Dca\ExistTable( $strArticleFileName 
 
 $objArticleTable->setTableListener( 'iido.basic.dca.article' );
 
+$objConfig  = System::getContainer()->get('iido.basic.config');
+$objArticle = false;
+
+if( Input::get('act') === 'edit' )
+{
+    $objArticle = \Contao\ArticleModel::findByPk( Input::get('id') );
+}
+
 
 
 /**
  * Palettes
  */
 
-Contao\CoreBundle\DataContainer\PaletteManipulator::create()
-    ->addLegend('design_legend', 'layout_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER)
-    ->addLegend('dimensions_legend', 'design_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_BEFORE)
-    ->addLegend('animation_legend', 'expert_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true)
+$paletteManipulator = Contao\CoreBundle\DataContainer\PaletteManipulator::create();
 
-    ->addField(['bgColor', 'gradientColors', 'gradientAngle', 'bgImage', 'bgPosition', 'bgRepeat', 'bgAttachment', 'bgSize'], 'design_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
-    ->addField(['width', 'height'], 'dimensions_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+if( $objConfig->get('includeArticleFields') )
+{
+    $arrFields      = StringUtil::deserialize( $objConfig->get('articleFields'), true);
+    $arrDesign      = [];
+    $arrDimensions  = [];
 
-    ->addField('addAnimation', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND)
+    // Design
 
-    ->applyToPalette('default', $strArticleFileName);
+    if( in_array('bg_color', $arrFields) )
+    {
+        $arrDesign[] = 'bgColor';
+    }
+
+    if( in_array('bg_gradient', $arrFields) )
+    {
+        $arrDesign[] = 'gradientColors';
+        $arrDesign[] = 'gradientAngle';
+    }
+
+    if( in_array('bg_image', $arrFields) )
+    {
+        $arrDesign[] = 'bgImage';
+        $arrDesign[] = 'bgPosition';
+        $arrDesign[] = 'bgRepeat';
+        $arrDesign[] = 'bgAttachment';
+        $arrDesign[] = 'bgSize';
+    }
+
+    if( count($arrDesign) )
+    {
+        $paletteManipulator->addLegend('design_legend', 'layout_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER);
+        $paletteManipulator->addField($arrDesign, 'design_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND);
+    }
+
+
+    // Dimensions
+
+    if( in_array('width', $arrFields) )
+    {
+        $arrDimensions[] = 'width';
+    }
+
+    if( in_array('height', $arrFields) )
+    {
+        $arrDimensions[] = 'height';
+    }
+
+    if( count($arrDimensions) )
+    {
+        $paletteManipulator->addLegend('dimensions_legend', 'layout_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER);
+        $paletteManipulator->addField($arrDimensions, 'dimensions_legend', \Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND);
+    }
+
+
+    // Animation
+
+    if( in_array('animation', $arrFields) )
+    {
+        $paletteManipulator->addLegend('animation_legend', 'expert_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER, true);
+        $paletteManipulator->addField('addAnimation', 'animation_legend', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_PREPEND);
+    }
+
+
+    // Type
+
+//    if( in_array('type', $arrFields) )
+//    {
+        if( $objArticle )
+        {
+            $objArticlePage = \Contao\PageModel::findByPk( $objArticle->pid );
+
+            if( $objArticlePage )
+            {
+                if( $objArticlePage->type === 'global_element' )
+                {
+                    $paletteManipulator->addField('articleType', 'title', Contao\CoreBundle\DataContainer\PaletteManipulator::POSITION_AFTER);
+                }
+            }
+        }
+//    }
+
+
+    $paletteManipulator->applyToPalette('default', $strArticleFileName);
+}
 
 
 
@@ -125,6 +208,22 @@ $objArticleTable->addSubpalette("addAnimation", "animationType,animateRun,animat
 \IIDO\BasicBundle\Dca\Field::create('animateRun', 'select')
     ->setLangTable( 'content' )
     ->addToTable( $objArticleTable );
+
+
+
+// TYPE
+
+\IIDO\BasicBundle\Dca\Field::create('articleType', 'select')
+    ->addDefault('default')
+    ->addToTable( $objArticleTable );
+
+
+
+// GLOBAL ELEMENTS
+
+//\IIDO\BasicBundle\Dca\Field::create('articleType', 'select')
+//    ->addDefault('default')
+//    ->addToTable( $objArticleTable );
 
 
 
