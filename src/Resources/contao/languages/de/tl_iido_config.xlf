@@ -122,15 +122,30 @@
 <!--                <target>Überschrift oben: Farbe</target>-->
 <!--            </trans-unit>-->
 
-            <trans-unit id="tl_iido_config.options.elementFields.dev">
-                <source>in development</source>
-                <target>In Entwicklung</target>
+            <trans-unit id="tl_iido_config.options.elementFields.topHeadline">
+                <source>top headline</source>
+                <target>Überschrift Oben</target>
             </trans-unit>
+            <trans-unit id="tl_iido_config.options.elementFields.subHeadline">
+                <source>sub headline</source>
+                <target>Überschrift Unten</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_config.options.elementFields.animation">
+                <source>Animation</source>
+                <target>Animation</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_config.options.elementFields.cssID">
+                <source>update cssID</source>
+                <target>Update: CSS-ID/Klasse</target>
+            </trans-unit>
+
+
 
             <trans-unit id="tl_iido_config.options.pageFields.dev">
                 <source>in development</source>
                 <target>In Entwicklung</target>
             </trans-unit>
+
 
 
             <trans-unit id="tl_iido_config.options.articleFields.width">

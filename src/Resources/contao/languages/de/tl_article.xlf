@@ -63,6 +63,12 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_article.articleType.0">
+                <source>Type</source>
+                <target>Typ</target>
+            </trans-unit>
+
+
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
@@ -198,6 +204,53 @@
             <trans-unit id="tl_article.options.height.full">
                 <source>full height</source>
                 <target>Volle Höhe</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.articleType.default">
+                <source>Standard Artikel</source>
+                <target>Standard Artikel</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.topHeader">
+                <source>Header: Top Bar</source>
+                <target>Kopfzeile: Top Bar</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.header">
+                <source>Header</source>
+                <target>Kopfzeile</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.stickyHeader">
+                <source>Sticky Header</source>
+                <target>Sticky Kopfzeile</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.pitLane">
+                <source>Pit Lange</source>
+                <target>Boxengasse (Pit lane)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.footer">
+                <source>Footer</source>
+                <target>Fußzeile</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.footerBar">
+                <source>Footer: Bottom Bar</source>
+                <target>Fußzeile: Bottom Bar</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.mobileMenu">
+                <source>Mobile Menü</source>
+                <target>Mobile Menü</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.navigationCont">
+                <source>Navigation: Container (offset)</source>
+                <target>Navigation: Container (offset)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.canvasTop">
+                <source>Canvas Top: Section in top (hidden)</source>
+                <target>Canvas Top: Bereich oben (versteckt)</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.articleType.fixedButtons">
+                <source>Fixed Elements: Buttons</source>
+                <target>Fixierte Elemente: Buttons</target>
             </trans-unit>
 
 

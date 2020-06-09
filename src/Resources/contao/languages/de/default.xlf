@@ -7,6 +7,17 @@
                 <target>Spalten: Master Element</target>
             </trans-unit>
 
+
+
+            <trans-unit id="PTY.global_element.0">
+                <source>Global Element Page</source>
+                <target>Global-Elements Seite</target>
+            </trans-unit>
+            <trans-unit id="PTY.global_element.1">
+                <source>Diese Seite ist nur für Globale Elemente (Kopfzeile, Fußzeile, usw.), leitet immer auf die Startseite um beim direktem Aufruf.</source>
+                <target>Diese Seite ist nur für Globale Elemente (Kopfzeile, Fußzeile, usw.), leitet immer auf die Startseite um beim direktem Aufruf.</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
