@@ -18,6 +18,7 @@
     {
         "php": ">=7.3",
         "contao/core-bundle": "4.9.*",
+        "codefog/contao-haste": "^4",
         "madeyourday/contao-rocksolid-custom-elements": "^2",
         "heimrichhannot/contao-fieldpalette-bundle": "^0"
     },
