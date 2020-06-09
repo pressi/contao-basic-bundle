@@ -82,6 +82,11 @@ class TextFieldWidget extends \TextField
 //            echo "<pre>"; print_r( $objModel ); exit;
 //            echo "<pre>"; print_r( $this->strField ); exit;
         }
+        if( $this->addon )
+        {
+            $strField = preg_replace('/class="tl_text/', 'class="tl_text has-addon', $strField);
+            $strField = $strField . '<div class="addon">' . $this->addon . '</div>';
+        }
 
 //        if( $this->colorpicker && !preg_match('/fillColor/', $this->strField) )
 //        {
