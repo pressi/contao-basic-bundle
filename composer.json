@@ -47,7 +47,8 @@
         "codefog/contao-news_categories": "News Kategorien",
         "madeyourday/contao-rocksolid-antispam": "Antispam",
         "do-while/contao-backupdb-bundle": "Datenbanksicherung",
-        "fritzmg/contao-backend-documentation": "Backend Dokumentation"
+        "fritzmg/contao-backend-documentation": "Backend Dokumentation",
+        "heimrichhannot/contao-backend-lost-password-bundle": "Backend Login: Passwort vergessen"
     },
     "autoload":
     {

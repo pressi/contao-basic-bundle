@@ -10,6 +10,7 @@
 namespace IIDO\BasicBundle\Config;
 
 
+use Contao\CoreBundle\Util\PackageUtil;
 use Contao\System;
 
 
@@ -361,8 +362,9 @@ class BundleConfig
      */
     public static function getContaoVersion(): string
     {
-        $packages = System::getContainer()->getParameter('kernel.packages');
-        return $packages['contao/core-bundle'];
+//        $packages = System::getContainer()->getParameter('kernel.packages');
+//        return $packages['contao/core-bundle'];
+        return PackageUtil::getContaoVersion();
     }
 
 
@@ -387,6 +389,6 @@ class BundleConfig
      */
     public static function getRootDir( $includeSlash = false ): string
     {
-        return dirname(System::getContainer()->getParameter('kernel.root_dir')) . ($includeSlash ? '/' : '');
+        return dirname(System::getContainer()->getParameter('kernel.root_dir')) . ($includeSlash ? DIRECTORY_SEPARATOR : '');
     }
 }

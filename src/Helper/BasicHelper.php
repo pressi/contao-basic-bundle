@@ -112,7 +112,8 @@ class BasicHelper
         }
         else
         {
-            return 'bestpreisagrar';
+            //TODO: BE AUSGABE ÜBERARBEITEN!!!
+            return '';
         }
     }
 
