@@ -32,6 +32,7 @@ use IIDO\BasicBundle\Renderer\ContentRenderer;
 use Symfony\Cmf\Bundle\RoutingBundle\Tests\Fixtures\App\Document\Content;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
+use PHPHtmlParser\Dom;
 
 
 /**
@@ -80,6 +81,9 @@ class ContentListener implements ServiceAnnotationInterface
         {
             return '';
         }
+
+//        $objDom = new Dom();
+//        $objDom->load( $strBuffer );
 
         $objArticle         = false;
         $elementType        = $objRow->type;
