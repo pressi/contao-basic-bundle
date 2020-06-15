@@ -20,7 +20,8 @@
         "contao/core-bundle": "4.9.*",
         "codefog/contao-haste": "^4",
         "madeyourday/contao-rocksolid-custom-elements": "^2",
-        "heimrichhannot/contao-fieldpalette-bundle": "^0"
+        "heimrichhannot/contao-fieldpalette-bundle": "^0",
+        "paquettg/php-html-parser": "^2"
     },
     "replace":
     {
