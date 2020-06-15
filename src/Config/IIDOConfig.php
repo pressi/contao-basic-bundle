@@ -12,7 +12,9 @@ namespace IIDO\BasicBundle\Config;
 
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Model\ConfigModel;
+use Symfony\Component\Yaml\Yaml;
 
 
 class IIDOConfig
@@ -23,10 +25,12 @@ class IIDOConfig
     protected $dbObject;
 
 
-    /**
-     * @var string
-     */
-    protected $modelClass = ConfigModel::class;
+    protected string $modelClass = ConfigModel::class;
+
+
+    protected string $filePath = 'config/iido.basic.config.yml';
+
+    protected ?array $config = [];
 
 
 
@@ -35,21 +39,30 @@ class IIDOConfig
      */
     public function __construct(Connection $connection)
     {
-        $className = $this->modelClass;
+//        $rootDir = BasicHelper::getRootDir( true );
 
-        if( $connection->getSchemaManager()->tablesExist( $className::getTable()) )
-        {
-            if( $className::countAll() )
-            {
-                $this->dbObject = $className::findAll()->current();
-            }
-        }
-        else
-        {
-            $this->dbObject = new \stdClass();
-        }
+        $this->checkFile( true );
 
-        $this->connection = $connection;
+//        $config = Yaml::parseFile( $rootDir . $this->filePath );
+
+//        echo "<pre>"; print_r( $config ); exit;
+
+//        $className = $this->modelClass;
+
+//        if( $connection->getSchemaManager()->tablesExist( $className::getTable()) )
+//        {
+//            if( $className::countAll() )
+//            {
+//                $this->dbObject = $className::findAll()->current();
+//            }
+//        }
+//        else
+//        {
+//            $this->dbObject = new \stdClass();
+//        }
+
+//        $this->connection = $connection;
+//        $this->config = $config;
     }
 
 
@@ -61,14 +74,18 @@ class IIDOConfig
      */
     public function get( $varName )
     {
-        $className = $this->modelClass;
+        $this->checkFile( true );
 
-        if( $this->connection->getSchemaManager()->tablesExist( $className::getTable() ) )
-        {
-            return $this->dbObject->$varName;
-        }
+        return $this->config[ $varName ];
 
-        return null;
+//        $className = $this->modelClass;
+
+//        if( $this->connection->getSchemaManager()->tablesExist( $className::getTable() ) )
+//        {
+//            return $this->dbObject->$varName;
+//        }
+
+//        return null;
     }
 
 
@@ -77,30 +94,38 @@ class IIDOConfig
      * @param $varName
      * @param $varValue
      *
-     * @return ConfigModel
+     * @return array|null
      */
     public function set( $varName, $varValue )
     {
-        $this->dbObject->{$varName} = $varValue;
+//        $this->dbObject->{$varName} = $varValue;
 
-        return $this->dbObject;
+        $this->config[ $varName ] = $varValue;
+
+        return $this->config;
     }
 
 
 
     /**
-     * @return ConfigModel|null
+     * @return array|null
      */
     public function save()
     {
-        $className = $this->modelClass;
+        $rootDir = BasicHelper::getRootDir( true );
 
-        if( $this->connection->getSchemaManager()->tablesExist( $className::getTable()) )
-        {
-            return $this->dbObject->save();
-        }
+//        $className = $this->modelClass;
 
-        return null;
+//        if( $this->connection->getSchemaManager()->tablesExist( $className::getTable()) )
+//        {
+//            return $this->dbObject->save();
+//        }
+
+        $fileContent = Yaml::dump( $this->config );
+
+        file_put_contents( $rootDir . $this->filePath, $fileContent );
+
+        return $this->config;
     }
 
 
@@ -111,5 +136,29 @@ class IIDOConfig
         /* @var $router \Symfony\Component\Routing\RouterInterface */
 
         return $router->generate('contao_backend', ['do' => 'config-settings', 'table' => 'tl_iido_config', 'act' => 'edit', 'id' => 1, 'rt' => REQUEST_TOKEN, 'ref' => TL_REFERER_ID]);
+    }
+
+
+
+    protected function checkFile( $setConfig = true )
+    {
+        $rootDir = BasicHelper::getRootDir( true );
+
+        if( !file_exists( $rootDir . $this->filePath) )
+        {
+            fopen( $rootDir . $this->filePath, "w");
+        }
+
+        if( $setConfig )
+        {
+            $this->config = Yaml::parseFile( $rootDir . $this->filePath );
+        }
+    }
+
+
+
+    public function getConfigFilePath()
+    {
+        return $this->filePath;
     }
 }
