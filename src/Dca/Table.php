@@ -230,6 +230,13 @@ class Table
 
 
 
+    public function setDataContainer( $strDataContainer )
+    {
+        $this->dataContainer = $strDataContainer;
+    }
+
+
+
     public function setBundle( $bundleClass )
     {
         $this->bundle = $bundleClass;
