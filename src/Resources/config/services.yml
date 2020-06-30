@@ -53,11 +53,11 @@ services:
     tags:
       - {name: twig.extension}
 
-  iido.basic.config:
-    class: IIDO\BasicBundle\Config\IIDOConfig
-    public: true
-    arguments:
-      - '@database_connection'
+#  iido.basic.config:
+#    class: IIDO\BasicBundle\Config\IIDOConfig
+#    public: true
+#    arguments:
+#      - '@database_connection'
 
 
   IIDO\BasicBundle\Controller\Elements\ColumnMasterElement:
