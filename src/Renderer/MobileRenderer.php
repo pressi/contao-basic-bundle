@@ -14,6 +14,7 @@ use Contao\PageModel;
 use Contao\ThemeModel;
 use Contao\ModuleModel;
 use Contao\System;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\GlobalElementsHelper;
 
@@ -23,9 +24,7 @@ class MobileRenderer
 
     public static function renderMobileMenuTemplate( $strBuffer )
     {
-        $objIIDOConfig  = System::getContainer()->get('iido.basic.config');
-
-        if( $objIIDOConfig->get('enableMobileNavigation') )
+        if( IIDOConfig::get('enableMobileNavigation') )
         {
             /* @var PageModel $objPage */
             global $objPage;
@@ -43,12 +42,12 @@ class MobileRenderer
                 'js-hamburger'
             ];
 
-            if( $objIIDOConfig->get('showMobileNavOnTablet') )
+            if( IIDOConfig::get('showMobileNavOnTablet') )
             {
                 $arrClasses[] = 'show-on-tablet';
             }
 
-            if( !$objIIDOConfig->get('showMobileNavBurgerDark') )
+            if( !IIDOConfig::get('showMobileNavBurgerDark') )
             {
                 $arrClasses[] = 'light';
             }
