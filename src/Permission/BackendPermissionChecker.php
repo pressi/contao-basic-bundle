@@ -19,6 +19,7 @@ use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\StringUtil;
 use Contao\System;
 use Doctrine\DBAL\Connection;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 
@@ -71,10 +72,9 @@ class BackendPermissionChecker implements FrameworkAwareInterface
 
         if( $accessFieldName )
         {
-            $objConfig  = System::getContainer()->get('iido.basic.config');
-            $arrFields  = StringUtil::deserialize( $objConfig->get( $fieldsFieldName ), true);
+            $arrFields  = StringUtil::deserialize( IIDOConfig::get( $fieldsFieldName ), true);
 
-            if( $objConfig->get( $accessFieldName ) && in_array( $fieldName, $arrFields) )
+            if( IIDOConfig::get( $accessFieldName ) && in_array( $fieldName, $arrFields) )
             {
                 if( $model )
                 {
