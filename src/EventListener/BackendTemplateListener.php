@@ -16,6 +16,7 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FilesModel;
 use Contao\Input;
 use IIDO\BasicBundle\Config\BundleConfig;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ImageHelper;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
@@ -37,17 +38,15 @@ class BackendTemplateListener extends DefaultListener implements ServiceAnnotati
 
         if( $config->isComplete() )
         {
-            $iidoConfig = \System::getContainer()->get('iido.basic.config');
-
-            if( $strTemplate === "be_login" && $iidoConfig->get('customLogin') )
+            if( $strTemplate === "be_login" && IIDOConfig::get('customLogin') )
             {
                 $arrImages  = scandir(BasicHelper::getRootDir( true ) . 'files/master/Library/Physio');
-//                $arrImages  = ImageHelper::getImages( $iidoConfig->get('loginImageSRC') );
+//                $arrImages  = ImageHelper::getImages( IIDOConfig::get('loginImageSRC') );
                 $index      = rand(2, (count($arrImages) - 1));
                 $strImage   = $arrImages[ $index ];
                 $strLogo    = '';
 
-                $objLogo    = $iidoConfig->get('loginLogoSRC');
+                $objLogo    = IIDOConfig::get('loginLogoSRC');
 
                 if( $objLogo )
                 {
@@ -78,7 +77,7 @@ footer .contao-logo{display:block;float:right;width:56px;height:15px;background:
             {
                 $strTableDiv = '';
 
-                if( Input::get('do') === 'article' && $iidoConfig->get('enableLayout') )
+                if( Input::get('do') === 'article' && IIDOConfig::get('enableLayout') )
                 {
                     $objArticle = ArticleModel::findByPk( Input::get('id') );
                     $show = '';

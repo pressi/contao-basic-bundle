@@ -13,6 +13,7 @@ namespace IIDO\BasicBundle\EventListener;
 use Contao\Controller;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\System;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\HeaderHelper;
 use IIDO\BasicBundle\Renderer\SectionRenderer;
@@ -37,7 +38,6 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
     {
         $chunks = explode('::', $tag);
         $return = false;
-        $config = System::getContainer()->get('iido.basic.config');
 
         if (self::TAG === $chunks[0])
         {
@@ -80,12 +80,12 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
                                 }
                             }
 
-                            $rowClass = (($config->get('enableLayout') && !$topBarExists) ? ' row' : '');
+                            $rowClass = ((IIDOConfig::get('enableLayout') && !$topBarExists) ? ' row' : '');
 
                             $layoutDivStart = '';
                             $layoutDivEnd   = '';
 
-                            if( $config->get('enableLayout') && $topBarExists )
+                            if( IIDOConfig::get('enableLayout') && $topBarExists )
                             {
                                 $layoutDivStart = '<div class="hbi-cont row">';
                                 $layoutDivEnd   = '</div>';

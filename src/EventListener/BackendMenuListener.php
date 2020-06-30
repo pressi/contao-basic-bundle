@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\Database;
 use Contao\StringUtil;
 use Contao\System;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -78,13 +79,12 @@ class BackendMenuListener
 //            $manipulator->moveToPosition($systemNode['config-settings'], 3);
         }
 
-        $objIIDOConfig = System::getContainer()->get('iido.basic.config');
 //            $objConfigTable = Database::getInstance()->prepare('SELECT * FROM tl_iido_config WHERE id=?')->execute(1);
         $contentNode = $tree->getChild('content');
 
-        if( $objIIDOConfig->get('navLabels') && $contentNode )
+        if( IIDOConfig::get('navLabels') && $contentNode )
         {
-            $navLabels = StringUtil::deserialize($objIIDOConfig->get('navLabels'), true);
+            $navLabels = StringUtil::deserialize(IIDOConfig::get('navLabels'), true);
 
             if( count($navLabels) )
             {

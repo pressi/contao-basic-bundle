@@ -1,15 +1,12 @@
 <?php
 
-/*
- * News Categories bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2017, Codefog
- * @author     Codefog <https://codefog.pl>
- * @license    MIT
- */
 
 namespace IIDO\BasicBundle\EventListener;
 
+use Contao\Backend;
+use Contao\BackendUser;
+use Contao\Controller;
+use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Monolog\ContaoContext;
@@ -19,6 +16,7 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Widget\NewsAreaOfApplicationPickerWidget;
 use IIDO\BasicBundle\Widget\NewsUsagePickerWidget;
 use Psr\Log\LoggerInterface;
@@ -28,7 +26,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 
-class AjaxListener implements ServiceAnnotationInterface
+class AjaxListener extends Backend implements ServiceAnnotationInterface
 {
 
     /**
@@ -54,6 +52,8 @@ class AjaxListener implements ServiceAnnotationInterface
     {
         $this->logger = $logger;
         $this->framework = $framework;
+
+        parent::__construct();
     }
 
 
@@ -63,13 +63,49 @@ class AjaxListener implements ServiceAnnotationInterface
      */
     public function onExecutePostActions($action, DataContainer $dc)
     {
-        if ('reloadNewsAreasOfApplicationWidget' === $action)
+        if( 'reloadNewsAreasOfApplicationWidget' === $action )
         {
             $this->reloadNewsAreasOfApplicationWidget($dc);
         }
-        elseif ('reloadNewsUsageWidget' === $action)
+        elseif( 'reloadNewsUsageWidget' === $action )
         {
             $this->reloadNewsUsageWidget($dc);
+        }
+        elseif( 'toggleSubpalette' === $action )
+        {
+            $this->toggleSubpalette( $dc );
+        }
+    }
+
+
+
+    private function toggleSubpalette( DataContainer $dc )
+    {
+        $this->import(BackendUser::class, 'User');
+
+        // Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
+        if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || ($GLOBALS['TL_DCA'][$dc->table]['fields'][Input::post('field')]['exclude'] && !$this->User->hasAccess($dc->table . '::' . Input::post('field'), 'alexf')))
+        {
+            $this->log('Field "' . Input::post('field') . '" is not an allowed selector field (possible SQL injection attempt)', __METHOD__, TL_ERROR);
+
+            throw new BadRequestHttpException('Bad request');
+        }
+
+        if( $dc instanceof \DC_YamlConfigFile )
+        {
+            $val = (Input::post('state') == 1);
+            IIDOConfig::persist(Input::post('field'), $val);
+
+            if( Input::post('load') )
+            {
+                IIDOConfig::set(Input::post('field'), $val);
+
+//                IIDOConfig::getInstance()->save();
+
+                throw new ResponseException( $this->convertToResponse($dc->edit(false, Input::post('id'))) );
+            }
+
+//            throw new NoContentResponseException();
         }
     }
 
@@ -259,5 +295,19 @@ class AjaxListener implements ServiceAnnotationInterface
         $objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$field], $dc->inputName, $value, $field, $dc->table, $dc));
 
         throw new ResponseException(new Response($objWidget->generate()));
+    }
+
+
+
+    /**
+     * Convert a string to a response object
+     *
+     * @param string $str
+     *
+     * @return Response
+     */
+    protected function convertToResponse($str)
+    {
+        return new Response(Controller::replaceOldBePaths($str));
     }
 }

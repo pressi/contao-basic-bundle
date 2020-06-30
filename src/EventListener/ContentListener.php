@@ -23,6 +23,7 @@ use Contao\ContentModel;
 use Contao\Controller;
 use Contao\StringUtil;
 use Contao\System;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\ContentHelper;
@@ -82,9 +83,6 @@ class ContentListener implements ServiceAnnotationInterface
             return '';
         }
 
-//        $objDom = new Dom();
-//        $objDom->load( $strBuffer );
-
         $objArticle         = false;
         $elementType        = $objRow->type;
         $elementClass       = ContentHelper::getElementClass( $objRow );
@@ -98,7 +96,6 @@ class ContentListener implements ServiceAnnotationInterface
         }
 
         $strBuffer  = ContentRenderer::parseHeadline( $strBuffer, $objRow );
-        $iidoConfig = \System::getContainer()->get('iido.basic.config');
         $strType    = $this->getElementType( $objRow, $objAliasElement );
 
         if( $elementType === 'text' )
@@ -128,7 +125,7 @@ class ContentListener implements ServiceAnnotationInterface
                 $strBuffer .= '</div>';
             }
 
-            if( $isBackend && $iidoConfig->get('enableLayout') )
+            if( $isBackend && IIDOConfig::get('enableLayout') )
             {
                 $labelAddon = '';
 
@@ -288,7 +285,7 @@ class ContentListener implements ServiceAnnotationInterface
 
 
         // GRID
-        if( false === strpos($cssID[1], 'no-grid') && $iidoConfig->get('enableLayout') )
+        if( false === strpos($cssID[1], 'no-grid') && IIDOConfig::get('enableLayout') )
         {
             $classes    = [];
             $devices    = ["mobile", "tablet", "desktop", "wide"];
@@ -1543,8 +1540,7 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
     protected function renderNewHeadlines( $strContent, $objRow, &$objElement )
     {
-        $objConfig      = System::getContainer()->get('iido.basic.config');
-        $arrFields      = StringUtil::deserialize( $objConfig->get('elementFields'), true);
+        $arrFields      = StringUtil::deserialize( IIDOConfig::get('elementFields'), true);
 
         $cssID          = StringUtil::deserialize( $objRow->cssID, true);
         $strContent     = str_replace('®', '&reg;', $strContent);
@@ -1554,8 +1550,8 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
         $headline       = $arrHeadline['value'];
         $repHeadline    = '<' . $unit . '>' . $headline . '</' . $unit . '>';
 
-        $topHeadline    = (($objConfig->get('includeElementFields') && in_array( 'topHeadline', $arrFields )) ? $objRow->topHeadline : '');
-        $subHeadline    = (($objConfig->get('includeElementFields') && in_array( 'subHeadline', $arrFields )) ? $objRow->subHeadline : '');
+        $topHeadline    = ((IIDOConfig::get('includeElementFields') && in_array( 'topHeadline', $arrFields )) ? $objRow->topHeadline : '');
+        $subHeadline    = ((IIDOConfig::get('includeElementFields') && in_array( 'subHeadline', $arrFields )) ? $objRow->subHeadline : '');
 
         if( !$headline || false !== strpos($objRow->type, 'rsce_') || $objRow->type === 'headline' )
         {

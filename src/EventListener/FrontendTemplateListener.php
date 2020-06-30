@@ -17,6 +17,7 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\System;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 use IIDO\BasicBundle\Renderer\ArticleTemplateRenderer;
@@ -138,8 +139,6 @@ class FrontendTemplateListener implements ServiceAnnotationInterface
 
         if( 0 === strpos($strTemplate, 'fe_page') )
         {
-            $config = System::getContainer()->get('iido.basic.config');
-
             $objCanvasTop = ArticleModel::findByAlias("ge_canvas-top_" . $objRootPage->alias);
 
             if( !$objCanvasTop )
@@ -154,7 +153,7 @@ class FrontendTemplateListener implements ServiceAnnotationInterface
                 $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<div id="pitLane">([\s\n]{0,})<div class="inside">([A-Za-z0-9\s\n\-:_\{\}]{0,})<\/div>([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
             }
 
-            if( $config->get('previewMode') )
+            if( IIDOConfig::get('previewMode') )
             {
                 $strBuffer = preg_replace('/<meta name="robots" content="([a-z,]+)">/', '<meta name="robots" content="noindex,nofollow">', $strBuffer);
             }

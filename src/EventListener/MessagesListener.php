@@ -17,6 +17,7 @@ use Contao\BackendUser;
 use Contao\Controller;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\System;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 
@@ -36,16 +37,15 @@ class MessagesListener extends Backend implements ServiceAnnotationInterface
     {
         $this->import(BackendUser::class, 'User');
 
-        $iidoConfig     = System::getContainer()->get('iido.basic.config');
         $strMessages    = '';
 
-        if( $iidoConfig->get('previewMode') )
+        if( IIDOConfig::get('previewMode') )
         {
             $adminAddon = '';
 
             if( $this->User->isAdmin )
             {
-                $adminAddon = ' <a href="' . $iidoConfig->getLink() . '" onclick="window.parent.location.href = this.getAttribute(\'href\'); return false;">Deaktivieren</a>';
+                $adminAddon = ' <a href="' . IIDOConfig::getLink() . '" onclick="window.parent.location.href = this.getAttribute(\'href\'); return false;">Deaktivieren</a>';
             }
 
             $strMessages .= '<div class="tl_error">Der Vorschau-Modus (Meta: noindex,nofollow) ist aktiv.' . $adminAddon . '</div>';
@@ -53,13 +53,13 @@ class MessagesListener extends Backend implements ServiceAnnotationInterface
 
         if( $this->User->isAdmin )
         {
-            if( $iidoConfig->get('customLogin') )
+            if( IIDOConfig::get('customLogin') )
             {
                 $strMessages .= '<div class="tl_info">Der personalisierte Login ist aktiviert.</div>';
             }
 
             $enableMobile = '<strong>deaktiviert</strong>';
-            if( $iidoConfig->get('enableMobileNavigation') )
+            if( IIDOConfig::get('enableMobileNavigation') )
             {
                 $enableMobile = 'aktiviert';
             }
@@ -67,17 +67,17 @@ class MessagesListener extends Backend implements ServiceAnnotationInterface
 
             $arrFieldMessage = [];
 
-            if( $iidoConfig->get('includeElementFields') )
+            if( IIDOConfig::get('includeElementFields') )
             {
                 $arrFieldMessage[] = 'bei den Inhalts Elementen';
             }
 
-            if( $iidoConfig->get('includeArticleFields') )
+            if( IIDOConfig::get('includeArticleFields') )
             {
                 $arrFieldMessage[] = 'bei den Artikeln';
             }
 
-            if( $iidoConfig->get('includePageFields') )
+            if( IIDOConfig::get('includePageFields') )
             {
                 $arrFieldMessage[] = 'bei den Seiten';
             }
