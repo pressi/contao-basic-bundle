@@ -50,19 +50,19 @@ class ConfigMaintenance extends \Backend implements \executable
 
 		$objTemplate->configSettingsLink = $router->generate('contao_backend', ['do' => 'config-settings', 'table' => 'tl_iido_config', 'act' => 'edit', 'id' => 1, 'rt' => REQUEST_TOKEN, 'ref' => TL_REFERER_ID]);
 
-        $objSettings = ConfigModel::findAll();
-
-        if( !$objSettings )
-        {
-            $objSettings = new ConfigModel();
-
-            $objSettings->id        = 1;
-            $objSettings->tstamp    = time();
-
-//            $objSettings->styleFiles   = 'fonts,icons,animate,core,buttons,form,forms,layout,hamburgers,hamburgers.min.css,navigation,content,style,styles,page,sidekick,responsive';
-
-            $objSettings->save();
-        }
+//        $objSettings = ConfigModel::findAll();
+//
+//        if( !$objSettings )
+//        {
+//            $objSettings = new ConfigModel();
+//
+//            $objSettings->id        = 1;
+//            $objSettings->tstamp    = time();
+//
+////            $objSettings->styleFiles   = 'fonts,icons,animate,core,buttons,form,forms,layout,hamburgers,hamburgers.min.css,navigation,content,style,styles,page,sidekick,responsive';
+//
+//            $objSettings->save();
+//        }
 
 
 //		if (\Input::get('act') === 'iido_settings')
