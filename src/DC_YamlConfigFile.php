@@ -3,6 +3,8 @@
 //namespace IIDO\BasicBundle;
 
 
+use Contao\Config;
+use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\Environment;
@@ -11,7 +13,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
-use IIDO\ConfigBundle\Config\IIDOConfig;
+use IIDO\BasicBundle\Config\IIDOConfig;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 
@@ -27,14 +29,16 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 	 */
 	public function __construct($strTable)
 	{
-		parent::__construct();
+	    parent::__construct();
 
 		$this->intId = Input::get('id');
 
 		// Check whether the table is defined
 		if ($strTable == '' || !isset($GLOBALS['TL_DCA'][$strTable]))
 		{
-			$this->log('Could not load data container configuration for "' . $strTable . '"', __METHOD__, TL_ERROR);
+			$logger = static::getContainer()->get('monolog.logger.contao');
+		    $logger->log(\Psr\Log\LogLevel::ERROR, 'Could not load data container configuration for "' . $strTable . '"', array('contao' => new ContaoContext(__METHOD__, TL_ERROR)));
+
 			trigger_error('Could not load data container configuration', E_USER_ERROR);
 		}
 
@@ -119,7 +123,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 		$return = '';
 		$ajaxId = null;
 
-		if (Environment::get('isAjaxRequest'))
+		if( Environment::get('isAjaxRequest') )
 		{
 			$ajaxId = func_get_arg(1);
 		}
@@ -129,8 +133,8 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 		$boxes = StringUtil::trimsplit(';', $this->strPalette);
 		$legends = array();
 
-        /** @var IIDOConfig $objConfig */
-        $objConfig = System::getContainer()->get('iido.basic.config');
+//        /** @var IIDOConfig $objConfig */
+//        $objConfig = System::getContainer()->get('iido.basic.config');
 
 		if (!empty($boxes))
 		{
@@ -147,19 +151,19 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 
 					if (preg_match('/^{.*}$/', $vv))
 					{
-						$legends[$k] = substr($vv, 1, -1);
+                        $legends[$k] = substr($vv, 1, -1);
 						unset($boxes[$k][$kk]);
 					}
 					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]['exclude'])
 					{
-						unset($boxes[$k][$kk]);
+                        unset($boxes[$k][$kk]);
 					}
 				}
 
 				// Unset a box if it does not contain any fields
 				if (empty($boxes[$k]))
 				{
-					unset($boxes[$k]);
+				    unset($boxes[$k]);
 				}
 			}
 
@@ -169,6 +173,14 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 			// Render boxes
 			$class = 'tl_tbox';
 			$fs = $objSessionBag->get('fieldset_states');
+
+//			$strBoxes = '';
+//			foreach( $boxes as $kboxes => $vboxes )
+//            {
+//                $strBoxes .= $kboxes . ':' . implode(',', $vboxes);
+//            }
+//            $this->log($strBoxes, __METHOD__, TL_ERROR);
+//            $this->log($this->strPalette, __METHOD__, TL_ERROR);
 
 			foreach ($boxes as $k=>$v)
 			{
@@ -198,6 +210,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 				// Build rows of the current box
 				foreach ($v as $vv)
 				{
+//$this->log($vv, __METHOD__, TL_ERROR);
 					if ($vv == '[EOF]')
 					{
 						if ($blnAjax && Environment::get('isAjaxRequest'))
@@ -223,8 +236,8 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 					$this->strField = $vv;
 					$this->strInputName = $vv;
 
-//					$this->varValue = Config::get($this->strField);
-					$this->varValue = $objConfig->get( $this->strField );
+					$this->varValue = IIDOConfig::get($this->strField);
+//					$this->varValue = $objConfig->get( $this->strField );
 
 					// Handle entities
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'text' || $GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['inputType'] == 'textarea')
@@ -274,7 +287,8 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 		}
 
 		$this->import(Files::class, 'Files');
-		$filePath = $objConfig->getConfigFilePath();
+//		$filePath = $objConfig->getConfigFilePath();
+		$filePath = IIDOConfig::getFilePath();
 
 		// Check whether the target file is writeable
 		if( !$this->Files->is_writeable( $filePath ) )
@@ -283,7 +297,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 		}
 
 		// Submit buttons
-		$arrButtons = array();
+		$arrButtons = [];
 		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
 		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
 
@@ -461,40 +475,42 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 			$strCurrent = html_entity_decode($this->varValue, ENT_QUOTES, Config::get('characterSet'));
 		}
 
-        /** @var IIDOConfig $objConfig */
-        $objConfig = System::getContainer()->get('iido.basic.config');
+//        /** @var IIDOConfig $objConfig */
+//        $objConfig = System::getContainer()->get('iido.basic.config');
 
 		// Save the value if there was no error
 		if ($strCurrent != $varValue && (\strlen($varValue) || !$arrData['eval']['doNotSaveEmpty']))
 		{
-//			Config::persist($this->strField, $varValue);
-			$objConfig->set($this->strField, $varValue);
+			IIDOConfig::persist($this->strField, $varValue);
+//			$objConfig->set($this->strField, $varValue);
 
 
 			$deserialize = StringUtil::deserialize($varValue);
-//			$prior = \is_bool(Config::get($this->strField)) ? (Config::get($this->strField) ? 'true' : 'false') : Config::get($this->strField);
-            $prior = \is_bool($objConfig->get($this->strField)) ? ($objConfig->get($this->strField) ? 'true' : 'false') : $objConfig->get($this->strField);
+			$prior = \is_bool(IIDOConfig::get($this->strField)) ? (IIDOConfig::get($this->strField) ? 'true' : 'false') : IIDOConfig::get($this->strField);
+//            $prior = \is_bool($objConfig->get($this->strField)) ? ($objConfig->get($this->strField) ? 'true' : 'false') : $objConfig->get($this->strField);
 
 			// Add a log entry
 			if (!\is_array($deserialize) && !\is_array(StringUtil::deserialize($prior)))
 			{
 				if ($arrData['inputType'] == 'password' || $arrData['inputType'] == 'textStore')
 				{
-					$this->log('The global configuration variable "' . $this->strField . '" has been changed', __METHOD__, TL_CONFIGURATION);
+					$logger = static::getContainer()->get('monolog.logger.contao');
+                    $logger->log(\Psr\Log\LogLevel::INFO, 'The iido basic configuration variable "' . $this->strField . '" has been changed', array('contao' => new ContaoContext(__METHOD__, TL_CONFIGURATION)));
 				}
 				else
 				{
-					$this->log('The global configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"', __METHOD__, TL_CONFIGURATION);
+                    $logger = static::getContainer()->get('monolog.logger.contao');
+                    $logger->log(\Psr\Log\LogLevel::INFO, 'The iido basic configuration variable "' . $this->strField . '" has been changed from "' . $prior . '" to "' . $varValue . '"', array('contao' => new ContaoContext(__METHOD__, TL_CONFIGURATION)));
 				}
 			}
 
 			// Set the new value so the input field can show it
 			$this->varValue = $deserialize;
-//			Config::set($this->strField, $deserialize);
-            $objConfig->set($this->strField, $varValue);
+            IIDOConfig::set($this->strField, $deserialize);
+//            $objConfig->set($this->strField, $varValue);
 		}
 
-        $objConfig->save();
+//        $objConfig->save();
 	}
 
 
@@ -506,8 +522,8 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 	 */
 	public function getPalette()
 	{
-        /** @var IIDOConfig $objConfig */
-        $objConfig = System::getContainer()->get('iido.basic.config');
+//        /** @var IIDOConfig $objConfig */
+//        $objConfig = System::getContainer()->get('iido.basic.config');
 
 		$palette = 'default';
 		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette];
@@ -520,8 +536,8 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
 			{
-//				$trigger = Config::get($name);
-                $trigger = $objConfig->get($name);
+			    $trigger = IIDOConfig::get($name);
+//                $trigger = $objConfig->get($name);
 
 				// Overwrite the trigger if the page is not reloaded
 				if (Input::post('FORM_SUBMIT') == $this->strTable)
@@ -536,6 +552,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 
 				if ($trigger != '')
 				{
+//                    $this->log( $name , __FUNCTION__, TL_ERROR);
 					if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] == 'checkbox' && !$GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'])
 					{
 						$sValues[] = $name;
@@ -557,6 +574,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
 						}
 					}
+//                    $this->log( implode(',', $subpalettes[$name]) , __FUNCTION__, TL_ERROR);
 				}
 			}
 
@@ -590,7 +608,8 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
 			}
 		}
-
+//echo "<pre>"; print_r( $strPalette ); exit;
+//        $this->log( $strPalette , __FUNCTION__, TL_ERROR);
 		return $strPalette;
 	}
 }
