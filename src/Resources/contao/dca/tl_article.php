@@ -5,7 +5,7 @@ $objArticleTable    = new \IIDO\BasicBundle\Dca\ExistTable( $strArticleFileName 
 
 $objArticleTable->setTableListener( 'iido.basic.dca.article' );
 
-$objConfig  = System::getContainer()->get('iido.basic.config');
+//$objConfig  = System::getContainer()->get('iido.basic.config');
 $objArticle = false;
 
 if( Input::get('act') === 'edit' )
@@ -21,9 +21,11 @@ if( Input::get('act') === 'edit' )
 
 $paletteManipulator = Contao\CoreBundle\DataContainer\PaletteManipulator::create();
 
-if( $objConfig->get('includeArticleFields') )
+//if( $objConfig->get('includeArticleFields') )
+if( \IIDO\BasicBundle\Config\IIDOConfig::get('includeArticleFields') )
 {
-    $arrFields      = StringUtil::deserialize( $objConfig->get('articleFields'), true);
+//    $arrFields      = StringUtil::deserialize( $objConfig->get('articleFields'), true);
+    $arrFields      = StringUtil::deserialize( \IIDO\BasicBundle\Config\IIDOConfig::get('articleFields'), true);
     $arrDesign      = [];
     $arrDimensions  = [];
 

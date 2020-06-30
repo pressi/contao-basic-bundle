@@ -6,7 +6,7 @@ $objContentTable    = new \IIDO\BasicBundle\Dca\ExistTable( $strContentFileName 
 $objContentTable->setTableListener( 'iido.basic.dca.content' );
 
 
-$objConfig  = System::getContainer()->get('iido.basic.config');
+//$objConfig  = System::getContainer()->get('iido.basic.config');
 $objElement = false;
 
 if( Input::get('act') === 'edit' )
@@ -31,11 +31,15 @@ if( Input::get('act') === 'edit' )
  * Palettes
  */
 
-$arrFields      = StringUtil::deserialize( $objConfig->get('elementFields'), true);
-$removeHeadline = $objConfig->get('removeHeadlineFieldFromElements');
+//$arrFields      = StringUtil::deserialize( $objConfig->get('elementFields'), true);
+$arrFields      = StringUtil::deserialize( \IIDO\BasicBundle\Config\IIDOConfig::get('elementFields'), true);
+
+//$removeHeadline = $objConfig->get('removeHeadlineFieldFromElements');
+$removeHeadline = \IIDO\BasicBundle\Config\IIDOConfig::get('removeHeadlineFieldFromElements');
 
 
-if( $objConfig->get('includeElementFields') )
+//if( $objConfig->get('includeElementFields') )
+if( \IIDO\BasicBundle\Config\IIDOConfig::get('includeElementFields') )
 {
     $headlineFields = '';
 
@@ -275,7 +279,8 @@ $objContentTable->addSubpalette("addAnimation", "animationType,animateRun,animat
     ->addToTable( $objContentTable );
 */
 
-if( $objConfig->get('includeElementFields') && in_array('cssID', $arrFields) )
+//if( $objConfig->get('includeElementFields') && in_array('cssID', $arrFields) )
+if( \IIDO\BasicBundle\Config\IIDOConfig::get('includeElementFields') && in_array('cssID', $arrFields) )
 {
     \IIDO\BasicBundle\Dca\Field::update('cssID', $objContentTable)
         ->addEval('tl_class', 'css-id-field')

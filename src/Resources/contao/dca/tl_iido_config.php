@@ -173,7 +173,7 @@ $objConfTable->addSubpalette('loginShowPublisherLink', 'loginPublisher');
 // BACKEND
 
 \IIDO\BasicBundle\Dca\Field::create('navLabels', 'optionWizard')
-    ->addSQL("blob NULL")
+//    ->addSQL("blob NULL")
     ->addToTable( $objConfTable );
 
 
