@@ -214,7 +214,7 @@ class StyleSheetHelper
 
             foreach($arrStyleSheets as $styleSheet)
             {
-                $styleSheetKey = preg_replace('/.scss$/', '', $styleSheet);
+                $styleSheetKey = preg_replace('/.(scss|css)$/', '', $styleSheet);
 
                 if( !preg_match('/.scss$/', $styleSheet) )
                 {
@@ -224,6 +224,10 @@ class StyleSheetHelper
                 if( file_exists( BasicHelper::getRootDir( true ) . $filePathIntern . '/theme/' . $styleSheet ) )
                 {
                     $GLOBALS['TL_CSS'][ $fileKey . '-' . $styleSheetKey ] = $filePath . '/theme/' . $styleSheet . self::getStylesheetMode();
+                }
+                elseif( file_exists( BasicHelper::getRootDir( true ) . $filePathIntern . '/theme/' . preg_replace('/.scss$/', '.css', $styleSheet) ) )
+                {
+                    $GLOBALS['TL_CSS'][ $fileKey . '-' . $styleSheetKey ] = $filePath . '/theme/' . preg_replace('/.scss$/', '.css', $styleSheet) . self::getStylesheetMode();
                 }
             }
         }

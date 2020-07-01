@@ -105,6 +105,104 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
                         $return = '';
                     }
                     break;
+
+
+                case "date":
+                    if( isset($chunks[2]) )
+                    {
+                        $dateFormat = $chunks[2];
+
+                        if( preg_match('/\+/', $dateFormat) )
+                        {
+                            $isSourceTime   = isset($chunks[3]);
+                            $sourceTime     = $chunks[3];
+
+                            $arrMode    = preg_split("/\+/", $dateFormat);
+                            $isMode     = false;
+
+                            $nextMonth  = false;
+
+                            foreach($arrMode as $key => $value)
+                            {
+                                if( $isMode )
+                                {
+                                    preg_match('/^([0-9]{1,})/', $value, $arrModeMatches);
+
+                                    $strValue   = preg_replace('/^([0-9]{1,})/', '', $value);
+                                    $isMode     = false;
+
+                                    $format     = $arrMode[ ($key - 1) ];
+                                    $strReturn  = ($isSourceTime ? date($format, $sourceTime) : date($format));
+                                    $strReturn  = ((int) $strReturn + (int) $arrModeMatches[1]);
+
+                                    if( $format === "d" )
+                                    {
+                                        $monthDays = date("t");
+
+                                        if( $strReturn > $monthDays )
+                                        {
+                                            $strReturn = ($strReturn - $monthDays);
+
+                                            $nextMonth = true;
+                                        }
+
+                                        if( strlen($strReturn) === 1)
+                                        {
+                                            $strReturn = '0' . $strReturn;
+                                        }
+                                    }
+
+                                    if( $nextMonth && preg_match('/m/', $strValue) )
+                                    {
+                                        $strMonth = ($isSourceTime ? date("m", $sourceTime) : date("m"));
+                                        $strMonth = ((int) $strMonth + 1);
+
+                                        if( strlen($strMonth) === 1 )
+                                        {
+                                            $strMonth = '0' . $strMonth;
+                                        }
+
+                                        $strValue = preg_replace('/m/', $strMonth, $strValue);
+                                    }
+
+                                    $return .= $strReturn . ($isSourceTime ? date($strValue, $sourceTime) : date($strValue));
+                                }
+                                else
+                                {
+                                    $isMode = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            $return = (( isset($chunks[3]) ) ? date($dateFormat, $chunks[3]) : date($dateFormat) );
+                        }
+                    }
+                    else
+                    {
+                        $return = date(Config::get('dateFormat'));
+                    }
+                    break;
+
+
+
+                case "get":
+                    $return = Input::get( $chunks[2] );
+
+                    if( ($chunks[2] === 'adults' || $chunks[2] === 'children') && !$return )
+                    {
+                        $return = (($chunks[2] === 'adults') ? 2 : 0);
+                    }
+                    elseif( $chunks[2] === 'arrival' && !$return )
+                    {
+                        $return = date('d.m.Y', strtotime('+1 day'));
+                    }
+                    elseif( $chunks[2] === 'depature' && !$return )
+                    {
+                        $return = date('d.m.Y', strtotime('+4 days'));
+                    }
+
+                    break;
             }
         }
 

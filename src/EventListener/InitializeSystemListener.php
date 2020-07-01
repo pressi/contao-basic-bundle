@@ -112,6 +112,13 @@ class InitializeSystemListener implements ServiceAnnotationInterface
         $GLOBALS['TL_PTY']['global_element'] = GlobalElementPage::class;
 
 
+
+        // FE form fields
+//        $GLOBALS['TL_FFL']['radioTable']        = $ns . '\FormField\RadioButtonTable';
+//        $GLOBALS['TL_FFL']['databaseSelect']    = $ns . '\FormField\DatabaseSelect';
+        $GLOBALS['TL_FFL']['pickdate']          = $namespace . '\FormField\PickDate';
+
+
         // BE form fields
         $GLOBALS['BE_FFL']['imageSize'] = $namespace . '\Widget\ImageSizeWidget';
         $GLOBALS['BE_FFL']['pageTree']  = $namespace . '\Widget\PageTreeWidget';

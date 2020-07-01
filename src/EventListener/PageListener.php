@@ -60,11 +60,21 @@ class PageListener implements ServiceAnnotationInterface
             ScriptHelper::addScript('isotope');
         }
 
+        //TODO: selectable in backend!!! wenn seite in lightbox öffnet!?
+        StyleSheetHelper::addThemeStyle('pickdate', 'default,default.date');
+        ScriptHelper::addScript('pickdate', false, true);
+
+        if( BasicHelper::getLanguage() !== 'en' )
+        {
+            ScriptHelper::addTranslateScript('pickdate', BasicHelper::getLanguage());
+        }
+
         //TODO: include when it will be needed
         $GLOBALS['TL_JAVASCRIPT']['j_gsap']                 = $publicBundlePath . '/scripts/lib/greensock/jquery.gsap.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['tweenlite']              = $publicBundlePath . '/scripts/lib/greensock/TweenMax.min.js|static';
 
 //        echo "<pre>"; print_r( $GLOBALS['TL_JAVASCRIPT'] ); exit;
+//        echo "<pre>"; print_r( $GLOBALS['TL_CSS'] ); exit;
     }
 
 

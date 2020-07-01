@@ -278,4 +278,46 @@ IIDO.Form = IIDO.Form || {};
     };
 
 
+
+    form.initInputIntegerChooser = function( prefix )
+    {
+        if( prefix === undefined || prefix === 'undefined' || prefix === null )
+        {
+            prefix = '';
+        }
+
+        var intChoosers = document.querySelectorAll(prefix + 'div.widget.widget-int-chooser');
+
+        if( intChoosers.length )
+        {
+            for( var i=0; i<intChoosers.length; i++ )
+            {
+                var intChooser  = intChoosers[ i ],
+                    intPlus     = intChooser.querySelector('.control > .button.is-static.addon-plus'),
+                    intMinus    = intChooser.querySelector('.control > .button.is-static.addon-minus');
+
+                intPlus.addEventListener('click', function()
+                {
+                    var textInput = this.parentNode.previousElementSibling.querySelector("input.text");
+
+                    textInput.value = (parseInt( textInput.value ) + 1);
+                });
+
+                intMinus.addEventListener('click', function()
+                {
+                    var textInput   = this.parentNode.nextElementSibling.querySelector("input.text"),
+                        inputValue  = (parseInt( textInput.value ) - 1);
+
+                    if( inputValue < 0 )
+                    {
+                        inputValue = 0;
+                    }
+
+                    textInput.value = inputValue;
+                });
+            }
+        }
+    };
+
+
 })(window, jQuery, IIDO.Form);

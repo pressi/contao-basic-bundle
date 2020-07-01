@@ -272,7 +272,7 @@ class ScriptHelper
                 $fileKey = $fileName;
             }
 
-            $filePath       = self::getScriptSource( $fileName, false, true );
+            $filePath = self::getScriptSource( $fileName, false, true );
 
             if( is_dir(BasicHelper::getRootDir( true ) . $filePath . '/translate') )
             {
@@ -439,7 +439,20 @@ class ScriptHelper
 
             if( count($arrFolders) > 1 )
             {
-                // TODO:
+                foreach($arrFolders as $folder )
+                {
+                    if( $scriptVersion )
+                    {
+                        if( version_compare($folder, $scriptVersion, '>') )
+                        {
+                            $scriptVersion = $folder;
+                        }
+                    }
+                    else
+                    {
+                        $scriptVersion = $folder;
+                    }
+                }
             }
             else
             {
