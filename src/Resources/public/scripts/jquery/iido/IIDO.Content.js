@@ -20,6 +20,7 @@ IIDO.Content = IIDO.Content || {};
 
         this.initFormFields();
         this.initScrollFadeElements();
+        this.initBorderAnimations();
         this.initAnimations();
     };
 
@@ -159,7 +160,7 @@ IIDO.Content = IIDO.Content || {};
 
             IIDO.Content.resetScrollFadeStyles();
 
-            IIDO.Base.addEvent(window, "resize load", IIDO.Content.resetScrollFadeStyles);
+            IIDO.Base.addEvent(window, "resize load", IIDO.Content.resetScrollFadeStyles());
             IIDO.Base.addEvent(window, "scroll resize load", IIDO.Content.scrollScrollFade);
             IIDO.Content.scrollScrollFade();
         }
@@ -169,15 +170,33 @@ IIDO.Content = IIDO.Content || {};
 
     content.scrollScrollFade = function()
     {
+        let header = document.getElementById('header');
+        let headerPos = IIDO.Base.getStyle(header, 'postion');
+        let headerHeight = (headerPos !== 'absolute' && headerPos !== 'fixed') ? header.offsetHeight : 0;
+
+        var offset = window.pageYOffset || document.documentElement.scrollTop || 0
+
+        headerHeight = (headerHeight - 15);
+
+        if( headerHeight > 0 && headerHeight >= offset )
+        {
+            return;
+        }
+        else
+        {
+            offset = (offset - headerHeight);
+        }
+
         if( IIDO.Base.getZoomLevel() > 1.01 || (window.matchMedia && window.matchMedia("(max-width: 900px)").matches) )
         {
             IIDO.Content.resetScrollFadeStyles();
             return;
         }
 
-        var scrollFadeHeight    = $scrollFadeEl && $scrollFadeEl.offsetHeight,
-            offset              = window.pageYOffset || document.documentElement.scrollTop || 0;
+        var scrollFadeHeight    = $scrollFadeEl && $scrollFadeEl.offsetHeight;
 
+        // console.log( offset );
+        // console.log( scrollFadeHeight );
 
         if( offset > 0 && offset < scrollFadeHeight )
         {
@@ -198,6 +217,89 @@ IIDO.Content = IIDO.Content || {};
         $scrollFadeEl.parentNode.style.overflow = '';
         $scrollFadeEl.style.transform = $scrollFadeEl.style.WebkitTransform = '';
         $scrollFadeEl.style.opacity = '';
+    };
+
+
+
+    content.initBorderAnimations = function()
+    {
+        var controller  = new ScrollMagic.Controller(),
+            winH        = window.innerHeight;
+
+        var boxImages = document.querySelectorAll('.scroll-border-animation:not(.ani-css)');
+
+        if( boxImages.length )
+        {
+            for( var biNum=0; biNum<boxImages.length; biNum++ )
+            {
+                var boxImage        = boxImages[ biNum ],
+                    articleTagCont  = boxImage.parentNode;
+
+                if( articleTagCont.classList.contains('article-inside') )
+                {
+                    articleTagCont = articleTagCont.parentNode;
+                }
+
+                var articleTag      = $( articleTagCont ),
+                    bgColor         = false;
+
+                if( articleTagCont.classList.contains('has-bg-color') )
+                {
+                    bgColor = IIDO.Base.getStyle(articleTagCont.querySelector('.article-bg-container'), 'background-color');
+                }
+                else
+                {
+                    bgColor = IIDO.Base.getStyle(document.body, 'background-color');
+                }
+
+                if( bgColor && bgColor !== 'transparent' && bgColor !== 'rgba(0, 0, 0, 0)' )
+                {
+                    boxImage.querySelector('.slide-box.slide-box-left').style.backgroundColor = bgColor;
+                    boxImage.querySelector('.slide-box.slide-box-right').style.backgroundColor = bgColor;
+                }
+
+                var wipeAnimation = new TimelineMax()
+                    .fromTo(
+                        [
+                            $(boxImage.querySelector('.slide-box.slide-box-left')),
+                            $(boxImage.querySelector('.slide-box.slide-box-right'))
+                        ],
+                        0.2,
+                        {
+                            "width": 0
+                        },
+                        {
+                            "width": 25,
+                            ease: Linear.easeNone,
+                        });
+
+                // var boundingArticle = articleTagCont.getBoundingClientRect();
+                var boundingArticle = boxImage.getBoundingClientRect();
+                var bodyRect        = document.body.getBoundingClientRect(),
+                    elemOffset      = (boundingArticle.top - bodyRect.top),
+                    elemHeight      = boxImage.offsetHeight;
+
+                //TODO: set offset to 0 when first article!
+                elemOffset = 0;
+                // var insidePadding   = 0,
+                //     insideTag       = articleTagCont.querySelector('.article-inside');
+
+                // if( insideTag )
+                // {
+                //     insidePadding = parseInt( IIDO.Base.getStyle(insideTag, 'padding-top') );
+                // }
+
+                new ScrollMagic.Scene({
+                    triggerElement: articleTag,
+                    triggerHook: "onLeave",
+                    // duration: (winH / 3) + (articleTagCont.offsetHeight / 2) + parseInt( IIDO.Base.getStyle(articleTagCont, 'padding-top') ) + insidePadding,
+                    // offset: (elemOffset - ((winH / 3)))
+                    offset: elemOffset,
+                    duration: elemOffset + (elemHeight / 2)
+                })
+                    .setPin( articleTag ).setTween( wipeAnimation ).addTo( controller );
+            }
+        }
     };
 
 })(window, jQuery, IIDO.Content);
