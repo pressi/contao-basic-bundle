@@ -69,9 +69,21 @@ class PageListener implements ServiceAnnotationInterface
             ScriptHelper::addTranslateScript('pickdate', BasicHelper::getLanguage());
         }
 
-        //TODO: include when it will be needed
+
+        //TODO add wenn needed && create function ScriptHelper::addLibSrcipt || addLibraryScript
         $GLOBALS['TL_JAVASCRIPT']['j_gsap']                 = $publicBundlePath . '/scripts/lib/greensock/jquery.gsap.min.js|static';
         $GLOBALS['TL_JAVASCRIPT']['tweenlite']              = $publicBundlePath . '/scripts/lib/greensock/TweenMax.min.js|static';
+
+
+        //TODO: include when it will be needed && -||-
+        $GLOBALS['TL_JAVASCRIPT']['scrollmagic']            = $publicBundlePath . '/scripts/lib/scrollMagic/2.0.7/ScrollMagic.min.js|static';
+        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_gsap']       = $publicBundlePath . '/scripts/lib/scrollMagic/2.0.7/animation.gsap.min.js|static';
+//        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_debug']      = $publicBundlePath . '/scripts/lib/scrollMagic/2.0.7/debug.addIndicators.min.js|static';
+        $GLOBALS['TL_JAVASCRIPT']['scrollmagic_velocity']   = $publicBundlePath . '/scripts/lib/scrollMagic/2.0.7/animation.velocity.min.js|static';
+//        ScriptHelper::addScript('scrollMagic');
+//        ScriptHelper::addSourceScript('scrollMagic', 'animation.gsap');
+//        ScriptHelper::addSourceScript('scrollMagic', 'debug.addIndicators');
+//        ScriptHelper::addSourceScript('scrollMagic', 'animation.velocity');
 
 //        echo "<pre>"; print_r( $GLOBALS['TL_JAVASCRIPT'] ); exit;
 //        echo "<pre>"; print_r( $GLOBALS['TL_CSS'] ); exit;
