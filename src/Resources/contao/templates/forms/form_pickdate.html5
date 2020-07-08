@@ -16,9 +16,60 @@
 <?php if ($this->hasErrors()): ?>
     <p class="error"><?= $this->getErrorAsString() ?></p>
 <?php endif; ?>
+<?php
+$enable = [];
+$strValue = $this->value;
+if( Input::get('timerange') )
+{
+    $arrTimerange = json_decode(Input::get('timerange'), true);
+//    echo '<div id="main"><div class="inside">'; print_r( Input::get('timerange') ); echo '</div></div>'; exit;
 
+    if( count($arrTimerange) )
+    {
+        $enable[] = '{from:[1970,1,1],to:[' .  date('Y', strtotime('+120 years')) . ',31,31]}';
+    }
+
+    $setValue = false;
+    foreach( $arrTimerange as $timerange )
+    {
+        $start  = $timerange[0];
+        $stop   = $timerange[1];
+
+        if( $start > time() )
+        {
+            if( $this->name === "arrival" )
+            {
+                $stop = ($stop - (60*60*24*2));
+            }
+
+            $from = \Contao\Date::parse('Y,', $start) . (\Contao\Date::parse('n', $start) - 1) . \Contao\Date::parse(',j', $start);
+            $to = \Contao\Date::parse('Y,', $stop) . (\Contao\Date::parse('n', $stop) - 1) . \Contao\Date::parse(',j', $stop);
+
+            $enable[] = '{from: [' . $from . '], to: [' . $to . '], inverted: true}';
+//            $enable[] = '{from: [' . $from . '], to: [' . $to . ']}';
+
+            if( !$setValue )
+            {
+                $setValue = true;
+                $strValue = \Contao\Date::parse('d.m.Y', $start);
+
+                if( $this->name === "departure" )
+                {
+                    $strValue = \Contao\Date::parse('d.m.Y', ($start + (60*60*24*2) ));
+                }
+//                else
+//                {
+//                    $strValue = \Contao\Date::parse('d.m.Y', ($stop - (60*60*24*2) ));
+//                }
+            }
+        }
+    }
+}
+
+$this->value = $strValue;
+?>
 <input type="<?= $this->type ?>" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="text<?php if ($this->hideInput) echo ' password'; ?><?php if ($this->class) echo ' ' . $this->class; ?>" value="<?= specialchars($this->value) ?>"<?= $this->getAttributes() ?>>
-<? if(TL_MODE === "FE"): ?>
+<?php if(TL_MODE === "FE"): ?>
 <script type="text/javascript">
 
     jQuery(document).ready(function()
@@ -30,11 +81,11 @@
             firstDay: 1,
             formatSubmit: 'dd.mm.yyyy',
             format: 'dd.mm.yyyy',
-            selectYears: true,
-            selectMonths: true,
-            today: '',
-            min: currentDate //new Date(<?= date("Y") ?>, <?= date("m") ?>, <?= date("d") ?>),
-            // disable: [
+            // selectYears: true,
+            // selectMonths: true,
+            today: ''
+            ,min: currentDate //new Date(<?= date("Y") ?>, <?= date("m") ?>, <?= date("d") ?>),
+            <?php /*// disable: [
             //     [2019,1,20],
             //     [2019,1,21]
             // ] // Disable Dates
@@ -43,7 +94,10 @@
             // ] // Disable days of the week
             // ,disable [
             //     { from: [2019,1,20], to: [2019,2,2] }
-            // ]
+            // ] */?>
+            <?php if( count($enable) && 1 == 2 ): ?>
+            ,enable: [<?= implode(',', $enable) ?>]
+            <?php endif ?>
             <?php if( $this->name === "arrival" ): ?>
             ,onSet: function(thingSet)
             {
@@ -103,15 +157,22 @@
                 }
             }
             <?php endif; ?>
-        })
-    });
+        });
 
+        <?php  if( count($enable) ): ?>
+        let picker = jQuery('#ctrl_<?= $this->id ?>').pickadate('picker');
+
+        picker.set('disable', [<?= implode(',', $enable) ?>]);
+
+        <?php endif  ?>
+    });
+<?php /*
     // jQuery.extend( jQuery.fn.pickatime.defaults, {
     //     clear: 'Löschen'
     // });
 
     //http://amsul.ca/pickadate.js/date/
-
+*/ ?>
 </script>
 <? endif ?>
 <?php $this->endblock(); ?>
