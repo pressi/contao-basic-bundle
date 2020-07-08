@@ -14,6 +14,7 @@ services:
   IIDO\BasicBundle\EventListener\FrontendTemplateListener:
   IIDO\BasicBundle\EventListener\ContentListener:
   IIDO\BasicBundle\EventListener\MessagesListener:
+  IIDO\BasicBundle\EventListener\FormListener:
 
   IIDO\BasicBundle\EventListener\BackendTemplateListener:
     arguments:
