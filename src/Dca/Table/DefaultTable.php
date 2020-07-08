@@ -94,14 +94,16 @@ class DefaultTable
      * @param string $title
      * @param string $icon
      * @param string $attributes
+     * @param string $strTable
      *
      * @return string
      */
     public static function toggleIconStatic($row, $href, $label, $title, $icon, $attributes, $strTable)
     {
-        if( Input::get('tid') !== null && \strlen(Input::get('tid')) )
+//        if( Input::get('tid') !== null && \strlen(Input::get('tid')) )
+        if( Input::get('tid') )
         {
-            self::toggleVisibilityStatic( Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null) );
+            self::toggleVisibilityStatic( Input::get('tid'), (Input::get('state') == 1), (@func_get_arg(12) ?: null), $strTable );
             Backend::redirect( Backend::getReferer() );
         }
 
@@ -131,6 +133,7 @@ class DefaultTable
      * @param integer       $intId
      * @param boolean       $blnVisible
      * @param DataContainer $dc
+     * @param string        $strTable
      */
     public static function toggleVisibilityStatic($intId, $blnVisible, DataContainer $dc = null, $strTable = '')
     {
