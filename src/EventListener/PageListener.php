@@ -40,7 +40,11 @@ class PageListener implements ServiceAnnotationInterface
 
 //        $GLOBALS['TL_JAVASCRIPT']['j_mask'] = 'files/bestpreisagrar/js/jquery.mask.min.js|static';
 
-        StyleSheetHelper::addDefaultPageStyleSheets();
+        if( false !== strpos($pageModel->cssClass, 'ext-blankpage') && false !== strpos($layout->cssClass, 'ext-blankpage') )
+        {
+            StyleSheetHelper::addDefaultPageStyleSheets();
+        }
+
         ScriptHelper::addDefaultScripts();
 
         ScriptHelper::addInternScript('base');

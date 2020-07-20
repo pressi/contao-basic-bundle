@@ -57,6 +57,8 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
 
                         if( $strClass )
                         {
+                            $renderWrapper = true;
+
                             if( $strClass === "header-bar" || $strClass === "header-top-bar" )
                             {
                                 $isTopBar       = ($strClass === "header-top-bar");
@@ -78,6 +80,10 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
                                     $addClasses     = ' ' . $arrData['class'];
                                     $strAttributes  = ' ' . $arrData['attributes'];
                                 }
+                                else
+                                {
+                                    $renderWrapper = false;
+                                }
                             }
 
                             $rowClass = ((IIDOConfig::get('enableLayout') && !$topBarExists) ? ' row' : '');
@@ -91,7 +97,10 @@ class InsertTagsListener extends DefaultListener implements ServiceAnnotationInt
                                 $layoutDivEnd   = '</div>';
                             }
 
-                            $return = '<div class="' . $strClass . $addClasses . '"' . $strAttributes . '><div class="' . $strClass . '-inside' . $rowClass . '">' . $layoutDivStart . $return . $layoutDivEnd . '</div></div>';
+                            if( $renderWrapper )
+                            {
+                                $return = '<div class="' . $strClass . $addClasses . '"' . $strAttributes . '><div class="' . $strClass . '-inside' . $rowClass . '">' . $layoutDivStart . $return . $layoutDivEnd . '</div></div>';
+                            }
                         }
 
                         if( $isStickyHeader )
