@@ -35,6 +35,13 @@ class ExistTable extends Table
 //        {
 //            $this->addSorting = true;
 //        }
+
+        foreach( $GLOBALS['TL_DCA'][ $tableName ]['palettes'] as $palettes => $fields )
+        {
+            $this->arrPalettes[ $palettes ] = $fields;
+        }
+
+        $this->tableExists = true;
     }
 
 }

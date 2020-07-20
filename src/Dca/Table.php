@@ -188,6 +188,9 @@ class Table
     protected $arrRemoveFieldsFromPaelette  = [];
 
 
+    protected $tableExists = false;
+
+
 
     /**
      * Table constructor.
@@ -482,6 +485,14 @@ class Table
      */
     public function updateDca()
     {
+//        if( $this->strTable === 'tl_article' )
+//        {
+//            echo "<pre>";
+////            print_r( $this->strTable );
+////            echo "<br>";
+//            print_r( $GLOBALS['TL_DCA'][ $this->strTable ] ); exit;
+//        }
+
         $this->addTableConfigToTable();
 
 //        if( $this->addSorting )
@@ -500,6 +511,12 @@ class Table
 
         $this->addFieldsToTable();
         $this->addSelectorsToTable();
+
+//        if( $this->strTable === 'tl_article' )
+//        {
+//            echo "<pre>";
+//            print_r( $GLOBALS['TL_DCA'][ $this->strTable ] ); exit;
+//        }
 
 //        if( $this->strTable === "tl_content" )
 //        {
@@ -1314,14 +1331,44 @@ class Table
     {
         if( isset($this->arrPalettes[ $strPalette ]) )
         {
-            $strReplacement = ',' . $strReplaceField . ',' . $strNewField;
+            $seperator = ',';
+
+            if( 0 === strpos($strNewField, '{') )
+            {
+                $seperator = ';';
+            }
+
+            $strReplacement = ',' . $strReplaceField . $seperator . $strNewField;
 
             if( $fieldPosition === 'before' )
             {
-                $strReplacement = ',' .$strNewField . ',' . $strReplaceField;
+                $seperatorNext = ',';
+
+                if( 0 === strpos($strReplaceField, '{') )
+                {
+                    $seperatorNext = ';';
+                }
+
+                if( 0 === strpos($strNewField, '{') )
+                {
+                    $seperator = '';
+                }
+
+                $strReplacement = $seperator . $strNewField . $seperatorNext . $strReplaceField;
             }
 
-            $this->arrPalettes[ $strPalette ] = preg_replace('/,' . $strReplaceField . '/', $strReplacement, $this->arrPalettes[ $strPalette ]);
+            $sepRep = ',';
+
+            if( 0 === strpos($strReplaceField, '{') )
+            {
+                $sepRep = '';
+            }
+
+//echo "<pre>"; print_r( $strReplaceField );
+//echo "<br>"; print_r( $strReplacement );
+//exit;
+            $this->arrPalettes[ $strPalette ] = preg_replace('/' . $sepRep . $strReplaceField . '/', $strReplacement, $this->arrPalettes[ $strPalette ]);
+//            echo "<pre>"; print_r( $this->arrPalettes[ $strPalette ] ); exit;
         }
     }
 
@@ -1539,8 +1586,13 @@ class Table
     {
         $this->arrSelectors = array_unique($this->arrSelectors);
 
-        if( count($this->arrSelectors) )
+        if( $this->arrSelectors && count($this->arrSelectors) )
         {
+            if( is_string($GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__']) )
+            {
+                $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__'] = [];
+            }
+
             if( !isset($GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__']) || !count($GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__']) )
             {
                 $GLOBALS['TL_DCA'][ $this->strTable ]['palettes']['__selector__'] = $this->arrSelectors;
@@ -1658,7 +1710,26 @@ class Table
         {
             foreach($this->arrPalettes as $strPalette => $fields )
             {
-                $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $strPalette ] = $this->renderPaletteFields( $fields );
+                $fields = $strPalette === '__selector__' ? $fields : $this->renderPaletteFields( $fields );
+
+                if( $this->tableExists )
+                {
+                    if( !isset($GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $strPalette ]) )
+                    {
+                        $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $strPalette ] = $fields;
+                    }
+//                    else
+//                    {
+//                        if( $fields !== $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $strPalette ] )
+//                        {
+//                            $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $strPalette ] = $fields;
+//                        }
+//                    }
+                }
+                else
+                {
+                    $GLOBALS['TL_DCA'][ $this->strTable ]['palettes'][ $strPalette ] = $fields;
+                }
             }
         }
 
