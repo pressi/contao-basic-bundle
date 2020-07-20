@@ -87,61 +87,19 @@ class ArticleTemplateRenderer
             $strArticleInsideClasses .= ' row';
         }
 
-        $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<section$1class="mod_article$2' . ($strArticleClasses ? ' ' . $strArticleClasses : '') . '"$3' . $strArticleStyles . '>' . $divOverlay . '<div class="article-inside' . $strArticleInsideClasses . '"' . $strArticleInsideStyles . '>' . $divTableStart, $strContent, -1, $count);
+        $divInsideContainer = $divOverlay . '<div class="article-inside' . $strArticleInsideClasses . '"' . $strArticleInsideStyles . '>' . $divTableStart;
 
-//        $objDom = new Dom();
-//        $objDom->load( $strContent );
+        if( IIDOConfig::get('enableBootstrap') )
+        {
+            $divInsideContainer = '';
+            $divTableEnd        = '';
+        }
 
-//        $article = $objDom->find('.mod_article');
-
-//        if( $article )
-//        {
-//            $tag = $article->getTag();
-//            $tag->setAttribute('class',  $tag->getAttribute('class')['value'] . ' ' . $strArticleClasses);
-//
-//            $newTag = new Dom\Tag('section');
-//            $newTag->setAttributes( $tag->getAttributes() );
-//
-//            $encode = new Encode();
-//            $encode->from('UTF-8');
-//
-//            $newTag->setEncoding( $encode );
-//
-//            $newNode = new Dom\HtmlNode( $newTag );
-//
-//            $parent     = $article->getParent();
-//            $arrChilds  = $article->getChildren();
-//
-//            $parent->replaceChild($article->id(), $newNode);
-//
-//            if( count($arrChilds) )
-//            {
-//                foreach($arrChilds as $childNode)
-//                {
-//                    $newNode->addChild( $childNode );
-//                }
-//            }
-//        }
-
-//        $strContent = $objDom->outerHtml;
-
-
-//        $tag->name();
-//        $tag->setName('section');
-//        $section = $objDom->createElement("section", $tag->nodeValue);
-//        $objDom->replaceChild( $tag, $section);
-
-//        echo "<pre>";
-//        print_r( $tag );
-//        echo "<br>";
-//        print_r( $newTag );
-
-//        print_r( $article );
-//        print_r( $objDom->outerHtml );
-//        exit;
+        $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<section$1class="mod_article$2' . ($strArticleClasses ? ' ' . $strArticleClasses : '') . '"$3' . $strArticleStyles . '>' . $divInsideContainer, $strContent, -1, $count);
 
         if( $count )
         {
+            $strContent = preg_replace('/<\/div>([\s\n]{0,})$/', '', $strContent);
             $strContent .= $divTableEnd . '</section>';
         }
 
