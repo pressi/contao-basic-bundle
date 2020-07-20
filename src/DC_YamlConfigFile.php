@@ -236,7 +236,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 					$this->strField = $vv;
 					$this->strInputName = $vv;
 
-					$this->varValue = IIDOConfig::get($this->strField);
+					$this->varValue = IIDOConfig::get($this->strField, $this->strTable);
 //					$this->varValue = $objConfig->get( $this->strField );
 
 					// Handle entities
@@ -481,12 +481,12 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 		// Save the value if there was no error
 		if ($strCurrent != $varValue && (\strlen($varValue) || !$arrData['eval']['doNotSaveEmpty']))
 		{
-			IIDOConfig::persist($this->strField, $varValue);
+			IIDOConfig::persist($this->strField, $varValue, $this->strTable);
 //			$objConfig->set($this->strField, $varValue);
 
 
 			$deserialize = StringUtil::deserialize($varValue);
-			$prior = \is_bool(IIDOConfig::get($this->strField)) ? (IIDOConfig::get($this->strField) ? 'true' : 'false') : IIDOConfig::get($this->strField);
+			$prior = \is_bool(IIDOConfig::get($this->strField, $this->strTable)) ? (IIDOConfig::get($this->strField, $this->strTable) ? 'true' : 'false') : IIDOConfig::get($this->strField, $this->strTable);
 //            $prior = \is_bool($objConfig->get($this->strField)) ? ($objConfig->get($this->strField) ? 'true' : 'false') : $objConfig->get($this->strField);
 
 			// Add a log entry
@@ -506,7 +506,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 
 			// Set the new value so the input field can show it
 			$this->varValue = $deserialize;
-            IIDOConfig::set($this->strField, $deserialize);
+            IIDOConfig::set($this->strField, $deserialize, $this->strTable);
 //            $objConfig->set($this->strField, $varValue);
 		}
 
@@ -536,7 +536,7 @@ class DC_YamlConfigFile extends DataContainer implements \editable
 
 			foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
 			{
-			    $trigger = IIDOConfig::get($name);
+			    $trigger = IIDOConfig::get($name, $this->strTable);
 //                $trigger = $objConfig->get($name);
 
 				// Overwrite the trigger if the page is not reloaded

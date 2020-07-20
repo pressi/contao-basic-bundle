@@ -227,10 +227,10 @@ class IIDOConfig
      * @param string $strKey   The full variable name
      * @param mixed  $varValue The configuration value
      */
-    public function add($strKey, $varValue)
+    public function add($strKey, $varValue, $strTable = 'tl_iido_config')
     {
         $this->markModified();
-        $this->arrData[ $strKey ] = $varValue; //$this->escape($varValue);
+        $this->arrData[ $strTable ][ $strKey ] = $varValue; //$this->escape($varValue);
     }
 
 
@@ -241,9 +241,9 @@ class IIDOConfig
      * @param string $strKey   The full variable name
      * @param mixed  $varValue The configuration value
      */
-    public function update($strKey, $varValue)
+    public function update($strKey, $varValue, $strTable = 'tl_iido_config')
     {
-        $this->add($strKey, $varValue);
+        $this->add($strKey, $varValue, $strTable);
     }
 
 
@@ -253,10 +253,10 @@ class IIDOConfig
      *
      * @param string $strKey The full variable name
      */
-    public function delete( $strKey )
+    public function delete( $strKey, $strTable = 'tl_iido_config' )
     {
         $this->markModified();
-        unset( $this->arrData[ $strKey ] );
+        unset( $this->arrData[ $strTable ][ $strKey ] );
     }
 
 
@@ -264,13 +264,14 @@ class IIDOConfig
     /**
      * Check whether a configuration value exists
      *
-     * @param string $strKey The short key
+     * @param string $strKey   The short key
+     * @param string $strTable The table name
      *
      * @return boolean True if the configuration value exists
      */
-    public static function has($strKey)
+    public static function has($strKey, $strTable = 'tl_iido_config')
     {
-        return \array_key_exists($strKey, $GLOBALS['TL_IIDO_CONFIG']);
+        return \array_key_exists($strKey, $GLOBALS['TL_IIDO_CONFIG'][ $strTable ]);
     }
 
 
@@ -278,15 +279,16 @@ class IIDOConfig
     /**
      * Return a configuration value
      *
-     * @param string $strKey The short key
+     * @param string $strKey   The short key
+     * @param string $strTable The table name
      *
      * @return mixed|null The configuration value
      */
-    public static function get($strKey)
+    public static function get($strKey, $strTable = 'tl_iido_config')
     {
         static::loadParameters( true );
 
-        return $GLOBALS['TL_IIDO_CONFIG'][ $strKey ] ?? null;
+        return $GLOBALS['TL_IIDO_CONFIG'][ $strTable ][ $strKey ] ?? null;
     }
 
 
@@ -296,10 +298,11 @@ class IIDOConfig
      *
      * @param string $strKey   The short key
      * @param string $varValue The configuration value
+     * @param string $strTable The table name
      */
-    public static function set($strKey, $varValue)
+    public static function set($strKey, $varValue, $strTable = 'tl_iido_config')
     {
-        $GLOBALS['TL_IIDO_CONFIG'][ $strKey ] = $varValue;
+        $GLOBALS['TL_IIDO_CONFIG'][ $strTable ][ $strKey ] = $varValue;
     }
 
 
@@ -310,11 +313,11 @@ class IIDOConfig
      * @param string $strKey   The short key or full variable name
      * @param mixed  $varValue The configuration value
      */
-    public static function persist($strKey, $varValue)
+    public static function persist($strKey, $varValue, $strTable = 'tl_iido_config')
     {
         $objConfig = static::getInstance();
 
-        $objConfig->add($strKey, $varValue);
+        $objConfig->add($strKey, $varValue, $strTable);
     }
 
 
@@ -324,11 +327,11 @@ class IIDOConfig
      *
      * @param string $strKey The short key or full variable name
      */
-    public static function remove($strKey)
+    public static function remove($strKey, $strTable = 'tl_iido_config')
     {
         $objConfig = static::getInstance();
 
-        $objConfig->delete($strKey);
+        $objConfig->delete($strKey, $strTable);
     }
 
 
@@ -360,14 +363,17 @@ class IIDOConfig
 
         if( count($arrConfig) )
         {
-            foreach( $arrConfig as $key => $value )
+            foreach( $arrConfig as $strTable => $arrData )
             {
-                if( $includeGlobals && $GLOBALS['TL_IIDO_CONFIG'][ $key ] )
+                foreach( $arrData as $key => $value )
                 {
-                    $value = $GLOBALS['TL_IIDO_CONFIG'][ $key ];
-                }
+                    if( $includeGlobals && $GLOBALS['TL_IIDO_CONFIG'][ $strTable ][ $key ] )
+                    {
+                        $value = $GLOBALS['TL_IIDO_CONFIG'][ $strTable ][ $key ];
+                    }
 
-                $GLOBALS['TL_IIDO_CONFIG'][ $key ] = $value;
+                    $GLOBALS['TL_IIDO_CONFIG'][ $strTable ][ $key ] = $value;
+                }
             }
         }
     }
@@ -408,12 +414,12 @@ class IIDOConfig
 
 
 
-    public static function getLink(): string
+    public static function getLink( string $strTable = 'tl_iido_config'): string
     {
         $router = System::getContainer()->get('router');
         /* @var $router \Symfony\Component\Routing\RouterInterface */
 
-        return $router->generate('contao_backend', ['do' => 'config-settings', 'table' => 'tl_iido_config', 'act' => 'edit', 'id' => 1, 'rt' => REQUEST_TOKEN, 'ref' => TL_REFERER_ID]);
+        return $router->generate('contao_backend', ['do' => 'config-settings', 'table' => $strTable, 'act' => 'edit', 'id' => 1, 'rt' => REQUEST_TOKEN, 'ref' => TL_REFERER_ID]);
     }
 
 
