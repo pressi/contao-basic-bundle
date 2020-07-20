@@ -1,3 +1,9 @@
+.w16 {
+    float: left;
+    width: calc(100% / 6 - 30px);
+    min-height: 80px;
+}
+
 .w25 {
     float: left;
     width: calc(25% - 30px);
@@ -24,34 +30,57 @@
     min-height: 80px;
 }
 
+.clr.cw16,
 .clr.cw25 {
     width: calc(100% - 30px);
 }
 
+.cw16 fieldset > br,
+/*.cw16 fieldset > legend,*/
+.cw16 fieldset > legend + input + input.tl_checkbox,
+.cw16 fieldset > legend + input + input.tl_checkbox + label,
 .cw25 fieldset > br,
-.cw25 fieldset > legend,
+/*.cw25 fieldset > legend,*/
 .cw25 fieldset > legend + input + input.tl_checkbox,
 .cw25 fieldset > legend + input + input.tl_checkbox + label {
     display: none;
 }
+.cw16 fieldset > *,
 .cw25 fieldset > * {
     float: left;
 }
 
+.cw16 fieldset > legend,
+.cw25 fieldset > legend {
+    display: block;
+    float: none;
+
+    padding-bottom: 5px;
+}
+
+.cw16 fieldset > label,
 .cw25 fieldset > label {
     width: calc(25% - 24px); height: 24px;
     line-height: 24px;
     margin: 0 7px 7px 0;
 }
+.cw16 fieldset > label {
+    width: calc(100% / 6 - 26px);
+    /*line-height: 18px;*/
+}
+
+.cw16 fieldset > label:last-of-type,
 .cw25 fieldset > label:last-of-type {
     width: auto;
 }
 
+.cw16 fieldset > input[type="checkbox"],
 .cw25 fieldset > input[type="checkbox"] {
     width: 16px; height: 16px;
     margin: 4px;
 }
 
+.cw16 fieldset:after,
 .cw25 fieldset:after {
     content: "";
     display: block;
