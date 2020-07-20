@@ -160,7 +160,7 @@ IIDO.Content = IIDO.Content || {};
 
             IIDO.Content.resetScrollFadeStyles();
 
-            IIDO.Base.addEvent(window, "resize load", IIDO.Content.resetScrollFadeStyles());
+            IIDO.Base.addEvent(window, "resize load", IIDO.Content.resetScrollFadeStyles);
             IIDO.Base.addEvent(window, "scroll resize load", IIDO.Content.scrollScrollFade);
             IIDO.Content.scrollScrollFade();
         }
@@ -194,6 +194,7 @@ IIDO.Content = IIDO.Content || {};
         }
 
         var scrollFadeHeight    = $scrollFadeEl && $scrollFadeEl.offsetHeight;
+//            offset              = window.pageYOffset || document.documentElement.scrollTop || 0;
 
         // console.log( offset );
         // console.log( scrollFadeHeight );
