@@ -36,50 +36,50 @@
 
 
 
-            <trans-unit id="tl_content.layout_col_mobile.0">
-                <source>Smartphone</source>
-                <target>Smartphone</target>
-            </trans-unit>
-            <trans-unit id="tl_content.layout_col_mobile.1">
-                <source>Spaltenanzahl</source>
-                <target>Spaltenanzahl</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.layout_col_mobile.0">-->
+<!--                <source>Smartphone</source>-->
+<!--                <target>Smartphone</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.layout_col_mobile.1">-->
+<!--                <source>Spaltenanzahl</source>-->
+<!--                <target>Spaltenanzahl</target>-->
+<!--            </trans-unit>-->
 
-            <trans-unit id="tl_content.layout_col_tablet.0">
-                <source>Tablet</source>
-                <target>Tablet</target>
-            </trans-unit>
-            <trans-unit id="tl_content.layout_col_tablet.1">
-                <source>Spaltenanzahl</source>
-                <target>Spaltenanzahl</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.layout_col_tablet.0">-->
+<!--                <source>Tablet</source>-->
+<!--                <target>Tablet</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.layout_col_tablet.1">-->
+<!--                <source>Spaltenanzahl</source>-->
+<!--                <target>Spaltenanzahl</target>-->
+<!--            </trans-unit>-->
 
-            <trans-unit id="tl_content.layout_col_desktop.0">
-                <source>Desktop</source>
-                <target>Desktop</target>
-            </trans-unit>
-            <trans-unit id="tl_content.layout_col_desktop.1">
-                <source>Spaltenanzahl</source>
-                <target>Spaltenanzahl</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.layout_col_desktop.0">-->
+<!--                <source>Desktop</source>-->
+<!--                <target>Desktop</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.layout_col_desktop.1">-->
+<!--                <source>Spaltenanzahl</source>-->
+<!--                <target>Spaltenanzahl</target>-->
+<!--            </trans-unit>-->
 
-            <trans-unit id="tl_content.layout_col_wide.0">
-                <source>Widescreen (Breitbild)</source>
-                <target>Widescreen (Breitbild)</target>
-            </trans-unit>
-            <trans-unit id="tl_content.layout_col_wide.1">
-                <source>Spaltenanzahl</source>
-                <target>Spaltenanzahl</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.layout_col_wide.0">-->
+<!--                <source>Widescreen (Breitbild)</source>-->
+<!--                <target>Widescreen (Breitbild)</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.layout_col_wide.1">-->
+<!--                <source>Spaltenanzahl</source>-->
+<!--                <target>Spaltenanzahl</target>-->
+<!--            </trans-unit>-->
 
-            <trans-unit id="tl_content.layout_cond_width.0">
-                <source>Anzeigen auf:</source>
-                <target>Anzeigen auf:</target>
-            </trans-unit>
-            <trans-unit id="tl_content.layout_cond_width.1">
-                <source>Wählen Sie auf welchen Geräten das Element angezeigt werden soll.</source>
-                <target>Wählen Sie auf welchen Geräten das Element angezeigt werden soll.</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.layout_cond_width.0">-->
+<!--                <source>Anzeigen auf:</source>-->
+<!--                <target>Anzeigen auf:</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.layout_cond_width.1">-->
+<!--                <source>Wählen Sie auf welchen Geräten das Element angezeigt werden soll.</source>-->
+<!--                <target>Wählen Sie auf welchen Geräten das Element angezeigt werden soll.</target>-->
+<!--            </trans-unit>-->
 
 
 
@@ -122,10 +122,10 @@
                 <target>Template</target>
             </trans-unit>
 
-            <trans-unit id="tl_content.layout_legend">
-                <source>Layout</source>
-                <target>Layout</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.layout_legend">-->
+<!--                <source>Layout</source>-->
+<!--                <target>Layout</target>-->
+<!--            </trans-unit>-->
 
             <trans-unit id="tl_content.animation_legend">
                 <source>Animation</source>
@@ -167,92 +167,92 @@
 <!--                <source>Widescreen (Breitbild)</source>-->
 <!--                <target>Widescreen (Breitbild)</target>-->
 <!--            </trans-unit>-->
-            <trans-unit id="tl_content.options.layout_cond_width.mobile">
-                <source>show on Smartphones</source>
-                <target>Auf Smartphones anzeigen</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_cond_width.tablet">
-                <source>show on Tablets</source>
-                <target>Auf Tablets anzeigen</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_cond_width.desktop">
-                <source>show on Desktops</source>
-                <target>Auf Desktops anzeigen</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_cond_width.wide">
-                <source>show on Widescreens</source>
-                <target>Auf Widescreens anzeigen</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.options.layout_cond_width.mobile">-->
+<!--                <source>show on Smartphones</source>-->
+<!--                <target>Auf Smartphones anzeigen</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_cond_width.tablet">-->
+<!--                <source>show on Tablets</source>-->
+<!--                <target>Auf Tablets anzeigen</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_cond_width.desktop">-->
+<!--                <source>show on Desktops</source>-->
+<!--                <target>Auf Desktops anzeigen</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_cond_width.wide">-->
+<!--                <source>show on Widescreens</source>-->
+<!--                <target>Auf Widescreens anzeigen</target>-->
+<!--            </trans-unit>-->
 
 
 
-            <trans-unit id="tl_content.options.layout_col_mobile.12">
-                <source>12/12 Volle Breite</source>
-                <target>12/12 Volle Breite</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.11">
-                <source>11/12</source>
-                <target>11/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.10">
-                <source>10/12</source>
-                <target>10/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.9">
-                <source>9/12</source>
-                <target>9/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.8">
-                <source>8/12</source>
-                <target>8/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.7">
-                <source>7/12</source>
-                <target>7/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.6">
-                <source>6/12 Halbe Breite</source>
-                <target>6/12 Halbe Breite</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.5">
-                <source>5/12</source>
-                <target>5/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.4">
-                <source>4/12</source>
-                <target>4/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.3">
-                <source>3/12</source>
-                <target>3/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.2">
-                <source>2/12</source>
-                <target>2/12</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_col_mobile.1">
-                <source>1/12</source>
-                <target>1/12</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.12">-->
+<!--                <source>12/12 Volle Breite</source>-->
+<!--                <target>12/12 Volle Breite</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.11">-->
+<!--                <source>11/12</source>-->
+<!--                <target>11/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.10">-->
+<!--                <source>10/12</source>-->
+<!--                <target>10/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.9">-->
+<!--                <source>9/12</source>-->
+<!--                <target>9/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.8">-->
+<!--                <source>8/12</source>-->
+<!--                <target>8/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.7">-->
+<!--                <source>7/12</source>-->
+<!--                <target>7/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.6">-->
+<!--                <source>6/12 Halbe Breite</source>-->
+<!--                <target>6/12 Halbe Breite</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.5">-->
+<!--                <source>5/12</source>-->
+<!--                <target>5/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.4">-->
+<!--                <source>4/12</source>-->
+<!--                <target>4/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.3">-->
+<!--                <source>3/12</source>-->
+<!--                <target>3/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.2">-->
+<!--                <source>2/12</source>-->
+<!--                <target>2/12</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_col_mobile.1">-->
+<!--                <source>1/12</source>-->
+<!--                <target>1/12</target>-->
+<!--            </trans-unit>-->
 
 
 
-            <trans-unit id="tl_content.options.layout_align_mobile.normal">
-                <source>normal</source>
-                <target>Normal</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_align_mobile.center">
-                <source>center</source>
-                <target>Zentriert</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_align_mobile.left">
-                <source>left</source>
-                <target>Links</target>
-            </trans-unit>
-            <trans-unit id="tl_content.options.layout_align_mobile.right">
-                <source>right</source>
-                <target>Rechts</target>
-            </trans-unit>
+<!--            <trans-unit id="tl_content.options.layout_align_mobile.normal">-->
+<!--                <source>normal</source>-->
+<!--                <target>Normal</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_align_mobile.center">-->
+<!--                <source>center</source>-->
+<!--                <target>Zentriert</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_align_mobile.left">-->
+<!--                <source>left</source>-->
+<!--                <target>Links</target>-->
+<!--            </trans-unit>-->
+<!--            <trans-unit id="tl_content.options.layout_align_mobile.right">-->
+<!--                <source>right</source>-->
+<!--                <target>Rechts</target>-->
+<!--            </trans-unit>-->
 
 
 
