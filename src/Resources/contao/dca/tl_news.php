@@ -39,6 +39,9 @@ if( Input::get('id') == '1' )
             ]
     ]
     );
+
+    $GLOBALS['TL_DCA'][ $strFileName ]['list']['sorting']['flag']   = 2;
+    $GLOBALS['TL_DCA'][ $strFileName ]['list']['sorting']['fields'] = ['headline'];
 }
 
 
