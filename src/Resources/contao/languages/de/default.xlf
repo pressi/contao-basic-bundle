@@ -18,6 +18,15 @@
                 <target>Diese Seite ist nur für Globale Elemente (Kopfzeile, Fußzeile, usw.), leitet immer auf die Startseite um beim direktem Aufruf.</target>
             </trans-unit>
 
+
+
+<!-- ### META FIELDS ######################################################################################################## -->
+
+            <trans-unit id="MSC.aw_previewImage">
+                <source>Vorschaubild</source>
+                <target>Vorschaubild</target>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
