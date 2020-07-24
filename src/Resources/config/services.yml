@@ -9,12 +9,12 @@ services:
       - "@request_stack"
       - "@contao.routing.scope_matcher"
 
-  IIDO\BasicBundle\EventListener\ArticleListener:
-  IIDO\BasicBundle\EventListener\PageListener:
-  IIDO\BasicBundle\EventListener\FrontendTemplateListener:
-  IIDO\BasicBundle\EventListener\ContentListener:
-  IIDO\BasicBundle\EventListener\MessagesListener:
-  IIDO\BasicBundle\EventListener\FormListener:
+  IIDO\BasicBundle\EventListener\ArticleListener: ~
+  IIDO\BasicBundle\EventListener\PageListener: ~
+  IIDO\BasicBundle\EventListener\FrontendTemplateListener: ~
+  IIDO\BasicBundle\EventListener\ContentListener: ~
+  IIDO\BasicBundle\EventListener\MessagesListener: ~
+  IIDO\BasicBundle\EventListener\FormListener: ~
 
   IIDO\BasicBundle\EventListener\BackendTemplateListener:
     arguments:
@@ -74,8 +74,9 @@ services:
 
 
   ## TABLES LISTENER - Callbacks
-  IIDO\BasicBundle\Dca\Listener\ConfigListener:
-  IIDO\BasicBundle\Dca\Listener\ArticleListener:
+  IIDO\BasicBundle\Dca\Listener\ConfigListener: ~
+  IIDO\BasicBundle\EventListener\DataContainer\FilesListener: ~
+  IIDO\BasicBundle\EventListener\DataContainer\ModuleListener: ~
 
 
   ## News Area Of Appliction Picker
