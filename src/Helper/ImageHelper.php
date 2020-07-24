@@ -24,18 +24,18 @@ class ImageHelper
     {
         $assetImage = '';
 
-        if( preg_match('/assets\/images\//', $imageSRC) )
-        {
-            $assetImage = $imageSRC;
-
-            if( $defaultImageObject )
-            {
-                $imageSRC = $defaultImageObject;
-            }
-        }
-
         if( !$imageSRC instanceof \FilesModel )
         {
+            if( preg_match('/assets\/images\//', $imageSRC) )
+            {
+                $assetImage = $imageSRC;
+
+                if( $defaultImageObject )
+                {
+                    $imageSRC = $defaultImageObject;
+                }
+            }
+
             $imageSRC = str_replace('%20', ' ', $imageSRC);
             $objImage = FilesModel::findByPk( $imageSRC );
 
