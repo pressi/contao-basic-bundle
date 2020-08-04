@@ -74,6 +74,11 @@ class IIDOConfig
     protected function __construct()
     {
         $this->strRootDir = BasicHelper::getRootDir( true );
+
+        if( !file_exists( $this->strRootDir . DIRECTORY_SEPARATOR . $this->configFilePath) )
+        {
+            touch($this->strRootDir . DIRECTORY_SEPARATOR . $this->configFilePath);
+        }
     }
 
 
