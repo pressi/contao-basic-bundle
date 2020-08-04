@@ -61,7 +61,7 @@ services:
 #      - '@database_connection'
 
 
-  IIDO\BasicBundle\Controller\Elements\ColumnMasterElement:
+  IIDO\BasicBundle\Controller\Elements\ColumnMasterElement: ~
 
 
   ## Permission Checker
