@@ -128,6 +128,12 @@ class IIDOConfig
      */
     protected function initialize()
     {
+        $fileName = $this->getConfigFilePath();
+        if( !file_exists( $this->strRootDir . DIRECTORY_SEPARATOR . $fileName) )
+        {
+            touch($this->strRootDir . DIRECTORY_SEPARATOR . $fileName);
+        }
+
         if( static::$blnHasLcf === null )
         {
             static::preload();
