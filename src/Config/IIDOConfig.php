@@ -370,6 +370,14 @@ class IIDOConfig
      */
     protected static function loadParameters( $includeGlobals = false )
     {
+        $fileName   = self::getFilePath();
+        $rootDir    = BasicHelper::getRootDir();
+
+        if( !file_exists( $rootDir . DIRECTORY_SEPARATOR . $fileName) )
+        {
+            touch($rootDir . DIRECTORY_SEPARATOR . $fileName);
+        }
+
         $arrConfig = Yaml::parseFile( BasicHelper::getRootDir( true ) . self::getFilePath() );
 
         if( count($arrConfig) )
