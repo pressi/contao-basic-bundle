@@ -38,7 +38,7 @@ class ModuleListener extends Backend implements ServiceAnnotationInterface
         $this->import($strClass);
         $options = $this->$strClass->$strMethod( $dc );
 
-        return array_merge($options, ['order_categoryGroup']);
+        return array_merge($options, ['order_categoryGroup', 'order_areasOfApplicationGroup']);
     }
 
 }
