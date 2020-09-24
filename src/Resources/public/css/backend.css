@@ -87,6 +87,10 @@
     clear: both;
 }
 
+.minh .selector_container > ul {
+    min-height: 71px;
+}
+
 
 
 /**
@@ -141,6 +145,42 @@
 }
 
 
+#ctrl_showInLanguage br:not(:first-of-type) {
+    display: none;
+}
+
+#ctrl_showInLanguage label:not(:first-of-type) {
+    margin-right: 15px;
+}
+
+.cte_type .lang-flags {
+    float: right;
+    margin: 0 25px 0 0;
+}
+
+.cte_type .lang-flags:after {
+    content: '';
+    display: table;
+    float: none;
+    clear: both;
+}
+
+.cte_type .lang-flags > * {
+    float: left;
+    width: 25px;
+
+    padding: 0 5px;
+
+    opacity: 0.2;
+}
+
+.cte_type .lang-flags > * img {
+    max-width: 100%;
+    height: auto;
+}
+
+.cte_type .lang-flags > *.shown {
+    opacity: 1;
 
 /**
  * article list (tree)
