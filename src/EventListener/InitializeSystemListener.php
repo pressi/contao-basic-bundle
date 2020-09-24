@@ -17,6 +17,8 @@ use IIDO\BasicBundle\Widget\NewsUsagePickerWidget;
 use IIDO\BasicBundle\Model\IidoContentModel;
 use IIDO\BasicBundle\Widget\TextFieldWidget;
 use IIDO\BasicBundle\Widget\TagsFieldWidget;
+use IIDO\BasicBundle\Model\NewsModel;
+use IIDO\BasicBundle\Widget\MetaWizardWidget;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 use IIDO\BasicBundle\Config\BundleConfig;
@@ -104,6 +106,7 @@ class InitializeSystemListener implements ServiceAnnotationInterface
 
         // FE modules
         $GLOBALS['FE_MOD']['navigationMenu']['articlenav'] = $namespace . '\Controller\Modules\ArticlenavModule';
+        $GLOBALS['FE_MOD']['news']['areaOfApplicationList'] = $namespace . '\Controller\Module\NewsAreasOfApplicationModule';
 
 
 
@@ -132,6 +135,7 @@ class InitializeSystemListener implements ServiceAnnotationInterface
         $GLOBALS['BE_FFL']['fileTree']  = $namespace . '\Widget\FileTreeWidget';
         $GLOBALS['BE_FFL']['text']      = TextFieldWidget::class;
         $GLOBALS['BE_FFL']['iidoTag']   = TagsFieldWidget::class;
+        $GLOBALS['BE_FFL']['metaWizard']    = MetaWizardWidget::class;
 
         $GLOBALS['BE_FFL']['newsAreaOfApplicationPicker']   = NewsAreaOfApplicationPickerWidget::class;
         $GLOBALS['BE_FFL']['newsUsagePicker']               = NewsUsagePickerWidget::class;
@@ -143,6 +147,7 @@ class InitializeSystemListener implements ServiceAnnotationInterface
 
         $GLOBALS['TL_MODELS']['tl_news_areaOfApplication']  = NewsAreaOfApplicationModel::class;
         $GLOBALS['TL_MODELS']['tl_news_usage']              = NewsUsageModel::class;
+        $GLOBALS['TL_MODELS']['tl_news']                    = NewsModel::class;
 
 
         // Maintenance
