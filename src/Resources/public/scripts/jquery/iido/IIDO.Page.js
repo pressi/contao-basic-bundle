@@ -309,7 +309,7 @@ IIDO.Page = IIDO.Page || {};
 
     page.initSearch = function()
     {
-        $searchForm  = $("div.fullscreen-search-form");
+        $searchForm  = $("div.fullscreen-search-form,form.fullscreen-search-form");
 
         if( $searchForm.length )
         {
@@ -318,9 +318,14 @@ IIDO.Page = IIDO.Page || {};
             if( searchLinks.length )
             {
                 searchLinks.each( function(index, element) {
-                    var el      = $(element);
+                    // var el      = $(element);
 
                     // IIDO.Base.addEvent(element, "click", IIDO.Page.openFullscreenSearch);
+
+                    element.addEventListener('click', function(e)
+                    {
+                        IIDO.Page.openFullscreenSearch(e);
+                    });
                 });
             }
 
@@ -338,6 +343,11 @@ IIDO.Page = IIDO.Page || {};
         }
         else
         {
+            if( !$searchForm )
+            {
+                $searchForm = $("div.fullscreen-search-form,form.fullscreen-search-form");
+            }
+
             IIDO.Base.eventPreventDefault(event);
             $searchForm.addClass("is-pre-active");
 
@@ -350,7 +360,7 @@ IIDO.Page = IIDO.Page || {};
 
             document.body.classList.add("open-fullscreen-search");
 
-            // $("html").addClass("noscroll");
+            $("html").addClass("noscroll");
         }
     };
 
@@ -362,8 +372,9 @@ IIDO.Page = IIDO.Page || {};
         $searchForm.removeClass("is-active");
 
         document.body.classList.remove("open-fullscreen-search");
+        document.body.classList.remove("open-search-container");
 
-        // $("html").removeClass("noscroll");
+        $("html").removeClass("noscroll");
     };
 
 
@@ -536,6 +547,80 @@ IIDO.Page = IIDO.Page || {};
             //     activeTag.removeClass( "active" );
             // }*/
         };
+
+        var slideClassName = "page-lightbox";
+
+        if( el.hasClass("event-link") )
+        {
+            slideClassName = "event-page page-lightbox";
+        }
+
+        if( el.hasClass("lb-animation") )
+        {
+            slideClassName += ' has-lb-animation';
+
+            options.opts.margin = 0;
+            options.opts.animationDuration = 0;
+            options.opts.animationEffect = false;
+            options.opts.transitionEffect = false;
+
+            // options.opts.afterLoad = function(instance, current)
+            options.opts.afterShow = function(instance, current)
+            {
+                $closeLightbox = false;
+                current.$slide[0].classList.add("animation-completed");
+
+                var insideElem  = $(current.$slide[0]).find(".inside"),
+                    animation   = 'slideInRight';
+
+                insideElem.addClass('shown');
+
+                // insideElem.addClass('animated ' + animation).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function()
+                // {
+                //     insideElem.removeClass('animated ' + animation);
+                // });
+            };
+
+            options.opts.beforeClose = function(instance, current)
+            {
+                var insideElem  = $(current.$slide[0]).find(".inside"),
+                    animation   = 'slideOutRight';
+
+                insideElem.removeClass('shown');
+
+                setTimeout(function()
+                {
+                    $closeLightbox = true;
+                    $.fancybox.close();
+                }, 500);
+
+                // insideElem.addClass('animated ' + animation).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function()
+                // {
+                //     insideElem.removeClass('animated ' + animation);
+                //
+                //     $closeLightbox = true;
+                //     $.fancybox.close();
+                // });
+
+                if( !$closeLightbox )
+                {
+                    return false;
+                }
+            };
+        }
+
+        if( openType === "ajax" )
+        {
+            // options = $.extend({}, options, {opts:{ajax:{settings:{data:{fancybox:true}}},fitToView:true,width:'100%',height:'100%',margin:0,selector:'#main > .inside',slideClass:slideClassName}});
+
+            // options.opts.fitToView = true;
+            // options.opts.width = '100%';
+            // options.opts.height = '100%';
+            // options.opts.margin = 0;
+            options.opts.filter = '#main > .inside';
+            options.opts.selector = '#main > .inside';
+            options.opts.slideClass = slideClassName;
+        }
 
         if( el.hasClass("fit") || el.hasClass("fit-to-view") || el.hasClass("ftv") )
         {
