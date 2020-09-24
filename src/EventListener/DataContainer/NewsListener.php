@@ -15,6 +15,7 @@ use Codefog\NewsCategoriesBundle\Model\NewsCategoryModel;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
+use Contao\StringUtil;
 use Haste\Model\Model;
 use Contao\Model\Collection;
 use Contao\Module;
@@ -25,6 +26,7 @@ use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Doctrine\DBAL\Connection;
 use IIDO\BasicBundle\Helper\BasicHelper;
+use IIDO\BasicBundle\Model\NewsAreaOfApplicationModel;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 use IIDO\BasicBundle\Permission\NewsPermissionChecker as PermissionChecker;
 
@@ -247,32 +249,127 @@ class NewsListener implements FrameworkAwareInterface, ServiceAnnotationInterfac
 
         $module->news_order = $module->news_order ?: $module->news_sorting;
 
-//        if( $module->news_order !== 'order_categoryGroup' )
-//        {
-//            return false;
-//        }
 
-        $objCategories  = NewsCategoryModel::findPublishedByPid( 1 ); //TODO: im backend verwaltbar machen
-        $arrNews        = [];
-        $arrShown       = [];
+        $arrFilter = StringUtil::deserialize($module->news_filterAreasOfApplication, TRUE);
+//        $arrFilter = StringUtil::deserialize($module->news_filterUsage, TRUE);
 
-        if( $objCategories )
+        if( count($arrFilter) )
         {
-            while( $objCategories->next() )
+            $arrNews = [];
+            $arrInsert = [];
+
+            /** @var Model $model */
+            $model      = $this->framework->getAdapter(Model::class);
+
+            $newsIds    = $model->getReferenceValues('tl_news', 'areasOfApplication', $arrFilter);
+            $newsIds    = $this->parseIds($newsIds);
+
+            foreach( $newsIds as $newsId )
             {
-                $objCategory = $objCategories->current();
-//                $objCategory->isHeader = true;
+                $objNews     = NewsModel::findByPk( $newsId );
 
-                /** @var Model $model */
-                $model = $this->framework->getAdapter(Model::class);
-
-                $newsIds = $model->getReferenceValues('tl_news', 'categories', [$objCategory->id]);
-                $newsIds = $this->parseIds($newsIds);
-
-                if (0 === \count($newsIds))
+                if( !$objNews->published )
                 {
                     continue;
                 }
+
+                $arrNews[] = $objNews;
+                $arrInsert[] = $objNews->id;
+            }
+
+            if( $module->news_order === 'order_categoryGroup' )
+            {
+                $arrOrderedNews = [];
+
+                $objCategories  = NewsCategoryModel::findPublishedByPid( 1 ); //TODO: im backend verwaltbar machen
+
+                if( $objCategories )
+                {
+                    while( $objCategories->next() )
+                    {
+                        $objCategory = $objCategories->current();
+
+                        $newsIds = $model->getReferenceValues('tl_news', 'categories', [$objCategory->id]);
+                        $newsIds = $this->parseIds($newsIds);
+
+                        if (0 === \count($newsIds))
+                        {
+                            continue;
+                        }
+
+                        $i = 0;
+                        foreach( $newsIds as $newsId )
+                        {
+                            if( in_array($newsId, $arrInsert) )
+                            {
+                                $objDefNews     = NewsModel::findByPk( $newsId );
+                                $objNews        = clone $objDefNews;
+                                $objNews->id    = $objDefNews->id;
+
+                                if( $i === 0 )
+                                {
+                                    $objNews->hasHeader = true;
+
+                                }
+                                else
+                                {
+                                    $objNews->hasHeader = false;
+                                }
+
+                                $objNews->headerCategory = $objCategory;
+
+                                $arrShown[] = $newsId;
+                                $arrOrderedNews[] = $objNews;
+
+                                $i++;
+                            }
+                        }
+                    }
+                }
+
+                if( count($arrOrderedNews) )
+                {
+                    $arrNews = $arrOrderedNews;
+                }
+            }
+
+            if( count($arrNews) )
+            {
+                $collection = new Collection( $arrNews, 'tl_news' );
+
+                return $collection;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        $strLang = strtolower( BasicHelper::getLanguage() );
+
+        if( $module->news_order == 'order_categoryGroup' )
+        {
+            $objCategories  = NewsCategoryModel::findPublishedByPid( 1 ); //TODO: im backend verwaltbar machen
+            $arrNews        = [];
+            $arrShown       = [];
+
+            if( $objCategories )
+            {
+                while( $objCategories->next() )
+                {
+                    $objCategory = $objCategories->current();
+//                $objCategory->isHeader = true;
+
+                    /** @var Model $model */
+                    $model = $this->framework->getAdapter(Model::class);
+
+                    $newsIds = $model->getReferenceValues('tl_news', 'categories', [$objCategory->id]);
+                    $newsIds = $this->parseIds($newsIds);
+
+                    if (0 === \count($newsIds))
+                    {
+                        continue;
+                    }
 //                echo "<pre>"; print_r( $objCategory->title );
 //                echo "<br>"; print_r( $newsIds ); echo "</pre>";
 
@@ -280,22 +377,45 @@ class NewsListener implements FrameworkAwareInterface, ServiceAnnotationInterfac
 //                {
 //                    $arrNews[] = $objCategory;
 
-                //TODO: save news in array / keine weitere datenbankabfrage für die selbe news!!
+                    //TODO: save news in array / keine weitere datenbankabfrage für die selbe news!!
                     $i = 0;
                     foreach( $newsIds as $newsId )
                     {
-                        $objNews = NewsModel::findByPk( $newsId );
-                        $objNews = clone $objNews;
+                        $objDefNews     = NewsModel::findByPk( $newsId );
+                        $isShown        = true;
+
+                        if( $objDefNews->productMarket === 'usa' && ($strLang !== 'en-us' || $strLang !== 'en_us') )
+                        {
+                            $isShown = false;
+                        }
+
+                        if( $objDefNews->productMarket === 'default' && ($strLang === 'en-us' || $strLang === 'en_us') )
+                        {
+                            if( !$objDefNews->isAlsoUSProduct )
+                            {
+                                $isShown = false;
+                            }
+                        }
+
+                        if( !$objDefNews->published || !$isShown )
+                        {
+                            continue;
+                        }
+
+                        $objNews        = clone $objDefNews;
+                        $objNews->id    = $objDefNews->id;
 
                         if( $i === 0 )
                         {
                             $objNews->hasHeader = true;
-                            $objNews->headerCategory = $objCategory;
+//                            $objNews->headerCategory = $objCategory;
                         }
                         else
                         {
                             $objNews->hasHeader = false;
                         }
+
+                        $objNews->headerCategory = $objCategory;
 
                         $arrShown[] = $newsId;
                         $arrNews[] = $objNews;
@@ -324,19 +444,86 @@ class NewsListener implements FrameworkAwareInterface, ServiceAnnotationInterfac
 //                        $arrNews[] = $arrCatNews->current();
 //                    }
 //                }
+                }
             }
-        }
 //        echo "<pre>"; print_r( $arrNews ); exit;
 
-        if( count($arrNews) )
-        {
-            $collection = new Collection( $arrNews, 'tl_news' );
+            if( count($arrNews) )
+            {
+                $collection = new Collection( $arrNews, 'tl_news' );
 
 //            echo "<pre>"; print_r( count($arrNews) );
 //            echo "<br>"; print_r( $collection->count() );
 //            exit;
 
-            return $collection;
+                return $collection;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        elseif( $module->news_order == 'order_areasOfApplicationGroup' )
+        {
+            $objAreas   = NewsAreaOfApplicationModel::findAll();
+            $arrNews    = [];
+            $arrShown   = [];
+
+            if( $objAreas )
+            {
+                while( $objAreas->next() )
+                {
+                    $objArea = $objAreas->current();
+
+                    /** @var Model $model */
+                    $model = $this->framework->getAdapter(Model::class);
+
+                    $newsIds = $model->getReferenceValues('tl_news', 'areasOfApplication', [$objArea->id]);
+                    $newsIds = $this->parseIds($newsIds);
+
+                    if (0 === \count($newsIds))
+                    {
+                        continue;
+                    }
+
+                    $i = 0;
+                    foreach( $newsIds as $newsId )
+                    {
+                        $objDefNews     = NewsModel::findByPk( $newsId );
+
+                        if( !$objDefNews->published )
+                        {
+                            continue;
+                        }
+
+                        $objNews        = clone $objDefNews;
+                        $objNews->id    = $objDefNews->id;
+
+                        if( $i === 0 )
+                        {
+                            $objNews->hasHeader = true;
+                        }
+                        else
+                        {
+                            $objNews->hasHeader = false;
+                        }
+
+                        $objNews->headerCategory = $objArea;
+
+                        $arrShown[] = $newsId;
+                        $arrNews[] = $objNews;
+
+                        $i++;
+                    }
+                }
+            }
+
+            if( count($arrNews) )
+            {
+                $collection = new Collection( $arrNews, 'tl_news' );
+                return $collection;
+            }
         }
 
         return false;
