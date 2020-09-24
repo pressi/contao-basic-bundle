@@ -21,6 +21,7 @@ namespace IIDO\BasicBundle\EventListener;
 //use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\System;
 use IIDO\BasicBundle\Config\IIDOConfig;
@@ -81,6 +82,28 @@ class ContentListener implements ServiceAnnotationInterface
         elseif( !$isMobile && ($objRow->showOnMobile || FALSE !== strpos( $cssID[1], 'show-on-mobile' )) )
         {
             return '';
+        }
+
+
+        if( $objRow->ptable === 'tl_news' )
+        {
+            $strLang = BasicHelper::getLanguage();
+            $arrLang = StringUtil::deserialize($objRow->showInLanguage, true);
+
+            if( !in_array($strLang, $arrLang) )
+            {
+                if( $strLang === 'de' )
+                {
+                    if( count($arrLang) )
+                    {
+                        return '';
+                    }
+                }
+                else
+                {
+                    return '';
+                }
+            }
         }
 
         $objArticle         = false;
@@ -1540,12 +1563,26 @@ $("#' . $strID . $intID . $strSelector . '").masonry({
 
     protected function renderNewHeadlines( $strContent, $objRow, &$objElement )
     {
+        $rowCssID       = $objRow->cssID;
+        $rowHeadline    = $objRow->headline;
+
+        if( $objRow->type === 'module' )
+        {
+            $objModule = ModuleModel::findByPk( $objRow->module );
+
+            if( $objModule )
+            {
+                $rowCssID       = $objModule->cssID;
+                $rowHeadline    = $objModule->headline;
+            }
+        }
+        
         $arrFields      = StringUtil::deserialize( IIDOConfig::get('elementFields'), true);
 
-        $cssID          = StringUtil::deserialize( $objRow->cssID, true);
+        $cssID          = StringUtil::deserialize( $rowCssID, true);
         $strContent     = str_replace('®', '&reg;', $strContent);
 
-        $arrHeadline    = \StringUtil::deserialize($objRow->headline, TRUE);
+        $arrHeadline    = \StringUtil::deserialize( $rowHeadline, TRUE);
         $unit           = $arrHeadline['unit'];
         $headline       = $arrHeadline['value'];
         $repHeadline    = '<' . $unit . '>' . $headline . '</' . $unit . '>';
