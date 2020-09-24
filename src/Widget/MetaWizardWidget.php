@@ -43,6 +43,11 @@ class MetaWizardWidget extends MetaWizard
 		$objRootLangs = $this->Database->query("SELECT REPLACE(language, '-', '_') AS language FROM tl_page WHERE type='root'");
 		$existing = $objRootLangs->fetchEach('language');
 
+		if( !is_array($this->varValue) )
+        {
+            $this->varValue = [];
+        }
+
 		foreach ($existing as $lang)
 		{
 			if (!isset($this->varValue[$lang]))
@@ -50,6 +55,14 @@ class MetaWizardWidget extends MetaWizard
 				$this->varValue[$lang] = array();
 			}
 		}
+
+//        if( count($existing) || (empty($this->varValue) || !\is_array($this->varValue)) )
+//        {
+//            foreach( $existing as $lang )
+//            {
+//                $this->varValue[ $lang ] = ['title'=>'','alt'=>]
+//            }
+//        }
 
 		// No languages defined in the site structure
 		if (empty($this->varValue) || !\is_array($this->varValue))
