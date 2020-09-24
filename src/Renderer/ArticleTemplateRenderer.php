@@ -7,6 +7,7 @@ namespace IIDO\BasicBundle\Renderer;
 use Contao\Template;
 use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Helper\ColorHelper;
+use IIDO\BasicBundle\Helper\ScriptHelper;
 use IIDO\BasicBundle\Helper\StylesHelper;
 //use PHPHtmlParser\Dom;
 //use PHPHtmlParser\Selector\Parser;
@@ -18,6 +19,11 @@ class ArticleTemplateRenderer
 {
     public static function parseTemplate( $strContent, $templateName ): string
     {
+        if( 0 === strpos($templateName, 'mod_articlenav') )
+        {
+            return $strContent;
+        }
+
         $objArticle = false;
 
         preg_match_all('/id="([A-Za-z0-9\-_]{0,})"/', $strContent, $idMatches);
@@ -95,7 +101,16 @@ class ArticleTemplateRenderer
             $divTableEnd        = '';
         }
 
-        $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<section$1class="mod_article$2' . ($strArticleClasses ? ' ' . $strArticleClasses : '') . '"$3' . $strArticleStyles . '>' . $divInsideContainer, $strContent, -1, $count);
+        $attributes = '';
+
+        if( ScriptHelper::hasPageFullPage( true ) )
+        {
+            $attributes = 'data-anchor="' . $objArticle->alias . '" ';
+
+            $divInsideContainer .= '<div class="section-index"></div>';
+        }
+
+        $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article ([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<section$1' . $attributes . 'class="mod_article $2' . ($strArticleClasses ? ' ' . $strArticleClasses : '') . '"$3' . $strArticleStyles . '>' . $divInsideContainer, $strContent, -1, $count);
 
         if( $count )
         {

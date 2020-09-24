@@ -102,11 +102,18 @@ class InitializeSystemListener implements ServiceAnnotationInterface
 //        ));
 
 
+        // FE modules
+        $GLOBALS['FE_MOD']['navigationMenu']['articlenav'] = $namespace . '\Controller\Modules\ArticlenavModule';
+
+
+
         // BE modules (with tables)
         $GLOBALS['BE_MOD']['system']['config-settings'] =
         [
             'tables'    => ['tl_iido_config']
         ];
+
+
 
         // Page types
         $GLOBALS['TL_PTY']['global_element'] = GlobalElementPage::class;
