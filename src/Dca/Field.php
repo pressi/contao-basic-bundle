@@ -41,7 +41,7 @@ class Field
 
         'text'          => "varchar(##MAXLENGTH##) NOT NULL default ''",
         'textarea'      => "mediumtext NULL",
-        'checkbox'      => "char(1) NOT NULL default ''",
+        'checkbox'      => "char(1) NOT NULL default '##DEFAULT##'",
         'select'        => "varchar(##MAXLENGTH##) NOT NULL default '##DEFAULT##'",
         'fileTree'      => "binary(16) NULL",
         'pageTree'      => "int(10) unsigned NOT NULL default '0'",
@@ -100,6 +100,9 @@ class Field
 
     protected $alternativeOptionLangName    = '';
     protected $alternativeLabelLangName     = '';
+
+    protected $label = '';
+    protected $labelPrefix = '';
 
 
 
@@ -532,7 +535,16 @@ class Field
 
                 if( $this->type === "checkbox" && $this->arrEval['multiple'] )
                 {
-                    $arrFieldConfig['sql']      = "blob NULL";
+                    if( $arrFieldConfig['default'] )
+                    {
+                        $arrFieldConfig['sql']      = "varchar(50) DEFAULT '" . $arrFieldConfig['default'] . "'";
+//                        $arrFieldConfig['sql']      = "text NULL";
+//                        echo "<pre>"; print_r( $arrFieldConfig ); exit;
+                    }
+                    else
+                    {
+                        $arrFieldConfig['sql']      = "blob NULL";
+                    }
 //                    $arrFieldConfig['relation'] = array('type'=>'hasMany', 'load'=>'lazy');
                 }
                 else
@@ -551,7 +563,10 @@ class Field
             }
         }
 //echo "<pre>"; print_r( $this->name ); echo "<br>"; print_r( $arrFieldConfig ); echo "<br>"; print_r( $this->arrConfig ); echo "</pre>";
-
+//if( $arrFieldConfig['inputType'] === 'checkbox' && $arrFieldConfig['eval']['multiple'] )
+//{
+//    echo "<pre>"; print_r( $arrFieldConfig ); exit;
+//}
         if( $returnAsArray )
         {
             return $arrFieldConfig;
@@ -940,6 +955,12 @@ class Field
      */
     protected function renderLabel()
     {
+        if( $this->label )
+        {
+            return $this->label;
+        }
+
+
         $fieldName = $this->name;
 
         if( $this->fieldPrefix )
@@ -957,6 +978,18 @@ class Field
         if( !$strLabel )
         {
             $strLabel = $GLOBALS['TL_LANG']['DEF'][ $fieldName ];
+        }
+
+        if( $this->labelPrefix )
+        {
+            if( is_array($strLabel) )
+            {
+                $strLabel[0] = $this->labelPrefix . $strLabel[0];
+            }
+            else
+            {
+                $strLabel = $this->labelPrefix . $strLabel;
+            }
         }
 
         return $strLabel;
@@ -1075,6 +1108,22 @@ class Field
     {
         $this->alternativeLabelLangName = $labelName;
 
+        return $this;
+    }
+
+
+
+    public function setLabel( $strLabel )
+    {
+        $this->label = $strLabel;
+        return $this;
+    }
+
+
+
+    public function setLabelPrefix( $strLabelPrefix )
+    {
+        $this->labelPrefix = $strLabelPrefix;
         return $this;
     }
 
