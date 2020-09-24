@@ -1,0 +1,100 @@
+<?php
+
+namespace Contao;
+
+if ($GLOBALS['TL_CONFIG']['useRTE']):
+
+// Use document.write() here in case TinyMCE is loaded in a subpalette (see #1424)
+?>
+<script>window.tinymce || document.write('<script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>">\x3C/script>')</script>
+<script>
+window.tinymce && tinymce.init({
+  skin: 'contao',
+  selector: '#<?= $this->selector ?>',
+  language: '<?= Backend::getTinyMceLanguage() ?>',
+  element_format: 'html',
+  document_base_url: '<?= Environment::get('base') ?>',
+  entities: '160,nbsp,60,lt,62,gt,173,shy',
+  branding: false,
+  setup: function(editor) {
+    editor.getElement().removeAttribute('required');
+  },
+  init_instance_callback: function(editor) {
+    if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
+      editor.editorManager.get(editor.id).focus();
+    }
+    editor.on('focus', function() { Backend.getScrollOffset(); });
+  },
+  file_browser_callback: function(field_name, url, type, win) {
+    Backend.openModalBrowser(field_name, url, type, win, '<?= $this->source ?>');
+  },
+  file_browser_callback_types: <?= json_encode($this->fileBrowserTypes) ?>,
+    link_class_list:
+        [
+            {title: '--', value: ''},<?php /*= $strLinkClasses */ ?>
+            // {title: 'Button Primary', value: 'btn btn-primary'},
+            //{title: 'Button weiß', value: 'btn btn-secondary'},
+            //{title: 'Button Grün', value: 'btn btn-tertiary'},
+            // {title: 'Button', value: 'btn'},
+            {title: 'Seite in Lightbox öffnen', value: 'open-page-in-lightbox'},
+            //{title: 'Scroll zum Element', value: 'scroll-to-element'},
+            //{title: 'Bild, Datei oder Video in Lightbox öffnen', value: 'open-file-in-lightbox'},
+            //{title: 'Link mit Pfeil rechts', value: 'arrow-link'},
+            // {title: 'Galerie in Lightbox öffnen', value: 'open-gallery-in-lightbox'},
+            // {title: 'Zur nächsten Seite (nur bei FullPage)', value: 'scroll-to-next-page'},
+            // {title: 'Link Icon: Mail', value: 'ico icon-email'},
+            // {title: 'Link Icon: Telefon', value: 'ico icon-phone'},
+            // {title: 'Link Icon: Anfahrt/Kontakt', value: 'ico icon-contact'}
+        ],
+    <?php /* if( count($themeColors) ): */ ?>
+    style_formats_merge: true,
+    style_formats:
+        [
+            <?php /*
+            {
+                title : 'Farben',
+                items :
+                    [
+                        <?php $i=0; foreach( $themeColors as $theme => $arrColors):
+                        foreach($arrColors as $code => $color):
+                        $code = preg_replace('/&#35;/', '#', $code);
+                        ?>
+                        <?= (($i > 0) ? ',' : '') ?>{title:'<?= $color . ' (' . $theme . ')'; ?>', inline: 'span', styles: { color: '<?= $code ?>'} }
+                        <?php $i++; endforeach; endforeach; ?>
+                    ]
+            }, */ ?>
+            {
+                title: 'Microdata',
+                items:
+                    [
+                        {title: 'Adresse', block: 'div', attributes: {itemprop: 'address', itemscope: '', itemtype: 'http://shema.org/PostalAddress'}, wrapper: true},
+                        {title: 'Straße', inline: 'span', attributes: {itemprop: 'streetAddress'}, wrapper: true},
+                        {title: 'Postleitzahl', inline: 'span', attributes: {itemprop: 'postalCode'}, wrapper: true},
+                        {title: 'Ort', inline: 'span', attributes: {itemprop: 'addressLocality'}, wrapper: true},
+                        {title: 'Telefonnummer', inline: 'span', attributes: {itemprop: 'telephone'}, wrapper: true},
+                        {title: 'Faxnummer', inline: 'span', attributes: {itemprop: 'faxNumber'}, wrapper: true},
+                        {title: 'E-Mail', inline: 'span', attributes: {itemprop: 'email'}, wrapper: true},
+                        {title: 'Internetadresse', inline: 'span', attributes: {itemprop: 'url'}, wrapper: true}
+                    ]
+            },
+            {
+                title: 'Elemente',
+                items:
+                    [
+                        {title: 'Trenner', inline: 'span', classes: 'span-divider'},
+                        {title: 'Heller / Light', inline: 'span', classes: 'span-light'}
+                    ]
+            }
+        ],
+    <?php /* endif */ ?>
+  content_css: 'system/themes/<?= Backend::getTheme() ?>/tinymce.min.css',
+  plugins: 'autosave charmap code fullscreen image importcss link lists paste searchreplace stripnbsp tabfocus table visualblocks visualchars',
+  browser_spellcheck: true,
+  tabfocus_elements: ':prev,:next',
+  importcss_append: true,
+  extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
+  menubar: 'file edit insert view format table',
+  toolbar: 'link unlink | image | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | code'
+});
+</script>
+<?php endif; ?>
