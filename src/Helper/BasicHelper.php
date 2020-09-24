@@ -108,7 +108,23 @@ class BasicHelper
         {
             global $objPage;
 
-            return $objPage->rootAlias;
+            $alias = $objPage->rootAlias;
+
+            if( !$objPage->fallback )
+            {
+                $objRootPages = PageModel::findPublishedRootPages();
+
+                while( $objRootPages->next() )
+                {
+                    if( $objRootPages->fallback && $objRootPages->id !== $objPage->rootId )
+                    {
+                        $alias = $objRootPages->alias;
+                        break;
+                    }
+                }
+            }
+
+            return $alias;
         }
         else
         {
