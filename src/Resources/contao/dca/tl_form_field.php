@@ -106,8 +106,15 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['tableOptions'] = array
 \IIDO\BasicBundle\Helper\DcaHelper::addSelectField('optionsFrom', $strFileName, array('includeBlankOption'=>true), 'clr', false, '', false, true);
 \IIDO\BasicBundle\Helper\DcaHelper::addTextField('optionsBlankLabel', $strFileName);
 
-\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('newsArchives', $strFileName, 'news_archives', 'tl_module');
-\IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('eventsArchives', $strFileName, 'cal_calendar', 'tl_module');
+if( \IIDO\BasicBundle\Helper\BasicHelper::isActiveBundle('contao/news-bundle') )
+{
+    \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('newsArchives', $strFileName, 'news_archives', 'tl_module');
+}
+
+if( \IIDO\BasicBundle\Helper\BasicHelper::isActiveBundle('contao/calendar-bundle') )
+{
+    \IIDO\BasicBundle\Helper\DcaHelper::copyFieldFromTable('eventsArchives', $strFileName, 'cal_calendar', 'tl_module');
+}
 
 
 if( $objElement && $objElement->type === "databaseSelect" )

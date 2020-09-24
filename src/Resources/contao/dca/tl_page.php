@@ -10,6 +10,16 @@ $objPageTable   = new \IIDO\BasicBundle\Dca\ExistTable( $strFileName );
  */
 
 $objPageTable->copyPalette( 'default', 'global_element' );
+$objPageTable->replacePaletteFields('regular', ',includeLayout', ',includeLayout,enableFullPage');
+
+
+
+/**
+ * Fields
+ */
+
+\IIDO\BasicBundle\Dca\Field::create('enableFullPage', 'checkbox')
+    ->addToTable( $objPageTable );
 
 
 
