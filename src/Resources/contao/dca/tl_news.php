@@ -7,10 +7,14 @@
  * www.iido.at <development@iido.at>
  *******************************************************************/
 
+\Contao\Controller::loadLanguageFile('tl_news');
+
 
 $strFileName = 'tl_news';
 
 $GLOBALS['TL_DCA'][ $strFileName ]['config']['backlink'] = 'do=news&ref=' . Input::get('ref');
+
+$arrLangFields = ['headline', 'alias', 'pageTitle', 'description', 'url'];
 
 
 
@@ -52,7 +56,31 @@ if( Input::get('id') == '1' )
 
 
 //$GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace(',categories', ',categories,areasOfApplication', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
-$GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace(',categories', ',categories,areasOfApplication,usage', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
+//$GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace(',categories', ',categories,areasOfApplication,usage', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
+
+foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
+{
+    if( $palette === '__selector__' )
+    {
+        continue;
+    }
+
+    $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',categories', ',categories,areasOfApplication,usage', $fields);
+}
+
+
+foreach( $arrLangFields as $langField )
+{
+    foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
+    {
+        if( $palette === '__selector__' )
+        {
+            continue;
+        }
+
+        $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',' . $langField, ',' . $langField . ',' . $langField . 'EN,' . $langField . 'US', $fields);
+    }
+}
 
 
 
@@ -96,6 +124,28 @@ $GLOBALS['TL_DCA'][ $strFileName ]['fields']['usage'] = [
     ],
 ];
 
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['productMarket'] =
+[
+    'label'         => $GLOBALS['TL_LANG'][ $strFileName ]['productMarket'],
+    'default'       => 'default',
+    'exclude'       => true,
+    'filter'        => true,
+    'inputType'     => 'select',
+    'options'       => $GLOBALS['TL_LANG'][ $strFileName ]['options']['productMarket'],
+    'eval'          => ['tl_class'=>'w50','submitOnChange'=>true],
+    'sql'           => "varchar(32) NOT NULL default 'default'"
+];
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['isAlsoUSProduct'] =
+[
+    'label'         => $GLOBALS['TL_LANG'][ $strFileName ]['isAlsoUSProduct'],
+    'exclude'       => true,
+    'filter'        => true,
+    'inputType'     => 'checkbox',
+    'eval'          => ['tl_class'=>'w50 m12',],
+    'sql'           => "char(1) NOT NULL default ''"
+];
+
 if( Input::get('do') === 'news' && Input::get('act') === 'edit' )
 {
     $objElement = \Contao\NewsModel::findByPk( Input::get('id') );
@@ -111,6 +161,66 @@ if( Input::get('do') === 'news' && Input::get('act') === 'edit' )
 
             $GLOBALS['TL_LANG'][ $strFileName ]['alias'][0] = 'Produktalias';
             $GLOBALS['TL_LANG'][ $strFileName ]['relatedNews'][0] = 'Verwandte Produkte';
+
+            foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
+            {
+                $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',headline,', ',productMarket,headline,', $fields);
+            }
+
+            if( $objElement->productMarket === 'default' )
+            {
+                foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
+                {
+                    $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',productMarket,', ',productMarket,isAlsoUSProduct,', $fields);
+                }
+            }
         }
     }
 }
+
+
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields'][ 'headline' ]['eval']['tl_class'] = 'clr ' . $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ 'headline' ]['eval']['tl_class'];
+
+
+
+foreach( $arrLangFields as $langField )
+{
+    $strLangFileName = '';
+
+    if( $langField === 'url' )
+    {
+        $strLangFileName = 'MSC';
+    }
+
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN'] = $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField ];
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US'] = $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField ];
+
+    unset( $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN']['save_callback'] );
+    unset( $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US']['save_callback'] );
+
+    $strIconEN = '<img src="/files/hhsystem/images/backend/flag-en.svg" width="22" height="22">';
+    $strIconUS = '<img src="/files/hhsystem/images/backend/flag-us.svg" width="22" height="22">';
+
+
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField ]['eval']['tl_class'] = preg_replace(['/w50/', '/[\s]{2,}/'], ['w33', '', ''], $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField ]['eval']['tl_class']);
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN']['eval']['tl_class'] = preg_replace(['/w50/', '/clr/', '/[\s]{2,}/'], ['w33', '', ''], $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN']['eval']['tl_class']);
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US']['eval']['tl_class'] = preg_replace(['/w50/', '/clr/', '/[\s]{2,}/'], ['w33', '', ''], $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US']['eval']['tl_class']);
+
+    unset( $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField ]['label'] );
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField ]['label'] = $GLOBALS['TL_LANG'][ $strLangFileName?:$strFileName ][ $langField ];
+
+    unset( $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN']['label'] );
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN']['label'] = $GLOBALS['TL_LANG'][ $strLangFileName?:$strFileName ][ $langField ];
+
+    unset( $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US']['label'] );
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US']['label'] = $GLOBALS['TL_LANG'][ $strLangFileName?:$strFileName ][ $langField ];
+
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN']['label'][0] = $strIconEN . $GLOBALS['TL_LANG'][ $strLangFileName?:$strFileName ][ $langField ][0];
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US']['label'][0] = $strIconUS . $GLOBALS['TL_LANG'][ $strLangFileName?:$strFileName ][ $langField ][0];
+
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'EN']['eval']['mandatory'] = false;
+    $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ $langField . 'US']['eval']['mandatory'] = false;
+}
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['description']['eval']['tl_class'] = 'clr ' . $GLOBALS['TL_DCA'][ $strFileName ]['fields']['description']['eval']['tl_class'];

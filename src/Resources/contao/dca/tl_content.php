@@ -5,9 +5,9 @@ $objContentTable    = new \IIDO\BasicBundle\Dca\ExistTable( $strContentFileName 
 
 $objContentTable->setTableListener( 'iido.basic.dca.content' );
 
+//$config = \Contao\System::getContainer()->get('iido.config.config');
 
-//$objConfig  = System::getContainer()->get('iido.basic.config');
-$objElement = false;
+$objElement = $isNews = false;
 
 if( Input::get('act') === 'edit' )
 {
@@ -15,10 +15,21 @@ if( Input::get('act') === 'edit' )
 }
 
 
+if( $objElement )
+{
+    if( $objElement->ptable === 'tl_news' )
+    {
+        $isNews = true;
+    }
+}
+
+
 
 /**
  * Sorting
  */
+
+$objContentTable->addSortingConfig('child_record_callback', array('iido.config.dca.content', 'addNewsLanguageFlags'));
 
 //if( $config->get('enableLayout') )
 //{
@@ -97,6 +108,11 @@ if( $removeHeadline )
 //$palette = $objContentTable->getDefaultPaletteFields( $strContentFileName, ['elements' => ['iido_elements']]);
 //$objContentTable->addPalette('iido_column_master', $palette);
 
+if( $isNews )
+{
+    $objContentTable->replacePaletteFields('all', ',type', ',type,showInLanguage');
+}
+
 
 
 /**
@@ -110,6 +126,11 @@ $objContentTable->addSubpalette("addAnimation", "animationType,animateRun,animat
 /**
  * Fields
  */
+
+\IIDO\BasicBundle\Dca\Field::create('showInLanguage', 'checkbox')
+    ->addDefault(serialize(['de']))
+    ->addEval('multiple', true)
+    ->addToTable( $objContentTable );
 
 //\IIDO\BasicBundle\Dca\Field::copy('pfield', 'tl_fieldpalette', 'pfield')
 //    ->addFieldToTable( $objContentTable );

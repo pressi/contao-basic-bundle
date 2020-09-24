@@ -71,7 +71,7 @@ $objTable->addLabel(['title', 'frontendTitle'], '%s <span style="padding-left:3p
  */
 
 //$objTable->addPalette('default', '{title_legend},title,alias,frontendTitle,,cssClass,mainCategory;{details_legend:hide},image,address,geo,website,phone,email,oppening,description,map;{video_legend},addVideo;{modules_legend:hide},hideInList,hideInReader,excludeInRelated;{redirect_legend:hide},jumpTo;');
-$objTable->addPalette('default', '{title_legend},title,alias,frontendTitle,cssClass;{redirect_legend:hide},jumpTo;{modules_legend:hide},hideInList,hideInReader,excludeInRelated;');
+$objTable->addPalette('default', '{title_legend},title,titleEN,titleUS,alias,aliasEN,aliasUS,frontendTitle,frontendTitleEN,frontendTitleUS,cssClass;{description_legend},description,descriptionEN,descriptionUS;{redirect_legend:hide},jumpTo;{modules_legend:hide},hideInList,hideInReader,excludeInRelated;');
 
 
 
@@ -93,24 +93,79 @@ $objTable->addPalette('default', '{title_legend},title,alias,frontendTitle,cssCl
 \IIDO\BasicBundle\Dca\Field::create('title')
     ->addToSearch()
     ->addEval('mandatory', true)
+    ->addEval('tl_class', 'w33', true)
     ->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('titleEN')
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-en.svg" width="22" height="22">')
+    ->addLabelName('title')
+    ->addEval('tl_class', 'w33', true)
+    ->addToTable( $objTable );
+\IIDO\BasicBundle\Dca\Field::create('titleUS')
+    ->addEval('tl_class', 'w33', true)
+    ->addLabelName('title')
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-us.svg" width="22" height="22">')
+    ->addToTable( $objTable );
+
+
 
 \IIDO\BasicBundle\Dca\Field::create('frontendTitle')
     ->addToSearch()
+    ->addEval('tl_class', 'w33', true)
     ->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('frontendTitleEN')
+->addLabelName('frontendTitle')
+    ->addEval('tl_class', 'w33', true)
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-en.svg" width="22" height="22">')
+    ->addToTable( $objTable );
+\IIDO\BasicBundle\Dca\Field::create('frontendTitleUS')
+    ->addLabelName('frontendTitle')
+    ->addEval('tl_class', 'w33', true)
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-us.svg" width="22" height="22">')
+    ->addToTable( $objTable );
+
 
 $objTable->addSortingField();
 $objTable->addPidField( false );
 //$objTable->addAliasField();
-$objTable->addAliasField('usage');
+
+
+$objAliasField = $objTable->addAliasField('usage');
+$objAliasField->addEval('tl_class', 'w33', true);
+
+\IIDO\BasicBundle\Dca\Field::create('aliasEN')
+    ->addLabelName('alias')
+    ->addEval('tl_class', 'w33', true)
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-en.svg" width="22" height="22">')
+    ->addToTable( $objTable );
+\IIDO\BasicBundle\Dca\Field::create('aliasUS')
+    ->addLabelName('alias')
+    ->addEval('tl_class', 'w33', true)
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-us.svg" width="22" height="22">')
+    ->addToTable( $objTable );
+
+
 $objTable->addPublishedFields('', '', '', false);
 
 \IIDO\BasicBundle\Dca\Field::create('cssClass')->addToTable( $objTable );
 
-//\IIDO\BasicBundle\Dca\Field::create('description', 'textarea')
-//    ->setUseRTE()
-//    ->addToTable( $objTable );
-//
+
+\IIDO\BasicBundle\Dca\Field::create('description', 'textarea')
+    ->setUseRTE()
+    ->addToTable( $objTable );
+
+\IIDO\BasicBundle\Dca\Field::create('descriptionEN', 'textarea')
+    ->addLabelName('description')
+    ->setUseRTE()
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-en.svg" width="22" height="22">')
+    ->addToTable( $objTable );
+\IIDO\BasicBundle\Dca\Field::create('descriptionUS', 'textarea')
+    ->addLabelName('description')
+    ->setUseRTE()
+    ->setLabelPrefix('<img src="/files/hhsystem/images/backend/flag-us.svg" width="22" height="22">')
+    ->addToTable( $objTable );
+
 //\IIDO\BasicBundle\Dca\Field::create('address', 'textarea')
 //    ->setUseRTE()
 //    ->addToTable( $objTable );
