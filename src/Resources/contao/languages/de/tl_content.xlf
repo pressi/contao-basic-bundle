@@ -109,6 +109,12 @@
             </trans-unit>
 
 
+            <trans-unit id="tl_content.showInLanguage.0">
+                <source>show in language</source>
+                <target>Sprachen</target>
+            </trans-unit>
+
+
 
 <!-- ### LEGENDS ############################################################################################################ -->
 
@@ -147,6 +153,21 @@
             <trans-unit id="tl_content.options.headlineFloating.right">
                 <source>align right</source>
                 <target>Rechtsbündig</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_content.options.showInLanguage.de">
+                <source>german</source>
+                <target><![CDATA[<img src="/files/hhsystem/images/backend/flag-de.svg" width="22" height="22"> Deutsch]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.showInLanguage.en">
+                <source>english</source>
+                <target><![CDATA[<img src="/files/hhsystem/images/backend/flag-en.svg" width="22" height="22"> Englisch]]></target>
+            </trans-unit>
+            <trans-unit id="tl_content.options.showInLanguage.en_us">
+                <source>us english</source>
+                <target><![CDATA[<img src="/files/hhsystem/images/backend/flag-us.svg" width="22" height="22"> US Englisch]]></target>
             </trans-unit>
 
 

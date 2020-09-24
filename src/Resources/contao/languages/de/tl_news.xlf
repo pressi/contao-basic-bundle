@@ -13,6 +13,16 @@
                 <target>Verwendungszweck(e)</target>
             </trans-unit>
 
+            <trans-unit id="tl_news.productMarket.0">
+                <source>Produkttyp</source>
+                <target>Produkttyp</target>
+            </trans-unit>
+
+            <trans-unit id="tl_news.isAlsoUSProduct.0">
+                <source>Produkt auch für den US Markt freigeben</source>
+                <target>Produkt auch für den US Markt freigeben</target>
+            </trans-unit>
+
 
 
 <!-- ### GLOBAL OPERATIONS ################################################################################################## -->
@@ -25,6 +35,25 @@
             <trans-unit id="tl_news.global_operation.uses">
                 <source>Verwendungszweck</source>
                 <target>Verwendungszweck</target>
+            </trans-unit>
+
+
+            <trans-unit id="tl_news.category_legend">
+                <source>Kategorien</source>
+                <target>Kategorien</target>
+            </trans-unit>
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+            <trans-unit id="tl_news.options.productMarket.default">
+                <source>Standard</source>
+                <target>Standard</target>
+            </trans-unit>
+            <trans-unit id="tl_news.options.productMarket.usa">
+                <source>US Produkt</source>
+                <target>US Produkt</target>
             </trans-unit>
 
         </body>
