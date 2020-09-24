@@ -40,7 +40,7 @@ class PageListener implements ServiceAnnotationInterface
 
 //        $GLOBALS['TL_JAVASCRIPT']['j_mask'] = 'files/bestpreisagrar/js/jquery.mask.min.js|static';
 
-        if( false !== strpos($pageModel->cssClass, 'ext-blankpage') && false !== strpos($layout->cssClass, 'ext-blankpage') )
+        if( false === strpos($pageModel->cssClass, 'ext-blankpage') && false === strpos($layout->cssClass, 'ext-blankpage') )
         {
             StyleSheetHelper::addDefaultPageStyleSheets();
         }
@@ -64,14 +64,19 @@ class PageListener implements ServiceAnnotationInterface
             ScriptHelper::addScript('isotope');
         }
 
-        //TODO: selectable in backend!!! wenn seite in lightbox öffnet!?
-        StyleSheetHelper::addThemeStyle('pickdate', 'default,default.date');
-        ScriptHelper::addScript('pickdate', false, true);
-
-        if( BasicHelper::getLanguage() !== 'en' )
+        if( ScriptHelper::hasPageFullPage() )
         {
-            ScriptHelper::addTranslateScript('pickdate', BasicHelper::getLanguage());
+            ScriptHelper::addScript('fullpage', true, true);
         }
+
+        //TODO: selectable in backend!!! wenn seite in lightbox öffnet!?
+//        StyleSheetHelper::addThemeStyle('pickdate', 'default,default.date');
+//        ScriptHelper::addScript('pickdate', false, true);
+
+//        if( BasicHelper::getLanguage() !== 'en' )
+//        {
+//            ScriptHelper::addTranslateScript('pickdate', BasicHelper::getLanguage());
+//        }
 
 
         //TODO add wenn needed && create function ScriptHelper::addLibSrcipt || addLibraryScript
@@ -91,6 +96,7 @@ class PageListener implements ServiceAnnotationInterface
 
 //        echo "<pre>"; print_r( $GLOBALS['TL_JAVASCRIPT'] ); exit;
 //        echo "<pre>"; print_r( $GLOBALS['TL_CSS'] ); exit;
+//        echo "<pre>"; print_r( $GLOBALS['TL_USER_CSS'] ); exit;
     }
 
 
@@ -124,6 +130,11 @@ class PageListener implements ServiceAnnotationInterface
 
                         $strBuffer = preg_replace('/<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/header>/', $offsetNavToggler . '</div></div></div></header>', $strBuffer);
                     }
+                }
+
+                if( $objHeader->showMode === 'layout-02' || false !== strpos($headerClasses[1], 'layout-02') )
+                {
+                    $strBuffer = PageHelper::addBodyClasses('header-on-left', $strBuffer );
                 }
             }
 

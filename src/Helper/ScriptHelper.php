@@ -164,17 +164,45 @@ class ScriptHelper
                                 break;
                             }
                         }
+                    }
 
-                        if( $hasIsotope )
-                        {
-                            break;
-                        }
+                    if( $hasIsotope )
+                    {
+                        break;
                     }
                 }
             }
         }
 
         return $hasIsotope;
+    }
+
+
+
+    public static function hasPageFullPage( $checkOnlyCurrentPage = false )
+    {
+        global $objPage;
+
+        $hasFullPage = false;
+
+        if( $objPage->enableFullPage )
+        {
+            $hasFullPage = true;
+        }
+        else
+        {
+            if( !$checkOnlyCurrentPage )
+            {
+                $objRootPage = PageHelper::getRootPage();
+
+                if( $objRootPage && $objRootPage->addFullPage )
+                {
+                    $hasFullPage = true;
+                }
+            }
+        }
+
+        return $hasFullPage;
     }
 
 
@@ -218,6 +246,11 @@ class ScriptHelper
                         {
                             foreach($arrFiles as $strFile )
                             {
+                                if( preg_match('/.js.map$/', $strFile) )
+                                {
+                                    continue;
+                                }
+
                                 $fileParts = explode("-", $strFile);
 
                                 if( preg_match('/^b/', $strFile) )
@@ -248,10 +281,10 @@ class ScriptHelper
                     }
                 }
 
-//                if( $addStylesheet ) TODO: implement!!
-//                {
-//                    StylesheetHelper::addStylesheet( $fileName );
-//                }
+                if( $addStylesheet )
+                {
+                    StyleSheetHelper::addStylesheet( $fileName );
+                }
             }
         }
     }

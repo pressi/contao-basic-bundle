@@ -13,6 +13,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use Contao\System;
 use IIDO\BasicBundle\Helper\ColorHelper;
+use IIDO\BasicBundle\Helper\ScriptHelper;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 
@@ -70,6 +71,11 @@ class ArticleListener implements ServiceAnnotationInterface
             {
                 $classes[] = 'height-' . $objRow->height;
             }
+        }
+
+        if( ScriptHelper::hasPageFullPage( true ) )
+        {
+            $classes[] = 'section';
         }
 
         $objRow->classes = $classes;

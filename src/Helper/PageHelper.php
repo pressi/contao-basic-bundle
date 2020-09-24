@@ -151,4 +151,25 @@ class PageHelper
         return $objRootPage;
     }
 
+
+
+    public static function addBodyClasses( $classes, $strBuffer )
+    {
+        if( is_array($classes) )
+        {
+            $classes = implode(' ', $classes);
+        }
+
+        if( preg_match('/<body([A-Za-z0-9\s\-="\(\)\{\},;.:_]{0,})class="/', $strBuffer) )
+        {
+            $strBuffer = preg_replace('/<body([A-Za-z0-9\s\-="\(\)\{\},;.:_]{0,})class="/', '<body$1class="' . trim($classes) . ' ', $strBuffer);
+        }
+        else
+        {
+            $strBuffer = preg_replace('/<body/', '<body class="' . trim($classes) . ' "', $strBuffer);
+        }
+
+        return $strBuffer;
+    }
+
 }
