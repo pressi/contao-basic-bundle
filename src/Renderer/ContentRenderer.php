@@ -34,7 +34,7 @@ class ContentRenderer
         $classes        = '';
         $styles         = '';
 
-        $strNewHeadline = preg_replace(['/;/', '/--([\w\d\s!?]+)--/'], ['<br>', '<span class="normal">$1</span>'], $arrHeadline['value']);
+        $strNewHeadline = preg_replace(['/;/', '/--([\w\d\s!?.\-öäüÖÄÜß&%$€]+)--/', '/\|([\w\d\s!?.\-öäüÖÄÜß&%$€]+)\|/'], ['<br>', '<span class="normal">$1</span>', '<strong>$1</strong>'], $arrHeadline['value']);
         $strTopHeadline = '';
 
         if( $objRow->type === 'headline' )
