@@ -380,7 +380,7 @@ class IIDOConfig
 
         $arrConfig = Yaml::parseFile( BasicHelper::getRootDir( true ) . self::getFilePath() );
 
-        if( count($arrConfig) )
+        if( is_array($arrConfig) && count($arrConfig) )
         {
             foreach( $arrConfig as $strTable => $arrData )
             {
