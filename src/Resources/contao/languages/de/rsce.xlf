@@ -1,0 +1,94 @@
+<?xml version="1.0" ?><xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/default.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="RSCE.box.boxSize.w25">
+                <source>25% (1/4)</source>
+                <target>25% (1/4)</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.boxSize.w33">
+                <source>33% (1/3)</source>
+                <target>33% (1/3)</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.boxSize.w50">
+                <source>50%</source>
+                <target>50%</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.boxSize.w66">
+                <source>66% (2/3)</source>
+                <target>66% (2/3)</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.boxSize.w75">
+                <source>75% (2/4)</source>
+                <target>75% (2/4)</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.boxSize.w100">
+                <source>100%</source>
+                <target>100%</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="RSCE.box.titleSize.xs">
+                <source>Extra Small</source>
+                <target>Extra Small</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titleSize.s">
+                <source>Small</source>
+                <target>Small</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titleSize.m">
+                <source>Medium</source>
+                <target>Medium</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titleSize.l">
+                <source>Large</source>
+                <target>Large</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titleSize.xl">
+                <source>Extra Large</source>
+                <target>Extra Large</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="RSCE.box.titlePosition.left_top">
+                <source>Left Top</source>
+                <target>Links Oben</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.center_top">
+                <source>Center Top</source>
+                <target>Mitte Oben</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.right_top">
+                <source>Right Top</source>
+                <target>Rechts Oben</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.left_center">
+                <source>Left Center</source>
+                <target>Links Mitte</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.center_center">
+                <source>Center Center</source>
+                <target>Zentriert (Mitte Mitte)</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.right_center">
+                <source>Right Center</source>
+                <target>Rechts Mitte</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.left_bottom">
+                <source>Left bottom</source>
+                <target>Links Unten</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.center_bottom">
+                <source>Center bottom</source>
+                <target>Mitte Unten</target>
+            </trans-unit>
+            <trans-unit id="RSCE.box.titlePosition.right_bottom">
+                <source>Right Bottom</source>
+                <target>Rechts Unten</target>
+            </trans-unit>
+
+        </body>
+    </file>
+</xliff>
