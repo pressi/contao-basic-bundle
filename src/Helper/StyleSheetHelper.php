@@ -38,7 +38,7 @@ class StyleSheetHelper
 
     public static function addDefaultPageStyleSheets()
     {
-        $rootAlias          = PageHelper::getRootPageAlias();
+        $rootAlias          = PageHelper::getRootPageAlias( true );
         $rootPath           = BasicHelper::getRootDir( true );
         $customStyleFiles   = ConfigHelper::get('cssCustomFiles');
 
@@ -87,7 +87,7 @@ class StyleSheetHelper
     public static function getValueFromVariables( $varName, $renderForOptions = false )
     {
         $varValue       = '';
-        $rootAlias      = PageHelper::getRootPageAlias();
+        $rootAlias      = PageHelper::getRootPageAlias( true );
         $rootDir        = BasicHelper::getRootDir( true );
 //        $filePath       = BasicHelper::replacePlaceholder( self::$variablesFilePath, true );
         $filePath       = sprintf(self::$variablesFilePath, $rootDir, $rootAlias);
