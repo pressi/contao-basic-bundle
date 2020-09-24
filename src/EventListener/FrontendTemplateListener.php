@@ -162,7 +162,15 @@ class FrontendTemplateListener implements ServiceAnnotationInterface
 
             if( Input::get('mode') == 'dev' )
             {
-                $mainScssFile = BasicHelper::getRootDir(true ) . "files/{$objPage->rootAlias}/styles/main.scss";
+                $folderName = $objPage->rootAlias;
+
+                if( $objPage->languageMain )
+                {
+                    $objLangPage    = PageModel::findByPk( $objPage->languageMain );
+                    $folderName     = $objLangPage->rootAlias;
+                }
+
+                $mainScssFile = BasicHelper::getRootDir(true ) . "files/{$folderName}/styles/main.scss";
 
                 if( file_exists($mainScssFile) )
                 {
@@ -190,6 +198,20 @@ class FrontendTemplateListener implements ServiceAnnotationInterface
 
                 $strBuffer = preg_replace('/<\/main>/', $navi . '</main>', $strBuffer);
                 $strBuffer = preg_replace('/<\/body>/', '<script>$(document).ready(function() { $("#main .inside").fullpage({menu:"#fullMenu",afterRender:function(){$("#fullMenu").on("click", "a", function(){$.fancybox.close();});$(".logo").click(function(){if($(this).hasClass("logo-light")){$.fancybox.close();}$.fn.fullpage.moveTo(1)});},licenseKey:"A6AC7EB1-13164DD3-8D289E36-D7D4549D"}); })</script></body>', $strBuffer);
+            }
+
+            if( preg_match("/<footer/", $strBuffer) )
+            {
+//                    $strBuffer = preg_replace('/<body([^>]+)class="/', '<body$1class="footerpage ', $strBuffer);
+                $arrBodyClasses[] = 'footerpage';
+
+                $divsOpen   = '<div id="page"><div id="outer">';
+                $divsClose  = '</div></div></div>';
+
+                $strBuffer  = str_replace('<div id="wrapper">', $divsOpen . '<div id="wrapper">', $strBuffer);
+                $strBuffer  = str_replace('<footer', $divsClose . '<footer', $strBuffer);
+
+                $strBuffer  = preg_replace('/<\/footer>(\s){0,}<\/div>/im', '</footer>', $strBuffer);
             }
         }
 
