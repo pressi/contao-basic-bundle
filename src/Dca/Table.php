@@ -2259,6 +2259,8 @@ class Table
         }
 
         $field->addToTable( $this );
+
+        return $field;
     }
 
 
