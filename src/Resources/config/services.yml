@@ -15,6 +15,8 @@ services:
   IIDO\BasicBundle\EventListener\ContentListener: ~
   IIDO\BasicBundle\EventListener\MessagesListener: ~
   IIDO\BasicBundle\EventListener\FormListener: ~
+  IIDO\BasicBundle\EventListener\ParseArticlesListener: ~
+
   IIDO\BasicBundle\EventListener\DataContainer\FilesListener: ~
   IIDO\BasicBundle\EventListener\DataContainer\ModuleListener: ~
 
@@ -64,6 +66,9 @@ services:
 
 
 #  IIDO\BasicBundle\Controller\Elements\ColumnMasterElement: ~
+
+  # FE Modules
+  IIDO\BasicBundle\Controller\Module\NewsFilterModule: ~
 
 
   ## Permission Checker
