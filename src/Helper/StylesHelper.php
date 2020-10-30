@@ -14,6 +14,13 @@ class StylesHelper
         $addBackgroundImage = ($objArticle->bgImage);
         $arrBackgroundSize  = \StringUtil::deserialize($objArticle->bgSize, true);
 
+        if( $addBackgroundImage && !count($arrOwnStyles) && !$objArticle->bgRepeat && !$objArticle->bgPosition )
+        {
+            $arrBackgroundSize[2] = 'cover';
+            $objArticle->bgRepeat = 'no-repeat';
+            $objArticle->bgPosition = 'center center';
+        }
+
         if( $addBackgroundImage && is_array($arrBackgroundSize) && strlen($arrBackgroundSize[2]) && $arrBackgroundSize[2] != '-' )
         {
             $bgSize = $arrBackgroundSize[2];

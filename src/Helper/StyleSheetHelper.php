@@ -250,7 +250,7 @@ class StyleSheetHelper
 
         if( !count($arrFiles) )
         {
-            $strPath    = preg_replace('/\/scss\//', '/css/', $strPath);
+            $strPath    = preg_replace('/\/scss\//', '/css', $strPath);
             $arrFiles   = scan( BasicHelper::getRootDir( true ) . $strPath . '/' . $scriptName . '/' . $folderVersion );
 
             $fileExtension = 'css';
@@ -258,7 +258,7 @@ class StyleSheetHelper
 
         foreach($arrFiles as $strFile)
         {
-            if( preg_match('/.min.' . $fileExtension . '$/', $strFile) )
+            if( preg_match('/.min.' . $fileExtension . '$/', $strFile) && !preg_match('/.map$/', $strFile) )
             {
                 $fileName = $strFile;
                 break;

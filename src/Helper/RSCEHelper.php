@@ -663,8 +663,8 @@ class RSCEHelper extends \Frontend
             }
             else
             {
-                $image->useAsBG = true;
-                $image->insertImage = true;
+//                $image->useAsBG = true;
+//                $image->insertImage = true;
 
                 $strContent = $objClass->insert('image', (array) $image);
 
