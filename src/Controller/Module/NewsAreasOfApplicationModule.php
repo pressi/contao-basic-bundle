@@ -77,7 +77,7 @@ class NewsAreasOfApplicationModule extends ModuleNews
             return '';
         }
 
-        $this->manager = System::getContainer()->get('iido.config.news.areaOfApplication.manager');
+        $this->manager = System::getContainer()->get('iido.basic.news.areaOfApplication.manager');
         $this->currentNewsAreasOfApplication = $this->getCurrentNewsAreasOfApplication();
 
         return parent::generate();
@@ -97,7 +97,7 @@ class NewsAreasOfApplicationModule extends ModuleNews
             return;
         }
 
-        $param = System::getContainer()->get('iido.config.news.areaOfApplication.manager')->getParameterName();
+        $param = System::getContainer()->get('iido.basic.news.areaOfApplication.manager')->getParameterName();
 
 
         // Get the active category
