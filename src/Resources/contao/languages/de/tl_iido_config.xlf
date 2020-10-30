@@ -141,9 +141,9 @@
 
 
 
-            <trans-unit id="tl_iido_config.options.pageFields.dev">
-                <source>in development</source>
-                <target>In Entwicklung</target>
+            <trans-unit id="tl_iido_config.options.pageFields.fullpage">
+                <source>FullPage</source>
+                <target>FullPage</target>
             </trans-unit>
 
 
