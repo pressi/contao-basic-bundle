@@ -194,6 +194,60 @@ IIDO.Filter = IIDO.Filter || {};
         return value;
     };
 
+
+
+    var $sliderRanges = {};
+
+    filter.setRangeSlider = function( ranges )
+    {
+        $sliderRanges = ranges;
+    };
+
+
+
+    filter.checkRangeSlider = function( rangeSlider )
+    {
+        let value = parseInt(rangeSlider.value);
+
+        let range = $sliderRanges.filter(rangeItem =>
+            {
+               if( parseInt(rangeItem.from) <= value && parseInt(rangeItem.to) >= value )
+               {
+                   return true;
+               }
+            });
+
+        let button = rangeSlider.parentNode.nextElementSibling.nextElementSibling;
+
+        if( range && range[0] )
+        {
+            if( parseInt(range[0].projects) > 0 )
+            {
+                if( parseInt(range[0].projects) === 1 )
+                {
+                    button.innerHTML = '1 projekt anzeigen';
+                }
+                else
+                {
+                    button.innerHTML = range[0].projects + ' projekte anzeigen';
+                }
+
+                button.removeAttribute('disabled');
+            }
+            else
+            {
+                button.setAttribute('disabled', 'disabled');
+                button.innerHTML = 'keine projekte';
+            }
+        }
+        else
+        {
+            button.setAttribute('disabled', 'disabled');
+            button.innerHTML = 'keine projekte';
+        }
+    };
+
+
 })(window, jQuery, IIDO.Filter);
 
 // document.addEventListener("DOMContentLoaded", function()

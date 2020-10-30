@@ -46,6 +46,8 @@ IIDO.Page = IIDO.Page || {};
                 {
                     offsetNavigation.classList.remove('open');
                     document.body.classList.remove('open-offset-navigation');
+
+                    IIDO.Page.pauseNavVideo();
                 });
             }
 
@@ -58,6 +60,8 @@ IIDO.Page = IIDO.Page || {};
                         {
                             offsetNavigation.classList.remove('open');
                             document.body.classList.remove('open-offset-navigation');
+
+                            IIDO.Page.pauseNavVideo();
                         }
                         else
                         {
@@ -94,10 +98,39 @@ IIDO.Page = IIDO.Page || {};
                 {
                     offsetNavigation.classList.remove('open');
                     document.body.classList.remove('open-offset-navigation');
+
+                    IIDO.Page.pauseNavVideo();
                 }
             })
         }
     };
+
+
+
+    page.pauseNavVideo = function()
+    {
+        let offsetNavOverlay = document.querySelector('.offset-navigation-overlay');
+        let offsetNavCont = document.querySelector('.offset-navigation-container');
+
+        if( offsetNavOverlay )
+        {
+            offsetNavOverlay.classList.remove('show-video');
+
+            let videoFrame = offsetNavOverlay.querySelector('.video-container iframe');
+
+            if( videoFrame )
+            {
+                let videoPlayer = new Vimeo.Player( videoFrame );
+
+                videoPlayer.pause();
+            }
+        }
+
+        if( offsetNavCont )
+        {
+            offsetNavCont.classList.remove('show-contact');
+        }
+    }
 
 
 
@@ -736,14 +769,35 @@ IIDO.Page = IIDO.Page || {};
 
             prev.addEventListener('click', function()
             {
-                $.fn.fullpage.moveSectionUp();
+                let activeSection = $.fn.fullpage.getActiveSection();
+
+                if( activeSection.isFirst )
+                {
+                    let sections = activeSection.item.parentNode.querySelectorAll('.section');
+
+                    $.fn.fullpage.moveTo( sections.length );
+                }
+                else
+                {
+                    $.fn.fullpage.moveSectionUp();
+                }
             });
 
             next.addEventListener('click', function()
             {
-                $.fn.fullpage.moveSectionDown();
+                let activeSection = $.fn.fullpage.getActiveSection();
+
+                if( activeSection.isLast )
+                {
+                    $.fn.fullpage.moveTo( 1 );
+                }
+                else
+                {
+                    $.fn.fullpage.moveSectionDown();
+                }
             });
         }
+
 
         let cont = document.getElementById('main').querySelector('.inside');
         let sections = cont.querySelectorAll('section.section');
@@ -752,8 +806,111 @@ IIDO.Page = IIDO.Page || {};
         {
             sections.forEach( function(element, index)
             {
-                element.querySelector('.section-index').innerHTML = (index + 1);
+                let sectionIndex = element.querySelector('.section-index');
+
+                if( sectionIndex )
+                {
+                    sectionIndex.innerHTML = (index + 1);
+                }
             });
+        }
+
+
+        let navToggler = document.querySelector('.nav-toggler:not(.offset-navigation-toggler)');
+
+        if( navToggler )
+        {
+            navToggler.parentNode.classList.add('hidden');
+            navToggler.classList.add('closed');
+
+            navToggler.parentNode.classList.remove('shown');
+            navToggler.classList.remove('open');
+
+            navToggler.addEventListener('click', function()
+            {
+                this.classList.toggle('closed');
+                this.parentNode.classList.toggle('hidden');
+
+                this.classList.toggle('open');
+                this.parentNode.classList.toggle('shown');
+            });
+        }
+
+
+        let navPosSection = document.querySelectorAll('.link.insert-section');
+
+        if( navPosSection.length )
+        {
+            navPosSection.forEach( navItem =>
+            {
+                navItem.addEventListener('click', function()
+                {
+                    let menuAnchor  = this.getAttribute('data-menuanchor');
+                    let navSection  = document.querySelector('section[data-anchor="' + menuAnchor + '"]');
+
+                    if( navSection )
+                    {
+                        // let siblings = IIDO.Base.getSiblings( this.parentNoade );
+                        //
+                        // if( this.classList.contains('active') )
+                        // {
+                        //     this.classList.remove('active');
+                        // }
+                        // else
+                        // {
+                        //     this.classList.add('active');
+                        //
+                        //     if( siblings.length )
+                        //     {
+                        //         siblings.forEach( sibling =>
+                        //         {
+                        //             sibling.querySelector('a').classList.remove('active');
+                        //         });
+                        //     }
+                        // }
+
+                        navSection.classList.toggle('shown');
+                        document.body.classList.toggle('nav-section-shown');
+
+                        if( document.documentElement.classList.contains('fp-enabled') )
+                        {
+                            $.fn.fullpage.setAllowScrolling(false);
+                        }
+                    }
+                });
+            });
+
+            let navSections = document.querySelectorAll('section.nav-section');
+
+            if( navSections.length )
+            {
+                let container = document.getElementById('container');
+
+                navSections.forEach( navSection =>
+                {
+                    let clonedSection = navSection.cloneNode( true );
+                    navSection.parentNode.removeChild( navSection );
+
+                    let closer = document.createElement('div');
+
+                    closer.classList.add('closer');
+
+                    closer.addEventListener('click', function()
+                    {
+                        this.parentNode.classList.remove('shown');
+                        document.body.classList.remove('nav-section-shown');
+
+                        if( document.documentElement.classList.contains('fp-enabled') )
+                        {
+                            $.fn.fullpage.setAllowScrolling(true);
+                        }
+                    });
+
+                    clonedSection.appendChild( closer );
+
+                    container.appendChild( clonedSection );
+                });
+            }
         }
     }
 
