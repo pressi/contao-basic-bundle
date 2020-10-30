@@ -11,6 +11,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 
 
+use Contao\StringUtil;
 use Contao\System;
 use IIDO\BasicBundle\Helper\ColorHelper;
 use IIDO\BasicBundle\Helper\ScriptHelper;
@@ -36,6 +37,7 @@ class ArticleListener implements ServiceAnnotationInterface
         /* @var $objPermission \IIDO\BasicBundle\Permission\BackendPermissionChecker */
 
         $classes    = $objRow->classes;
+        $cssID      = StringUtil::deserialize( $objRow->cssID, true );
 //        $classes[]  = "row";
 //        $classes[] = "row-direction-$objRow->layout_direction";
 
@@ -75,10 +77,23 @@ class ArticleListener implements ServiceAnnotationInterface
 
         if( ScriptHelper::hasPageFullPage( true ) )
         {
-            $classes[] = 'section';
+            if( !$objRow->noSection && false === strpos($cssID[1], 'no-section') )
+            {
+                $classes[] = 'section';
+            }
+
+            if( false !== strpos($cssID[1], 'show-from-') )
+            {
+//                preg_match_all('/show-from-([A-Za-z]+)/', $cssID[1], $matches);
+
+                $classes[] = 'nav-section';
+            }
         }
 
-        $objRow->classes = $classes;
+        $cssID[1] = trim(preg_replace('/no-section/', '', $cssID[1]));
+
+        $objRow->cssID      = serialize( $cssID );
+        $objRow->classes    = $classes;
     }
 
 

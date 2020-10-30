@@ -8,6 +8,7 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
+use IIDO\BasicBundle\Helper\BasicHelper;
 use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 
 
@@ -32,13 +33,23 @@ class ModuleListener extends Backend implements ServiceAnnotationInterface
      */
     public function optionsCallback( DataContainer $dc ): array
     {
-        $strClass   = 'contao_newsrelated.listener.news';
-        $strMethod  = 'newsOrderOptionsCallback';
+        if( BasicHelper::isActiveBundle('fritmg/contao-news-related') )
+        {
+            $strClass   = 'contao_newsrelated.listener.news';
+            $strMethod  = 'newsOrderOptionsCallback';
+
+            $this->import($strClass);
+            $options = $this->$strClass->$strMethod( $dc );
+
+            return array_merge($options, ['order_categoryGroup', 'order_areasOfApplicationGroup']);
+        }
+
+        $strClass   = 'tl_module_news';
+        $strMethod  = 'getSortingOptions';
 
         $this->import($strClass);
-        $options = $this->$strClass->$strMethod( $dc );
 
-        return array_merge($options, ['order_categoryGroup', 'order_areasOfApplicationGroup']);
+        return $this->$strClass->$strMethod( $dc );
     }
 
 }

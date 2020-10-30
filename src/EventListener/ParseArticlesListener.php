@@ -12,6 +12,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\FrontendTemplate;
+use Contao\Input;
 use Contao\Module;
 use Contao\NewsArchiveModel;
 use Contao\PageModel;
@@ -84,8 +85,92 @@ class ParseArticlesListener
                 $template->link = preg_replace('/' . $newsEntry['alias'] . '.html$/', $alias . '.html', $template->link);
             }
         }
+
+
+        $template->hidden = false;
+
+        $qm = $getQM = (int) Input::get('qm');
+
+        if( $qm )
+        {
+            $min = 0;
+            $max = 0;
+
+            $ranges = [];
+            $arrQM  = [];
+
+//            $objNews = NewsModel::findAll();
+            $objNews = NewsModel::findPublishedByPid(1);
+
+            while( $objNews->next() )
+            {
+                $qm = $objNews->squareMeters;
+
+                if( !$qm )
+                {
+                    continue;
+                }
+
+                if( $qm < $min || $min === 0 )
+                {
+                    $min = $qm;
+                }
+
+                if( $qm > $max )
+                {
+                    $max = $qm;
+                }
+
+                $arrQM[ $qm ][] = $objNews->current();
+            }
+
+            $step = round(($max - $min) / 10);
+
+            $from = (int) $min;
+            for($i =1; $i<=10; $i++)
+            {
+                $counter = 0;
+                $to = ($i === 10 ? (int) $max : ($from + $step));
+
+                foreach( $arrQM as $qmeters => $projects)
+                {
+                    if( $qmeters >= $from && $qmeters <= $to)
+                    {
+                        $counter = ($counter + count($projects));
+                    }
+                }
+
+                $ranges[] = [
+                    'from'      => $from,
+                    'to'        => $to,
+                    'projects'  => $counter
+                ];
+
+                $from = ($from + $step + 1);
+            }
+
+            $proQM      = (int) $newsEntry['squareMeters'];
+
+            $qmStart    = 0;
+            $qmEnd      = 0;
+
+            foreach( $ranges as $range )
+            {
+                if( $getQM >= (int) $range['from'] && $getQM <= (int) $range['to'] )
+                {
+                    $qmStart    = $range['from'];
+                    $qmEnd      = $range['to'];
+                    break;
+                }
+            }
+
+            if( $newsEntry['qm'] === '' || $proQM < $qmStart || $proQM > $qmEnd )
+            {
+                $template->hidden = true;
+            }
+        }
     }
 
 }
 
-class_alias(NewsModel::class, 'NewsModel');
+//class_alias(NewsModel::class, 'NewsModel');

@@ -126,9 +126,14 @@ class PageListener implements ServiceAnnotationInterface
                     {
                         $strBuffer = SectionRenderer::renderOffsetNavigation( $strBuffer, true, $objOffsetNavigation );
 
-                        $offsetNavToggler = SectionRenderer::getOffsetNavigationToggler();
+                        $offsetNavToggler = SectionRenderer::getOffsetNavigationToggler( $objHeader );
 
-                        $strBuffer = preg_replace('/<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/header>/', $offsetNavToggler . '</div></div></div></header>', $strBuffer);
+                        $strBuffer = preg_replace('/<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/div>([\n\s]{0,})<\/header>/', $offsetNavToggler . '</div></div></div></header>', $strBuffer, 1, $count);
+
+                        if( !$count )
+                        {
+                            $strBuffer = preg_replace('/<\/div>([\n\s]{0,})<\/header>/', $offsetNavToggler . '</div></header>', $strBuffer);
+                        }
                     }
                 }
 
@@ -151,6 +156,10 @@ class PageListener implements ServiceAnnotationInterface
 //            $strBuffer = SectionRenderer::renderFixedButtons( $strBuffer );
 
             $strBuffer = preg_replace('/<!-- REMOVE:([A-Za-z0-9\n\s\-,;.:_\{\}><]{0,}) -->/', '', $strBuffer);
+
+            $strBuffer = preg_replace('/<div id="fixedContainer">([\s\n]{0,})<div class="inside">([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
+            $strBuffer = preg_replace('/<div id="stickyHeader">([\s\n]{0,})<div class="inside">([\s\n]{0,})<\/div>([\s\n]{0,})<\/div>/', '', $strBuffer);
+            $strBuffer = preg_replace('/<div class="custom">([\s\n]{0,})<\/div>/', '', $strBuffer);
         }
 
         return $strBuffer;

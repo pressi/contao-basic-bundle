@@ -14,6 +14,7 @@ namespace IIDO\BasicBundle\EventListener;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
+use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -190,14 +191,35 @@ class FrontendTemplateListener implements ServiceAnnotationInterface
 
             if( ScriptHelper::hasPageFullPage( true ) )
             {
+//                $navi = '<div class="fullpage-navigation">
+//    <div class="nav-label">Weiter</div>
+//    <div class="nav-prev"><div class="label">Zurück</div></div>
+//    <div class="nav-next"><div class="label">Weiter</div></div>
+//</div>';
+
+                $objArticles = ArticleModel::findPublishedByPidAndColumn($objPage->id, 'main');
+                $arrAnchros = [];
+
+                if( $objArticles )
+                {
+                    while( $objArticles->next() )
+                    {
+                        $arrAnchros[] = $objArticles->alias;
+                    }
+                }
+
                 $navi = '<div class="fullpage-navigation">
-    <div class="nav-label">Weiter</div>
     <div class="nav-prev"><div class="label">Zurück</div></div>
     <div class="nav-next"><div class="label">Weiter</div></div>
 </div>';
+                $objScript = new FrontendTemplate('fullpage_default');
+
+                $objScript->selector = '#main > .inside';
+                $objScript->startSlideAlwaysOnFirst = true;
+                $objScript->anchors = $arrAnchros;
 
                 $strBuffer = preg_replace('/<\/main>/', $navi . '</main>', $strBuffer);
-                $strBuffer = preg_replace('/<\/body>/', '<script>$(document).ready(function() { $("#main .inside").fullpage({menu:"#fullMenu",afterRender:function(){$("#fullMenu").on("click", "a", function(){$.fancybox.close();});$(".logo").click(function(){if($(this).hasClass("logo-light")){$.fancybox.close();}$.fn.fullpage.moveTo(1)});},licenseKey:"A6AC7EB1-13164DD3-8D289E36-D7D4549D"}); })</script></body>', $strBuffer);
+                $strBuffer = preg_replace('/<\/body>/', $objScript->parse() . '</body>', $strBuffer);
             }
 
             if( preg_match("/<footer/", $strBuffer) )

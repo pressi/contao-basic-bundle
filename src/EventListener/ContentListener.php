@@ -21,9 +21,11 @@ namespace IIDO\BasicBundle\EventListener;
 //use IIDO\BasicBundle\Helper\WebsiteStylesHelper;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\Environment;
 use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\System;
+use Contao\Template;
 use IIDO\BasicBundle\Config\IIDOConfig;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
@@ -72,8 +74,8 @@ class ContentListener implements ServiceAnnotationInterface
     public function onGetContentElement($objRow, $strBuffer, &$objElement): string
     {
         $isBackend      = BasicHelper::isBackend();
-        $cssID          = \StringUtil::deserialize($objRow->cssID, TRUE);
-        $isMobile       = \Environment::get("agent")->mobile;
+        $cssID          = StringUtil::deserialize($objRow->cssID, TRUE);
+        $isMobile       = Environment::get("agent")->mobile;
 
         if( $isMobile && ($objRow->hideOnMobile || FALSE !== strpos( $cssID[1], 'hide-on-mobile' )) )
         {
@@ -116,6 +118,11 @@ class ContentListener implements ServiceAnnotationInterface
         if( $elementType === 'alias' )
         {
             $objAliasElement = ContentModel::findByPk( $objRow->cteAlias );
+        }
+
+        if( $objRow->isFullPageSlide )
+        {
+            $arrElementClasses[] = 'slide';
         }
 
         $strBuffer  = ContentRenderer::parseHeadline( $strBuffer, $objRow );
@@ -196,6 +203,45 @@ class ContentListener implements ServiceAnnotationInterface
             {
                 $strBuffer = preg_replace('/<p>([A-Za-z0-9\-,;.:öäüÖÄÜß]+)/', '<p><span class="first-word">$1</span>', $strBuffer, 1);
             }
+
+            if( $objRow->isFullPageSlide )
+            {
+                if( false !== strpos($cssID[1], 'img-is-bg') )
+                {
+                    $styles = "background-image:url('" . $objElement->singleSRC . "');";
+
+                    $strBuffer = preg_replace('/class="image_container/', 'style="' . $styles . '" class="image_container bg-image bg-cover', $strBuffer);
+                }
+
+                if( false !== strpos($cssID[1], 'txt-pos-') && $objRow->addImage )
+                {
+                    $strBuffer = preg_replace('/<\/figure>/', '</figure><div class="txt-container">', $strBuffer);
+                    $strBuffer = $strBuffer . '</div>';
+                }
+
+                if( false !== strpos($cssID[1], 'box-center') || false !== strpos($cssID[1], 'split-content') )
+                {
+                    $headline = '';
+                    preg_match_all('/<h([0-9]+)([A-Za-z0-9\s\-="_]{0,})>([A-Za-z0-9\s\-="_,;.:#ß?!öäüÖÄÜ<>]{0,})<\/h([0-9]+)>/', $strBuffer, $headlineMatches);
+
+                    if( is_array($headlineMatches) && is_array($headlineMatches[0]) && count($headlineMatches[0]) )
+                    {
+                        $strBuffer = preg_replace('/' . preg_quote($headlineMatches[0][0], '/') . '/', '', $strBuffer);
+                        $headline = $headlineMatches[0][0];
+                    }
+
+                    if( $objRow->addImage )
+                    {
+                        $strBuffer = preg_replace('/<\/figure>/', '</figure><div class="txt-container">' . $headline, $strBuffer);
+                    }
+                    else
+                    {
+                        $strBuffer = preg_replace('/<div([A-Za-z0-9\s\-="_]{0,})class="' . $elementClass . '([A-Za-z0-9\s\-_]{0,})"([A-Za-z0-9\s\-="_]{0,})>/', '<div$1class="' . $elementClass . '$2"$3><div class="txt-container">' . $headline, $strBuffer);
+                    }
+
+                    $strBuffer = $strBuffer . '</div>';
+                }
+            }
         }
         elseif( $elementType === 'image' )
         {
@@ -257,9 +303,16 @@ class ContentListener implements ServiceAnnotationInterface
 
         $arrElementClasses[] = 'content-element';
 
-        if( !in_array($objRow->type, $this->arrNotInsideClassElements) )
+        $dontRun = false;
+        if( false !== strpos($strBuffer, ' slide') || false !== strpos($strBuffer, ' section') )
         {
-            $strBuffer = preg_replace('/<(div|section)([A-Za-z0-9\s\-=",;.:_]+)class="' . $elementClass . '([A-Za-z0-9\s\-,;.:_]{0,})"([A-Za-z0-9\s\-=",;.:_]{0,})>/', '<$1$2class="' . $elementClass . '$3"$4><div class="element-inside">', $strBuffer, -1, $countInside);
+            $dontRun = true;
+        }
+
+        if( !$dontRun && !in_array($objRow->type, $this->arrNotInsideClassElements) && !ScriptHelper::hasPageFullPage( true ) )
+        {
+//            $strBuffer = preg_replace('/<(div|section)([A-Za-z0-9\s\-=",;.:_]+)class="' . $elementClass . '([A-Za-z0-9\s\-,;.:_]{0,})"([A-Za-z0-9\s\-=",;.:_]{0,})>/', '<$1$2class="' . $elementClass . '$3"$4><div class="element-inside">', $strBuffer, -1, $countInside);
+            $strBuffer = preg_replace('/<(div|section)([A-Za-z0-9\s\-=",;.:_]+)class="' . $elementClass . '([A-Za-z0-9\s\-,;.:_]{0,})"([A-Za-z0-9\s\-=",;.:_#]{0,})>/', '<$1$2class="' . $elementClass . '$3"$4><div class="element-inside">', $strBuffer, -1, $countInside);
 
             if( $countInside )
             {

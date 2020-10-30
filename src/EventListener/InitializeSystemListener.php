@@ -106,7 +106,7 @@ class InitializeSystemListener implements ServiceAnnotationInterface
 
         // FE modules
         $GLOBALS['FE_MOD']['navigationMenu']['articlenav'] = $namespace . '\Controller\Modules\ArticlenavModule';
-        $GLOBALS['FE_MOD']['news']['areaOfApplicationList'] = $namespace . '\Controller\Module\NewsAreasOfApplicationModule';
+//        $GLOBALS['FE_MOD']['news']['areaOfApplicationList'] = $namespace . '\Controller\Module\NewsAreasOfApplicationModule';
 
 
 
