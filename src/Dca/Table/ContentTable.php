@@ -10,6 +10,9 @@
 namespace IIDO\BasicBundle\Dca\Table;
 
 
+use Contao\ArticleModel;
+use Contao\Input;
+use Contao\PageModel;
 use Contao\StringUtil;
 use IIDO\BasicBundle\Helper\StyleSheetHelper;
 
@@ -33,30 +36,48 @@ class ContentTable
         $tlContent = new \tl_content();
         $label = $tlContent->addCteType( $arrRow );
 
-        if( $arrRow['ptable'] === 'tl_news' )
-        {
-            $objNews = \NewsModel::findByPk( $arrRow['pid'] );
-
-            if( $objNews && $objNews->productMarket === 'default' )
-            {
-                $arrLangs = StringUtil::deserialize( $arrRow['showInLanguage'], true );
-
-                $strLangs = '<div class="lang-flags">';
-
-                $isDE = in_array('de', $arrLangs) || !count($arrLangs);
-                $strLangs .= '<span class="flag-de' . ($isDE ? ' shown' : '') . '"><img src="files/hhsystem/images/backend/flag-de.svg"></span>';
-
-                $isEN = in_array('en', $arrLangs);
-                $strLangs .= '<span class="flag-en' . ($isEN ? ' shown' : '') . '"><img src="files/hhsystem/images/backend/flag-en.svg"></span>';
-
-                $isUS = in_array('en_us', $arrLangs);
-                $strLangs .= '<span class="flag-en' . ($isUS ? ' shown' : '') . '"><img src="files/hhsystem/images/backend/flag-us.svg"></span>';
-
-                $strLangs .= '</div>';
-
-                $label = preg_replace('/<\/div>/', $strLangs . '</div>', $label, 1);
-            }
-        }
+        //TODO: enable/disable in settings
+//        if( $arrRow['ptable'] === 'tl_news' )
+//        {
+//            $objNews = \NewsModel::findByPk( $arrRow['pid'] );
+//
+//            if( $objNews && $objNews->productMarket === 'default' )
+//            {
+//                $arrLangs = StringUtil::deserialize( $arrRow['showInLanguage'], true );
+//
+//                $strLangs = '<div class="lang-flags">';
+//
+//                $isDE = in_array('de', $arrLangs) || !count($arrLangs);
+//                $strLangs .= '<span class="flag-de' . ($isDE ? ' shown' : '') . '"><img src="files/hhsystem/images/backend/flag-de.svg"></span>';
+//
+//                $isEN = in_array('en', $arrLangs);
+//                $strLangs .= '<span class="flag-en' . ($isEN ? ' shown' : '') . '"><img src="files/hhsystem/images/backend/flag-en.svg"></span>';
+//
+//                $isUS = in_array('en_us', $arrLangs);
+//                $strLangs .= '<span class="flag-en' . ($isUS ? ' shown' : '') . '"><img src="files/hhsystem/images/backend/flag-us.svg"></span>';
+//
+//                $strLangs .= '</div>';
+//
+//                $label = preg_replace('/<\/div>/', $strLangs . '</div>', $label, 1);
+//            }
+//        }
+//        else
+//        {
+//            $objArticle = ArticleModel::findByPk( Input::get('id') );
+//
+//            if( $objArticle )
+//            {
+//                $objCurrentPage = PageModel::findByPk( $objArticle->pid );
+//
+//                if( $objCurrentPage && $objCurrentPage->enableFullPage )
+//                {
+//                    if( $arrRow['isFullPageSlide'] )
+//                    {
+//                        $label = preg_replace('/<div class="cte_type([A-Za-z0-9\s\-_]{0,})">([A-Za-z0-9\s\-,;.:_+?!öäüÖÄÜß]+)<\/div>/', '<div class="cte_type$1">$2 <span class="fp-slide-cont">FullPage - Slide</span></div>', $label);
+//                    }
+//                }
+//            }
+//        }
 
         return $label;
     }
