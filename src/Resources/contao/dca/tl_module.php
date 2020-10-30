@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA'][ $strModuleFileName ]['fields']['news_filterAreasOfApplicatio
     'eval' => ['multiple' => true, 'fieldType' => 'checkbox', 'tl_class' => 'clr'],
     'sql' => ['type' => 'blob', 'notnull' => false]
 
-//    'options_callback'  => ['iido.config.listener.data_container.news', 'onAreaOfApplicationOptionsCallback'],
+//    'options_callback'  => ['iido.basic.listener.data_container.news', 'onAreaOfApplicationOptionsCallback'],
 //    'eval'              => ['multiple' => true, 'fieldType' => 'checkbox', 'tl_class' => 'clr w50 hauto'],
 //    'relation'          => [
 //        'type'              => 'haste-ManyToMany',
@@ -53,7 +53,7 @@ $GLOBALS['TL_DCA'][ $strModuleFileName ]['fields']['news_filterUsage'] = [
     'eval' => ['multiple' => true, 'fieldType' => 'checkbox', 'tl_class' => 'clr'],
     'sql' => ['type' => 'blob', 'notnull' => false]
 
-//    'options_callback'  => ['iido.config.listener.data_container.news', 'onUsageOptionsCallback'],
+//    'options_callback'  => ['iido.basic.listener.data_container.news', 'onUsageOptionsCallback'],
 //    'eval'              => ['multiple' => true, 'fieldType' => 'checkbox', 'tl_class' => 'w50 hauto'],
 //    'relation'          => [
 //        'type'              => 'haste-ManyToMany',

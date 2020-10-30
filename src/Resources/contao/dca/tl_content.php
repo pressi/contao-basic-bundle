@@ -5,9 +5,11 @@ $objContentTable    = new \IIDO\BasicBundle\Dca\ExistTable( $strContentFileName 
 
 $objContentTable->setTableListener( 'iido.basic.dca.content' );
 
-//$config = \Contao\System::getContainer()->get('iido.config.config');
+//$config = \Contao\System::getContainer()->get('iido.basic.config');
 
 $objElement = $isNews = false;
+$objArticle = $objParentPage = false;
+$activeLangFields = false;
 
 if( Input::get('act') === 'edit' )
 {
@@ -21,6 +23,13 @@ if( $objElement )
     {
         $isNews = true;
     }
+
+    $objArticle = \Contao\ArticleModel::findByPk( $objElement->pid );
+
+    if( $objArticle )
+    {
+        $objParentPage = \Contao\PageModel::findByPk( $objArticle->pid );
+    }
 }
 
 
@@ -29,7 +38,7 @@ if( $objElement )
  * Sorting
  */
 
-$objContentTable->addSortingConfig('child_record_callback', array('iido.config.dca.content', 'addNewsLanguageFlags'));
+$objContentTable->addSortingConfig('child_record_callback', array('iido.basic.dca.content', 'addNewsLanguageFlags'));
 
 //if( $config->get('enableLayout') )
 //{
@@ -108,9 +117,14 @@ if( $removeHeadline )
 //$palette = $objContentTable->getDefaultPaletteFields( $strContentFileName, ['elements' => ['iido_elements']]);
 //$objContentTable->addPalette('iido_column_master', $palette);
 
-if( $isNews )
+if( $isNews && $activeLangFields )
 {
     $objContentTable->replacePaletteFields('all', ',type', ',type,showInLanguage');
+}
+
+if( $objParentPage->enableFullPage )
+{
+    $objContentTable->replacePaletteFields('all', ',type', ',type,isFullPageSlide');
 }
 
 
@@ -131,6 +145,11 @@ $objContentTable->addSubpalette("addAnimation", "animationType,animateRun,animat
     ->addDefault(serialize(['de']))
     ->addEval('multiple', true)
     ->addToTable( $objContentTable );
+
+
+\IIDO\BasicBundle\Dca\Field::create('isFullPageSlide', 'checkbox')
+    ->addToTable( $objContentTable );
+
 
 //\IIDO\BasicBundle\Dca\Field::copy('pfield', 'tl_fieldpalette', 'pfield')
 //    ->addFieldToTable( $objContentTable );

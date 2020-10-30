@@ -7,6 +7,11 @@
  * www.iido.at <development@iido.at>
  *******************************************************************/
 
+if( !\IIDO\BasicBundle\Helper\BasicHelper::isActiveBundle('contao/news-bundle') )
+{
+    return;
+}
+
 \Contao\Controller::loadLanguageFile('tl_news');
 
 
@@ -15,6 +20,7 @@ $strFileName = 'tl_news';
 $GLOBALS['TL_DCA'][ $strFileName ]['config']['backlink'] = 'do=news&ref=' . Input::get('ref');
 
 $arrLangFields = ['headline', 'alias', 'pageTitle', 'description', 'url'];
+$activeLangFields = false;
 
 
 
@@ -22,7 +28,7 @@ $arrLangFields = ['headline', 'alias', 'pageTitle', 'description', 'url'];
  * Global Operations
  */
 
-if( Input::get('id') == '1' )
+if( Input::get('id') == '1' && 1 == 2 )
 {
     array_insert($GLOBALS['TL_DCA'][ $strFileName ]['list']['global_operations'], 3,
     [
@@ -65,20 +71,25 @@ foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
         continue;
     }
 
-    $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',categories', ',categories,areasOfApplication,usage', $fields);
+//    $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',categories', ',categories,areasOfApplication,usage', $fields);
+
+    $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',categories', ',categories,squareMeters', $fields);
 }
 
 
-foreach( $arrLangFields as $langField )
+if( $activeLangFields )
 {
-    foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
+    foreach( $arrLangFields as $langField )
     {
-        if( $palette === '__selector__' )
+        foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
         {
-            continue;
-        }
+            if( $palette === '__selector__' )
+            {
+                continue;
+            }
 
-        $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',' . $langField, ',' . $langField . ',' . $langField . 'EN,' . $langField . 'US', $fields);
+            $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',' . $langField, ',' . $langField . ',' . $langField . 'EN,' . $langField . 'US', $fields);
+        }
     }
 }
 
@@ -181,6 +192,16 @@ if( Input::get('do') === 'news' && Input::get('act') === 'edit' )
 
 
 $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ 'headline' ]['eval']['tl_class'] = 'clr ' . $GLOBALS['TL_DCA'][ $strFileName ]['fields'][ 'headline' ]['eval']['tl_class'];
+
+$GLOBALS['TL_DCA'][ $strFileName ]['fields']['squareMeters'] =
+[
+    'label'         => ['Quadratmeter', ''],
+    'exclude'       => true,
+    'filter'        => true,
+    'inputType'     => 'text',
+    'eval'          => ['tl_class'=>'w50','rgxp'=>'digit'],
+    'sql'           => "varchar(10) NOT NULL default ''"
+];
 
 
 

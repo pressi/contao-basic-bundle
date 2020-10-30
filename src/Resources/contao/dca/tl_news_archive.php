@@ -7,9 +7,15 @@
  * www.iido.at <development@iido.at>
  *******************************************************************/
 
+if( !\IIDO\BasicBundle\Helper\BasicHelper::isActiveBundle('contao/news-bundle') )
+{
+    return;
+}
+
 $strFileName = 'tl_news_archive';
 
 $arrLangFields = ['jumpTo'];
+$activeLangFields = false;
 
 
 
@@ -17,16 +23,19 @@ $arrLangFields = ['jumpTo'];
  * Palettes
  */
 
-foreach( $arrLangFields as $langField )
+if( $activeLangFields )
 {
-    foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
+    foreach( $arrLangFields as $langField )
     {
-        if( $palette === '__selector__' )
+        foreach( $GLOBALS['TL_DCA'][ $strFileName ]['palettes'] as $palette => $fields )
         {
-            continue;
-        }
+            if( $palette === '__selector__' )
+            {
+                continue;
+            }
 
-        $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',' . $langField, ',' . $langField . ',' . $langField . 'EN,' . $langField . 'US', $fields);
+            $GLOBALS['TL_DCA'][ $strFileName ]['palettes'][ $palette ] = str_replace(',' . $langField, ',' . $langField . ',' . $langField . 'EN,' . $langField . 'US', $fields);
+        }
     }
 }
 

@@ -13,6 +13,7 @@
 $strFileName = 'tl_news_category';
 
 $arrLangFields = ['title', 'alias', 'frontendTitle', 'description'];
+$activeLangFields = false;
 
 
 
@@ -24,10 +25,12 @@ $arrLangFields = ['title', 'alias', 'frontendTitle', 'description'];
 //$GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace(',categories', ',categories,areasOfApplication', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
 $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace(',categories', ',categories,areasOfApplication,usage', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
 
-
-foreach( $arrLangFields as $langField )
+if( $activeLangFields )
 {
-    $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace(',' . $langField, ',' . $langField . ',' . $langField . 'EN,' . $langField . 'US', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
+    foreach( $arrLangFields as $langField )
+    {
+        $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default'] = str_replace(',' . $langField, ',' . $langField . ',' . $langField . 'EN,' . $langField . 'US', $GLOBALS['TL_DCA'][ $strFileName ]['palettes']['default']);
+    }
 }
 
 

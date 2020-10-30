@@ -10,7 +10,16 @@ $objPageTable   = new \IIDO\BasicBundle\Dca\ExistTable( $strFileName );
  */
 
 $objPageTable->copyPalette( 'default', 'global_element' );
-$objPageTable->replacePaletteFields('regular', ',includeLayout', ',includeLayout,enableFullPage');
+
+if( \IIDO\BasicBundle\Config\IIDOConfig::get('includePageFields') )
+{
+    $arrFields      = StringUtil::deserialize( \IIDO\BasicBundle\Config\IIDOConfig::get('pageFields'), true);
+
+    if( in_array('fullpage', $arrFields) )
+    {
+        $objPageTable->replacePaletteFields('regular', ',includeLayout', ',includeLayout,enableFullPage');
+    }
+}
 
 
 

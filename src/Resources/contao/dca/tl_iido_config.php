@@ -4,7 +4,7 @@ $strConfTable = \IIDO\BasicBundle\Config\BundleConfig::getFileTable( __FILE__ );
 $objConfTable = new \IIDO\BasicBundle\Dca\Table( $strConfTable );
 $objConfTable->setDataContainer('YamlConfigFile');
 
-//$objTable->setTableListener('iido.config.dca.iido_config');
+//$objTable->setTableListener('iido.basic.dca.iido_config');
 
 
 
