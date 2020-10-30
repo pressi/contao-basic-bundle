@@ -1,0 +1,358 @@
+<script>
+    $(document).ready(function()
+    {
+        var $initialized = false;
+
+        $("<?= $this->selector ?>").fullpage(
+        {
+            autoScrolling:true,
+            slidesNavigation:false,
+            menu:"#fullMenu",
+            <?php if($this->anchors): ?>anchors: ["<?= implode('","', $this->anchors) ?>"],<?php endif ?>
+            // slideSelector: '.fp-co-slide',
+
+            afterRender: function( origin, destination, direction )
+            {
+                // $initialized = true;
+
+                $("#fullMenu").on("click", "a", function()
+                {
+                    if($.fancybox) { $.fancybox.close(); }
+
+                    if( this.parentNode.parentNode.parentNode.parentNode.classList.contains('onc-inside') )
+                    {
+                        let offsetNavToggler = document.querySelectorAll('.offset-navigation-toggler');
+
+                        if( offsetNavToggler.length )
+                        {
+                            offsetNavToggler[0].click();
+                        }
+                    }
+                });
+
+                $(".logo").click(function()
+                {
+                    if($(this).hasClass("logo-light"))
+                    {
+                        if($.fancybox){$.fancybox.close();}
+                    }
+
+                    $.fn.fullpage.moveTo(1)
+                });
+
+                let actSection = $.fn.fullpage.getActiveSection();
+                let nav = document.querySelector('.fullpage-navigation');
+
+                if( nav )
+                {
+                    let allSections = actSection.item.parentNode.querySelectorAll('.section');
+
+                    if( allSections.length < 2 )
+                    {
+                        nav.style.display = 'none';
+                    }
+                }
+
+                let bgToggler = document.createElement('div');
+
+                bgToggler.classList.add('toggle-background');
+
+                bgToggler.addEventListener('click', function()
+                {
+                    let activeSection = $.fn.fullpage.getActiveSection();
+                    let section = null;
+                    let bgContainer = null;
+
+                    if( activeSection.item.querySelector('.fp-slides') )
+                    {
+                        section = activeSection.item.querySelector('.fp-slide.active');
+                    }
+                    else
+                    {
+                        section = activeSection.item;
+                    }
+
+                    if( section )
+                    {
+                        bgContainer = section.querySelector('.bg-container');
+                    }
+
+                    if( this.classList.contains('contain') )
+                    {
+                        this.classList.remove('contain');
+
+                        if( bgContainer )
+                        {
+                            bgContainer.classList.remove('bg-contain');
+                            bgContainer.classList.add('bg-cover');
+                        }
+                    }
+                    else
+                    {
+                        this.classList.add('contain');
+
+                        if( bgContainer )
+                        {
+                            bgContainer.classList.add('bg-contain');
+                            bgContainer.classList.remove('bg-cover');
+                        }
+                    }
+                });
+
+                let activeSection = actSection; //$.fn.fullpage.getActiveSection();
+
+                if( activeSection.item.querySelector('.fp-slides') )
+                {
+                    let activeSlide = activeSection.item.querySelector('.fp-slide.active');
+
+                    if( !activeSlide.querySelector('.show-bg-toggler') )
+                    {
+                        bgToggler.style.display = 'none';
+                    }
+                }
+                else
+                {
+                    if( !activeSection.item.querySelector('.show-bg-toggler') )
+                    {
+                        bgToggler.style.display = 'none';
+                    }
+                }
+
+                document.getElementById('container').appendChild( bgToggler );
+            },
+
+            afterLoad: function( origin, destination, direction )
+            {
+                // if( destination.isFirst && !$initialized )
+                // {
+                //     $initialized = true;
+                // }
+                let invertedText = false;
+                let invertedNav = false;
+
+                if( destination.item.querySelector('.fp-slides') )
+                {
+                    let originActiveSlide = destination.item.querySelector('.fp-slide.active');
+
+                    invertedText = (originActiveSlide.classList.contains('txt-inverted') || originActiveSlide.classList.contains('text-inverted'));
+                    invertedNav = (originActiveSlide.classList.contains('nav-inverted') || originActiveSlide.classList.contains('navigation-inverted'));
+
+                    setTimeout(function()
+                    {
+                        originActiveSlide.classList.add('show-content');
+                    }, 500);
+                }
+                else
+                {
+                    invertedText = destination.item.querySelector('.txt-inverted,.text-inverted');
+                    invertedNav = destination.item.querySelector('.nav-inverted,.navigation-inverted');
+
+                    setTimeout(function()
+                    {
+                        destination.item.classList.add('show-content');
+                    }, 500);
+                }
+
+                if( invertedText )
+                {
+                    document.body.classList.add('inverted-active');
+                }
+                else
+                {
+                    document.body.classList.remove('inverted-active');
+                }
+
+                if( invertedNav )
+                {
+                    document.body.classList.add('inverted-nav');
+                }
+                else
+                {
+                    document.body.classList.remove('inverted-nav');
+                }
+            },
+
+            onLeave: function( origin, destination, direction )
+            {
+                let originActiveSlide = false;
+
+                origin.item.classList.remove('show-content');
+
+                if( origin.item.querySelector('.fp-slides') )
+                {
+                    originActiveSlide = origin.item.querySelector('.fp-slide.active');
+
+                    originActiveSlide.classList.remove('show-content');
+                }
+
+                let invertedText = false;
+                let invertedNav = false;
+
+                if( destination.item.querySelector('.fp-slides') )
+                {
+                    let activeSlide = destination.item.querySelector('.fp-slide.active');
+
+                    invertedText = (activeSlide.classList.contains('txt-inverted') || activeSlide.classList.contains('text-inverted'));
+                    invertedNav = (activeSlide.classList.contains('nav-inverted') || activeSlide.classList.contains('navigation-inverted'));
+
+                    setTimeout(function()
+                    {
+                        let folCont = activeSlide.querySelector('.flower-of-life-container');
+
+                        if( folCont )
+                        {
+                            redraw();
+                        }
+
+                        activeSlide.classList.add('show-content');
+                    }, 500);
+                }
+                else
+                {
+                    invertedText = destination.item.querySelector('.txt-inverted,.text-inverted');
+                    invertedNav = destination.item.querySelector('.nav-inverted,.navigation-inverted');
+
+                    setTimeout(function()
+                    {
+                        let folCont = destination.item.querySelector('.flower-of-life-container');
+
+                        if( folCont )
+                        {
+                            redraw();
+                        }
+
+                        destination.item.classList.add('show-content');
+                    }, 500);
+                }
+
+                if( invertedText )
+                {
+                    document.body.classList.add('inverted-active');
+                }
+                else
+                {
+                    document.body.classList.remove('inverted-active');
+                }
+
+                if( invertedNav )
+                {
+                    document.body.classList.add('inverted-nav');
+                }
+                else
+                {
+                    document.body.classList.remove('inverted-nav');
+                }
+
+                <?php if( $this->startSlideAlwaysOnFirst ): ?>
+                if( origin.item.querySelector('.fp-slides') )
+                {
+                    originActiveSlide.classList.remove('active');
+                    origin.item.querySelectorAll('.slide')[0].classList.add('active');
+
+                    originActiveSlide.parentNode.style.transform = 'translate3d(0, 0, 0)';
+                }
+                <?php endif ?>
+
+                let bgToggler = document.querySelector('.toggle-background');
+
+                if( bgToggler )
+                {
+                    if( destination.item.querySelector('.fp-slides') )
+                    {
+                        let activeSlide = destination.item.querySelector('.fp-slide.active');
+
+                        if( activeSlide.querySelector('.show-bg-toggler') )
+                        {
+                            bgToggler.style.display = 'block';
+                        }
+                        else
+                        {
+                            bgToggler.style.display = 'none';
+                        }
+                    }
+                    else
+                    {
+                        if( destination.item.querySelector('.show-bg-toggler') )
+                        {
+                            bgToggler.style.display = 'block';
+                        }
+                        else
+                        {
+                            bgToggler.style.display = 'none';
+                        }
+                    }
+                }
+            },
+
+            onSlideLeave: function( section, origin, destination, direction )
+            {
+                origin.item.classList.remove('show-content');
+
+                let invertedText = (destination.item.classList.contains('txt-inverted') || destination.item.classList.contains('text-inverted'));
+                let invertedNav = (destination.item.classList.contains('nav-inverted') || destination.item.classList.contains('navigation-inverted'));
+
+                if( invertedText )
+                {
+                    document.body.classList.add('inverted-active');
+                }
+                else
+                {
+                    document.body.classList.remove('inverted-active');
+                }
+
+                if( invertedNav )
+                {
+                    document.body.classList.add('inverted-nav');
+                }
+                else
+                {
+                    document.body.classList.remove('inverted-nav');
+                }
+
+                setTimeout(function()
+                {
+                    let folCont = destination.item.querySelector('.flower-of-life-container');
+
+                    if( folCont )
+                    {
+                        redraw();
+                    }
+
+                    destination.item.classList.add('show-content');
+                }, 500);
+
+                let bgToggler = document.querySelector('.toggle-background');
+
+                if( bgToggler )
+                {
+                    if( destination.item.querySelector('.fp-slides') )
+                    {
+                        let activeSlide = destination.item.querySelector('.fp-slide.active');
+
+                        if( activeSlide.querySelector('.show-bg-toggler') )
+                        {
+                            bgToggler.style.display = 'block';
+                        }
+                        else
+                        {
+                            bgToggler.style.display = 'none';
+                        }
+                    }
+                    else
+                    {
+                        if( destination.item.querySelector('.show-bg-toggler') )
+                        {
+                            bgToggler.style.display = 'block';
+                        }
+                        else
+                        {
+                            bgToggler.style.display = 'none';
+                        }
+                    }
+                }
+            },
+
+            licenseKey: "A6AC7EB1-13164DD3-8D289E36-D7D4549D"
+        });
+    });
+</script>

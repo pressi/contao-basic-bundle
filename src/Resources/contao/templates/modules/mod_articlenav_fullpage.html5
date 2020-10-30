@@ -1,0 +1,83 @@
+<?php
+$incToggler = false !== strpos($this->class, 'inc-nav-toggler');
+
+$this->class = preg_replace('/ inc-nav-toggler/', '', $this->class);
+
+?>
+<!-- indexer::stop -->
+<div class="<?= $this->class ?> pagination block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+
+    <?php if ($this->headline): ?>
+        <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+    <?php endif; ?>
+
+    <ul id="fullMenu">
+        <?php if ($this->first && 1 == 2): ?>
+            <li class="first"><a href="<?= $this->first['href'] ?>" class="first" title="<?= $this->first['title'] ?>"><?= $this->first['link'] ?></a></li>
+        <?php endif; ?>
+
+        <?php if ($this->previous && 1 == 2): ?>
+            <li class="previous"><a href="<?= $this->previous['href'] ?>" class="previous" title="<?= $this->previous['title'] ?>"><?= $this->previous['link'] ?></a></li>
+        <?php endif; ?>
+
+        <?php foreach ($this->articles as $article):
+
+            $article['isActive'] = false;
+
+            $arrUrl = explode('/', preg_replace('/.html$/', '', $article['href']));
+            $alias  = array_pop( $arrUrl );
+
+            $strClass = '';
+
+            $article['link'] = $article['title'];
+            $article['href'] = $alias;
+
+            $objArticle = \Contao\ArticleModel::findByAlias( $alias );
+
+            if( $objArticle )
+            {
+                $cssID = StringUtil::deserialize( $objArticle->cssID, true);
+
+                if( $objArticle->hideInNavigation || false !== strpos($cssID[1], 'hide-in-navigation') )
+                {
+                    continue;
+                }
+
+                if( $objArticle->noSection || false !== strpos($cssID[1], 'no-section') || !in_array('section', $objArticle->classes) )
+                {
+                    if( false === strpos($cssID[1], 'show-from-') && false === strpos($cssID[1], 'contact-block') )
+                    {
+                        continue;
+                    }
+
+//                    preg_match_all('/show-from-([A-Za-z]+)/', $cssID[1], $matches);
+
+//                    $strClass = ' insert-section is-from-' . $matches[1][0];
+                    $strClass = ' insert-section';
+                }
+            }
+            ?>
+            <?php if ($article['isActive']): ?>
+                <li class="active"><strong class="active"><?= $article['link'] ?></strong></li>
+            <?php else: ?>
+                <li class="link"><a href="#<?= $article['href'] ?>" data-menuanchor="<?= $article['href'] ?>" class="link<?= $strClass ?>" title="<?= $article['title'] ?>"><?= $article['link'] ?></a></li>
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <?php if ($this->next && 1 == 2): ?>
+            <li class="next"><a href="<?= $this->next['href'] ?>" class="next" title="<?= $this->next['title'] ?>"><?= $this->next['link'] ?></a></li>
+        <?php endif; ?>
+
+        <?php if ($this->last && 1 == 2): ?>
+            <li class="last"><a href="<?= $this->last['href'] ?>" class="last" title="<?= $this->last['title'] ?>"><?= $this->last['link'] ?></a></li>
+        <?php endif; ?>
+    </ul>
+
+    <?php if( $incToggler ): ?>
+    <div class="nav-toggler fp-nav-toggler">
+        <div class="nav-toggler-inside"></div>
+    </div>
+    <?php endif ?>
+
+</div>
+<!-- indexer::continue -->
