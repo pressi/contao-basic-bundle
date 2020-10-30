@@ -79,17 +79,28 @@ class SectionRenderer
 
 
 
-    public static function getOffsetNavigationToggler()
+    public static function getOffsetNavigationToggler( $objHeader )
     {
+        $cssID = StringUtil::deserialize($objHeader->cssID, true);
+
         $arrClasses =
         [
-            'offset-navigation-toggler',
-            'hamburger',
-            'hamburger--squeeze',
-            'hamburger--accessible',
-            'js-hamburger'
+            'nav-toggler',
+            'offset-navigation-toggler'
         ];
 
-        return '<a href="javascript:void(0)" class="' . implode(' ', $arrClasses) . '"><div class="hamburger-box"><div class="hamburger-inner"></div></div><span class="hamburger-label">Menü</span></a>';
+        $strHamburger = '<div class="nav-toggler-inside"></div>';
+
+        if( false === strpos($cssID[1], 'no-hamburger') )
+        {
+            $arrClasses[] = 'hamburger';
+            $arrClasses[] = 'hamburger--squeeze';
+            $arrClasses[] = 'hamburger--accessible';
+            $arrClasses[] = 'js-hamburger';
+
+            $strHamburger = '<div class="hamburger-box"><div class="hamburger-inner"></div></div><span class="hamburger-label">Menü</span>';
+        }
+
+        return '<a href="javascript:void(0)" class="' . implode(' ', $arrClasses) . '">' . $strHamburger . '</a>';
     }
 }

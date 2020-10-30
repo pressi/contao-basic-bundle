@@ -95,7 +95,7 @@ class ArticleTemplateRenderer
 
         $divInsideContainer = $divOverlay . '<div class="article-inside' . $strArticleInsideClasses . '"' . $strArticleInsideStyles . '>' . $divTableStart;
 
-        if( IIDOConfig::get('enableBootstrap') )
+        if( IIDOConfig::get('enableBootstrap') || ScriptHelper::hasPageFullPage(true) )
         {
             $divInsideContainer = '';
             $divTableEnd        = '';
@@ -107,7 +107,7 @@ class ArticleTemplateRenderer
         {
             $attributes = 'data-anchor="' . $objArticle->alias . '" ';
 
-            $divInsideContainer .= '<div class="section-index"></div>';
+//            $divInsideContainer .= '<div class="section-index"></div>';
         }
 
         $strContent = preg_replace('/<div([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#]{0,})class="mod_article ([A-Za-z0-9öäüÖÄÜß\s\-_\{\}\(\)\']{0,})"([A-Za-z0-9öäüÖÄÜß\s\-_="\'.,;:\(\)\/#%]{0,})>/u', '<section$1' . $attributes . 'class="mod_article $2' . ($strArticleClasses ? ' ' . $strArticleClasses : '') . '"$3' . $strArticleStyles . '>' . $divInsideContainer, $strContent, -1, $count);
@@ -129,7 +129,10 @@ class ArticleTemplateRenderer
                 $articleID = $cssID[0];
             }
 
-            $styles = Template::generateInlineStyle('.mod_article#' . $articleID . $styles);
+//            $styles = Template::generateInlineStyle('.mod_article#' . $articleID . $styles);
+            $GLOBALS['TL_HEAD']['art_' . $articleID ] = Template::generateInlineStyle('.mod_article#' . $articleID . $styles);
+
+            $styles = '';
         }
 
         return $styles . $strContent;

@@ -154,6 +154,14 @@ class ContentRenderer
             $colsMax = 12;
         }
 
+        if( $objRow->type === 'html' )
+        {
+            if( preg_match('/class="([A-Za-z0-9\s\-_]{0,})column-item/', $objRow->html) )
+            {
+                $classes .= ' column-item';
+            }
+        }
+
         if( false !== strpos($classes, 'column-item') || false !== strpos($classes, 'col-item') )
         {
             if( !$GLOBALS['IIDO']['COLUMNS']['OPEN'] )
@@ -169,9 +177,9 @@ class ContentRenderer
                 $strContent = '<div class="columns-container' . $strContClasses . '">' . $strContent;
             }
 
-            preg_match_all('/col-w-([0-9]+)/', $classes, $matches);
+            preg_match_all('/col-w([0-9\-]+)/', $classes, $matches);
 
-            $columnCount = (int) $matches[1][0];
+            $columnCount = (int) preg_replace('/^\-/', '', $matches[1][0]);
 
             if( false !== strpos($classes, 'col-item') )
             {
