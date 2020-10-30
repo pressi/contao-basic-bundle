@@ -181,6 +181,13 @@
 
 .cte_type .lang-flags > *.shown {
     opacity: 1;
+}
+
+span.fp-slide-cont {
+    margin-left: 15px;
+}
+
+
 
 /**
  * article list (tree)
