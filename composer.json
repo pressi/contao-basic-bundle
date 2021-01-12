@@ -13,7 +13,7 @@
             "role"      : "Developer"
         }
     ],
-    "version": "0.7.13",
+    "version": "0.7.16",
     "require":
     {
         "php": ">=7.3",
@@ -39,7 +39,7 @@
         "2do/contao-hotel-bundle": "IIDO Hotel Bundle",
         "codefog/contao-cookiebar": "Cookiebar",
         "netzhirsch/cookie-opt-in-bundle": "Cookie Opt-In (Kommerziell)",
-        "oveleon/contao-cookiebar": "Cookiebar Ext.",
+        "oveleon/contao-cookiebar": "Erweiterte Cookiebar",
         "numero2/contao-marketing-suite": "Marketing Suite, SEO (Kommerziell)",
         "terminal42/contao-changelanguage": "Sprachenwechsler",
         "terminal42/contao-leads": "Formular Erweiterung (Leads)",
@@ -52,7 +52,7 @@
         "do-while/contao-backupdb-bundle": "Datenbanksicherung",
         "fritzmg/contao-backend-documentation": "Backend Dokumentation",
         "heimrichhannot/contao-backend-lost-password-bundle": "Backend Login: Passwort vergessen",
-        "oveleon/contao-advanced-form-bundle": "Mehrseitige Formulare",
+        "oveleon/contao-advanced-form-bundle": "Mehrseitige Formulare"
     },
     "autoload":
     {
