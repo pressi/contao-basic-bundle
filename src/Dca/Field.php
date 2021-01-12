@@ -468,7 +468,7 @@ class Field
             $arrFieldConfig[ $key ] = $value;
         }
 
-        if( ($this->type === "select" || $this->type === "radio" || $this->type === "checkboxWizard" || ($this->type === 'checkbox' && $this->arrEval['multiple'])) && !isset($arrFieldConfig['options']) )
+        if( ($this->type === "select" || $this->type === "radio" || $this->type === "checkboxWizard"|| $this->type === "layoutWizard" || ($this->type === 'checkbox' && $this->arrEval['multiple'])) && !isset($arrFieldConfig['options']) )
         {
             if($GLOBALS['TL_LANG'][ $this->strLangTable?:$this->strTable ]['options'][ $this->alternativeOptionLangName?:$this->name ] && count($GLOBALS['TL_LANG'][ $this->strLangTable?:$this->strTable ]['options'][ $this->alternativeOptionLangName?:$this->name ]) )
             {
