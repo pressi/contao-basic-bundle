@@ -21,6 +21,39 @@ use Terminal42\ServiceAnnotationBundle\ServiceAnnotationInterface;
 class ConfigListener implements ServiceAnnotationInterface
 {
     /**
+     * @Callback(table="tl_iido_config", target="config.onload")
+     */
+    public function loadTable( DataContainer $dc ): void
+    {
+        $count = 2;
+
+        if( BasicHelper::isActiveBundle('contao/news-bundle') )
+        {
+            $count++;
+        }
+
+        if( BasicHelper::isActiveBundle('contao/calendar-bundle') )
+        {
+            $count++;
+        }
+
+        if( BasicHelper::isActiveBundle('delahaye/dlh_googlemaps') )
+        {
+            $count++;
+        }
+
+        if( BasicHelper::isActiveBundle('madeyourday/contao-rocksolid-slider') )
+        {
+            $count++;
+        }
+
+        $GLOBALS['TL_DCA']['tl_iido_config']['fields']['navLabels']['eval']['multiColumnEditor']['minRowCount'] = $count;
+        $GLOBALS['TL_DCA']['tl_iido_config']['fields']['navLabels']['eval']['multiColumnEditor']['maxRowCount'] = $count;
+    }
+
+
+
+    /**
      * @Callback(table="tl_iido_config", target="fields.navLabels.load")
      */
     public function loadNavFields( $varValue, DataContainer $dc )
