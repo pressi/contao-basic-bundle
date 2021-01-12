@@ -27,6 +27,23 @@ IIDO.Page = IIDO.Page || {};
         this.initFullPage();
 
         $("a.open-page-in-lightbox,a.open-in-lightbox,.ce_hyperlink.open-in-lightbox a.hyperlink_txt").click( function(e) { e.preventDefault(); IIDO.Page.openPageInLightbox(e); } );
+
+        $("a.scroll-to-fp-page").on("click", (e) => { e.preventDefault(); IIDO.Page.scrollToFullpagePage(e.currentTarget.getAttribute('href')); });
+    };
+
+
+
+    page.scrollToFullpagePage = function( linkTarget )
+    {
+        if( document.body.classList.contains('fancybox-active') )
+        {
+            $.fancybox.close();
+            setTimeout(() => { $.fn.fullpage.moveTo( linkTarget ); }, 500);
+        }
+        else
+        {
+            $.fn.fullpage.moveTo( linkTarget );
+        }
     };
 
 
@@ -551,13 +568,18 @@ IIDO.Page = IIDO.Page || {};
             options = $.extend({}, options, {opts:{ajax:{settings:{data:{fancybox:true}}},fitToView:true,width:'100%',height:'100%',margin:0,selector:'#main > .inside',filter:'#main > .inside',slideClass:slideClassName}});
         }
 
+        options.opts.afterLoad = function ()
+        {
+            $(".fancybox-stage a.scroll-to-fp-page").on("click", (e) => { e.preventDefault(); IIDO.Page.scrollToFullpagePage(e.currentTarget.getAttribute('href')); });
+        };
+
         options.opts.beforeShow = function(e)
         {
             /* $( "html" ).addClass( "fancybox-lock" );*/
 
             if( document.documentElement.classList.contains('fp-enabled') )
             {
-                $.fn.fullpage.setAllowScrolling(false);
+                $.fn.fullpage.setAllowScrolling(true);
             }
         };
 
@@ -567,7 +589,7 @@ IIDO.Page = IIDO.Page || {};
         {
             if( document.documentElement.classList.contains('fp-enabled') )
             {
-                $.fn.fullpage.setAllowScrolling(true);
+                $.fn.fullpage.setAllowScrolling(false);
             }
         };
 
