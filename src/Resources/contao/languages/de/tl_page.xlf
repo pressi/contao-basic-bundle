@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<xliff version="1.1">
+    <file datatype="php" original="src/Resources/contao/languages/en/tl_page.php" source-language="en" target-language="de">
+        <body>
+
+            <trans-unit id="tl_page.enableFullPage.0">
+                <source>FullPage-Scrip aktivieren</source>
+                <target>FullPage-Scrip aktivieren</target>
+            </trans-unit>
+
+
+
+<!-- ### LEGENDS ############################################################################################################ -->
+
+<!--            <trans-unit id="tl_page._legend">-->
+<!--                <source>Elemnte</source>-->
+<!--                <target>Elemnte</target>-->
+<!--            </trans-unit>-->
+
+
+
+<!-- ### OPTIONS ############################################################################################################ -->
+
+<!--            <trans-unit id="tl_page.options.headlineFloating.left">-->
+<!--                <source>align left</source>-->
+<!--                <target>Linksbündig</target>-->
+<!--            </trans-unit>-->
+
+        </body>
+    </file>
+</xliff>
