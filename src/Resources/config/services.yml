@@ -81,6 +81,7 @@ services:
 
 
   ## TABLES LISTENER - Callbacks
+  IIDO\BasicBundle\EventListener\DataContainer\ArticleListener: ~
   IIDO\BasicBundle\Dca\Listener\ConfigListener: ~
   IIDO\BasicBundle\Dca\Listener\ArticleListener: ~
 
