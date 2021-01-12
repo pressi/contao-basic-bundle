@@ -105,7 +105,8 @@ class ArticleTemplateRenderer
 
         if( ScriptHelper::hasPageFullPage( true ) )
         {
-            $attributes = 'data-anchor="' . $objArticle->alias . '" ';
+            $attributes .= 'data-anchor="' . $objArticle->alias . '" ';
+            $attributes .= 'data-title="' . ($objArticle->frontendTitle ? : $objArticle->title) . '" ';
 
 //            $divInsideContainer .= '<div class="section-index"></div>';
         }

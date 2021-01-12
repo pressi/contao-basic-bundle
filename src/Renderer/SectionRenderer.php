@@ -7,6 +7,7 @@ namespace IIDO\BasicBundle\Renderer;
 use Contao\ArticleModel;
 use Contao\Controller;
 use Contao\FrontendTemplate;
+use Contao\PageModel;
 use Contao\StringUtil;
 use IIDO\BasicBundle\Helper\BasicHelper;
 use IIDO\BasicBundle\Helper\ColorHelper;
@@ -18,7 +19,31 @@ class SectionRenderer
 //    public static function renderStickyHeader( string $strContent, string $offsetNavToggler = '' ): string
     public static function renderStickyHeader( string $strContent ): string
     {
-        $objStickyHeader = ArticleModel::findBy(['articleType=?', 'published=?'], ['stickyHeader', '1'] );
+        global $objPage;
+
+        $objStickyHeader  = false;
+        $objStickyHeaders = ArticleModel::findBy(['articleType=?', 'published=?'], ['stickyHeader', '1'] );
+
+        if( $objStickyHeader )
+        {
+            if( $objStickyHeaders->count() > 1 )
+            {
+                while( $objStickyHeaders->next() )
+                {
+                    $objGEPage = PageModel::findByPk( $objStickyHeaders->pid );
+
+                    if( $objGEPage->rootAlias === $objPage->rootAlias )
+                    {
+                        $objStickyHeader = $objStickyHeaders->current();
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                $objStickyHeader = $objStickyHeaders;
+            }
+        }
 
         if( $objStickyHeader )
         {
