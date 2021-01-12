@@ -1,5 +1,15 @@
-
+<?php
+//TODO: Contao News??
+//TODO: Links zur Dokumentation
+//TODO: Support Form and Contact
+//TODO: Ticket erstellen System!!
+?>
 <div id="tl_soverview">
+
+    <?php if( $this->supportContact ): ?>
+    <div class="be-row">
+        <div class="be-col-70">
+    <?php endif ?>
 
     <div id="tl_intro">
         <div class="inside">
@@ -20,6 +30,22 @@
             <p><?= $this->shortcutsLink ?></p>
         </div>
     </div>
+
+    <?php if( $this->supportContact ): ?>
+        </div>
+        <div class="be-col-30">
+            <div id="tl_supportContact">
+                <p><strong>ZOMEDIA</strong><br>
+                Josef Zopf
+                </p>
+                <p>
+                    <a href="mailto:dialog@zo.media">E-Mail schreiben</a><br>
+                    <a href="tel:066012345678">Anrufen</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <?php endif ?>
 
     <div id="tl_versions">
         <div class="inside">
