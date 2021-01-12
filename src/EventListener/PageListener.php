@@ -112,11 +112,27 @@ class PageListener implements ServiceAnnotationInterface
             $objFooter = ArticleModel::findByAlias('ge_footer_' . $objPage->rootAlias );
             $objHeader = ArticleModel::findByAlias('ge_header_' . $objPage->rootAlias );
 
+//            $objFooter = ArticleModel::findByAlias('ge_footer_' . $objPage->rootAlias );
+//            $objHeader = ArticleModel::findByAlias('ge_header_' . $objPage->rootAlias );
+
             if( $objHeader )
             {
-                $strBuffer = $this->renderSection('header', $objHeader, $strBuffer);
+                $headerOnLeft   = false;
+                $headerClasses  = StringUtil::deserialize( $objHeader->cssID, true );
 
-                $headerClasses = StringUtil::deserialize( $objHeader->cssID, true );
+                if( $objHeader->layout === 'left' || false !== strpos($headerClasses[1], 'layout-02') )
+                {
+                    $headerOnLeft = true;
+
+                    if( false === strpos($headerClasses[1], 'layout-02') )
+                    {
+                        $headerClasses[1] = trim($headerClasses[1] . ' layout-02');
+
+                        $objHeader->cssID = $headerClasses;
+                    }
+                }
+
+                $strBuffer = $this->renderSection('header', $objHeader, $strBuffer);
 
                 if( false !== strpos($headerClasses[1], 'layout-01') )
                 {
@@ -137,7 +153,7 @@ class PageListener implements ServiceAnnotationInterface
                     }
                 }
 
-                if( $objHeader->showMode === 'layout-02' || false !== strpos($headerClasses[1], 'layout-02') )
+                if( $headerOnLeft )
                 {
                     $strBuffer = PageHelper::addBodyClasses('header-on-left', $strBuffer );
                 }
@@ -182,7 +198,7 @@ class PageListener implements ServiceAnnotationInterface
 
 
 
-    protected function renderSection( $tag, $model, $strContent ): string
+    protected function renderSection( string $tag, $model, string $strContent ): string
     {
         $cssID          = \StringUtil::deserialize( $model->cssID, TRUE );
         $showGrid       = (FALSE !== strpos($cssID[1], 'show-grid'));

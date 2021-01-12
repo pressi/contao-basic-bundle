@@ -26,4 +26,13 @@ class PageListener implements ServiceAnnotationInterface
     {
         return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected);
     }
+
+
+
+    /**
+     * Callback(table="tl_page", target="config.onsubmit")
+     */
+    public function onSubmit( DataContainer $dc ): void
+    {
+    }
 }

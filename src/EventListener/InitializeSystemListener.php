@@ -12,6 +12,7 @@ use Contao\CoreBundle\ServiceAnnotation\Hook;
 use IIDO\BasicBundle\Model\NewsAreaOfApplicationModel;
 use IIDO\BasicBundle\Model\NewsUsageModel;
 use IIDO\BasicBundle\Pages\GlobalElementPage;
+use IIDO\BasicBundle\Widget\LayoutWizardWidget;
 use IIDO\BasicBundle\Widget\NewsAreaOfApplicationPickerWidget;
 use IIDO\BasicBundle\Widget\NewsUsagePickerWidget;
 use IIDO\BasicBundle\Model\IidoContentModel;
@@ -135,7 +136,8 @@ class InitializeSystemListener implements ServiceAnnotationInterface
         $GLOBALS['BE_FFL']['fileTree']  = $namespace . '\Widget\FileTreeWidget';
         $GLOBALS['BE_FFL']['text']      = TextFieldWidget::class;
         $GLOBALS['BE_FFL']['iidoTag']   = TagsFieldWidget::class;
-        $GLOBALS['BE_FFL']['metaWizard']    = MetaWizardWidget::class;
+        $GLOBALS['BE_FFL']['metaWizard']        = MetaWizardWidget::class;
+        $GLOBALS['BE_FFL']['layoutWizard']      = LayoutWizardWidget::class;
 
         $GLOBALS['BE_FFL']['newsAreaOfApplicationPicker']   = NewsAreaOfApplicationPickerWidget::class;
         $GLOBALS['BE_FFL']['newsUsagePicker']               = NewsUsagePickerWidget::class;
