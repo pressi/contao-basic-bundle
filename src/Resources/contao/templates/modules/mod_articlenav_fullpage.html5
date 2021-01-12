@@ -38,7 +38,7 @@ $this->class = preg_replace('/ inc-nav-toggler/', '', $this->class);
             {
                 $cssID = StringUtil::deserialize( $objArticle->cssID, true);
 
-                if( $objArticle->hideInNavigation || false !== strpos($cssID[1], 'hide-in-navigation') )
+                if( $objArticle->hideInNav ||$objArticle->hideInNavigation || false !== strpos($cssID[1], 'hide-in-navigation') || false !== strpos($cssID[1], 'hide-in-nav') )
                 {
                     continue;
                 }
