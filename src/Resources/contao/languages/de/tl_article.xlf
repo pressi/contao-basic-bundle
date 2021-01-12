@@ -3,9 +3,35 @@
     <file datatype="php" original="src/Resources/contao/languages/en/tl_article.php" source-language="en" target-language="de">
         <body>
 
+            <trans-unit id="tl_article.frontendTitle.0">
+                <source>frontend title</source>
+                <target>Frontend-Titel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.navTitle.0">
+                <source>navigation title</source>
+                <target>Navigations-Titel</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.hideInNav.0">
+                <source>hide in navigation</source>
+                <target>nicht in der Navigations anzeigen</target>
+            </trans-unit>
+
+
             <trans-unit id="tl_article.bgColor.0">
                 <source>Hintergrund-Farbe</source>
                 <target>Hintergrund-Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.addOwnBGColor.0">
+                <source>Eigene Hintergrund-Farbe</source>
+                <target>Eigene Hintergrund-Farbe</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.ownBGColor.0">
+                <source>Eigene Hintergrund-Farbe</source>
+                <target>Eigene Hintergrund-Farbe</target>
             </trans-unit>
 
             <trans-unit id="tl_article.gradientColors.0">
@@ -68,6 +94,16 @@
                 <target>Typ</target>
             </trans-unit>
 
+            <trans-unit id="tl_article.extBGImage.0">
+                <source>Erweiterte Hintergrund-Einstellungen</source>
+                <target>Erweiterte Hintergrund-Einstellungen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.layout.0">
+                <source>Layout</source>
+                <target>Layout</target>
+            </trans-unit>
+
 
 
 <!-- ### LEGENDS ############################################################################################################ -->
@@ -80,6 +116,11 @@
             <trans-unit id="tl_article.dimensions_legend">
                 <source>Größen</source>
                 <target>Größen</target>
+            </trans-unit>
+
+            <trans-unit id="tl_article.animation_legend">
+                <source>Animationen</source>
+                <target>Animationen</target>
             </trans-unit>
 
 
@@ -251,6 +292,21 @@
             <trans-unit id="tl_article.options.articleType.fixedButtons">
                 <source>Fixed Elements: Buttons</source>
                 <target>Fixierte Elemente: Buttons</target>
+            </trans-unit>
+
+
+
+            <trans-unit id="tl_article.options.layout.top">
+                <source>top</source>
+                <target>Oben</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.layout.left">
+                <source>left</source>
+                <target>Links</target>
+            </trans-unit>
+            <trans-unit id="tl_article.options.layout.right">
+                <source>right</source>
+                <target>Rechts</target>
             </trans-unit>
 
 

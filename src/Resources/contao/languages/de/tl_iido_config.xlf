@@ -148,6 +148,14 @@
 
 
 
+            <trans-unit id="tl_iido_config.options.articleFields.frontendTitle">
+                <source>frontend title</source>
+                <target>Frontend-Titel</target>
+            </trans-unit>
+            <trans-unit id="tl_iido_config.options.articleFields.navTitle">
+                <source>navigation title</source>
+                <target>Navigations-Titel</target>
+            </trans-unit>
             <trans-unit id="tl_iido_config.options.articleFields.width">
                 <source>Width</source>
                 <target>Breite</target>

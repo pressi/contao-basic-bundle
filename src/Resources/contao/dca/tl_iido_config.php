@@ -172,8 +172,36 @@ $objConfTable->addSubpalette('loginShowPublisherLink', 'loginPublisher');
 
 // BACKEND
 
-\IIDO\BasicBundle\Dca\Field::create('navLabels', 'optionWizard')
+\IIDO\BasicBundle\Dca\Field::create('navLabels', 'multiColumnEditor')
 //    ->addSQL("blob NULL")
+    ->addEval('multiColumnEditor',
+    [
+        'sortable'      => false,
+        'class'         => 'nav-labels',
+        'minRowCount'   => 0,
+        'maxRowCount'   => 0,
+        'skipCopyValuesOnAdd' => false,
+        'palettes'      =>
+        [
+            'default'       => 'value,label'
+        ],
+        'fields'        =>
+        [
+            'value'         =>
+            [
+                'label'         => ['Wert'],
+                'inputType'     => 'text',
+                'eval'          => ['readonly'=>true,'groupStyle' => 'width:150px']
+            ],
+
+            'label'         =>
+            [
+                'label'         => ['Bezeichnung'],
+                'inputType'     => 'text',
+                'eval'          => ['groupStyle' => 'width:250px']
+            ]
+        ]
+    ])
     ->addToTable( $objConfTable );
 
 
