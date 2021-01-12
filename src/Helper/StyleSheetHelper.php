@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace IIDO\BasicBundle\Helper;
 
 
+use Contao\StringUtil;
 use IIDO\BasicBundle\Config\BundleConfig;
 
 
@@ -24,6 +25,7 @@ class StyleSheetHelper
     protected static $masterFilePath        = 'files/master/scss/master.scss';
 
     protected static $customPath            = 'files/%s/%s/';
+    protected static $configFilePath        = 'files/config/styles/variables_%s.scss';
 
 
     protected static $stylesheetPath        = '/Resources/public/%s/';
@@ -45,9 +47,27 @@ class StyleSheetHelper
         $stylesPathPublic   = BundleConfig::getBundlePath( true ) . sprintf(self::$stylesheetPathPublic, self::$stylesPathFolder);
         $includeMainFile    = file_exists($rootPath . sprintf(self::$customPath, $rootAlias, self::$stylesPathFolder) . 'main.scss');
 
+        if( !file_exists($rootPath . sprintf(self::$configFilePath, $rootAlias)) )
+        {
+            $arrConfigPath = explode('/', self::$configFilePath);
+
+            if( !is_dir($rootPath . 'files/' . $arrConfigPath[1]) )
+            {
+                mkdir( $rootPath . 'files/' . $arrConfigPath[1]);
+                mkdir( $rootPath . 'files/' . $arrConfigPath[1] . '/' . $arrConfigPath[2]);
+            }
+
+            if( !is_dir($rootPath . 'files/' . $arrConfigPath[1] . '/' . $arrConfigPath[2]) )
+            {
+                mkdir( $rootPath . 'files/' . $arrConfigPath[1] . '/' . $arrConfigPath[2]);
+            }
+
+            touch( $rootPath . sprintf(self::$configFilePath, $rootAlias) );
+        }
+
         if( $includeMainFile )
         {
-            $arrCustomStyleFiles = \StringUtil::trimsplit(',', $customStyleFiles);
+            $arrCustomStyleFiles = StringUtil::trimsplit(',', $customStyleFiles);
 
             if( count($arrCustomStyleFiles) )
             {
@@ -289,5 +309,50 @@ class StyleSheetHelper
         $objLayout = PageHelper::getPageLayout( $objPage );
 
         return ($objLayout->combineScripts ? self::$stylesheetModeCombine : '');
+    }
+
+
+
+    public static function addConfigVar( $varName, $varValue, $fileName )
+    {
+        $strNewFile = '';
+        $insert     = false;
+        $objFile    = fopen(BasicHelper::getRootDir( true ) . sprintf(self::$configFilePath, $fileName), 'r+');
+
+        while( !feof($objFile) )
+        {
+            $fileLine = fgets($objFile);
+
+            if( !$fileLine || !strlen($fileLine) )
+            {
+                continue;
+            }
+
+            $arrParts = explode(':', $fileLine);
+
+            $key    = preg_replace('/^\$/', '', trim($arrParts[0]));
+//            $value  = preg_replace('/;$/', '', trim($arrParts[1]));
+
+            if( $key === $varName )
+            {
+                $insert = true;
+                $value = $varValue;
+
+                $strNewFile .= '$' . $key . ": '" . $value . "';\n";
+            }
+            else
+            {
+                $strNewFile .= $fileLine . "\n";
+            }
+        }
+
+        if( !$insert )
+        {
+            $strNewFile .= '$' . $varName . ": '" . $varValue . "';";
+        }
+
+        fseek($objFile, 0);
+        fwrite($objFile, $strNewFile);
+        fclose($objFile);
     }
 }
